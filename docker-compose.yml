@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  auth-redis:
+    image: redis:6
+    container_name: auth-redis
+    networks:
+      - auth-network
+    ports:
+      - 6363:6379
+    restart: unless-stopped
+
+networks:
+  auth-network:
+    name: auth-network

@@ -1,0 +1,4 @@
+build/
+logs/
+node_modules/
+*.md

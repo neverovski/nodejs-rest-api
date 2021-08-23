@@ -1,0 +1,93 @@
+{
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "prettier", // npm module eslint-plugin-prettier
+    "import", // npm module eslint-plugin-import
+    "sort-class-members" // npm module eslint-plugin-sort-class-members
+  ],
+  "extends": [
+    "airbnb-base", // npm module eslint-config-airbnb-base
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:prettier/recommended",
+    "prettier" // npm module eslint-config-prettier
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./"
+  },
+  "root": true,
+  "env": {
+    "node": true,
+    "es6": true,
+    "mocha": true
+  },
+  "rules": {
+    "no-debugger": "off",
+    "no-restricted-syntax": ["off", "ForOfStatement"],
+    "lines-between-class-members": [
+      "error",
+      "always",
+      { "exceptAfterSingleLine": true }
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never"
+      }
+    ],
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "class-methods-use-this": "off",
+    "import/prefer-default-export": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/unbound-method": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "object-curly-spacing": ["error", "always"],
+    "key-spacing": ["error", { "afterColon": true }],
+    "no-multi-spaces": "error",
+    "prettier/prettier": "error",
+    "import/no-duplicates": ["error", { "considerQueryString": true }],
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", "parent"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "sort-class-members/sort-class-members": [
+      2,
+      {
+        "order": [
+          "[properties]",
+          "[conventional-private-properties]",
+          "[static-properties]",
+          "constructor",
+          "[methods]",
+          "[conventional-private-methods]",
+          "[static-methods]"
+        ],
+        "accessorPairPositioning": "getThenSet"
+      }
+    ],
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error"
+  }
+}
