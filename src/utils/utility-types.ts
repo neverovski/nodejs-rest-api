@@ -1,3 +1,10 @@
+import { FindOneOptions } from 'typeorm';
+
+export type OptionCtx<T> = Pick<
+  FindOneOptions<T>,
+  'where' | 'order' | 'relations'
+>;
+
 export interface IHttpException {
   message: string;
   status: number;

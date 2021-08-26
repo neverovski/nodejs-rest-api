@@ -9,4 +9,6 @@ export const PRETTY_PRINT = {
 };
 
 // Table
+export const DB_TABLE_USER = 'users';
+export const DB_TABLE_PROFILE = 'profiles';
 export const DB_TABLE_REFRESH_SESSION = 'refreshSessions';
