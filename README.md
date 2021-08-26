@@ -26,10 +26,10 @@ $ npm run start:prod
     - [ ] Сreate a new user
     - [ ] Update user
   - Platform
-   - [ ] Facebook
-   - [ ] Google
-   - [ ] Twitter
-   - [ ] Github
+    - [ ] Facebook
+    - [ ] Google
+    - [ ] Twitter
+    - [ ] Github
 
 ## Contribution
 
