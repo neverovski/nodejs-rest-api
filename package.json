@@ -13,7 +13,11 @@
     "test:integration": "mocha -r ts-node/register -r tsconfig-paths/register tests/integration/**/*.test.ts",
     "coverage:unit": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test:unit",
     "coverage:integration": "nyc -r lcov -e .ts -x \"*.test.ts\" test:integration",
-    "prepare": "husky install"
+    "migrate:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create -n",
+    "migrate:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run",
+    "migrate:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert",
+    "prepare": "husky install",
+    "commit": "git-cz"
   },
   "repository": {
     "type": "git",
@@ -49,6 +53,8 @@
     "typeorm": "^0.2.37"
   },
   "devDependencies": {
+    "@commitlint/cli": "^9.1.2",
+    "@commitlint/config-conventional": "^9.1.2",
     "@types/body-parser": "^1.19.1",
     "@types/bull": "^3.15.3",
     "@types/chai": "^4.2.21",
@@ -62,6 +68,10 @@
     "@types/pino": "^6.3.11",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.29.3",
+    "commitizen": "^4.2.4",
+    "commitlint-config-cz": "^0.13.2",
+    "cz-conventional-changelog": "3.3.0",
+    "cz-customizable": "^6.3.0",
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
     "eslint": "^7.32.0",
@@ -80,5 +90,10 @@
     "tsconfig-paths": "^3.10.1",
     "tscpaths": "0.0.9",
     "typescript": "^4.3.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    }
   }
 }

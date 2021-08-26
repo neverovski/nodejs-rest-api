@@ -7,3 +7,6 @@ export const PRETTY_PRINT = {
   translateTime: 'SYS:yyyy-mm-dd HH:MM:ss',
   ignore: 'hostname',
 };
+
+// Table
+export const DB_TABLE_REFRESH_SESSION = 'refreshSessions';
