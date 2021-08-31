@@ -21,6 +21,7 @@ export default class ConfigCore {
    */
   protected set<T>(env: string, validator: Schema, defaultVal: T | null): T {
     let item: any;
+
     if (process.env[env] || process.env[env] === '') {
       item = process.env[env];
     } else {

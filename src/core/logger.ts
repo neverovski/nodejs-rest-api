@@ -1,8 +1,7 @@
 import pino, { LogFn } from 'pino';
 
 import { AppConfig } from '@config/index';
-
-import { ENV_TEST, PRETTY_PRINT } from '../constants';
+import { ENV_TEST, PRETTY_PRINT } from '@utils/index';
 
 interface ILogger {
   name: string;

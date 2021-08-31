@@ -1,13 +1,14 @@
 import { AppConfig, DBConfig } from '@config/index';
+import { Logger } from '@core/index';
 import db from '@db/index';
 import Middleware, { ErrorMiddleware } from '@middleware/index';
-import { EventEmitter, Logger } from '@utils/helpers';
+import { EventEmitter } from '@utils/index';
 
 import Server from './server';
 
 const app = new Server({
   port: Number(AppConfig.port),
-  middleware: Middleware,
+  initMiddleware: Middleware,
   errorMiddleware: ErrorMiddleware,
 });
 
@@ -21,10 +22,10 @@ db.connect()
     Logger.debug(`PORT: ${DBConfig.port}`);
     Logger.debug(`DATABASE: ${DBConfig.database}`);
     app
-      .start()
-      .then((serverParams) => {
+      .init()
+      .then(() => {
         EventEmitter.emit('start');
-        Logger.info('Server initialized...', serverParams);
+        Logger.info('Server start initialization...');
         Logger.debug('--- APP CONFIG ---');
         Logger.debug(`HOST: ${AppConfig.host}`);
         Logger.debug(`PORT: ${AppConfig.port}`);

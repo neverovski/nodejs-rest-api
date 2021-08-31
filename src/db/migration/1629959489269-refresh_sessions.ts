@@ -14,6 +14,19 @@ export class refreshSessions1629959489269 implements MigrationInterface {
             isPrimary: true,
             isGenerated: true,
           },
+          {
+            name: 'userId',
+            type: 'int',
+          },
+          {
+            name: 'refreshToken',
+            type: 'int',
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'now()',
+          },
         ],
       }),
     );

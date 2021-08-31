@@ -1,4 +1,4 @@
-import { Logger } from '@utils/index';
+import Logger from './logger';
 
 export default class ControllerCore {
   init(): void {
