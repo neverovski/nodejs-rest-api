@@ -3,37 +3,37 @@ import { HttpExceptionType, IHttpException } from './utility-types';
 export const CodeResponse = {
   [HttpExceptionType.OK]: {
     status: 200,
-    code: 'OK',
+    code: HttpExceptionType.OK,
     message: 'Ok',
   },
   [HttpExceptionType.BAD_REQUEST]: {
     status: 400,
-    code: 'BAD_REQUEST',
+    code: HttpExceptionType.BAD_REQUEST,
     message: 'Bad Request',
   },
   [HttpExceptionType.TOKEN_EXPIRED]: {
     status: 401,
-    code: 'TOKEN_EXPIRED',
+    code: HttpExceptionType.TOKEN_EXPIRED,
     message: 'Token expired',
   },
   [HttpExceptionType.FORBIDDEN]: {
     status: 403,
-    code: 'FORBIDDEN',
+    code: HttpExceptionType.FORBIDDEN,
     message: 'Forbidden',
   },
   [HttpExceptionType.NOT_FOUND]: {
     status: 404,
-    code: 'NOT_FOUND',
+    code: HttpExceptionType.NOT_FOUND,
     message: 'Not found',
   },
   [HttpExceptionType.ROUTE_NOT_FOUND]: {
     status: 404,
-    code: 'ROUTE_NOT_FOUND',
+    code: HttpExceptionType.ROUTE_NOT_FOUND,
     message: 'Route not found',
   },
   [HttpExceptionType.SERVER_ERROR]: {
     status: 500,
-    code: 'SERVER_ERROR',
+    code: HttpExceptionType.SERVER_ERROR,
     message: 'Server error occurred',
   },
 } as Record<HttpExceptionType, IHttpException>;

@@ -1,6 +1,6 @@
 import { RequestHandler, ErrorRequestHandler } from 'express';
 
-import { Logger } from '@utils/index';
+import Logger from './logger';
 
 export default abstract class MiddlewareCore {
   init(): void {

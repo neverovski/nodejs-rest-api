@@ -3,8 +3,8 @@ import { HttpException } from '@core/index';
 import { CodeResponse } from '../code-response';
 import { HttpExceptionType, IHttpException } from '../utility-types';
 
-export const responseError = (code: HttpExceptionType): void => {
-  throw new HttpException({
+export const responseError = (code: HttpExceptionType): HttpException => {
+  return new HttpException({
     ...CodeResponse[code],
   });
 };

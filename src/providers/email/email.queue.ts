@@ -2,7 +2,8 @@ import Bull from 'bull';
 import ms from 'ms';
 
 import { AppConfig, RedisConfig } from '@config/index';
-import { EventEmitter, Logger } from '@utils/index';
+import { Logger } from '@core/index';
+import { EventEmitter } from '@utils/index';
 
 import { EMAIL_QUEUQ } from './email.constant';
 
