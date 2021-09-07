@@ -17,10 +17,8 @@ db.connect()
     Logger.debug('Database initialized...');
     Logger.debug('--- SQL DATABASE CONFIG ---');
     Logger.debug(`CLIENT: ${DBConfig.client}`);
-    Logger.debug(`USER: ${DBConfig.user}`);
     Logger.debug(`HOST: ${DBConfig.host}`);
     Logger.debug(`PORT: ${DBConfig.port}`);
-    Logger.debug(`DATABASE: ${DBConfig.database}`);
     app
       .init()
       .then(() => {

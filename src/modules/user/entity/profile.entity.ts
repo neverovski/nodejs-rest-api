@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, JoinColumn, PrimaryColumn } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 
 import { EntityCore } from '@core/index';
 import { DB_TABLE_PROFILE } from '@utils/index';
@@ -14,7 +14,7 @@ export default class ProfileEntity
   extends EntityCore<IProfile>
   implements IProfile
 {
-  @PrimaryColumn()
+  @Column('int', { unique: true })
   userId!: number;
 
   @Column('varchar')

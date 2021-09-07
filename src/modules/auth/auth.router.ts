@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { RouterCore } from '@core/index';
 
 import AuthController from './auth.controller';
-import AuthService from './auth.service';
+import AuthService from './service/auth.service';
 
 export default class AuthRouter extends RouterCore {
   private readonly controller: AuthController;

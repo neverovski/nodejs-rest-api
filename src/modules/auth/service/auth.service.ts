@@ -1,6 +1,8 @@
-import { IAuthService } from './interface';
+import { ServiceCore } from '@core/index';
 
-export default class AuthService implements IAuthService {
+import { IAuthService } from '../interface';
+
+export default class AuthService extends ServiceCore implements IAuthService {
   forgotPassword() {
     throw new Error('Method not implemented.');
   }
