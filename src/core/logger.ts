@@ -81,21 +81,21 @@ export class Logger {
     }
   }
 
-  info(message: string, meta: any = {}): void {
+  info(message: string): void {
     if (AppConfig.env !== ENV_TEST) {
-      this.infoLogger.info(message, Object.keys(meta).length ? meta : '');
+      this.infoLogger.info(message);
     }
   }
 
-  debug(message: string, meta: any = {}): void {
+  debug(message: string): void {
     if (AppConfig.env !== ENV_TEST) {
-      this.debugLogger.debug(message, Object.keys(meta).length ? meta : '');
+      this.debugLogger.debug(message);
     }
   }
 
-  trace(message: string, meta: any = {}): void {
+  trace(message: string): void {
     if (AppConfig.env !== ENV_TEST) {
-      this.traceLogger.trace(message, Object.keys(meta).length ? meta : '');
+      this.traceLogger.trace(message);
     }
   }
 }

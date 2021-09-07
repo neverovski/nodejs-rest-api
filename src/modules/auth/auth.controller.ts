@@ -2,8 +2,6 @@ import AutoBin from 'auto-bind';
 
 import { ControllerCore } from '@core/index';
 
-import { IAuthService } from './interface';
-
 /**
  * @openapi
  * tags:
@@ -11,7 +9,7 @@ import { IAuthService } from './interface';
  *   description: auth
  */
 export default class AuthController extends ControllerCore {
-  constructor(private readonly service: IAuthService) {
+  constructor() {
     super();
 
     this.init();

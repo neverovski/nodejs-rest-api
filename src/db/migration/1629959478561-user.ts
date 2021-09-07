@@ -20,14 +20,18 @@ export class user1629959478561 implements MigrationInterface {
             isUnique: true,
           },
           {
+            name: 'password',
+            type: 'varchar',
+          },
+          {
             name: 'isConfirmedEmail',
             type: 'bool',
-            default: true,
+            default: false,
           },
           {
             name: 'isActive',
             type: 'bool',
-            default: true,
+            default: false,
           },
           {
             name: 'createdAt',

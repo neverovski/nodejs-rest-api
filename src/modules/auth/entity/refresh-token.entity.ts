@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, JoinColumn, PrimaryColumn } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 
 import { EntityCore } from '@core/index';
 import { DB_TABLE_REFRESH_TOKEN } from '@utils/index';
@@ -17,13 +17,13 @@ export default class RefreshTokenEntity
   @Column('int')
   userId!: number;
 
-  @Column()
+  @Column('varchar')
   token!: string;
 
   @Column('boolean', { default: false })
   isRevoked = false;
 
-  @Column()
+  @Column('varchar')
   ip!: string;
 
   @Column('text', { nullable: true })

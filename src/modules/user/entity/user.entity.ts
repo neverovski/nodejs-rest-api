@@ -16,15 +16,20 @@ export default class UserEntity extends EntityCore<IUser> implements IUser {
   })
   email!: string;
 
-  @Column('bool', {
-    default: true,
+  @Column('varchar', {
+    select: false,
   })
-  isConfirmedEmail = true;
+  password!: string;
 
   @Column('bool', {
-    default: true,
+    default: false,
   })
-  isActive = true;
+  isConfirmedEmail = false;
+
+  @Column('bool', {
+    default: false,
+  })
+  isActive = false;
 
   @OneToOne(() => ProfileEntity, (profile) => profile.user)
   profile!: ProfileEntity;

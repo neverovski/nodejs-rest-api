@@ -20,7 +20,7 @@ export class refreshToken1629959489269 implements MigrationInterface {
           },
           {
             name: 'token',
-            type: '', // character varying(36) not null
+            type: 'varchar', // character varying(36) not null
           },
           {
             name: 'isRevoked',
@@ -29,7 +29,7 @@ export class refreshToken1629959489269 implements MigrationInterface {
           },
           {
             name: 'ip',
-            type: '', // cidr not null
+            type: 'varchar', // cidr not null
           },
           {
             name: 'os',

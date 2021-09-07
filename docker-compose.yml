@@ -12,7 +12,7 @@ services:
 
   auth-db:
     image: postgres:13
-    container_name: server-db
+    container_name: auth-db
     volumes:
       - ./data/postgresql/server:/var/lib/postgresql/data
     environment:
