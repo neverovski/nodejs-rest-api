@@ -1,6 +1,12 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+  TableIndex,
+} from 'typeorm';
 
-import { DB_TABLE_REFRESH_TOKEN } from '@utils/index';
+import { DB_TABLE_REFRESH_TOKEN, DB_TABLE_USER } from '@utils/index';
 
 export class refreshToken1629959489269 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -19,8 +25,8 @@ export class refreshToken1629959489269 implements MigrationInterface {
             type: 'int',
           },
           {
-            name: 'token',
-            type: 'varchar', // character varying(36) not null
+            name: 'jwtid',
+            type: 'varchar',
           },
           {
             name: 'isRevoked',
@@ -29,7 +35,8 @@ export class refreshToken1629959489269 implements MigrationInterface {
           },
           {
             name: 'ip',
-            type: 'varchar', // cidr not null
+            type: 'cidr',
+            isNullable: true,
           },
           {
             name: 'os',
@@ -61,6 +68,32 @@ export class refreshToken1629959489269 implements MigrationInterface {
             default: 'now()',
           },
         ],
+      }),
+    );
+
+    await queryRunner.createIndex(
+      DB_TABLE_REFRESH_TOKEN,
+      new TableIndex({
+        name: `IDX_${DB_TABLE_REFRESH_TOKEN.toUpperCase()}_USER_ID`,
+        columnNames: ['userId'],
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      DB_TABLE_REFRESH_TOKEN,
+      new TableForeignKey({
+        columnNames: ['userId'],
+        referencedColumnNames: ['id'],
+        referencedTableName: DB_TABLE_USER,
+        onDelete: 'CASCADE',
+      }),
+    );
+
+    await queryRunner.createIndex(
+      DB_TABLE_REFRESH_TOKEN,
+      new TableIndex({
+        name: `IDX_${DB_TABLE_REFRESH_TOKEN.toUpperCase()}_JWT_ID`,
+        columnNames: ['jwtid'],
       }),
     );
   }

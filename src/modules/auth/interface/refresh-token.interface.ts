@@ -1,8 +1,8 @@
 export interface IRefreshToken {
   userId: number;
-  token: string;
+  jwtid: string;
   isRevoked: boolean;
-  ip: string;
+  ip?: string;
   os?: string;
   browser?: string;
   userAgent?: string;

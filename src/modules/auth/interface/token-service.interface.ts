@@ -1,4 +1,8 @@
+import { RefreshToken } from '../auth.type';
+
 export interface ITokenService {
-  generateAccessToken(): void;
-  generateRefreshToken(): void;
+  generateAccessToken(): string;
+  generateRefreshToken(
+    body: Omit<RefreshToken, 'jwtid' | 'expiredAt'>,
+  ): Promise<string>;
 }

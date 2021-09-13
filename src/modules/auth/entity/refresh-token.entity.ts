@@ -18,12 +18,12 @@ export default class RefreshTokenEntity
   userId!: number;
 
   @Column('varchar')
-  token!: string;
+  jwtid!: string;
 
   @Column('boolean', { default: false })
   isRevoked = false;
 
-  @Column('varchar')
+  @Column('cidr', { nullable: true })
   ip!: string;
 
   @Column('text', { nullable: true })
