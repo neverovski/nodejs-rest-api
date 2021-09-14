@@ -22,6 +22,7 @@ export class user1629959478561 implements MigrationInterface {
           {
             name: 'password',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'isConfirmedEmail',

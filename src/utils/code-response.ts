@@ -21,6 +21,11 @@ export const CodeResponse = {
     code: HttpExceptionType.TOKEN_EXPIRED,
     message: 'Token expired',
   },
+  [HttpExceptionType.TOKEN_MALFORMED]: {
+    status: 401,
+    code: HttpExceptionType.TOKEN_MALFORMED,
+    message: 'Trying get data from token. Something wrong',
+  },
   [HttpExceptionType.FORBIDDEN]: {
     status: 403,
     code: HttpExceptionType.FORBIDDEN,

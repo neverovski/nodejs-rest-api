@@ -1,11 +1,10 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, Index, OneToOne, JoinColumn } from 'typeorm';
 
 import { EntityCore } from '@core/index';
+import { UserEntity } from '@modules/user';
 import { DB_TABLE_REFRESH_TOKEN } from '@utils/index';
 
 import { IRefreshToken } from '../interface';
-
-// import UserEntity from './user.entity';
 
 @Entity({
   name: DB_TABLE_REFRESH_TOKEN,
@@ -14,9 +13,15 @@ export default class RefreshTokenEntity
   extends EntityCore<IRefreshToken>
   implements IRefreshToken
 {
+  @Index()
   @Column('int')
   userId!: number;
 
+  @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  user!: UserEntity;
+
+  @Index()
   @Column('varchar')
   jwtid!: string;
 

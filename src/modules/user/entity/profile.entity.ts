@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, Index } from 'typeorm';
 
 import { EntityCore } from '@core/index';
 import { DB_TABLE_PROFILE } from '@utils/index';
@@ -14,16 +14,17 @@ export default class ProfileEntity
   extends EntityCore<IProfile>
   implements IProfile
 {
+  @Index()
   @Column('int', { unique: true })
   userId!: number;
+
+  @OneToOne(() => UserEntity, (user) => user.profile, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  user!: UserEntity;
 
   @Column('varchar')
   firstName!: string;
 
   @Column('varchar')
   lastName!: string;
-
-  @OneToOne(() => UserEntity, (user) => user.profile, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
-  user!: UserEntity;
 }
