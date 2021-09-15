@@ -1,6 +1,11 @@
 import AutoBin from 'auto-bind';
+import { Response, Request } from 'express';
 
 import { ControllerCore } from '@core/index';
+
+import { Login } from './auth.type';
+import { TokenDTO } from './dto';
+import { IAuthService } from './interface';
 
 /**
  * @openapi
@@ -9,10 +14,16 @@ import { ControllerCore } from '@core/index';
  *   description: auth
  */
 export default class AuthController extends ControllerCore {
-  constructor() {
+  constructor(private readonly service: IAuthService) {
     super();
 
     this.init();
     AutoBin(this);
+  }
+
+  async login(req: Request<any, any, Login>, res: Response) {
+    const data = await this.service.login(req.body);
+
+    return res.json(this.response(TokenDTO, data));
   }
 }

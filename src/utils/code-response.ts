@@ -16,6 +16,11 @@ export const CodeResponse = {
     code: HttpExceptionType.BAD_REQUEST,
     message: 'Bad Request',
   },
+  [HttpExceptionType.INVALID_CREDENTIALS]: {
+    message: 'Invalid credentials',
+    status: 400,
+    code: HttpExceptionType.INVALID_CREDENTIALS,
+  },
   [HttpExceptionType.TOKEN_EXPIRED]: {
     status: 401,
     code: HttpExceptionType.TOKEN_EXPIRED,

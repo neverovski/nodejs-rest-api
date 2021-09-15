@@ -3,7 +3,7 @@ import { getCustomRepository } from 'typeorm';
 
 import { JwtConfig } from '@config/index';
 import { ServiceCore } from '@core/index';
-import { UserService, UserDTO } from '@modules/user';
+import { UserService, FullUser } from '@modules/user';
 import {
   generateToken,
   convertToMS,
@@ -104,16 +104,14 @@ export default class TokenService extends ServiceCore implements ITokenService {
   // FIXME: conver to private
   async getUserFromRefreshTokenPayload(
     payload: RefreshTokenPayload,
-  ): Promise<UserDTO> {
+  ): Promise<FullUser> {
     const { sub } = payload;
 
     if (!sub) {
       throw responseError(HttpExceptionType.TOKEN_MALFORMED);
     }
 
-    const { data } = await this.userService.getOne({ id: +sub });
-
-    return data as UserDTO;
+    return this.userService.getOne({ id: +sub });
   }
 
   // FIXME: conver to private

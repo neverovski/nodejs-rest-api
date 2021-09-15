@@ -13,3 +13,9 @@ export type TokenPayload = {
 
 export type AccessTokenPayload = Pick<FullUser, 'email'> & TokenPayload;
 export type RefreshTokenPayload = TokenPayload;
+
+export type Login = Required<Pick<FullUser, 'email' | 'password'>>;
+export type ResponseToken = {
+  accessToken: string;
+  refreshToken: string;
+};

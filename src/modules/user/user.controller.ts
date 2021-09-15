@@ -2,6 +2,7 @@ import AutoBind from 'auto-bind';
 import { Request, Response } from 'express';
 
 import { ControllerCore } from '@core/index';
+import { responseOk, HttpExceptionType } from '@utils/index';
 
 import { IUserService } from './interface';
 import { User } from './user.type';
@@ -21,8 +22,8 @@ export default class UserController extends ControllerCore {
   }
 
   async create(req: Request<any, any, User>, res: Response) {
-    const data = await this.service.create(req.body);
+    await this.service.create(req.body);
 
-    return res.json(data);
+    return res.json(responseOk(HttpExceptionType.USER_CREATED));
   }
 }
