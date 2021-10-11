@@ -30,6 +30,7 @@ $ npm run start:prod
     - [ ] Google
     - [ ] Twitter
     - [ ] Github
+  - Unit test
 
 ## Project Structure
 

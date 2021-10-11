@@ -6,9 +6,7 @@ import { DB_TABLE_REFRESH_TOKEN } from '@utils/index';
 
 import { IRefreshToken } from '../interface';
 
-@Entity({
-  name: DB_TABLE_REFRESH_TOKEN,
-})
+@Entity({ name: DB_TABLE_REFRESH_TOKEN })
 export default class RefreshTokenEntity
   extends EntityCore<IRefreshToken>
   implements IRefreshToken

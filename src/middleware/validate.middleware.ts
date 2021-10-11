@@ -44,11 +44,6 @@ class ValidateMiddleware extends MiddlewareCore {
     });
   }
 
-  /**
-   * Handler
-   *
-   * @returns {Function}
-   */
   handler(schemas: IJsonSchema): RequestHandler {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {

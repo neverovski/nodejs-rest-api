@@ -11,6 +11,12 @@ export interface IHttpException {
   code: string;
 }
 
+export type PayloadJWT = {
+  sub: number;
+  email: string;
+  role: string;
+};
+
 export enum TypeToken {
   BEARER = 'Bearer',
 }
@@ -24,7 +30,21 @@ export enum HttpExceptionType {
   TOKEN_MALFORMED = 'TOKEN_MALFORMED',
   FORBIDDEN = 'FORBIDDEN',
   NOT_FOUND = 'NOT_FOUND',
+  USER_ALREADY_TAKEN = 'USER_ALREADY_TAKEN',
   UNPROCESSABLE_ENTITY = 'UNPROCESSABLE_ENTITY',
   ROUTE_NOT_FOUND = 'ROUTE_NOT_FOUND',
   SERVER_ERROR = 'SERVER_ERROR',
+}
+
+export enum HttpStatus {
+  OK = 200,
+  Created = 201,
+  NoContent = 204,
+  BadRequest = 400,
+  Unauthorized = 401,
+  Forbidden = 403,
+  NotFound = 404,
+  Conflict = 409,
+  UnprocessableEntity = 422,
+  InternalServerError = 500,
 }

@@ -1,63 +1,57 @@
 import { plainToClass, ClassTransformOptions } from 'class-transformer';
+import { Response } from 'express';
 
-import { responseError, HttpExceptionType } from '@utils/index';
+import { responseError, HttpExceptionType, HttpStatus } from '@utils/index';
 
 import Logger from './logger';
 
 export default class ControllerCore {
-  init(): void {
-    Logger.trace(`${this.constructor.name} initialized...`);
+  constructor() {
+    this.init();
   }
 
-  protected response<T, R>(
-    transformTo: { new (): R },
-    data: T[],
-    params?: {
+  response<T, DTO>(
+    res: Response,
+    ctx?: {
+      data: T | T[];
+      dto?: { new (): DTO };
+      status?: HttpStatus;
+      // page?: Page | null;
       options?: ClassTransformOptions;
-      page?: Page;
     },
-  ): ResponseData<R[]>;
+  ) {
+    const { data, options, dto } = ctx || {};
 
-  protected response<T, R>(
-    transformTo: { new (): R },
-    data: T,
-    params?: {
-      options?: ClassTransformOptions;
-      page?: Page;
-    },
-  ): ResponseData<R>;
-
-  protected response<T, R>(
-    transformTo: { new (): R },
-    data: T | T[],
-    params?: {
-      options?: ClassTransformOptions;
-      page?: Page;
-    },
-  ): ResponseData<R | R[]> {
-    if (!data) {
+    if (!data && ctx?.status === HttpStatus.OK) {
       throw responseError(HttpExceptionType.NOT_FOUND);
     }
 
-    const dataDTO = plainToClass(transformTo, data, params?.options || {});
-    const meta = params?.page ? this.pages(params.page) : null;
+    const status = !ctx ? HttpStatus.NoContent : ctx?.status || HttpStatus.OK;
 
-    return { data: dataDTO, ...(meta && { meta }) };
+    res.status(status).json({
+      ...(data && { data: dto ? plainToClass(dto, data, options) : data }),
+      // ...(page && { meta: this.pages(page) }),
+    });
   }
 
-  private pages(data: Page): Meta {
-    const currentPage = data.page;
-    const pages = data.limit > 0 ? Math.ceil(data.count / data.limit) || 1 : 1;
-    const totalPages = pages || 1;
-
-    return {
-      currentPage,
-      hasNextPage: currentPage < totalPages,
-      hasPrevPage: currentPage > 1,
-      nextPage: currentPage >= totalPages ? totalPages : currentPage + 1,
-      prevPage: currentPage <= totalPages ? currentPage - 1 : totalPages - 1,
-      totalPages,
-      totalItems: data.count,
-    };
+  private init(): void {
+    Logger.trace(`${this.constructor.name} initialized...`);
   }
+
+  // private pages(data: Page): Meta {
+  //   const currentPage = data.page;
+  //   const pages = data.limit > 0 ? Math.ceil(data.count / data.limit) || 1 : 1;
+  //   const totalPages = pages || 1;
+
+  //   return {
+  //     limit: data.limit,
+  //     currentPage,
+  //     hasNextPage: currentPage < totalPages,
+  //     hasPrevPage: currentPage > 1,
+  //     nextPage: currentPage >= totalPages ? totalPages : currentPage + 1,
+  //     prevPage: currentPage <= totalPages ? currentPage - 1 : totalPages - 1,
+  //     totalPages,
+  //     totalItems: data.count,
+  //   };
+  // }
 }

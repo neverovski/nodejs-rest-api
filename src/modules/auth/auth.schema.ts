@@ -7,7 +7,7 @@ export const LoginSchema: IJsonSchema = {
     $schema: 'http://json-schema.org/draft-07/schema#',
     type: 'object',
     additionalProperties: false,
-    required: ['email', 'profile', 'password'],
+    required: ['email', 'password'],
     properties: {
       email: {
         type: 'string',

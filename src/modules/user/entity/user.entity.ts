@@ -7,33 +7,22 @@ import { IUser } from '../interface';
 
 import ProfileEntity from './profile.entity';
 
-@Entity({
-  name: DB_TABLE_USER,
-})
+@Entity({ name: DB_TABLE_USER })
 export default class UserEntity extends EntityCore<IUser> implements IUser {
   @Index()
-  @Column('varchar', {
-    unique: true,
-  })
+  @Column('varchar', { unique: true })
   email!: string;
 
   @Index()
-  @Column('varchar', {
-    select: false,
-    nullable: true,
-  })
+  @Column('varchar', { nullable: true })
   password?: string;
 
-  @Column('bool', {
-    default: false,
-  })
+  @Column('bool', { default: false })
   isConfirmedEmail = false;
 
-  @Column('bool', {
-    default: false,
-  })
+  @Column('bool', { default: false })
   isActive = false;
 
-  @OneToOne(() => ProfileEntity, (profile) => profile.user)
+  @OneToOne(() => ProfileEntity, (profile) => profile.user, { eager: true })
   profile!: ProfileEntity;
 }

@@ -2,8 +2,9 @@ import AutoBind from 'auto-bind';
 import { Request, Response } from 'express';
 
 import { ControllerCore } from '@core/index';
-import { responseOk, HttpExceptionType } from '@utils/index';
+import { HttpExceptionType, HttpStatus } from '@utils/index';
 
+import { UserDTO } from './dto';
 import { IUserService } from './interface';
 import { User } from './user.type';
 
@@ -17,13 +18,23 @@ export default class UserController extends ControllerCore {
   constructor(private readonly service: IUserService) {
     super();
 
-    this.init();
     AutoBind(this);
   }
 
   async create(req: Request<any, any, User>, res: Response) {
     await this.service.create(req.body);
 
-    return res.json(responseOk(HttpExceptionType.USER_CREATED));
+    this.response(res, {
+      data: HttpExceptionType.USER_CREATED,
+      status: HttpStatus.Created,
+    });
+  }
+
+  async current(req: Request, res: Response) {
+    const { userId } = req.currentUser;
+
+    const data = await this.service.getOne({ id: userId });
+
+    this.response(res, { data, dto: UserDTO });
   }
 }

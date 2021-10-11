@@ -17,13 +17,12 @@ export default class AuthController extends ControllerCore {
   constructor(private readonly service: IAuthService) {
     super();
 
-    this.init();
     AutoBin(this);
   }
 
   async login(req: Request<any, any, Login>, res: Response) {
     const data = await this.service.login(req.body);
 
-    return res.json(this.response(TokenDTO, data));
+    this.response(res, { data, dto: TokenDTO });
   }
 }

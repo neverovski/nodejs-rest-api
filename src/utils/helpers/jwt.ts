@@ -1,6 +1,8 @@
+import { IncomingHttpHeaders } from 'http';
+
 import { SignOptions, sign, verify } from 'jsonwebtoken';
 
-import { HttpExceptionType } from '../utility-types';
+import { HttpExceptionType, TypeToken } from '../utility-types';
 
 import { convertToUnixTime } from './date';
 import { responseError } from './response';
@@ -30,4 +32,26 @@ export const generateToken = <T>(
   opts?: SignOptions,
 ): string => {
   return sign({ ...payload, iat: convertToUnixTime() }, secret, opts);
+};
+
+export const getTokenFromHeader = (
+  headers: IncomingHttpHeaders,
+): string | null => {
+  const authorization = headers.authorization || headers.Authorization;
+
+  if (
+    authorization &&
+    typeof authorization === 'string' &&
+    authorization.startsWith(`${TypeToken.BEARER} `)
+  ) {
+    return authorization.split(`${TypeToken.BEARER} `)[1] || null;
+  }
+
+  return null;
+};
+
+export const getTokenFromCookies = (cookies: any): string | null => {
+  const { accessToken } = cookies as { accessToken: string };
+
+  return accessToken || null;
 };

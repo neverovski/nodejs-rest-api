@@ -1,7 +1,11 @@
 import { Router } from 'express';
 
 import { RouterCore } from '@core/index';
-import { AsyncMiddleware, ValidateMiddleware } from '@middleware/index';
+import {
+  AsyncMiddleware,
+  ValidateMiddleware,
+  AuthMiddleware,
+} from '@middleware/index';
 
 import UserController from './user.controller';
 import { CreateUserSchema } from './user.schema';
@@ -21,6 +25,12 @@ export default class UserRouter extends RouterCore {
       '/',
       ValidateMiddleware.handler(CreateUserSchema),
       AsyncMiddleware(this.controller.create),
+    );
+
+    this.router.get(
+      '/current',
+      AuthMiddleware.handler(),
+      AsyncMiddleware(this.controller.current),
     );
 
     return this.router;
