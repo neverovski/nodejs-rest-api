@@ -11,13 +11,13 @@ export interface IHttpException {
   code: string;
 }
 
-export type PayloadJWT = {
+export type JWTPayload = {
   sub: number;
   email: string;
   role: string;
 };
 
-export enum TypeToken {
+export enum TokenType {
   BEARER = 'Bearer',
 }
 

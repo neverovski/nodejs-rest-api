@@ -40,7 +40,7 @@
     "auto-bind": "^4.0.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
-    "bull": "^3.29.2",
+    "bull": "^3.29.3",
     "class-transformer": "^0.4.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -73,7 +73,7 @@
     "@types/jsonwebtoken": "^8.5.5",
     "@types/mocha": "^9.0.0",
     "@types/ms": "^0.7.31",
-    "@types/node": "^16.10.3",
+    "@types/node": "^16.10.9",
     "@types/nodemailer": "^6.4.4",
     "@types/pg": "^8.6.1",
     "@types/pino": "^6.3.11",
@@ -89,7 +89,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.5.0",
-    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-sort-class-members": "^1.11.0",
     "husky": "^7.0.2",
@@ -101,7 +101,7 @@
     "tsc-watch": "^4.5.0",
     "tsconfig-paths": "^3.11.0",
     "tscpaths": "0.0.9",
-    "typescript": "^4.4.3"
+    "typescript": "^4.4.4"
   },
   "config": {
     "commitizen": {

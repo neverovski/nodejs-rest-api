@@ -4,7 +4,7 @@ import { RouterCore } from '@core/index';
 import { ValidateMiddleware, AsyncMiddleware } from '@middleware/index';
 
 import AuthController from './auth.controller';
-import { LoginSchema } from './auth.schema';
+import { LoginSchema, RefreshTokenSchema } from './auth.schema';
 import { AuthService } from './service';
 
 export default class AuthRouter extends RouterCore {
@@ -21,6 +21,12 @@ export default class AuthRouter extends RouterCore {
       '/login',
       ValidateMiddleware.handler(LoginSchema),
       AsyncMiddleware(this.controller.login),
+    );
+
+    this.router.post(
+      '/refresh-token',
+      ValidateMiddleware.handler(RefreshTokenSchema),
+      AsyncMiddleware(this.controller.refreshToken),
     );
 
     return this.router;

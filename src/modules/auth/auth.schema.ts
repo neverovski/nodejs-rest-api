@@ -21,3 +21,18 @@ export const LoginSchema: IJsonSchema = {
     },
   },
 };
+
+export const RefreshTokenSchema: IJsonSchema = {
+  params: { type: 'object', maxProperties: 0 },
+  query: { type: 'object', maxProperties: 0 },
+  body: {
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      refreshToken: {
+        type: 'string',
+      },
+    },
+  },
+};

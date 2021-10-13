@@ -4,7 +4,7 @@ import { JwtConfig } from '@config/index';
 import { MiddlewareCore } from '@core/index';
 import {
   verifyToken,
-  PayloadJWT,
+  JWTPayload,
   getTokenFromHeader,
   getTokenFromCookies,
   HttpExceptionType,
@@ -19,7 +19,7 @@ class AuthMiddleware extends MiddlewareCore {
 
       if (accessToken) {
         try {
-          const data = await verifyToken<PayloadJWT>(
+          const data = await verifyToken<JWTPayload>(
             accessToken,
             JwtConfig.secretAccessToken,
           );

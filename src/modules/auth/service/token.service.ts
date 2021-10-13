@@ -8,7 +8,7 @@ import {
   generateToken,
   convertToMS,
   addMillisecondToDate,
-  TypeToken,
+  TokenType,
   verifyToken,
   responseError,
   HttpExceptionType,
@@ -25,14 +25,15 @@ import { RefreshTokenRepository } from '../repository';
 export default class TokenService extends ServiceCore implements ITokenService {
   private readonly userService: UserService;
   private readonly repository: RefreshTokenRepository;
-  private readonly typeToken: TypeToken;
+  private readonly typeToken: TokenType;
 
   constructor() {
     super();
 
+    this.typeToken = TokenType.BEARER;
+
     this.userService = new UserService();
     this.repository = getCustomRepository(RefreshTokenRepository);
-    this.typeToken = TypeToken.BEARER;
   }
 
   generateAccessToken(
@@ -73,27 +74,28 @@ export default class TokenService extends ServiceCore implements ITokenService {
     return generateToken(payload, JwtConfig.secretRefreshToken, opts);
   }
 
-  // async resolveRefreshToken(
-  //   token: string,
-  // ): Promise<{ user: User; token: RefreshToken }> {
-  //   const payload = await this.decodeRefreshToken(token);
-  //   const token = await this.getStoredTokenFromRefreshTokenPayload(payload);
+  async resolveRefreshToken(
+    token: string,
+  ): Promise<{ user: FullUser; token: RefreshToken }> {
+    const payload = await this.decodeRefreshToken(token);
+    const refreshTokenFromDB = await this.getRefreshTokenFromPayload(payload);
 
-  //   if (token.is_revoked) {
-  //     throw new UnprocessableEntityException('Refresh token revoked');
-  //   }
+    if (refreshTokenFromDB?.isRevoked) {
+      throw responseError(HttpExceptionType.TOKEN_EXPIRED);
+    }
 
-  //   const user = await this.getUserFromRefreshTokenPayload(payload);
+    const user = await this.getUserFromRefreshTokenPayload(payload);
 
-  //   if (!user) {
-  //     throw new UnprocessableEntityException('Refresh token malformed');
-  //   }
+    if (!user) {
+      throw responseError(HttpExceptionType.TOKEN_MALFORMED);
+    }
 
-  //   return { user, token };
-  // }
+    return { user, token: refreshTokenFromDB };
+  }
 
-  // FIXME: conver to private
-  async decodeRefreshToken(token: string): Promise<RefreshTokenPayload> {
+  private async decodeRefreshToken(
+    token: string,
+  ): Promise<RefreshTokenPayload> {
     try {
       return verifyToken(token, JwtConfig.secretRefreshToken);
     } catch (err) {
@@ -101,8 +103,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     }
   }
 
-  // FIXME: conver to private
-  async getUserFromRefreshTokenPayload(
+  private getUserFromRefreshTokenPayload(
     payload: RefreshTokenPayload,
   ): Promise<FullUser> {
     const { sub } = payload;
@@ -114,10 +115,9 @@ export default class TokenService extends ServiceCore implements ITokenService {
     return this.userService.getOne({ id: +sub });
   }
 
-  // FIXME: conver to private
-  async getStoredTokenFromRefreshTokenPayload(
+  private getRefreshTokenFromPayload(
     payload: RefreshTokenPayload,
-  ): Promise<RefreshToken | null> {
+  ): Promise<RefreshToken> {
     const { jti, sub } = payload;
 
     if (!jti && !sub) {

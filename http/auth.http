@@ -5,3 +5,10 @@ POST {{baseUrl}}/api/auth/login
   "email": "test@test.test",
   "password": "123456"
 }
+
+### REFRESH-TOKEN
+POST {{baseUrl}}/api/auth/refresh-token
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiZjVuaUFfSWsySXFHZW9kZlNFTzhYIiwidHlwIjoiQmVhcmVyIiwiaWF0IjoxNjM0MTY0OTcxLCJleHAiOjE2MzY3NTY5NzF9.hvD6mfVwECOin5OD8mKU3S5oa1wYf4W9KxDL8D-ss9k"
+}

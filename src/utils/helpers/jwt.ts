@@ -2,7 +2,7 @@ import { IncomingHttpHeaders } from 'http';
 
 import { SignOptions, sign, verify } from 'jsonwebtoken';
 
-import { HttpExceptionType, TypeToken } from '../utility-types';
+import { HttpExceptionType, TokenType } from '../utility-types';
 
 import { convertToUnixTime } from './date';
 import { responseError } from './response';
@@ -42,9 +42,9 @@ export const getTokenFromHeader = (
   if (
     authorization &&
     typeof authorization === 'string' &&
-    authorization.startsWith(`${TypeToken.BEARER} `)
+    authorization.startsWith(`${TokenType.BEARER} `)
   ) {
-    return authorization.split(`${TypeToken.BEARER} `)[1] || null;
+    return authorization.split(`${TokenType.BEARER} `)[1] || null;
   }
 
   return null;
