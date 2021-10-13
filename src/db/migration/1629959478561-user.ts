@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
 import { DB_TABLE_USER } from '@utils/index';
 
@@ -20,14 +20,19 @@ export class user1629959478561 implements MigrationInterface {
             isUnique: true,
           },
           {
+            name: 'password',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
             name: 'isConfirmedEmail',
             type: 'bool',
-            default: true,
+            default: false,
           },
           {
             name: 'isActive',
             type: 'bool',
-            default: true,
+            default: false,
           },
           {
             name: 'createdAt',
@@ -40,6 +45,22 @@ export class user1629959478561 implements MigrationInterface {
             default: 'now()',
           },
         ],
+      }),
+    );
+
+    await queryRunner.createIndex(
+      DB_TABLE_USER,
+      new TableIndex({
+        name: `IDX_${DB_TABLE_USER.toUpperCase()}_EMAIL`,
+        columnNames: ['email'],
+      }),
+    );
+
+    await queryRunner.createIndex(
+      DB_TABLE_USER,
+      new TableIndex({
+        name: `IDX_${DB_TABLE_USER.toUpperCase()}_PASSWORD`,
+        columnNames: ['password'],
       }),
     );
   }

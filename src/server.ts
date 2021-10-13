@@ -1,6 +1,6 @@
 import http from 'http';
 
-import { urlencoded } from 'body-parser';
+import { json, urlencoded } from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
@@ -47,6 +47,7 @@ export default class Server {
   private middleware(): void {
     this.app.use(helmet());
     this.app.use(cors());
+    this.app.use(json());
     this.app.use(urlencoded({ extended: false }));
     this.app.use(cookieParser());
 

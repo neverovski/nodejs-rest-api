@@ -7,7 +7,22 @@ services:
     networks:
       - auth-network
     ports:
-      - 6363:6379
+      - 6969:6379
+    restart: unless-stopped
+
+  auth-db:
+    image: postgres:13
+    container_name: auth-db
+    volumes:
+      - ./data/postgresql/server:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - auth-network
+    ports:
+      - 54323:5432
     restart: unless-stopped
 
 networks:

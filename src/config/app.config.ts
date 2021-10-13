@@ -1,20 +1,11 @@
-import path from 'path';
-
 import { ConfigCore } from '@core/index';
-import {
-  ENV_DEVELOPMENT,
-  ENV_PRODUCTION,
-  ENV_TEST,
-  FOLDER_SCRIPT,
-} from '@utils/constants';
+import { ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST } from '@utils/constants';
 
 class AppConfig extends ConfigCore {
   readonly env: string;
   readonly name: string;
   readonly port: number;
   readonly host: string;
-  readonly deployToken: string;
-  readonly pathFileDeploy: string;
 
   constructor() {
     super();
@@ -35,22 +26,6 @@ class AppConfig extends ConfigCore {
       this.joi.string().required(),
       'http://localhost',
     );
-    this.deployToken = this.set<string>(
-      'SECRET_DEPLOY_TOKEN',
-      this.joi.string().required(),
-      'localhost',
-    );
-    this.pathFileDeploy = this.fileDeploy;
-  }
-
-  private get fileDeploy(): string {
-    const fileName = this.set<string>(
-      'FILE_SCRIPT_DEPLOY',
-      this.joi.string().required(),
-      'deploy.sh',
-    );
-
-    return path.join(process.cwd(), FOLDER_SCRIPT, fileName);
   }
 }
 

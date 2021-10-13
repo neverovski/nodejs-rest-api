@@ -3,6 +3,7 @@ import {
   QueryRunner,
   Table,
   TableForeignKey,
+  TableIndex,
 } from 'typeorm';
 
 import { DB_TABLE_PROFILE, DB_TABLE_USER } from '@utils/index';
@@ -43,6 +44,14 @@ export class profile1629959478687 implements MigrationInterface {
             default: 'now()',
           },
         ],
+      }),
+    );
+
+    await queryRunner.createIndex(
+      DB_TABLE_PROFILE,
+      new TableIndex({
+        name: `IDX_${DB_TABLE_PROFILE.toUpperCase()}_USER_ID`,
+        columnNames: ['userId'],
       }),
     );
 

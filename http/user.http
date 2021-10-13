@@ -1,0 +1,24 @@
+### CURRENT USER
+GET {{baseUrl}}/api/users/current
+Authorization: Bearer {{$dotenv HTTP_TEST_ACCESS_TOKEN}}
+
+{
+  "email": "test@test.test",
+  "password": "123456",
+  "profile": {
+    "firstName": "D",
+    "lastName": "N"
+  }
+}
+
+### CREATE USER
+POST {{baseUrl}}/api/users
+
+{
+  "email": "test@test.test",
+  "password": "123456",
+  "profile": {
+    "firstName": "D",
+    "lastName": "N"
+  }
+}

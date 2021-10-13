@@ -19,17 +19,18 @@ $ npm run start:prod
 
 ## Next steps
   - Auth
-    - [ ] Authenticate user
-    - [ ] Refresh token
+    - [X] Authenticate user
+    - [X] Refresh token
     - [ ] Logout a user
   - User
-    - [ ] Сreate a new user
+    - [X] Сreate a new user
     - [ ] Update user
   - Platform
     - [ ] Facebook
     - [ ] Google
     - [ ] Twitter
     - [ ] Github
+  - Unit test
 
 ## Project Structure
 

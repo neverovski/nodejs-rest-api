@@ -1,0 +1,68 @@
+import { ServiceCore } from '@core/index';
+import { UserService } from '@modules/user';
+import { HttpExceptionType, responseError, TokenType } from '@utils/index';
+
+import { LoginRequest, RefreshTokenRequest } from '../auth.type';
+import { IAuthService } from '../interface';
+
+import TokenService from './token.service';
+
+export default class AuthService extends ServiceCore implements IAuthService {
+  private readonly userService: UserService;
+  private readonly tokenService: TokenService;
+
+  constructor() {
+    super();
+
+    this.userService = new UserService();
+    this.tokenService = new TokenService();
+  }
+
+  forgotPassword() {
+    throw new Error('Method not implemented.');
+  }
+
+  resetPassword() {
+    throw new Error('Method not implemented.');
+  }
+
+  async login(body: LoginRequest) {
+    const { email, password } = body;
+    const user = await this.userService.getOne({ email });
+    const valid = await this.userService.validateCredentials(user, password);
+
+    if (!valid) {
+      throw responseError(HttpExceptionType.INVALID_CREDENTIALS);
+    }
+
+    const accessToken = this.tokenService.generateAccessToken({
+      userId: user.id,
+      email,
+    });
+    const refreshToken = await this.tokenService.generateRefreshToken({
+      userId: user.id,
+    });
+
+    return { type: TokenType.BEARER, accessToken, refreshToken };
+  }
+
+  logout() {
+    throw new Error('Method not implemented.');
+  }
+
+  async refreshToken(body: RefreshTokenRequest) {
+    const { user } = await this.tokenService.resolveRefreshToken(
+      body.refreshToken,
+    );
+
+    const accessToken = this.tokenService.generateAccessToken({
+      userId: user.id,
+      email: user.email,
+    });
+    const refreshToken = await this.tokenService.generateRefreshToken({
+      userId: user.id,
+    });
+
+    return { type: TokenType.BEARER, accessToken, refreshToken };
+  }
+}
