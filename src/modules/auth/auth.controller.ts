@@ -1,5 +1,5 @@
-import AutoBin from 'auto-bind';
 import { Response, Request } from 'express';
+import { injectable, inject } from 'tsyringe';
 
 import { ControllerCore } from '@core/index';
 
@@ -13,11 +13,10 @@ import { IAuthService } from './interface';
  *   name: Auth
  *   description: auth
  */
+@injectable()
 export default class AuthController extends ControllerCore {
-  constructor(private readonly service: IAuthService) {
+  constructor(@inject('AuthService') private service: IAuthService) {
     super();
-
-    AutoBin(this);
   }
 
   async login(req: Request<any, any, LoginRequest>, res: Response) {

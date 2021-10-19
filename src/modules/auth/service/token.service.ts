@@ -10,7 +10,7 @@ import {
   addMillisecondToDate,
   TokenType,
   verifyToken,
-  responseError,
+  codeError,
   HttpExceptionType,
 } from '@utils/index';
 
@@ -82,13 +82,13 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const refreshTokenFromDB = await this.getRefreshTokenFromPayload(payload);
 
     if (refreshTokenFromDB?.isRevoked) {
-      throw responseError(HttpExceptionType.TOKEN_EXPIRED);
+      throw codeError(HttpExceptionType.TOKEN_EXPIRED);
     }
 
     const user = await this.getUserFromRefreshTokenPayload(payload);
 
     if (!user) {
-      throw responseError(HttpExceptionType.TOKEN_MALFORMED);
+      throw codeError(HttpExceptionType.TOKEN_MALFORMED);
     }
 
     return { user, token: refreshTokenFromDB };
@@ -113,7 +113,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const { jti, sub } = payload;
 
     if (!jti && !sub) {
-      throw responseError(HttpExceptionType.TOKEN_MALFORMED);
+      throw codeError(HttpExceptionType.TOKEN_MALFORMED);
     }
 
     return this.repository.findOneOrFail({ userId: +sub, jwtid: jti });
@@ -125,7 +125,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const { sub } = payload;
 
     if (!sub) {
-      throw responseError(HttpExceptionType.TOKEN_MALFORMED);
+      throw codeError(HttpExceptionType.TOKEN_MALFORMED);
     }
 
     return this.userService.getOne({ id: +sub });

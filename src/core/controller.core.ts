@@ -1,13 +1,16 @@
+import AutoBind from 'auto-bind';
 import { plainToClass, ClassTransformOptions } from 'class-transformer';
 import { Response } from 'express';
 
-import { responseError, HttpExceptionType, HttpStatus } from '@utils/index';
+import { codeError, HttpExceptionType, HttpStatus } from '@utils/index';
 
 import Logger from './logger';
 
 export default class ControllerCore {
   constructor() {
     this.init();
+
+    AutoBind(this);
   }
 
   response<T, DTO>(
@@ -23,7 +26,7 @@ export default class ControllerCore {
     const { data, options, dto } = ctx || {};
 
     if (!data && ctx?.status === HttpStatus.OK) {
-      throw responseError(HttpExceptionType.NOT_FOUND);
+      throw codeError(HttpExceptionType.NOT_FOUND);
     }
 
     const status = !ctx ? HttpStatus.NoContent : ctx?.status || HttpStatus.OK;

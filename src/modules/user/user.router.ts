@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { container } from 'tsyringe';
 
 import { RouterCore } from '@core/index';
 import {
@@ -17,7 +18,10 @@ export default class UserRouter extends RouterCore {
   constructor() {
     super(Router());
 
-    this.controller = new UserController(new UserService());
+    container.register('UserService', {
+      useClass: UserService,
+    });
+    this.controller = container.resolve(UserController);
   }
 
   init(): Router {

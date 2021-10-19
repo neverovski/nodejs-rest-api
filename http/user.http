@@ -15,7 +15,7 @@ Authorization: Bearer {{$dotenv HTTP_TEST_ACCESS_TOKEN}}
 POST {{baseUrl}}/api/users
 
 {
-  "email": "test@test.test",
+  "email": "test5@test.test",
   "password": "123456",
   "profile": {
     "firstName": "D",
