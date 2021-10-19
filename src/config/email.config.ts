@@ -2,11 +2,11 @@ import { ConfigCore } from '@core/index';
 
 class EmailConfig extends ConfigCore {
   readonly driver: string;
+  readonly encryption: string;
   readonly host: string;
+  readonly password: string;
   readonly port: number;
   readonly username: string;
-  readonly password: string;
-  readonly encryption: string;
 
   constructor() {
     super();

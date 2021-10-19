@@ -17,18 +17,18 @@ export default class UserService extends ServiceCore implements IUserService {
     this.repository = getCustomRepository(UserRepository);
   }
 
-  async getOne(query: Partial<FullUser>) {
-    const userFromDB = await this.repository.findOneUserOrFail(query);
-
-    return userFromDB as FullUser;
-  }
-
   async create(body: User) {
     try {
       await this.repository.createUser(body);
     } catch {
       throw responseError(HttpExceptionType.USER_ALREADY_TAKEN);
     }
+  }
+
+  async getOne(query: Partial<FullUser>) {
+    const userFromDB = await this.repository.findOneUserOrFail(query);
+
+    return userFromDB as FullUser;
   }
 
   async validateCredentials(

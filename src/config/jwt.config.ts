@@ -1,10 +1,10 @@
 import { ConfigCore } from '@core/index';
 
 class JwtConfig extends ConfigCore {
-  readonly secretAccessToken: string;
-  readonly secretRefreshToken: string;
   readonly expiresInAccessToken: string;
   readonly expiresInRefreshToken: string;
+  readonly secretAccessToken: string;
+  readonly secretRefreshToken: string;
 
   constructor() {
     super();

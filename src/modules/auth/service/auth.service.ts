@@ -2,14 +2,14 @@ import { ServiceCore } from '@core/index';
 import { UserService } from '@modules/user';
 import { HttpExceptionType, responseError, TokenType } from '@utils/index';
 
-import { LoginRequest, RefreshTokenRequest } from '../auth.type';
+import { LoginRequest, RefreshTokenRequest, LogoutRequest } from '../auth.type';
 import { IAuthService } from '../interface';
 
 import TokenService from './token.service';
 
 export default class AuthService extends ServiceCore implements IAuthService {
-  private readonly userService: UserService;
   private readonly tokenService: TokenService;
+  private readonly userService: UserService;
 
   constructor() {
     super();
@@ -19,10 +19,6 @@ export default class AuthService extends ServiceCore implements IAuthService {
   }
 
   forgotPassword() {
-    throw new Error('Method not implemented.');
-  }
-
-  resetPassword() {
     throw new Error('Method not implemented.');
   }
 
@@ -46,8 +42,10 @@ export default class AuthService extends ServiceCore implements IAuthService {
     return { type: TokenType.BEARER, accessToken, refreshToken };
   }
 
-  logout() {
-    throw new Error('Method not implemented.');
+  async logout(body: LogoutRequest) {
+    const { userId } = body;
+
+    await this.tokenService.update({ userId }, { isRevoked: true });
   }
 
   async refreshToken(body: RefreshTokenRequest) {
@@ -64,5 +62,9 @@ export default class AuthService extends ServiceCore implements IAuthService {
     });
 
     return { type: TokenType.BEARER, accessToken, refreshToken };
+  }
+
+  resetPassword() {
+    throw new Error('Method not implemented.');
   }
 }

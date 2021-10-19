@@ -20,6 +20,27 @@ class ValidateMiddleware extends MiddlewareCore {
     this.ajv.addFormat('phone', /^\+[0-9]*/);
   }
 
+  handler(schemas: IJsonSchema): RequestHandler {
+    return async (
+      req: Request<Record<string, unknown>, any, Record<string, unknown>>,
+      res: Response,
+      next: NextFunction,
+    ) => {
+      try {
+        await this.validate(schemas.params, req.params);
+        await this.validate(schemas.query, req.query);
+        await this.validate(schemas.body, req.body);
+        next();
+      } catch (errors) {
+        res.status(422).json({
+          ...CodeResponse.UNPROCESSABLE_ENTITY,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          errors,
+        });
+      }
+    };
+  }
+
   private async validate(
     schema: JSONSchema7,
     data: Record<string, unknown>,
@@ -42,22 +63,6 @@ class ValidateMiddleware extends MiddlewareCore {
         resolve();
       }
     });
-  }
-
-  handler(schemas: IJsonSchema): RequestHandler {
-    return async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        await this.validate(schemas.params, req.params);
-        await this.validate(schemas.query, req.query);
-        await this.validate(schemas.body, req.body);
-        next();
-      } catch (errors) {
-        res.status(422).json({
-          ...CodeResponse.UNPROCESSABLE_ENTITY,
-          errors,
-        });
-      }
-    };
   }
 }
 

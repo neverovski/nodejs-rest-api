@@ -1,9 +1,9 @@
 import { ConfigCore } from '@core/index';
 
 class RedisConfig extends ConfigCore {
-  readonly port: number;
   readonly host: string;
   readonly password: string;
+  readonly port: number;
   readonly time: number;
 
   constructor() {

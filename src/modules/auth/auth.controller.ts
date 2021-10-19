@@ -26,6 +26,14 @@ export default class AuthController extends ControllerCore {
     this.response(res, { data, dto: TokenDTO });
   }
 
+  async logout(req: Request, res: Response) {
+    const { userId } = req.currentUser;
+
+    await this.service.logout({ userId });
+
+    this.response(res);
+  }
+
   async refreshToken(
     req: Request<any, any, RefreshTokenRequest>,
     res: Response,

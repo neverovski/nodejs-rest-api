@@ -8,8 +8,12 @@ import {
 
 import { DB_TABLE_REFRESH_TOKEN, DB_TABLE_USER } from '@utils/index';
 
-export class refreshToken1629959489269 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+export class RefreshToken1629959489269 implements MigrationInterface {
+  async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable(DB_TABLE_REFRESH_TOKEN);
+  }
+
+  async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: DB_TABLE_REFRESH_TOKEN,
@@ -96,9 +100,5 @@ export class refreshToken1629959489269 implements MigrationInterface {
         columnNames: ['jwtid'],
       }),
     );
-  }
-
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(DB_TABLE_REFRESH_TOKEN);
   }
 }

@@ -1,9 +1,14 @@
-import { LoginRequest, RefreshTokenRequest, TokenResponse } from '../auth.type';
+import {
+  LoginRequest,
+  RefreshTokenRequest,
+  TokenResponse,
+  LogoutRequest,
+} from '../auth.type';
 
 export interface IAuthService {
   forgotPassword(): void;
-  resetPassword(): void;
   login(body: LoginRequest): Promise<TokenResponse>;
-  logout(): void;
+  logout(body: LogoutRequest): Promise<void>;
   refreshToken(body: RefreshTokenRequest): Promise<TokenResponse>;
+  resetPassword(): void;
 }

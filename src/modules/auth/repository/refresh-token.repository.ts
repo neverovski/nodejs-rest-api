@@ -2,7 +2,7 @@ import { EntityRepository } from 'typeorm';
 
 import { RepositoryCore } from '@core/index';
 
-import { RefreshToken } from '../auth.type';
+import { FullRefreshToken, RefreshToken } from '../auth.type';
 import { RefreshTokenEntity } from '../entity';
 
 @EntityRepository(RefreshTokenEntity)
@@ -17,5 +17,12 @@ export default class RefreshTokenRepository extends RepositoryCore<RefreshTokenE
     query: Partial<RefreshToken>,
   ): Promise<RefreshToken> {
     return this.findOneOrFail({ where: query });
+  }
+
+  async updateRefreshToken(
+    query: Partial<FullRefreshToken>,
+    body: Partial<RefreshToken>,
+  ): Promise<void> {
+    await this.update(query, body);
   }
 }

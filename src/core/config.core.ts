@@ -31,10 +31,12 @@ export default class ConfigCore {
       item = defaultVal;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { error, value } = validator.validate(item);
 
     if (!error) return value as T;
     throw new Error(
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       `Wrong "${env}" variable; Value: "${value}" is invalid. ${error}`,
     );
   }

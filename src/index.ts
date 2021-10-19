@@ -23,12 +23,14 @@ db.connect()
       })
       .catch((error) => {
         EventEmitter.emit('close');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         Logger.error('Server fails to initialize...', error);
         process.exit(1);
       });
   })
   .catch((error) => {
     EventEmitter.emit('close');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     Logger.error('Database fails to initialize...', error);
     process.exit(1);
   });

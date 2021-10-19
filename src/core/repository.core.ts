@@ -11,11 +11,15 @@ import { OptionCtx } from '@utils/index';
 export default class RepositoryCore<
   Entity extends ObjectLiteral,
 > extends Repository<Entity> {
-  async findEntityList(options: OptionCtx<Entity> = {}): Promise<Entity[]> {
+  async deleteEntity(query: FindConditions<Entity>): Promise<void> {
+    await this.delete(query);
+  }
+
+  findEntityList(options: OptionCtx<Entity> = {}): Promise<Entity[]> {
     return this.find(options);
   }
 
-  async findEntityOneOrFail(options: OptionCtx<Entity> = {}): Promise<Entity> {
+  findEntityOneOrFail(options: OptionCtx<Entity> = {}): Promise<Entity> {
     return this.findOneOrFail(options);
   }
 
@@ -45,9 +49,5 @@ export default class RepositoryCore<
         .returning('*')
         .execute()
     ).generatedMaps[0] as E;
-  }
-
-  async deleteEntity(query: FindConditions<Entity>): Promise<void> {
-    await this.delete(query);
   }
 }

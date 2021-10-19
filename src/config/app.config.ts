@@ -3,9 +3,9 @@ import { ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST } from '@utils/constants';
 
 class AppConfig extends ConfigCore {
   readonly env: string;
+  readonly host: string;
   readonly name: string;
   readonly port: number;
-  readonly host: string;
 
   constructor() {
     super();

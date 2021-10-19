@@ -5,15 +5,15 @@ import { ProfileDTO } from './profile.dto';
 @Exclude()
 export class UserDTO {
   @Expose()
-  id!: number;
+  createdAt!: Date;
 
   @Expose()
   email!: string;
 
   @Expose()
-  @Type(() => ProfileDTO)
-  profile!: ProfileDTO;
+  id!: number;
 
   @Expose()
-  createdAt!: Date;
+  @Type(() => ProfileDTO)
+  profile!: ProfileDTO;
 }

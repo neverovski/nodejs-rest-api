@@ -1,14 +1,14 @@
 import { ConfigCore } from '@core/index';
 
 class DBConfig extends ConfigCore {
+  readonly charset: string;
   readonly client: string;
+  readonly database: string;
+  readonly debug: boolean;
   readonly host: string;
+  readonly password: string;
   readonly port: number;
   readonly user: string;
-  readonly password: string;
-  readonly database: string;
-  readonly charset: string;
-  readonly debug: boolean;
 
   constructor() {
     super();

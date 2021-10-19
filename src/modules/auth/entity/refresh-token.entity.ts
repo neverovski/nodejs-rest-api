@@ -11,33 +11,33 @@ export default class RefreshTokenEntity
   extends EntityCore<IRefreshToken>
   implements IRefreshToken
 {
-  @Index()
-  @Column('int')
-  userId!: number;
+  @Column('text', { nullable: true })
+  browser!: string;
 
-  @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
-  user!: UserEntity;
+  @Column('timestamp')
+  expiredAt!: Date;
+
+  @Column('cidr', { nullable: true })
+  ip!: string;
+
+  @Column('boolean', { default: false })
+  isRevoked = false;
 
   @Index()
   @Column('varchar')
   jwtid!: string;
 
-  @Column('boolean', { default: false })
-  isRevoked = false;
-
-  @Column('cidr', { nullable: true })
-  ip!: string;
-
   @Column('text', { nullable: true })
   os!: string;
 
-  @Column('text', { nullable: true })
-  browser!: string;
+  @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  user!: UserEntity;
 
   @Column('text', { nullable: true })
   userAgent!: string;
 
-  @Column('timestamp')
-  expiredAt!: Date;
+  @Index()
+  @Column('int')
+  userId!: number;
 }

@@ -5,11 +5,11 @@ import {
 } from 'typeorm';
 
 export default class EntityCore<T> {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
   @CreateDateColumn()
   createdAt!: Date;
+
+  @PrimaryGeneratedColumn()
+  id!: number;
 
   @UpdateDateColumn()
   updatedAt!: Date;
