@@ -12,18 +12,18 @@ export default class ProfileEntity
   extends EntityCore<IProfile>
   implements IProfile
 {
-  @Column('int', { unique: true })
-  userId!: number;
-
-  @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
-  user!: UserEntity;
-
   @Column('varchar')
   firstName!: string;
 
   @Column('varchar')
   lastName!: string;
+
+  @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  user!: UserEntity;
+
+  @Column('int', { unique: true })
+  userId!: number;
 
   public get fullName(): string {
     return `${this.firstName || ''} ${this.lastName || ''}`.trim();

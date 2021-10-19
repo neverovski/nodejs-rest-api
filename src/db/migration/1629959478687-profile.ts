@@ -8,8 +8,12 @@ import {
 
 import { DB_TABLE_PROFILE, DB_TABLE_USER } from '@utils/index';
 
-export class profile1629959478687 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+export class Profile1629959478687 implements MigrationInterface {
+  async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable(DB_TABLE_PROFILE);
+  }
+
+  async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: DB_TABLE_PROFILE,
@@ -64,9 +68,5 @@ export class profile1629959478687 implements MigrationInterface {
         onDelete: 'CASCADE',
       }),
     );
-  }
-
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(DB_TABLE_PROFILE);
   }
 }

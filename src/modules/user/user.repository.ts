@@ -8,12 +8,6 @@ import { User, FullUser } from './user.type';
 
 @EntityRepository(UserEntity)
 export default class UserRepository extends RepositoryCore<UserEntity> {
-  async findOneUserOrFail(query: Partial<FullUser>): Promise<UserEntity> {
-    return this.findOneOrFail({
-      where: query,
-    });
-  }
-
   async createUser(body: User): Promise<UserEntity> {
     return this.manager.transaction(async (transaction) => {
       const { password, profile, ...data } = body;
@@ -32,6 +26,12 @@ export default class UserRepository extends RepositoryCore<UserEntity> {
       }
 
       return user;
+    });
+  }
+
+  async findOneUserOrFail(query: Partial<FullUser>): Promise<UserEntity> {
+    return this.findOneOrFail({
+      where: query,
     });
   }
 }

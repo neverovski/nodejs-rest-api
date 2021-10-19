@@ -13,15 +13,15 @@ export default class UserEntity extends EntityCore<IUser> implements IUser {
   @Column('varchar', { unique: true })
   email!: string;
 
-  @Index()
-  @Column('varchar', { nullable: true })
-  password?: string;
+  @Column('bool', { default: false })
+  isActive = false;
 
   @Column('bool', { default: false })
   isConfirmedEmail = false;
 
-  @Column('bool', { default: false })
-  isActive = false;
+  @Index()
+  @Column('varchar', { nullable: true })
+  password?: string;
 
   @OneToOne(() => ProfileEntity, (profile) => profile.user, { eager: true })
   profile!: ProfileEntity;

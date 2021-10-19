@@ -5,17 +5,13 @@
     }
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "prettier", // npm module eslint-plugin-prettier
-    "import", // npm module eslint-plugin-import
-    "sort-class-members" // npm module eslint-plugin-sort-class-members
-  ],
+  "plugins": ["prettier", "import"],
   "extends": [
-    "airbnb-base", // npm module eslint-config-airbnb-base
+    "airbnb-typescript/base",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:prettier/recommended",
-    "prettier" // npm module eslint-config-prettier
+    "prettier"
   ],
   "parserOptions": {
     "ecmaVersion": 2020,
@@ -29,37 +25,19 @@
     "mocha": true
   },
   "rules": {
-    "no-debugger": "off",
+    "no-var": "error",
+    "no-debugger": "error",
+    "no-console": 0,
     "no-restricted-syntax": ["off", "ForOfStatement"],
-    "lines-between-class-members": [
-      "error",
-      "always",
-      { "exceptAfterSingleLine": true }
-    ],
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "ts": "never"
-      }
-    ],
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "lines-between-class-members": "off",
     "class-methods-use-this": "off",
-    "import/prefer-default-export": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/restrict-template-expressions": "off",
-    "@typescript-eslint/no-unsafe-assignment": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/unbound-method": "off",
-    "@typescript-eslint/no-misused-promises": "off",
-    "@typescript-eslint/no-floating-promises": "off",
-    "indent": ["error", 2, { "SwitchCase": 1 }],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "object-curly-spacing": ["error", "always"],
     "key-spacing": ["error", { "afterColon": true }],
     "no-multi-spaces": "error",
-    "prettier/prettier": "error",
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "import/prefer-default-export": "off",
     "import/no-duplicates": ["error", { "considerQueryString": true }],
     "import/order": [
       "error",
@@ -72,23 +50,6 @@
         }
       }
     ],
-    "sort-class-members/sort-class-members": [
-      2,
-      {
-        "order": [
-          "[properties]",
-          "[conventional-private-properties]",
-          "[static-properties]",
-          "constructor",
-          "[methods]",
-          "[conventional-private-methods]",
-          "[static-methods]"
-        ],
-        "accessorPairPositioning": "getThenSet"
-      }
-    ],
-    "no-shadow": "off",
-    "@typescript-eslint/no-shadow": "error",
     "padding-line-between-statements": [
       "error",
       { "blankLine": "always", "prev": "*", "next": "return" },
@@ -97,6 +58,83 @@
         "blankLine": "any",
         "prev": ["const", "let", "var"],
         "next": ["const", "let", "var"]
+      }
+    ],
+    "prettier/prettier": "error",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/unbound-method": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/member-ordering": [
+      "error",
+      {
+        "default": {
+          "memberTypes": [
+            // Index signature
+            "signature",
+
+            // Fields
+            "public-instance-field",
+            "protected-instance-field",
+            "private-instance-field",
+            "public-static-field",
+            "protected-static-field",
+            "private-static-field",
+            "public-abstract-field",
+            "protected-abstract-field",
+            "private-abstract-field",
+
+            // Constructors
+            "public-constructor",
+            "protected-constructor",
+            "private-constructor",
+
+            // Getters
+            "public-instance-get",
+            "protected-instance-get",
+            "private-instance-get",
+            "public-static-get",
+            "protected-static-get",
+            "private-static-get",
+            "public-abstract-get",
+            "protected-abstract-get",
+            "private-abstract-get",
+
+            // Setters
+            "public-instance-set",
+            "protected-instance-set",
+            "private-instance-set",
+            "public-static-set",
+            "protected-static-set",
+            "private-static-set",
+            "public-abstract-set",
+            "protected-abstract-set",
+            "private-abstract-set",
+
+            // Methods
+            "public-instance-method",
+            "protected-instance-method",
+            "private-instance-method",
+            "public-static-method",
+            "protected-static-method",
+            "private-static-method",
+            "public-abstract-method",
+            "protected-abstract-method",
+            "private-abstract-method"
+          ],
+          "order": "alphabetically"
+        }
+      }
+    ],
+    "@typescript-eslint/lines-between-class-members": [
+      "error",
+      "always",
+      { "exceptAfterSingleLine": true }
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never"
       }
     ]
   }

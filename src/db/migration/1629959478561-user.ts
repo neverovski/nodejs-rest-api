@@ -2,8 +2,12 @@ import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
 import { DB_TABLE_USER } from '@utils/index';
 
-export class user1629959478561 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+export class User1629959478561 implements MigrationInterface {
+  async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable(DB_TABLE_USER);
+  }
+
+  async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: DB_TABLE_USER,
@@ -63,9 +67,5 @@ export class user1629959478561 implements MigrationInterface {
         columnNames: ['password'],
       }),
     );
-  }
-
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(DB_TABLE_USER);
   }
 }

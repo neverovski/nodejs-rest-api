@@ -6,6 +6,10 @@ POST {{baseUrl}}/api/auth/login
   "password": "123456"
 }
 
+### LOGOUT
+POST {{baseUrl}}/api/auth/logout
+Authorization: Bearer {{$dotenv HTTP_TEST_ACCESS_TOKEN}}
+
 ### REFRESH-TOKEN
 POST {{baseUrl}}/api/auth/refresh-token
 

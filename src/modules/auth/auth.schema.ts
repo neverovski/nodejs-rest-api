@@ -36,3 +36,9 @@ export const RefreshTokenSchema: IJsonSchema = {
     },
   },
 };
+
+export const LogoutSchema: IJsonSchema = {
+  params: { type: 'object', maxProperties: 0 },
+  query: { type: 'object', maxProperties: 0 },
+  body: { type: 'object', maxProperties: 0 },
+};

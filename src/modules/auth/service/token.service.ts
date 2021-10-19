@@ -18,14 +18,15 @@ import {
   RefreshToken,
   AccessTokenPayload,
   RefreshTokenPayload,
+  FullRefreshToken,
 } from '../auth.type';
 import { ITokenService } from '../interface';
 import { RefreshTokenRepository } from '../repository';
 
 export default class TokenService extends ServiceCore implements ITokenService {
-  private readonly userService: UserService;
   private readonly repository: RefreshTokenRepository;
   private readonly typeToken: TokenType;
+  private readonly userService: UserService;
 
   constructor() {
     super();
@@ -76,7 +77,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
 
   async resolveRefreshToken(
     token: string,
-  ): Promise<{ user: FullUser; token: RefreshToken }> {
+  ): Promise<{ token: RefreshToken; user: FullUser }> {
     const payload = await this.decodeRefreshToken(token);
     const refreshTokenFromDB = await this.getRefreshTokenFromPayload(payload);
 
@@ -93,26 +94,17 @@ export default class TokenService extends ServiceCore implements ITokenService {
     return { user, token: refreshTokenFromDB };
   }
 
-  private async decodeRefreshToken(
-    token: string,
-  ): Promise<RefreshTokenPayload> {
+  async update(query: Partial<FullRefreshToken>, body: Partial<RefreshToken>) {
+    await this.repository.updateRefreshToken(query, body);
+  }
+
+  private decodeRefreshToken(token: string): Promise<RefreshTokenPayload> {
     try {
       return verifyToken(token, JwtConfig.secretRefreshToken);
     } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       throw new Error(err);
     }
-  }
-
-  private getUserFromRefreshTokenPayload(
-    payload: RefreshTokenPayload,
-  ): Promise<FullUser> {
-    const { sub } = payload;
-
-    if (!sub) {
-      throw responseError(HttpExceptionType.TOKEN_MALFORMED);
-    }
-
-    return this.userService.getOne({ id: +sub });
   }
 
   private getRefreshTokenFromPayload(
@@ -125,5 +117,17 @@ export default class TokenService extends ServiceCore implements ITokenService {
     }
 
     return this.repository.findOneOrFail({ userId: +sub, jwtid: jti });
+  }
+
+  private getUserFromRefreshTokenPayload(
+    payload: RefreshTokenPayload,
+  ): Promise<FullUser> {
+    const { sub } = payload;
+
+    if (!sub) {
+      throw responseError(HttpExceptionType.TOKEN_MALFORMED);
+    }
+
+    return this.userService.getOne({ id: +sub });
   }
 }

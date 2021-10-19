@@ -5,9 +5,9 @@ type HttpDetail = {
 };
 
 export default class HttpException extends Error {
-  readonly status: number;
   readonly code: string;
   readonly message: string;
+  readonly status: number;
 
   constructor(detail: HttpDetail) {
     super();

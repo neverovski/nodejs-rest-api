@@ -19,9 +19,9 @@ type ServerType = {
 export default class Server {
   app!: express.Express;
   httpServer!: http.Server;
-  private readonly port: number;
-  private readonly initMiddleware: MiddlewareCore[];
   private readonly errorMiddleware: MiddlewareCore;
+  private readonly initMiddleware: MiddlewareCore[];
+  private readonly port: number;
 
   constructor({ port, initMiddleware, errorMiddleware }: ServerType) {
     this.port = port;
@@ -39,32 +39,6 @@ export default class Server {
     await this.listen();
   }
 
-  private routes(): void {
-    this.app.get('/', this.basePathRoute);
-    Router(this.app);
-  }
-
-  private middleware(): void {
-    this.app.use(helmet());
-    this.app.use(cors());
-    this.app.use(json());
-    this.app.use(urlencoded({ extended: false }));
-    this.app.use(cookieParser());
-
-    for (const m of this.initMiddleware) {
-      try {
-        m.init();
-        this.app.use(m.handler());
-      } catch (err) {
-        // throw err;
-      }
-    }
-  }
-
-  private basePathRoute(_req: express.Request, res: express.Response): void {
-    res.json({ message: 'base path' });
-  }
-
   private addErrorHandler(): void {
     try {
       this.errorMiddleware.init();
@@ -72,6 +46,10 @@ export default class Server {
     } catch (err) {
       throw new Error('Default error middleware failed.');
     }
+  }
+
+  private basePathRoute(_req: express.Request, res: express.Response): void {
+    res.json({ message: 'base path' });
   }
 
   private async listen(): Promise<void> {
@@ -105,5 +83,27 @@ export default class Server {
 
       return this.app.listen(this.port, () => resolve());
     });
+  }
+
+  private middleware(): void {
+    this.app.use(helmet());
+    this.app.use(cors());
+    this.app.use(json());
+    this.app.use(urlencoded({ extended: false }));
+    this.app.use(cookieParser());
+
+    for (const m of this.initMiddleware) {
+      try {
+        m.init();
+        this.app.use(m.handler());
+      } catch (err) {
+        // throw err;
+      }
+    }
+  }
+
+  private routes(): void {
+    this.app.get('/', this.basePathRoute);
+    Router(this.app);
   }
 }
