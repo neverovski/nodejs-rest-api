@@ -8,7 +8,7 @@ import {
   getTokenFromHeader,
   getTokenFromCookies,
   HttpExceptionType,
-  responseError,
+  codeError,
 } from '@utils/index';
 
 class AuthMiddleware extends MiddlewareCore {
@@ -36,7 +36,7 @@ class AuthMiddleware extends MiddlewareCore {
         }
       }
 
-      return next(responseError(HttpExceptionType.FORBIDDEN));
+      return next(codeError(HttpExceptionType.FORBIDDEN));
     };
   }
 }

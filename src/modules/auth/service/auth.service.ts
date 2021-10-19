@@ -1,6 +1,6 @@
 import { ServiceCore } from '@core/index';
 import { UserService } from '@modules/user';
-import { HttpExceptionType, responseError, TokenType } from '@utils/index';
+import { HttpExceptionType, codeError, TokenType } from '@utils/index';
 
 import { LoginRequest, RefreshTokenRequest, LogoutRequest } from '../auth.type';
 import { IAuthService } from '../interface';
@@ -28,7 +28,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     const valid = await this.userService.validateCredentials(user, password);
 
     if (!valid) {
-      throw responseError(HttpExceptionType.INVALID_CREDENTIALS);
+      throw codeError(HttpExceptionType.INVALID_CREDENTIALS);
     }
 
     const accessToken = this.tokenService.generateAccessToken({

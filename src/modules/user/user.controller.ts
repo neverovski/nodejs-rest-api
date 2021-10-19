@@ -1,8 +1,8 @@
-import AutoBind from 'auto-bind';
 import { Request, Response } from 'express';
+import { injectable, inject } from 'tsyringe';
 
 import { ControllerCore } from '@core/index';
-import { HttpExceptionType, HttpStatus } from '@utils/index';
+import { HttpExceptionType, HttpStatus, codeSuccess } from '@utils/index';
 
 import { UserDTO } from './dto';
 import { IUserService } from './interface';
@@ -14,18 +14,17 @@ import { User } from './user.type';
  *   name: User
  *   description: user
  */
+@injectable()
 export default class UserController extends ControllerCore {
-  constructor(private readonly service: IUserService) {
+  constructor(@inject('UserService') private service: IUserService) {
     super();
-
-    AutoBind(this);
   }
 
   async create(req: Request<any, any, User>, res: Response) {
     await this.service.create(req.body);
 
     this.response(res, {
-      data: HttpExceptionType.USER_CREATED,
+      data: codeSuccess(HttpExceptionType.USER_CREATED),
       status: HttpStatus.Created,
     });
   }

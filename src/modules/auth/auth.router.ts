@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { container } from 'tsyringe';
 
 import { RouterCore } from '@core/index';
 import {
@@ -17,7 +18,10 @@ export default class AuthRouter extends RouterCore {
   constructor() {
     super(Router());
 
-    this.controller = new AuthController(new AuthService());
+    container.register('AuthService', {
+      useClass: AuthService,
+    });
+    this.controller = container.resolve(AuthController);
   }
 
   init(): Router {
