@@ -9,13 +9,12 @@ export const addMillisecondToDate = (
   input?: Date | number,
   amount?: number,
 ): Date => {
-  const date = input && isDate(input) ? input : new Date();
-
-  return addMilliseconds(date, amount || 0);
+  return addMilliseconds(
+    input && isDate(input) ? input : new Date(),
+    amount || 0,
+  );
 };
 
-export const convertToUnixTime = (input?: Date | number): number => {
-  const date = input && isDate(input) ? input : new Date();
-
-  return getUnixTime(date);
+export const getUnixTimeOfDate = (input?: Date | number): number => {
+  return getUnixTime(input && isDate(input) ? input : new Date());
 };

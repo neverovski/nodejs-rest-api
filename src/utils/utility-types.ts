@@ -6,15 +6,16 @@ export type OptionCtx<T> = Pick<
 >;
 
 export interface IHttpException {
+  code: string;
   message: string;
   status: number;
-  code: string;
 }
 
 export type JWTPayload = {
-  sub: number;
   email: string;
   role: string;
+  sub: number;
+  userId: number;
 };
 
 export enum TokenType {

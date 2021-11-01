@@ -2,7 +2,7 @@ import AutoBind from 'auto-bind';
 import { plainToClass, ClassTransformOptions } from 'class-transformer';
 import { Response } from 'express';
 
-import { codeError, HttpExceptionType, HttpStatus } from '@utils/index';
+import { httpError, HttpExceptionType, HttpStatus } from '@utils/index';
 
 import Logger from './logger';
 
@@ -18,15 +18,15 @@ export default class ControllerCore {
     ctx?: {
       data: T | T[];
       dto?: { new (): DTO };
+      options?: ClassTransformOptions;
       status?: HttpStatus;
       // page?: Page | null;
-      options?: ClassTransformOptions;
     },
   ) {
     const { data, options, dto } = ctx || {};
 
     if (!data && ctx?.status === HttpStatus.OK) {
-      throw codeError(HttpExceptionType.NOT_FOUND);
+      throw httpError(HttpExceptionType.NOT_FOUND);
     }
 
     const status = !ctx ? HttpStatus.NoContent : ctx?.status || HttpStatus.OK;

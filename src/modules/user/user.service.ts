@@ -2,7 +2,7 @@ import { compare } from 'bcrypt';
 import { getCustomRepository } from 'typeorm';
 
 import { ServiceCore } from '@core/index';
-import { codeError, HttpExceptionType } from '@utils/index';
+import { httpError, HttpExceptionType } from '@utils/index';
 
 import { IUserService } from './interface';
 import UserRepository from './user.repository';
@@ -21,7 +21,7 @@ export default class UserService extends ServiceCore implements IUserService {
     try {
       await this.repository.createUser(body);
     } catch {
-      throw codeError(HttpExceptionType.USER_ALREADY_TAKEN);
+      throw httpError(HttpExceptionType.USER_ALREADY_TAKEN);
     }
   }
 

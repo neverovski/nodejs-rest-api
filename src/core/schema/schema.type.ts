@@ -1,17 +1,17 @@
 import { JSONSchema7 } from 'json-schema';
 
 export interface JSONSchemaCustom extends JSONSchema7 {
-  transform?: string[];
   consumes?: string[];
   properties?: {
     [key: string]: JSONSchemaCustom | boolean;
   };
+  transform?: string[];
 }
 
 export interface IJsonSchema {
+  body: JSONSchemaCustom | { [key: string]: Partial<JSONSchemaCustom> };
   params: JSONSchemaCustom;
   query: JSONSchemaCustom;
-  body: JSONSchemaCustom | { [key: string]: Partial<JSONSchemaCustom> };
 }
 
 export const PAGE_SCHEMA = {

@@ -2,13 +2,13 @@ import { Response, Request, NextFunction, RequestHandler } from 'express';
 
 import { JwtConfig } from '@config/index';
 import { MiddlewareCore } from '@core/index';
+import { JWTService } from '@providers/jwt';
 import {
-  verifyToken,
   JWTPayload,
   getTokenFromHeader,
   getTokenFromCookies,
   HttpExceptionType,
-  codeError,
+  httpError,
 } from '@utils/index';
 
 class AuthMiddleware extends MiddlewareCore {
@@ -19,13 +19,13 @@ class AuthMiddleware extends MiddlewareCore {
 
       if (accessToken) {
         try {
-          const data = await verifyToken<JWTPayload>(
+          const data = await JWTService.verifyAsync<JWTPayload>(
             accessToken,
             JwtConfig.secretAccessToken,
           );
 
           req.currentUser = {
-            userId: data.sub,
+            userId: data.userId,
             email: data.email,
             role: data.role,
           };
@@ -36,7 +36,7 @@ class AuthMiddleware extends MiddlewareCore {
         }
       }
 
-      return next(codeError(HttpExceptionType.FORBIDDEN));
+      return next(httpError(HttpExceptionType.FORBIDDEN));
     };
   }
 }

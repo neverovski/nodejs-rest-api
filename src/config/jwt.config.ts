@@ -10,24 +10,27 @@ class JwtConfig extends ConfigCore {
     super();
 
     this.secretAccessToken = this.set<string>(
-      'SECRET_ACCESS_TOKEN',
+      'JWT_SECRET_ACCESS_TOKEN',
       this.joi.string().required(),
       '',
     );
-    this.secretRefreshToken = this.set<string>(
-      'SECRET_REFRESH_TOKEN',
-      this.joi.string().required(),
-      '',
-    );
+
     this.expiresInAccessToken = this.set<string>(
-      'EXPIRES_IN_ACCESS_TOKEN',
+      'JWT_EXPIRES_IN_ACCESS_TOKEN',
+      this.joi.string().required(),
+      '15m',
+    );
+
+    this.secretRefreshToken = this.set<string>(
+      'JWT_SECRET_REFRESH_TOKEN',
       this.joi.string().required(),
       '',
     );
+
     this.expiresInRefreshToken = this.set<string>(
-      'EXPIRES_IN_REFRESH_TOKEN',
+      'JWT_EXPIRES_IN_REFRESH_TOKEN',
       this.joi.string().required(),
-      '',
+      '30d',
     );
   }
 }

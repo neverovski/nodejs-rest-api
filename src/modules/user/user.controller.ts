@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { injectable, inject } from 'tsyringe';
 
 import { ControllerCore } from '@core/index';
-import { HttpExceptionType, HttpStatus, codeSuccess } from '@utils/index';
+import { HttpExceptionType, HttpStatus, httpSuccess } from '@utils/index';
 
 import { UserDTO } from './dto';
 import { IUserService } from './interface';
@@ -24,7 +24,7 @@ export default class UserController extends ControllerCore {
     await this.service.create(req.body);
 
     this.response(res, {
-      data: codeSuccess(HttpExceptionType.USER_CREATED),
+      data: httpSuccess(HttpExceptionType.USER_CREATED),
       status: HttpStatus.Created,
     });
   }

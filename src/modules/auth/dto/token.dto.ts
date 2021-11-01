@@ -11,5 +11,5 @@ export class TokenDTO {
   refreshToken!: string;
 
   @Expose()
-  type!: TokenType;
+  tokenType!: TokenType;
 }

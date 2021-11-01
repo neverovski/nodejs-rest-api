@@ -4,21 +4,21 @@ import { getCustomRepository } from 'typeorm';
 import { JwtConfig } from '@config/index';
 import { ServiceCore } from '@core/index';
 import { UserService, FullUser } from '@modules/user';
+import { JWTService } from '@providers/jwt';
 import {
-  generateToken,
   convertToMS,
   addMillisecondToDate,
   TokenType,
-  verifyToken,
-  codeError,
+  httpError,
   HttpExceptionType,
 } from '@utils/index';
 
 import {
   RefreshToken,
-  AccessTokenPayload,
   RefreshTokenPayload,
   FullRefreshToken,
+  AcessTokenRequest,
+  TokenRequest,
 } from '../auth.type';
 import { ITokenService } from '../interface';
 import { RefreshTokenRepository } from '../repository';
@@ -37,21 +37,18 @@ export default class TokenService extends ServiceCore implements ITokenService {
     this.repository = getCustomRepository(RefreshTokenRepository);
   }
 
-  generateAccessToken(
-    body: Pick<RefreshToken, 'userId'> & Pick<AccessTokenPayload, 'email'>,
-  ) {
-    const { userId, ...data } = body;
+  generateAccessToken(body: AcessTokenRequest) {
     const opts = {
       expiresIn: JwtConfig.expiresInAccessToken,
     };
     const payload = {
-      ...data,
+      ...body,
       jti: nanoid(),
-      sub: String(userId),
+      sub: String(body.userId),
       typ: this.typeToken,
     };
 
-    return generateToken(payload, JwtConfig.secretAccessToken, opts);
+    return JWTService.signAsync(payload, JwtConfig.secretAccessToken, opts);
   }
 
   async generateRefreshToken(
@@ -72,7 +69,18 @@ export default class TokenService extends ServiceCore implements ITokenService {
       typ: this.typeToken,
     };
 
-    return generateToken(payload, JwtConfig.secretRefreshToken, opts);
+    return JWTService.sign(payload, JwtConfig.secretRefreshToken, opts);
+  }
+
+  async getToken(body: TokenRequest) {
+    const { id, ...data } = body;
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.generateAccessToken({ ...data, userId: id }),
+      this.generateRefreshToken({ userId: id }),
+    ]);
+
+    return { tokenType: this.typeToken, accessToken, refreshToken };
   }
 
   async resolveRefreshToken(
@@ -82,13 +90,13 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const refreshTokenFromDB = await this.getRefreshTokenFromPayload(payload);
 
     if (refreshTokenFromDB?.isRevoked) {
-      throw codeError(HttpExceptionType.TOKEN_EXPIRED);
+      throw httpError(HttpExceptionType.TOKEN_EXPIRED);
     }
 
     const user = await this.getUserFromRefreshTokenPayload(payload);
 
     if (!user) {
-      throw codeError(HttpExceptionType.TOKEN_MALFORMED);
+      throw httpError(HttpExceptionType.TOKEN_MALFORMED);
     }
 
     return { user, token: refreshTokenFromDB };
@@ -100,7 +108,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
 
   private decodeRefreshToken(token: string): Promise<RefreshTokenPayload> {
     try {
-      return verifyToken(token, JwtConfig.secretRefreshToken);
+      return JWTService.verifyAsync(token, JwtConfig.secretRefreshToken);
     } catch (err) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       throw new Error(err);
@@ -113,7 +121,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const { jti, sub } = payload;
 
     if (!jti && !sub) {
-      throw codeError(HttpExceptionType.TOKEN_MALFORMED);
+      throw httpError(HttpExceptionType.TOKEN_MALFORMED);
     }
 
     return this.repository.findOneOrFail({ userId: +sub, jwtid: jti });
@@ -125,7 +133,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const { sub } = payload;
 
     if (!sub) {
-      throw codeError(HttpExceptionType.TOKEN_MALFORMED);
+      throw httpError(HttpExceptionType.TOKEN_MALFORMED);
     }
 
     return this.userService.getOne({ id: +sub });

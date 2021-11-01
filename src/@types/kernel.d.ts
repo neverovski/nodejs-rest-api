@@ -13,8 +13,8 @@ type Meta = {
   hasPrevPage: boolean;
   nextPage: number;
   prevPage: number;
-  totalPages: number;
   totalItems: number;
+  totalPages: number;
 };
 
 type Page = { count: number; limit: number; page: number };

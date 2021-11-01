@@ -82,11 +82,13 @@
             "public-abstract-field",
             "protected-abstract-field",
             "private-abstract-field",
+            "field",
 
             // Constructors
             "public-constructor",
             "protected-constructor",
             "private-constructor",
+            "constructor",
 
             // Getters
             "public-instance-get",
@@ -98,6 +100,7 @@
             "public-abstract-get",
             "protected-abstract-get",
             "private-abstract-get",
+            "get",
 
             // Setters
             "public-instance-set",
@@ -109,6 +112,7 @@
             "public-abstract-set",
             "protected-abstract-set",
             "private-abstract-set",
+            "set",
 
             // Methods
             "public-instance-method",
@@ -119,7 +123,8 @@
             "private-static-method",
             "public-abstract-method",
             "protected-abstract-method",
-            "private-abstract-method"
+            "private-abstract-method",
+            "method"
           ],
           "order": "alphabetically"
         }
