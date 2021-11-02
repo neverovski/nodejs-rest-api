@@ -1,6 +1,6 @@
 import { ServiceCore } from '@core/index';
 import { UserService } from '@modules/user';
-import { HttpExceptionType, codeError, TokenType } from '@utils/index';
+import { HttpExceptionType, httpError } from '@utils/index';
 
 import { LoginRequest, RefreshTokenRequest, LogoutRequest } from '../auth.type';
 import { IAuthService } from '../interface';
@@ -28,18 +28,10 @@ export default class AuthService extends ServiceCore implements IAuthService {
     const valid = await this.userService.validateCredentials(user, password);
 
     if (!valid) {
-      throw codeError(HttpExceptionType.INVALID_CREDENTIALS);
+      throw httpError(HttpExceptionType.INVALID_CREDENTIALS);
     }
 
-    const accessToken = this.tokenService.generateAccessToken({
-      userId: user.id,
-      email,
-    });
-    const refreshToken = await this.tokenService.generateRefreshToken({
-      userId: user.id,
-    });
-
-    return { type: TokenType.BEARER, accessToken, refreshToken };
+    return this.tokenService.getToken({ id: user.id, email });
   }
 
   async logout(body: LogoutRequest) {
@@ -53,15 +45,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
       body.refreshToken,
     );
 
-    const accessToken = this.tokenService.generateAccessToken({
-      userId: user.id,
-      email: user.email,
-    });
-    const refreshToken = await this.tokenService.generateRefreshToken({
-      userId: user.id,
-    });
-
-    return { type: TokenType.BEARER, accessToken, refreshToken };
+    return this.tokenService.getToken({ id: user.id, email: user.email });
   }
 
   resetPassword() {

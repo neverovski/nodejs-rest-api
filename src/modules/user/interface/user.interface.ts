@@ -2,8 +2,8 @@ import { IProfile } from './profile.interface';
 
 export interface IUser {
   email: string;
-  password?: string;
-  isConfirmedEmail: boolean;
   isActive: boolean;
+  isConfirmedEmail: boolean;
+  password?: string;
   profile?: IProfile;
 }

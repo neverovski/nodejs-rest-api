@@ -11,9 +11,9 @@ import { MiddlewareCore, Logger } from '@core/index';
 import Router from './router';
 
 type ServerType = {
-  port: number;
-  initMiddleware: MiddlewareCore[];
   errorMiddleware: MiddlewareCore;
+  initMiddleware: MiddlewareCore[];
+  port: number;
 };
 
 export default class Server {

@@ -23,6 +23,9 @@ export default class UserEntity extends EntityCore<IUser> implements IUser {
   @Column('varchar', { nullable: true })
   password?: string;
 
-  @OneToOne(() => ProfileEntity, (profile) => profile.user, { eager: true })
+  @OneToOne(() => ProfileEntity, (profile) => profile.user, {
+    eager: true,
+    cascade: true,
+  })
   profile!: ProfileEntity;
 }

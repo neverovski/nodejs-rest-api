@@ -36,3 +36,35 @@ export const CreateUserSchema: IJsonSchema = {
     },
   },
 };
+
+export const UpdateUserSchema: IJsonSchema = {
+  params: { type: 'object', maxProperties: 0 },
+  query: { type: 'object', maxProperties: 0 },
+  body: {
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    type: 'object',
+    additionalProperties: false,
+    required: ['profile'],
+    properties: {
+      email: {
+        type: 'string',
+        format: 'email',
+        transform: ['trim', 'toLowerCase'],
+      },
+      profile: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          firstName: {
+            type: 'string',
+            minLength: 1,
+          },
+          lastName: {
+            type: 'string',
+            minLength: 1,
+          },
+        },
+      },
+    },
+  },
+};

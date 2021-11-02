@@ -1,7 +1,7 @@
 type CurrentUser = {
-  userId: number;
   email: string;
   role: string;
+  userId: number;
 };
 
 declare namespace Express {

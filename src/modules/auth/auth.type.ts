@@ -13,14 +13,18 @@ export type TokenPayload = {
 };
 
 export type AccessTokenPayload = Pick<FullUser, 'email'> & TokenPayload;
+export type AcessTokenRequest = Pick<RefreshToken, 'userId'> &
+  Pick<AccessTokenPayload, 'email'>;
+
 export type RefreshTokenPayload = TokenPayload;
 
 export type LoginRequest = Required<Pick<FullUser, 'email' | 'password'>>;
 export type RefreshTokenRequest = { refreshToken: string };
 export type LogoutRequest = { userId: FullUser['id'] };
 
+export type TokenRequest = Pick<FullUser, 'id' | 'email'>;
 export type TokenResponse = {
-  type: TokenType;
   accessToken: string;
   refreshToken: string;
+  tokenType: TokenType;
 };

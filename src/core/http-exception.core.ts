@@ -1,7 +1,7 @@
 type HttpDetail = {
-  status: number;
   code: string;
   message: string;
+  status: number;
 };
 
 export default class HttpException extends Error {

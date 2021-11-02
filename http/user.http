@@ -1,13 +1,15 @@
-### CURRENT USER
+### GET CURRENT USER
 GET {{baseUrl}}/api/users/current
 Authorization: Bearer {{$dotenv HTTP_TEST_ACCESS_TOKEN}}
 
+### UPDATE CURRENT USER
+PUT {{baseUrl}}/api/users/current
+Authorization: Bearer {{$dotenv HTTP_TEST_ACCESS_TOKEN}}
+
 {
-  "email": "test@test.test",
-  "password": "123456",
   "profile": {
-    "firstName": "D",
-    "lastName": "N"
+    "firstName": "Dmitry",
+    "lastName": "Neverovski"
   }
 }
 
@@ -15,10 +17,10 @@ Authorization: Bearer {{$dotenv HTTP_TEST_ACCESS_TOKEN}}
 POST {{baseUrl}}/api/users
 
 {
-  "email": "test5@test.test",
+  "email": "test6@test.test",
   "password": "123456",
   "profile": {
-    "firstName": "D",
-    "lastName": "N"
+    "firstName": "D.",
+    "lastName": "N."
   }
 }

@@ -2,11 +2,11 @@ import { Request, Response } from 'express';
 import { injectable, inject } from 'tsyringe';
 
 import { ControllerCore } from '@core/index';
-import { HttpExceptionType, HttpStatus, codeSuccess } from '@utils/index';
+import { HttpExceptionType, HttpStatus, httpSuccess } from '@utils/index';
 
 import { UserDTO } from './dto';
 import { IUserService } from './interface';
-import { User } from './user.type';
+import { User, UserUpdateRequest } from './user.type';
 
 /**
  * @openapi
@@ -24,16 +24,29 @@ export default class UserController extends ControllerCore {
     await this.service.create(req.body);
 
     this.response(res, {
-      data: codeSuccess(HttpExceptionType.USER_CREATED),
+      data: httpSuccess(HttpExceptionType.USER_CREATED),
       status: HttpStatus.Created,
     });
   }
 
-  async current(req: Request, res: Response) {
+  async getCurrentUser(req: Request, res: Response) {
     const { userId } = req.currentUser;
 
     const data = await this.service.getOne({ id: userId });
 
     this.response(res, { data, dto: UserDTO });
+  }
+
+  async updateCurrentUser(
+    req: Request<any, any, UserUpdateRequest>,
+    res: Response,
+  ) {
+    const { userId } = req.currentUser;
+
+    await this.service.update({ id: userId }, req.body);
+
+    this.response(res, {
+      data: httpSuccess(HttpExceptionType.USER_UPDATE),
+    });
   }
 }
