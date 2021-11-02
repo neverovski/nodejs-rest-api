@@ -14,6 +14,7 @@ export default class UserRepository extends RepositoryCore<UserEntity> {
       const { password, ...data } = body;
       const user = this.create(data);
 
+      //FIXME: BeforeInsert and BeforeUpdate
       if (password) {
         user.password = await hash(password, SALT_PASSWORD_ROUNDS);
       }
@@ -41,6 +42,7 @@ export default class UserRepository extends RepositoryCore<UserEntity> {
     });
 
     this.merge(userFromDB, user);
+    //FIXME: BeforeInsert and BeforeUpdate
     if (password) {
       userFromDB.password = await hash(password, SALT_PASSWORD_ROUNDS);
     }
