@@ -6,7 +6,7 @@ import { HttpExceptionType, HttpStatus, httpSuccess } from '@utils/index';
 
 import { UserDTO } from './dto';
 import { IUserService } from './interface';
-import { User } from './user.type';
+import { User, UserUpdateRequest } from './user.type';
 
 /**
  * @openapi
@@ -29,11 +29,24 @@ export default class UserController extends ControllerCore {
     });
   }
 
-  async current(req: Request, res: Response) {
+  async getCurrentUser(req: Request, res: Response) {
     const { userId } = req.currentUser;
 
     const data = await this.service.getOne({ id: userId });
 
     this.response(res, { data, dto: UserDTO });
+  }
+
+  async updateCurrentUser(
+    req: Request<any, any, UserUpdateRequest>,
+    res: Response,
+  ) {
+    const { userId } = req.currentUser;
+
+    await this.service.update({ id: userId }, req.body);
+
+    this.response(res, {
+      data: httpSuccess(HttpExceptionType.USER_UPDATE),
+    });
   }
 }

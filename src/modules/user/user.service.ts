@@ -31,6 +31,10 @@ export default class UserService extends ServiceCore implements IUserService {
     return userFromDB as FullUser;
   }
 
+  async update(query: Id, body: Partial<User>) {
+    await this.repository.updateUser(query, body);
+  }
+
   async validateCredentials(
     user: Pick<User, 'password'>,
     password: string,

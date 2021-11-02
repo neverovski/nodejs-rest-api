@@ -2,7 +2,7 @@
 POST {{baseUrl}}/api/auth/login
 
 {
-  "email": "test@test.test",
+  "email": "test6@test.test",
   "password": "123456"
 }
 

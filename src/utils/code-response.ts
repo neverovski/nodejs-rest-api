@@ -11,6 +11,11 @@ export const CodeResponse = {
     code: HttpExceptionType.USER_CREATED,
     message: 'User created successfully!',
   },
+  [HttpExceptionType.USER_UPDATE]: {
+    status: HttpStatus.OK,
+    code: HttpExceptionType.USER_UPDATE,
+    message: 'User updated successfully!',
+  },
   [HttpExceptionType.BAD_REQUEST]: {
     status: HttpStatus.BadRequest,
     code: HttpExceptionType.BAD_REQUEST,
