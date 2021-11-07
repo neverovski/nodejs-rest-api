@@ -28,20 +28,20 @@ export default class AuthRouter extends RouterCore {
     this.router.post(
       '/login',
       ValidateMiddleware.handler(LoginSchema),
-      AsyncMiddleware(this.controller.login),
+      AsyncMiddleware(this.controller.login.bind(this.controller)),
     );
 
     this.router.post(
       '/refresh-token',
       ValidateMiddleware.handler(RefreshTokenSchema),
-      AsyncMiddleware(this.controller.refreshToken),
+      AsyncMiddleware(this.controller.refreshToken.bind(this.controller)),
     );
 
     this.router.post(
       '/logout',
       AuthMiddleware.handler(),
       ValidateMiddleware.handler(LogoutSchema),
-      AsyncMiddleware(this.controller.logout),
+      AsyncMiddleware(this.controller.logout.bind(this.controller)),
     );
 
     return this.router;

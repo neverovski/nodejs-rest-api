@@ -28,20 +28,20 @@ export default class UserRouter extends RouterCore {
     this.router.post(
       '/',
       ValidateMiddleware.handler(CreateUserSchema),
-      AsyncMiddleware(this.controller.create),
+      AsyncMiddleware(this.controller.create.bind(this.controller)),
     );
 
     this.router.get(
       '/current',
       AuthMiddleware.handler(),
-      AsyncMiddleware(this.controller.getCurrentUser),
+      AsyncMiddleware(this.controller.getCurrentUser.bind(this.controller)),
     );
 
     this.router.put(
       '/current',
       AuthMiddleware.handler(),
       ValidateMiddleware.handler(UpdateUserSchema),
-      AsyncMiddleware(this.controller.updateCurrentUser),
+      AsyncMiddleware(this.controller.updateCurrentUser.bind(this.controller)),
     );
 
     return this.router;
