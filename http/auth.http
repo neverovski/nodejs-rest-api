@@ -8,7 +8,7 @@ POST {{baseUrl}}/api/auth/login
 
 ### LOGOUT
 POST {{baseUrl}}/api/auth/logout
-Authorization: Bearer {{$dotenv HTTP_TEST_ACCESS_TOKEN}}
+Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
 
 ### REFRESH-TOKEN
 POST {{baseUrl}}/api/auth/refresh-token

@@ -1,4 +1,3 @@
-import AutoBind from 'auto-bind';
 import { plainToClass, ClassTransformOptions } from 'class-transformer';
 import { Response } from 'express';
 
@@ -9,8 +8,6 @@ import Logger from './logger';
 export default class ControllerCore {
   constructor() {
     this.init();
-
-    AutoBind(this);
   }
 
   response<T, DTO>(

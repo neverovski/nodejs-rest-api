@@ -22,9 +22,12 @@ $ npm run start:prod
     - [X] Authenticate user
     - [X] Refresh token
     - [X] Logout a user
+    - [ ] Forgot password
+    - [ ] Reset password
   - User
     - [X] Сreate a new user
-    - [ ] Update user
+    - [X] Update user
+    - [ ] Reset password
   - Platform
     - [ ] Facebook
     - [ ] Google
