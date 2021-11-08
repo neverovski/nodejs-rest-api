@@ -25,9 +25,8 @@ export default class AuthService extends ServiceCore implements IAuthService {
   async login(body: LoginRequest) {
     const { email, password } = body;
     const user = await this.userService.getOne({ email });
-    const valid = await this.userService.validateCredentials(user, password);
 
-    if (!valid) {
+    if (!this.userService.validateCredentials(user, password)) {
       throw httpError(HttpExceptionType.INVALID_CREDENTIALS);
     }
 

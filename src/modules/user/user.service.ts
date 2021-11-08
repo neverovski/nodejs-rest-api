@@ -1,4 +1,4 @@
-import { compare } from 'bcrypt';
+import { compareSync } from 'bcrypt';
 import { getCustomRepository } from 'typeorm';
 
 import { ServiceCore } from '@core/index';
@@ -26,19 +26,14 @@ export default class UserService extends ServiceCore implements IUserService {
   }
 
   async getOne(query: Partial<FullUser>) {
-    const userFromDB = await this.repository.findOneUserOrFail(query);
-
-    return userFromDB as FullUser;
+    return this.repository.findOneOrFail({ where: query });
   }
 
   async update(query: Id, body: Partial<User>) {
     await this.repository.updateUser(query, body);
   }
 
-  async validateCredentials(
-    user: Pick<User, 'password'>,
-    password: string,
-  ): Promise<boolean> {
-    return user.password ? compare(password, user.password) : false;
+  validateCredentials(user: Pick<User, 'password'>, password: string) {
+    return user.password ? compareSync(password, user.password) : false;
   }
 }

@@ -7,5 +7,5 @@ export interface IUserService {
   validateCredentials(
     user: Required<Pick<User, 'password'>>,
     password: string,
-  ): Promise<boolean>;
+  ): boolean;
 }

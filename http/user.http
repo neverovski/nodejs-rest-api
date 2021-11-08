@@ -1,10 +1,10 @@
 ### GET CURRENT USER
 GET {{baseUrl}}/api/users/current
-Authorization: Bearer {{$dotenv HTTP_TEST_ACCESS_TOKEN}}
+Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
 
 ### UPDATE CURRENT USER
 PUT {{baseUrl}}/api/users/current
-Authorization: Bearer {{$dotenv HTTP_TEST_ACCESS_TOKEN}}
+Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
 
 {
   "profile": {
