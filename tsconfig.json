@@ -42,8 +42,9 @@
     "typeRoots": ["./src/@types", "./node_modules/@types"]
   },
   "include": ["./src", "./tests"],
-  "exclude": [".node_modules", "./build"],
+  "exclude": [".node_modules", "build"],
   "ts-node": {
-    "files": true
+    "files": true,
+    "require": ["tsconfig-paths/register"]
   }
 }
