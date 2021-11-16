@@ -22,8 +22,12 @@ export class UserSubscriber implements EntitySubscriberInterface<UserEntity> {
     databaseEntity,
   }: UpdateEvent<UserEntity>): Promise<void> {
     if (entity?.password && databaseEntity?.password) {
-      if (!compareSync(entity.password as string, databaseEntity.password)) {
+      if (
+        entity?.password !== databaseEntity?.password &&
+        !compareSync(entity.password as string, databaseEntity.password)
+      ) {
         await this.hashPassword(entity as UserEntity);
+        entity.confirmTokenPassword = '';
       } else {
         entity.password = databaseEntity.password;
       }
