@@ -1,16 +1,16 @@
-import { Entity, Column, OneToOne, Index } from 'typeorm';
+import { Entity, Column, OneToOne, Unique } from 'typeorm';
 
 import { EntityCore } from '@core/index';
-import { DB_TABLE_USER } from '@utils/index';
+import { DB_TABLE_USER, DB_UQ_USER_EMAIL } from '@utils/index';
 
 import { IUser } from '../interface';
 
 import ProfileEntity from './profile.entity';
 
 @Entity({ name: DB_TABLE_USER })
+@Unique(DB_UQ_USER_EMAIL, ['email'])
 export default class UserEntity extends EntityCore<IUser> implements IUser {
-  @Index()
-  @Column('varchar', { unique: true })
+  @Column('varchar')
   email!: string;
 
   @Column('bool', { default: false })
@@ -19,7 +19,6 @@ export default class UserEntity extends EntityCore<IUser> implements IUser {
   @Column('bool', { default: false })
   isConfirmedEmail = false;
 
-  @Index()
   @Column('varchar', { nullable: true })
   password?: string;
 

@@ -1,6 +1,6 @@
-import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableUnique } from 'typeorm';
 
-import { DB_TABLE_USER } from '@utils/index';
+import { DB_TABLE_USER, DB_UQ_USER_EMAIL } from '@utils/index';
 
 export class User1629959478561 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {
@@ -21,7 +21,6 @@ export class User1629959478561 implements MigrationInterface {
           {
             name: 'email',
             type: 'varchar',
-            isUnique: true,
           },
           {
             name: 'password',
@@ -52,19 +51,11 @@ export class User1629959478561 implements MigrationInterface {
       }),
     );
 
-    await queryRunner.createIndex(
+    await queryRunner.createUniqueConstraint(
       DB_TABLE_USER,
-      new TableIndex({
-        name: `IDX_${DB_TABLE_USER.toUpperCase()}_EMAIL`,
+      new TableUnique({
+        name: DB_UQ_USER_EMAIL,
         columnNames: ['email'],
-      }),
-    );
-
-    await queryRunner.createIndex(
-      DB_TABLE_USER,
-      new TableIndex({
-        name: `IDX_${DB_TABLE_USER.toUpperCase()}_PASSWORD`,
-        columnNames: ['password'],
       }),
     );
   }

@@ -51,10 +51,10 @@ export const CodeResponse = {
     code: HttpExceptionType.ROUTE_NOT_FOUND,
     message: 'Route not found',
   },
-  [HttpExceptionType.USER_ALREADY_TAKEN]: {
-    message: 'This email or phone already taken, try use another',
+  [HttpExceptionType.EMAIL_ALREADY_TAKEN]: {
+    message: 'This email already taken, try use another',
     status: HttpStatus.Conflict,
-    code: HttpExceptionType.USER_ALREADY_TAKEN,
+    code: HttpExceptionType.EMAIL_ALREADY_TAKEN,
   },
   [HttpExceptionType.UNPROCESSABLE_ENTITY]: {
     status: HttpStatus.UnprocessableEntity,

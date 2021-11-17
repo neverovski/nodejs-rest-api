@@ -1,13 +1,14 @@
-import { Entity, Column, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, JoinColumn, ManyToOne, Unique, Index } from 'typeorm';
 
 import { EntityCore } from '@core/index';
 import { UserEntity } from '@modules/user/entity';
-import { DB_TABLE_PLATFORM } from '@utils/index';
+import { DB_TABLE_PLATFORM, DB_UQ_PLATFORM_SSID } from '@utils/index';
 
 import { IPlatform } from '../interface';
 import { PlatformNetwork } from '../platform.constant';
 
 @Entity({ name: DB_TABLE_PLATFORM })
+@Unique(DB_UQ_PLATFORM_SSID, ['ssid'])
 export default class PlatformEntity
   extends EntityCore<IPlatform>
   implements IPlatform
@@ -15,7 +16,7 @@ export default class PlatformEntity
   @Column('enum', { enum: PlatformNetwork })
   name!: PlatformNetwork;
 
-  @Column('varchar', { unique: true })
+  @Column('varchar')
   ssid!: string;
 
   @Column('text', { nullable: true })
@@ -25,6 +26,7 @@ export default class PlatformEntity
   @JoinColumn({ name: 'userId' })
   user!: UserEntity;
 
+  @Index()
   @Column('int')
   userId!: number;
 }

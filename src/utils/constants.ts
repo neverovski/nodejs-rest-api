@@ -14,4 +14,7 @@ export const DB_TABLE_PROFILE = 'profiles';
 export const DB_TABLE_REFRESH_TOKEN = 'refresh_tokens';
 export const DB_TABLE_PLATFORM = 'platforms';
 
+export const DB_UQ_USER_EMAIL = 'UQ_USER_EMAIL';
+export const DB_UQ_PLATFORM_SSID = 'UQ_PLATFORM_SSID';
+
 export const SALT_PASSWORD_ROUNDS = 10;

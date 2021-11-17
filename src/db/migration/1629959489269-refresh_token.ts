@@ -78,7 +78,6 @@ export class RefreshToken1629959489269 implements MigrationInterface {
     await queryRunner.createIndex(
       DB_TABLE_REFRESH_TOKEN,
       new TableIndex({
-        name: `IDX_${DB_TABLE_REFRESH_TOKEN.toUpperCase()}_USER_ID`,
         columnNames: ['userId'],
       }),
     );
@@ -96,7 +95,6 @@ export class RefreshToken1629959489269 implements MigrationInterface {
     await queryRunner.createIndex(
       DB_TABLE_REFRESH_TOKEN,
       new TableIndex({
-        name: `IDX_${DB_TABLE_REFRESH_TOKEN.toUpperCase()}_JWT_ID`,
         columnNames: ['jwtid'],
       }),
     );

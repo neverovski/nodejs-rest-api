@@ -1,4 +1,4 @@
-import { Entity, Column, Index, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
 
 import { EntityCore } from '@core/index';
 import { UserEntity } from '@modules/user';
@@ -30,7 +30,7 @@ export default class RefreshTokenEntity
   @Column('text', { nullable: true })
   os!: string;
 
-  @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user!: UserEntity;
 

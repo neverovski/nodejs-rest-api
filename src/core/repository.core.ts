@@ -1,12 +1,19 @@
+import { DatabaseError } from 'pg';
 import {
   Repository,
   FindConditions,
   DeepPartial,
   ObjectType,
   ObjectLiteral,
+  QueryFailedError,
 } from 'typeorm';
 
-import { OptionCtx } from '@utils/index';
+import {
+  OptionCtx,
+  DB_UQ_USER_EMAIL,
+  httpError,
+  HttpExceptionType,
+} from '@utils/index';
 
 export default class RepositoryCore<
   Entity extends ObjectLiteral,
@@ -21,6 +28,18 @@ export default class RepositoryCore<
 
   findEntityOneOrFail(options: OptionCtx<Entity> = {}): Promise<Entity> {
     return this.findOneOrFail(options);
+  }
+
+  protected errorHandler(error: unknown) {
+    if (error instanceof QueryFailedError) {
+      const err = error.driverError as DatabaseError;
+
+      if (err.code === '23505' && err.constraint === DB_UQ_USER_EMAIL) {
+        return httpError(HttpExceptionType.EMAIL_ALREADY_TAKEN);
+      }
+    }
+
+    return error;
   }
 
   protected async insertEntityMany<E = Entity>(
