@@ -4,10 +4,15 @@ import {
   Table,
   TableIndex,
   TableForeignKey,
+  TableUnique,
 } from 'typeorm';
 
 import { PlatformNetwork } from '@modules/platform';
-import { DB_TABLE_PLATFORM, DB_TABLE_USER } from '@utils/index';
+import {
+  DB_TABLE_PLATFORM,
+  DB_TABLE_USER,
+  DB_UQ_PLATFORM_SSID,
+} from '@utils/index';
 
 export class Platform1636488492237 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {
@@ -37,7 +42,6 @@ export class Platform1636488492237 implements MigrationInterface {
           {
             name: 'ssid',
             type: 'varchar',
-            isUnique: true,
           },
           {
             name: 'url',
@@ -59,10 +63,17 @@ export class Platform1636488492237 implements MigrationInterface {
       true,
     );
 
+    await queryRunner.createUniqueConstraint(
+      DB_TABLE_PLATFORM,
+      new TableUnique({
+        name: DB_UQ_PLATFORM_SSID,
+        columnNames: ['ssid'],
+      }),
+    );
+
     await queryRunner.createIndex(
       DB_TABLE_PLATFORM,
       new TableIndex({
-        name: `IDX_${DB_TABLE_PLATFORM.toUpperCase()}_USER_ID`,
         columnNames: ['userId'],
       }),
     );
