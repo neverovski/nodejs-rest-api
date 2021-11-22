@@ -2,13 +2,20 @@
 POST {{baseUrl}}/api/auth/login
 
 {
-  "email": "test6@test.test",
+  "email": "dmitryneverovski@gmail.com",
   "password": "123456"
 }
 
 ### LOGOUT
 POST {{baseUrl}}/api/auth/logout
 Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
+
+### LOGIN
+POST {{baseUrl}}/api/auth/forgot-password
+
+{
+  "email": "dmitryneverovski@gmail.com"
+}
 
 ### REFRESH-TOKEN
 POST {{baseUrl}}/api/auth/refresh-token

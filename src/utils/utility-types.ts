@@ -24,6 +24,7 @@ export enum TokenType {
 
 export enum HttpExceptionType {
   OK = 'OK',
+  RESET_PASSWORD_SENT_EMAIL = 'RESET_PASSWORD_SENT_EMAIL',
   USER_CREATED = 'USER_CREATED',
   USER_UPDATE = 'USER_UPDATE',
   BAD_REQUEST = 'BAD_REQUEST',

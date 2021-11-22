@@ -1,3 +1,5 @@
+import { IHttpException } from '@utils/index';
+
 import {
   LoginRequest,
   RefreshTokenRequest,
@@ -10,7 +12,7 @@ import {
 } from '../auth.type';
 
 export interface IAuthService {
-  forgotPassword(): void;
+  forgotPassword(body: Pick<LoginRequest, 'email'>): Promise<IHttpException>;
   login(body: LoginRequest): Promise<TokenResponse>;
   logout(body: LogoutRequest): Promise<void>;
   refreshToken(body: RefreshTokenRequest): Promise<TokenResponse>;

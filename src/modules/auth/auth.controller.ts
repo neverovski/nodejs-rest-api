@@ -19,6 +19,16 @@ export default class AuthController extends ControllerCore {
     super();
   }
 
+  async forgotPassword(
+    req: Request<any, any, Pick<LoginRequest, 'email'>>,
+    res: Response,
+  ) {
+    const { email } = req.body;
+    const data = await this.service.forgotPassword({ email });
+
+    this.response(res, { data });
+  }
+
   async login(req: Request<any, any, LoginRequest>, res: Response) {
     const data = await this.service.login(req.body);
 

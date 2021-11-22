@@ -10,6 +10,9 @@ import ProfileEntity from './profile.entity';
 @Entity({ name: DB_TABLE_USER })
 @Unique(DB_UQ_USER_EMAIL, ['email'])
 export default class UserEntity extends EntityCore<IUser> implements IUser {
+  @Column('text')
+  confirmTokenPassword?: string;
+
   @Column('varchar')
   email!: string;
 
