@@ -1,3 +1,5 @@
+import { IHttpException } from '@utils/index';
+
 import {
   LoginRequest,
   RefreshTokenRequest,
@@ -7,14 +9,16 @@ import {
   FullRefreshToken,
   AcessTokenRequest,
   TokenRequest,
+  ForgotPasswordRequest,
+  ResetPasswordRequest,
 } from '../auth.type';
 
 export interface IAuthService {
-  forgotPassword(): void;
+  forgotPassword(body: ForgotPasswordRequest): Promise<IHttpException>;
   login(body: LoginRequest): Promise<TokenResponse>;
   logout(body: LogoutRequest): Promise<void>;
   refreshToken(body: RefreshTokenRequest): Promise<TokenResponse>;
-  resetPassword(): void;
+  resetPassword(body: ResetPasswordRequest): Promise<void>;
 }
 
 export interface ITokenService {

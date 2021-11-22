@@ -1,4 +1,4 @@
-import { plainToClass, ClassTransformOptions } from 'class-transformer';
+import { plainToInstance, ClassTransformOptions } from 'class-transformer';
 import { Response } from 'express';
 
 import { httpError, HttpExceptionType, HttpStatus } from '@utils/index';
@@ -29,7 +29,7 @@ export default class ControllerCore {
     const status = !ctx ? HttpStatus.NoContent : ctx?.status || HttpStatus.OK;
 
     res.status(status).json({
-      ...(data && { data: dto ? plainToClass(dto, data, options) : data }),
+      ...(data && { data: dto ? plainToInstance(dto, data, options) : data }),
       // ...(page && { meta: this.pages(page) }),
     });
   }

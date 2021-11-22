@@ -2,13 +2,28 @@
 POST {{baseUrl}}/api/auth/login
 
 {
-  "email": "test6@test.test",
-  "password": "123456"
+  "email": "dmitryneverovski@gmail.com",
+  "password": "654321"
 }
 
 ### LOGOUT
 POST {{baseUrl}}/api/auth/logout
 Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
+
+### FORGOT PASSWORD
+POST {{baseUrl}}/api/auth/forgot-password
+
+{
+  "email": "dmitryneverovski@gmail.com"
+}
+
+### RESET PASSWORD
+POST {{baseUrl}}/api/auth/reset-password
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJyN1p3d1hVdHd6N202VTJkRVRxVkUiLCJzdWIiOiIxIiwiZW1haWwiOiJkbWl0cnluZXZlcm92c2tpQGdtYWlsLmNvbSIsImlhdCI6MTYzNzYwOTM3OCwiZXhwIjoxNjM3Njk1Nzc4fQ._QjP8Zg8COMh6O_FB2o74GxQLnO2-gaF5Wpnzw9RxjY",
+  "password": "654321"
+}
 
 ### REFRESH-TOKEN
 POST {{baseUrl}}/api/auth/refresh-token

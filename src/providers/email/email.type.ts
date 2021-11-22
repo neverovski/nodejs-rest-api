@@ -9,3 +9,8 @@ export type DeployEmail = {
   subject: string;
   text: string;
 };
+
+export type ForgotPassword = {
+  email: string;
+  token: string;
+};

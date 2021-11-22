@@ -9,7 +9,13 @@ import {
 } from '@middleware/index';
 
 import AuthController from './auth.controller';
-import { LoginSchema, RefreshTokenSchema, LogoutSchema } from './auth.schema';
+import {
+  LoginSchema,
+  RefreshTokenSchema,
+  LogoutSchema,
+  ForgotPasswordSchema,
+  ResetPasswordSchema,
+} from './auth.schema';
 import { AuthService } from './service';
 
 export default class AuthRouter extends RouterCore {
@@ -42,6 +48,18 @@ export default class AuthRouter extends RouterCore {
       AuthMiddleware.handler(),
       ValidateMiddleware.handler(LogoutSchema),
       AsyncMiddleware(this.controller.logout.bind(this.controller)),
+    );
+
+    this.router.post(
+      '/forgot-password',
+      ValidateMiddleware.handler(ForgotPasswordSchema),
+      AsyncMiddleware(this.controller.forgotPassword.bind(this.controller)),
+    );
+
+    this.router.post(
+      '/reset-password',
+      ValidateMiddleware.handler(ResetPasswordSchema),
+      AsyncMiddleware(this.controller.resetPassword.bind(this.controller)),
     );
 
     return this.router;

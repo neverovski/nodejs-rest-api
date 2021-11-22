@@ -28,6 +28,11 @@ export class User1629959478561 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: 'confirmTokenPassword',
+            type: 'text',
+            isNullable: true,
+          },
+          {
             name: 'isConfirmedEmail',
             type: 'bool',
             default: false,
