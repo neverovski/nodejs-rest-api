@@ -7,7 +7,14 @@ import { EmailQueue, EMAIL_FORGOT_PASSWORD } from '@providers/email';
 import { JWTService } from '@providers/jwt';
 import { HttpExceptionType, httpError, httpSuccess } from '@utils/index';
 
-import { LoginRequest, RefreshTokenRequest, LogoutRequest } from '../auth.type';
+import {
+  LoginRequest,
+  RefreshTokenRequest,
+  LogoutRequest,
+  ForgotPasswordRequest,
+  ResetPasswordRequest,
+  AccessTokenPayload,
+} from '../auth.type';
 import { IAuthService } from '../interface';
 
 import TokenService from './token.service';
@@ -23,7 +30,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     this.tokenService = new TokenService();
   }
 
-  async forgotPassword(body: Pick<LoginRequest, 'email'>) {
+  async forgotPassword(body: ForgotPasswordRequest) {
     const { email } = body;
     const { id } = await this.userService.getOne({ email });
 
@@ -70,7 +77,17 @@ export default class AuthService extends ServiceCore implements IAuthService {
     return this.tokenService.getToken({ id: user.id, email: user.email });
   }
 
-  resetPassword() {
-    throw new Error('Method not implemented.');
+  async resetPassword(body: ResetPasswordRequest) {
+    const { password, token } = body;
+
+    const { jti, email } = await JWTService.verifyAsync<AccessTokenPayload>(
+      token,
+      JwtConfig.secretToken,
+    );
+
+    await this.userService.update(
+      { email, confirmTokenPassword: jti },
+      { password: password },
+    );
   }
 }

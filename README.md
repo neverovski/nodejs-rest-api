@@ -22,8 +22,8 @@ $ npm run start:prod
     - [X] Authenticate user
     - [X] Refresh token
     - [X] Logout a user
-    - [ ] Forgot password
-    - [ ] Reset password
+    - [X] Forgot password
+    - [X] Reset password
   - User
     - [X] Сreate a new user
     - [X] Update user

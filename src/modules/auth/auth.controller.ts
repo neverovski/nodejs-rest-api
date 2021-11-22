@@ -3,7 +3,12 @@ import { injectable, inject } from 'tsyringe';
 
 import { ControllerCore } from '@core/index';
 
-import { LoginRequest, RefreshTokenRequest } from './auth.type';
+import {
+  LoginRequest,
+  RefreshTokenRequest,
+  ForgotPasswordRequest,
+  ResetPasswordRequest,
+} from './auth.type';
 import { TokenDTO } from './dto';
 import { IAuthService } from './interface';
 
@@ -20,11 +25,10 @@ export default class AuthController extends ControllerCore {
   }
 
   async forgotPassword(
-    req: Request<any, any, Pick<LoginRequest, 'email'>>,
+    req: Request<any, any, ForgotPasswordRequest>,
     res: Response,
   ) {
-    const { email } = req.body;
-    const data = await this.service.forgotPassword({ email });
+    const data = await this.service.forgotPassword(req.body);
 
     this.response(res, { data });
   }
@@ -50,5 +54,14 @@ export default class AuthController extends ControllerCore {
     const data = await this.service.refreshToken(req.body);
 
     this.response(res, { data, dto: TokenDTO });
+  }
+
+  async resetPassword(
+    req: Request<any, any, ResetPasswordRequest>,
+    res: Response,
+  ) {
+    await this.service.resetPassword(req.body);
+
+    this.response(res);
   }
 }

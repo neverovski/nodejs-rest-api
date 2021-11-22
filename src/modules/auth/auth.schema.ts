@@ -61,3 +61,24 @@ export const LogoutSchema: IJsonSchema = {
   query: { type: 'object', maxProperties: 0 },
   body: { type: 'object', maxProperties: 0 },
 };
+
+export const ResetPasswordSchema: IJsonSchema = {
+  params: { type: 'object', maxProperties: 0 },
+  query: { type: 'object', maxProperties: 0 },
+  body: {
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    type: 'object',
+    additionalProperties: false,
+    required: ['token', 'password'],
+    properties: {
+      token: {
+        type: 'string',
+        minLength: 1,
+      },
+      password: {
+        type: 'string',
+        minLength: 6,
+      },
+    },
+  },
+};

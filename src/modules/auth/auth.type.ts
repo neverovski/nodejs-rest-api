@@ -21,6 +21,10 @@ export type RefreshTokenPayload = TokenPayload;
 export type LoginRequest = Required<Pick<FullUser, 'email' | 'password'>>;
 export type RefreshTokenRequest = { refreshToken: string };
 export type LogoutRequest = { userId: FullUser['id'] };
+export type ForgotPasswordRequest = Required<Pick<FullUser, 'email'>>;
+export type ResetPasswordRequest = Required<Pick<FullUser, 'password'>> & {
+  token: string;
+};
 
 export type TokenRequest = Pick<FullUser, 'id' | 'email'>;
 export type TokenResponse = {

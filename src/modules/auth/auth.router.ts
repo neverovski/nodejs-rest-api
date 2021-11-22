@@ -14,6 +14,7 @@ import {
   RefreshTokenSchema,
   LogoutSchema,
   ForgotPasswordSchema,
+  ResetPasswordSchema,
 } from './auth.schema';
 import { AuthService } from './service';
 
@@ -53,6 +54,12 @@ export default class AuthRouter extends RouterCore {
       '/forgot-password',
       ValidateMiddleware.handler(ForgotPasswordSchema),
       AsyncMiddleware(this.controller.forgotPassword.bind(this.controller)),
+    );
+
+    this.router.post(
+      '/reset-password',
+      ValidateMiddleware.handler(ResetPasswordSchema),
+      AsyncMiddleware(this.controller.resetPassword.bind(this.controller)),
     );
 
     return this.router;
