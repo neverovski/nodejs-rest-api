@@ -3,7 +3,7 @@ POST {{baseUrl}}/api/auth/login
 
 {
   "email": "dmitryneverovski@gmail.com",
-  "password": "654321"
+  "password": "123456"
 }
 
 ### LOGOUT

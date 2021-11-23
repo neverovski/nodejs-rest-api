@@ -68,3 +68,24 @@ export const UpdateUserSchema: IJsonSchema = {
     },
   },
 };
+
+export const ResetPasswordSchema: IJsonSchema = {
+  params: { type: 'object', maxProperties: 0 },
+  query: { type: 'object', maxProperties: 0 },
+  body: {
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    type: 'object',
+    additionalProperties: false,
+    required: ['oldPassword', 'newPassword'],
+    properties: {
+      oldPassword: {
+        type: 'string',
+        minLength: 6,
+      },
+      newPassword: {
+        type: 'string',
+        minLength: 6,
+      },
+    },
+  },
+};

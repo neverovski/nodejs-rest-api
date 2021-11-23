@@ -27,7 +27,7 @@ $ npm run start:prod
   - User
     - [X] Сreate a new user
     - [X] Update user
-    - [ ] Reset password
+    - [X] Reset password
   - Platform
     - [ ] Facebook
     - [ ] Google

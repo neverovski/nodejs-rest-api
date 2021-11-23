@@ -5,7 +5,7 @@ import { ServiceCore } from '@core/index';
 import { UserService } from '@modules/user';
 import { EmailQueue, EMAIL_FORGOT_PASSWORD } from '@providers/email';
 import { JWTService } from '@providers/jwt';
-import { HttpExceptionType, httpError, httpSuccess } from '@utils/index';
+import { HttpExceptionType, httpError } from '@utils/index';
 
 import {
   LoginRequest,
@@ -48,8 +48,6 @@ export default class AuthService extends ServiceCore implements IAuthService {
 
     await this.userService.update({ id }, { confirmTokenPassword });
     void EmailQueue.add(EMAIL_FORGOT_PASSWORD, { token, email });
-
-    return httpSuccess(HttpExceptionType.RESET_PASSWORD_SENT_EMAIL);
   }
 
   async login(body: LoginRequest) {

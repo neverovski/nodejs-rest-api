@@ -25,3 +25,12 @@ POST {{baseUrl}}/api/users
     "lastName": "N."
   }
 }
+
+### RESET PASSWORD
+POST {{baseUrl}}/api/users/reset-password
+Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
+
+{
+  "oldPassword": "654321",
+  "newPassword": "123456"
+}

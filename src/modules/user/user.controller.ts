@@ -6,7 +6,7 @@ import { HttpExceptionType, HttpStatus, httpSuccess } from '@utils/index';
 
 import { UserDTO } from './dto';
 import { IUserService } from './interface';
-import { User, UserUpdateRequest } from './user.type';
+import { User, UserUpdateRequest, Password } from './user.type';
 
 /**
  * @openapi
@@ -35,6 +35,16 @@ export default class UserController extends ControllerCore {
     const data = await this.service.getOne({ id: userId });
 
     this.response(res, { data, dto: UserDTO });
+  }
+
+  async resetPassword(req: Request<any, any, Password>, res: Response) {
+    const { userId } = req.currentUser;
+
+    await this.service.updatePassword({ id: userId }, req.body);
+
+    this.response(res, {
+      data: httpSuccess(HttpExceptionType.PASSWORD_RESET_SUCCESSFULLY),
+    });
   }
 
   async updateCurrentUser(
