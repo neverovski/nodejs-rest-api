@@ -9,7 +9,11 @@ import {
 } from '@middleware/index';
 
 import UserController from './user.controller';
-import { CreateUserSchema, UpdateUserSchema } from './user.schema';
+import {
+  CreateUserSchema,
+  UpdateUserSchema,
+  ResetPasswordSchema,
+} from './user.schema';
 import UserService from './user.service';
 
 export default class UserRouter extends RouterCore {
@@ -42,6 +46,13 @@ export default class UserRouter extends RouterCore {
       AuthMiddleware.handler(),
       ValidateMiddleware.handler(UpdateUserSchema),
       AsyncMiddleware(this.controller.updateCurrentUser.bind(this.controller)),
+    );
+
+    this.router.post(
+      '/reset-password',
+      AuthMiddleware.handler(),
+      ValidateMiddleware.handler(ResetPasswordSchema),
+      AsyncMiddleware(this.controller.resetPassword.bind(this.controller)),
     );
 
     return this.router;

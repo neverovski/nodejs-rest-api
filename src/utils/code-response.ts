@@ -6,10 +6,15 @@ export const CodeResponse = {
     code: HttpExceptionType.OK,
     message: 'Ok',
   },
-  [HttpExceptionType.RESET_PASSWORD_SENT_EMAIL]: {
-    message: 'Reset password code sent to email',
+  [HttpExceptionType.PASSWORD_RESET_SENT_EMAIL]: {
+    message: 'Password reset code sent to email',
     status: HttpStatus.OK,
-    code: HttpExceptionType.RESET_PASSWORD_SENT_EMAIL,
+    code: HttpExceptionType.PASSWORD_RESET_SENT_EMAIL,
+  },
+  [HttpExceptionType.PASSWORD_RESET_SUCCESSFULLY]: {
+    message: 'Password reset successfully',
+    status: HttpStatus.OK,
+    code: HttpExceptionType.PASSWORD_RESET_SUCCESSFULLY,
   },
   [HttpExceptionType.USER_CREATED]: {
     status: HttpStatus.OK,

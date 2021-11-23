@@ -20,8 +20,6 @@ class JWTService {
     opts?: jwt.SignOptions,
   ): Promise<string> {
     return new Promise((resolve, reject) => {
-      console.log(getUnixTimeOfDate());
-
       jwt.sign(
         { ...payload, iat: getUnixTimeOfDate() },
         secret,
