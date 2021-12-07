@@ -17,4 +17,6 @@ export const DB_TABLE_PLATFORM = 'platforms';
 export const DB_UQ_USER_EMAIL = 'UQ_USER_EMAIL';
 export const DB_UQ_PLATFORM_SSID = 'UQ_PLATFORM_SSID';
 
+export const FORMAT_DATE = 'yyyy-MM-dd';
+
 export const SALT_PASSWORD_ROUNDS = 10;

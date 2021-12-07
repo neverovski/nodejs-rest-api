@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 
-import { capitalize } from '@utils/helpers/string';
+import { StringHelper } from '@utils/helpers';
 
 describe('capitalize Function Test', () => {
   it('Should return - true', () => {
-    const data = capitalize('test');
+    const data = StringHelper.capitalize('test');
 
     expect(data).to.equal('Test');
   });

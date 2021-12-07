@@ -11,7 +11,7 @@ import {
 import {
   OptionCtx,
   DB_UQ_USER_EMAIL,
-  httpError,
+  ResponseHelper,
   HttpExceptionType,
 } from '@utils/index';
 
@@ -35,7 +35,7 @@ export default class RepositoryCore<
       const err = error.driverError as DatabaseError;
 
       if (err.code === '23505' && err.constraint === DB_UQ_USER_EMAIL) {
-        return httpError(HttpExceptionType.EMAIL_ALREADY_TAKEN);
+        return ResponseHelper.error(HttpExceptionType.EMAIL_ALREADY_TAKEN);
       }
     }
 

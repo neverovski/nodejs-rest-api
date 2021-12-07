@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, Unique } from 'typeorm';
+import { Entity, Column, OneToOne, Unique, DeleteDateColumn } from 'typeorm';
 
 import { EntityCore } from '@core/index';
 import { DB_TABLE_USER, DB_UQ_USER_EMAIL } from '@utils/index';
@@ -12,6 +12,9 @@ import ProfileEntity from './profile.entity';
 export default class UserEntity extends EntityCore<IUser> implements IUser {
   @Column('text')
   confirmTokenPassword?: string;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 
   @Column('varchar')
   email!: string;

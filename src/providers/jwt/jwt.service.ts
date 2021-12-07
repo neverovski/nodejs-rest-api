@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import { getUnixTimeOfDate, httpError, HttpExceptionType } from '@utils/index';
+import { DateHelper, ResponseHelper, HttpExceptionType } from '@utils/index';
 
 class JWTService {
   decode(
@@ -11,7 +11,11 @@ class JWTService {
   }
 
   sign<T>(payload: T, secret: string, opts?: jwt.SignOptions): string {
-    return jwt.sign({ ...payload, iat: getUnixTimeOfDate() }, secret, opts);
+    return jwt.sign(
+      { ...payload, iat: DateHelper.getUnixTimeOfDate() },
+      secret,
+      opts,
+    );
   }
 
   signAsync<T>(
@@ -21,7 +25,7 @@ class JWTService {
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       jwt.sign(
-        { ...payload, iat: getUnixTimeOfDate() },
+        { ...payload, iat: DateHelper.getUnixTimeOfDate() },
         secret,
         opts || {},
         (err, encoded) => (err ? reject(err) : resolve(encoded as string)),
@@ -37,13 +41,13 @@ class JWTService {
     return new Promise((resolve, reject) => {
       jwt.verify(token, secret, (error, decoded) => {
         if (error && error.name === 'TokenExpiredError') {
-          return reject(httpError(HttpExceptionType.TOKEN_EXPIRED));
+          return reject(ResponseHelper.error(HttpExceptionType.TOKEN_EXPIRED));
         }
         if (decoded) {
           return resolve(decoded as unknown as T);
         }
 
-        return reject(httpError(HttpExceptionType.TOKEN_MALFORMED));
+        return reject(ResponseHelper.error(HttpExceptionType.TOKEN_MALFORMED));
       });
     });
   }
