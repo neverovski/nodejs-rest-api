@@ -3,7 +3,7 @@ export interface IRefreshToken {
   expiredAt: Date;
   ip?: string;
   isRevoked?: boolean;
-  jwtid: string;
+  jti: string;
   os?: string;
   userAgent?: string;
   userId: number;

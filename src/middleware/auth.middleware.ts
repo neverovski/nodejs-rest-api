@@ -5,17 +5,17 @@ import { MiddlewareCore } from '@core/index';
 import { JWTService } from '@providers/jwt';
 import {
   JWTPayload,
-  getTokenFromHeader,
-  getTokenFromCookies,
+  TokenHelper,
   HttpExceptionType,
-  httpError,
+  ResponseHelper,
 } from '@utils/index';
 
 class AuthMiddleware extends MiddlewareCore {
   handler(): RequestHandler {
     return async (req: Request, _res: Response, next: NextFunction) => {
       const accessToken =
-        getTokenFromHeader(req.headers) || getTokenFromCookies(req.cookies);
+        TokenHelper.getTokenFromHeader(req.headers) ||
+        TokenHelper.getTokenFromCookies(req.cookies);
 
       if (accessToken) {
         try {
@@ -36,7 +36,7 @@ class AuthMiddleware extends MiddlewareCore {
         }
       }
 
-      return next(httpError(HttpExceptionType.FORBIDDEN));
+      return next(ResponseHelper.error(HttpExceptionType.FORBIDDEN));
     };
   }
 }

@@ -6,10 +6,9 @@ import { ServiceCore } from '@core/index';
 import { UserService, FullUser } from '@modules/user';
 import { JWTService } from '@providers/jwt';
 import {
-  convertToMS,
-  addMillisecondToDate,
+  DateHelper,
+  ResponseHelper,
   TokenType,
-  httpError,
   HttpExceptionType,
 } from '@utils/index';
 
@@ -52,20 +51,20 @@ export default class TokenService extends ServiceCore implements ITokenService {
   }
 
   async generateRefreshToken(
-    body: Omit<RefreshToken, 'jwtid' | 'expiredAt'>,
+    body: Omit<RefreshToken, 'jti' | 'expiredAt'>,
   ): Promise<string> {
-    const jwtid = nanoid();
-    const ms = convertToMS(JwtConfig.expiresInRefreshToken);
-    const expiredAt = addMillisecondToDate(new Date(), ms);
+    const jti = nanoid();
+    const ms = DateHelper.convertToMS(JwtConfig.expiresInRefreshToken);
+    const expiredAt = DateHelper.addMillisecondToDate(new Date(), ms);
 
-    await this.repository.createRefreshToken({ ...body, jwtid, expiredAt });
+    await this.repository.createRefreshToken({ ...body, jti, expiredAt });
 
     const opts = {
       expiresIn: JwtConfig.expiresInRefreshToken,
     };
     const payload = {
       sub: String(body.userId),
-      jti: jwtid,
+      jti,
       typ: this.typeToken,
     };
 
@@ -90,13 +89,13 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const refreshTokenFromDB = await this.getRefreshTokenFromPayload(payload);
 
     if (refreshTokenFromDB?.isRevoked) {
-      throw httpError(HttpExceptionType.TOKEN_EXPIRED);
+      throw ResponseHelper.error(HttpExceptionType.TOKEN_EXPIRED);
     }
 
     const user = await this.getUserFromRefreshTokenPayload(payload);
 
     if (!user) {
-      throw httpError(HttpExceptionType.TOKEN_MALFORMED);
+      throw ResponseHelper.error(HttpExceptionType.TOKEN_MALFORMED);
     }
 
     return { user, token: refreshTokenFromDB };
@@ -108,7 +107,10 @@ export default class TokenService extends ServiceCore implements ITokenService {
 
   private decodeRefreshToken(token: string): Promise<RefreshTokenPayload> {
     try {
-      return JWTService.verifyAsync(token, JwtConfig.secretRefreshToken);
+      return JWTService.verifyAsync<RefreshTokenPayload>(
+        token,
+        JwtConfig.secretRefreshToken,
+      );
     } catch (err) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       throw new Error(err);
@@ -121,10 +123,10 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const { jti, sub } = payload;
 
     if (!jti && !sub) {
-      throw httpError(HttpExceptionType.TOKEN_MALFORMED);
+      throw ResponseHelper.error(HttpExceptionType.TOKEN_MALFORMED);
     }
 
-    return this.repository.findOneOrFail({ userId: +sub, jwtid: jti });
+    return this.repository.findOneOrFail({ userId: +sub, jti });
   }
 
   private getUserFromRefreshTokenPayload(
@@ -133,7 +135,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const { sub } = payload;
 
     if (!sub) {
-      throw httpError(HttpExceptionType.TOKEN_MALFORMED);
+      throw ResponseHelper.error(HttpExceptionType.TOKEN_MALFORMED);
     }
 
     return this.userService.getOne({ id: +sub });

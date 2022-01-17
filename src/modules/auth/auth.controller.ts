@@ -2,7 +2,7 @@ import { Response, Request } from 'express';
 import { injectable, inject } from 'tsyringe';
 
 import { ControllerCore } from '@core/index';
-import { httpSuccess, HttpExceptionType } from '@utils/index';
+import { ResponseHelper, HttpExceptionType } from '@utils/index';
 
 import {
   LoginRequest,
@@ -32,7 +32,7 @@ export default class AuthController extends ControllerCore {
     await this.service.forgotPassword(req.body);
 
     this.response(res, {
-      data: httpSuccess(HttpExceptionType.PASSWORD_RESET_SENT_EMAIL),
+      data: ResponseHelper.success(HttpExceptionType.PASSWORD_RESET_SENT_EMAIL),
     });
   }
 
@@ -66,7 +66,9 @@ export default class AuthController extends ControllerCore {
     await this.service.resetPassword(req.body);
 
     this.response(res, {
-      data: httpSuccess(HttpExceptionType.PASSWORD_RESET_SUCCESSFULLY),
+      data: ResponseHelper.success(
+        HttpExceptionType.PASSWORD_RESET_SUCCESSFULLY,
+      ),
     });
   }
 }

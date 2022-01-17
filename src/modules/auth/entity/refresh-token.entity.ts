@@ -25,7 +25,7 @@ export default class RefreshTokenEntity
 
   @Index()
   @Column('varchar')
-  jwtid!: string;
+  jti!: string;
 
   @Column('text', { nullable: true })
   os!: string;

@@ -29,7 +29,7 @@ export class RefreshToken1629959489269 implements MigrationInterface {
             type: 'int',
           },
           {
-            name: 'jwtid',
+            name: 'jti',
             type: 'varchar',
           },
           {
@@ -95,7 +95,7 @@ export class RefreshToken1629959489269 implements MigrationInterface {
     await queryRunner.createIndex(
       DB_TABLE_REFRESH_TOKEN,
       new TableIndex({
-        columnNames: ['jwtid'],
+        columnNames: ['jti'],
       }),
     );
   }

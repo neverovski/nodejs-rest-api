@@ -6,7 +6,7 @@ import { JSONSchema7 } from 'json-schema';
 
 import { MiddlewareCore } from '@core/index';
 import { IJsonSchema } from '@core/schema';
-import { capitalize, CodeResponse } from '@utils/index';
+import { StringHelper, CodeResponse } from '@utils/index';
 
 class ValidateMiddleware extends MiddlewareCore {
   protected ajv: Ajv;
@@ -56,7 +56,7 @@ class ValidateMiddleware extends MiddlewareCore {
             (err.params.missingProperty as string) ||
               (err.params.additionalProperty as string) ||
               err.instancePath.slice(1)
-          ] = capitalize(err.message);
+          ] = StringHelper.capitalize(err.message);
         });
         reject(errors);
       } else {

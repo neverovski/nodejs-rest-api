@@ -1,14 +1,24 @@
 import { HttpException } from '@core/index';
 
-import { CodeResponse } from '../code-response';
-import { HttpExceptionType, IHttpException } from '../utility-types';
+import {
+  CodeResponse,
+  HttpExceptionType,
+  IHttpException,
+} from '../code-response';
 
-export const httpError = (code: HttpExceptionType): HttpException => {
-  return new HttpException({
-    ...CodeResponse[code],
-  });
-};
+export default (() => {
+  const error = (code: HttpExceptionType): HttpException => {
+    return new HttpException({
+      ...CodeResponse[code],
+    });
+  };
 
-export const httpSuccess = (code: HttpExceptionType): IHttpException => {
-  return CodeResponse[code];
-};
+  const success = (code: HttpExceptionType): IHttpException => {
+    return CodeResponse[code];
+  };
+
+  return {
+    error,
+    success,
+  };
+})();

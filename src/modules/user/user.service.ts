@@ -2,7 +2,7 @@ import { compareSync } from 'bcrypt';
 import { getCustomRepository } from 'typeorm';
 
 import { ServiceCore } from '@core/index';
-import { httpError, HttpExceptionType } from '@utils/index';
+import { ResponseHelper, HttpExceptionType } from '@utils/index';
 
 import { IUserService } from './interface';
 import UserRepository from './user.repository';
@@ -34,7 +34,7 @@ export default class UserService extends ServiceCore implements IUserService {
     const user = await this.repository.findOneOrFail({ where: query });
 
     if (!this.validateCredentials(user, oldPassword)) {
-      throw httpError(HttpExceptionType.INVALID_CREDENTIALS);
+      throw ResponseHelper.error(HttpExceptionType.INVALID_CREDENTIALS);
     }
 
     await this.repository.updateUser(query, { password: newPassword });
