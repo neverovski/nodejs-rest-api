@@ -19,36 +19,34 @@ export class Logger {
     this.fatalLogger = pino({
       name: `${app.name.toLowerCase()}::fatal`,
       level: 'fatal',
-      hooks: { logMethod: this.logMethod },
+      errorLikeObjectKeys: ['err', 'error'],
     });
     this.errorLogger = pino({
       name: `${app.name.toLowerCase()}::error`,
       level: 'error',
-      hooks: { logMethod: this.logMethod },
+      errorLikeObjectKeys: ['err', 'error'],
+      serializers: { error: pino.stdSerializers.err },
       PRETTY_PRINT,
     });
     this.warnLogger = pino({
       name: `${app.name.toLowerCase()}::warn`,
       level: 'warn',
-      hooks: { logMethod: this.logMethod },
+      errorLikeObjectKeys: ['err', 'error'],
       PRETTY_PRINT,
     });
     this.infoLogger = pino({
       name: `${app.name.toLowerCase()}::info`,
       level: 'info',
-      hooks: { logMethod: this.logMethod },
       PRETTY_PRINT,
     });
     this.debugLogger = pino({
       name: `${app.name.toLowerCase()}::debug`,
       level: 'debug',
-      hooks: { logMethod: this.logMethod },
       PRETTY_PRINT,
     });
     this.traceLogger = pino({
       name: `${app.name.toLowerCase()}::trace`,
       level: 'trace',
-      hooks: { logMethod: this.logMethod },
       PRETTY_PRINT,
     });
   }
@@ -61,13 +59,13 @@ export class Logger {
 
   error(message: string, error: Error, meta?: any): void {
     if (AppConfig.env !== ENV_TEST) {
-      this.errorLogger.error(message, meta || error.toString());
+      this.errorLogger.error({ error }, message, meta);
     }
   }
 
   fatal(message: string, error: Error, meta?: any): void {
     if (AppConfig.env !== ENV_TEST) {
-      this.fatalLogger.fatal(message, meta || error.toString());
+      this.fatalLogger.fatal({ error }, message, meta);
     }
   }
 
@@ -85,18 +83,8 @@ export class Logger {
 
   warn(message: string, error: Error, meta?: any): void {
     if (AppConfig.env !== ENV_TEST) {
-      this.warnLogger.warn(message, meta || error.toString());
+      this.warnLogger.warn({ error }, message, meta);
     }
-  }
-
-  private logMethod(args: any[], method: pino.LogFn): void {
-    if (args.length === 2) {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      args[0] = `${args[0]} %j`;
-    }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    method.apply(this, args);
   }
 }
 

@@ -4,6 +4,7 @@ class RedisConfig extends ConfigCore {
   readonly host: string;
   readonly password: string;
   readonly port: number;
+  readonly queuePrefix: string;
   readonly time: number;
 
   constructor() {
@@ -25,6 +26,11 @@ class RedisConfig extends ConfigCore {
       '',
     );
     this.time = this.set<number>('REDIS_TIME', this.joi.number(), 3600);
+    this.queuePrefix = this.set<string>(
+      'QUEUE_PREFIX',
+      this.joi.string().required(),
+      'AUTH',
+    );
   }
 }
 

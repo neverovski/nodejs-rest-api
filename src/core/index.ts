@@ -5,6 +5,7 @@ export { default as EntityCore } from './entity.core';
 export { default as HttpException } from './http-exception.core';
 export { default as Logger } from './logger';
 export { default as MiddlewareCore } from './middleware.core';
+export { default as QueueCore } from './queue.core';
 export { default as RepositoryCore } from './repository.core';
 export { default as RouterCore } from './router.core';
 export { default as ServiceCore } from './service.core';

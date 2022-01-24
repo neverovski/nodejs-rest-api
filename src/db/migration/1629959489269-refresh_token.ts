@@ -59,16 +59,16 @@ export class RefreshToken1629959489269 implements MigrationInterface {
           },
           {
             name: 'expiredAt',
-            type: 'timestamp',
+            type: 'timestamptz',
           },
           {
             name: 'createdAt',
-            type: 'timestamp',
+            type: 'timestamptz',
             default: 'now()',
           },
           {
             name: 'updatedAt',
-            type: 'timestamp',
+            type: 'timestamptz',
             default: 'now()',
           },
         ],
