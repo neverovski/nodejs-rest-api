@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import { JwtConfig } from '@config/index';
 import { ServiceCore } from '@core/index';
 import { UserService } from '@modules/user';
-import { EmailQueue, EMAIL_FORGOT_PASSWORD } from '@providers/email';
+import { EmailQueue } from '@providers/email';
 import { JWTService } from '@providers/jwt';
 import { HttpExceptionType, ResponseHelper } from '@utils/index';
 
@@ -47,7 +47,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     const token = JWTService.sign(payload, JwtConfig.secretToken, opts);
 
     await this.userService.update({ id }, { confirmTokenPassword });
-    void EmailQueue.add(EMAIL_FORGOT_PASSWORD, { token, email });
+    void EmailQueue.addForgotPasswordToQueue({ token, email });
   }
 
   async login(body: LoginRequest) {

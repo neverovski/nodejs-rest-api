@@ -29,6 +29,8 @@ export default class DBConnection {
             host: RedisConfig.host,
             port: RedisConfig.port,
           },
+          duration: DBConfig.cacheTime,
+          ignoreErrors: true,
         },
       }),
     });

@@ -20,3 +20,4 @@ export const DB_UQ_PLATFORM_SSID = 'UQ_PLATFORM_SSID';
 export const FORMAT_DATE = 'yyyy-MM-dd';
 
 export const SALT_PASSWORD_ROUNDS = 10;
+export const CACHE_TIME = 2000;

@@ -14,7 +14,7 @@ export default class RefreshTokenEntity
   @Column('text', { nullable: true })
   browser!: string;
 
-  @Column('timestamp')
+  @Column('timestamptz')
   expiredAt!: Date;
 
   @Column('cidr', { nullable: true })

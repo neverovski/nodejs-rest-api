@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:16
 LABEL Dmitry Neverovski <dmitryneverovski@gmail.com>
 
 # Install app dependencies

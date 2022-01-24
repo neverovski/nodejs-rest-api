@@ -5,13 +5,13 @@ import {
 } from 'typeorm';
 
 export default class EntityCore<T> {
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
 
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
 
   constructor(input?: Partial<T>) {

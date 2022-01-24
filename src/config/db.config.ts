@@ -1,6 +1,8 @@
 import { ConfigCore } from '@core/index';
+import { CACHE_TIME } from '@utils/index';
 
 class DBConfig extends ConfigCore {
+  readonly cacheTime: number;
   readonly charset: string;
   readonly client: string;
   readonly database: string;
@@ -41,6 +43,11 @@ class DBConfig extends ConfigCore {
       'utf8',
     );
     this.debug = this.set<boolean>('DB_DEBUG', this.joi.boolean(), false);
+    this.cacheTime = this.set<number>(
+      'DB_CACHE_TIME',
+      this.joi.number(),
+      CACHE_TIME,
+    );
   }
 }
 
