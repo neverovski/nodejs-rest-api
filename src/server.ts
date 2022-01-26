@@ -44,7 +44,7 @@ export default class Server {
       this.errorMiddleware.init();
       this.app.use(this.errorMiddleware.handler());
     } catch (err) {
-      throw new Error('Default error middleware failed.');
+      throw err;
     }
   }
 
@@ -55,25 +55,15 @@ export default class Server {
   private async listen(): Promise<void> {
     return new Promise((resolve) => {
       process.on('unhandledRejection', (reason) => {
-        const error = 'Error - unhandled rejection';
-
-        Logger.error('unhandledRejection', new Error(error), reason);
+        Logger.error('unhandledRejection', reason);
       });
 
-      process.on('rejectionHandled', (reason) => {
-        const error = 'Error - rejection handled';
-
-        Logger.warn('rejectionHandled', new Error(error), reason);
+      process.on('rejectionHandled', (promise) => {
+        Logger.warn('rejectionHandled', promise);
       });
 
-      process.on('multipleResolves', (type, promise, value) => {
-        const error = 'Error - multiple resolves';
-
-        Logger.error('multipleResolves', new Error(error), {
-          type,
-          promise,
-          value,
-        });
+      process.on('multipleResolves', (type, promise, reason) => {
+        Logger.error('multipleResolves', { type, promise, reason });
       });
 
       process.on('uncaughtException', (error) => {
@@ -97,7 +87,7 @@ export default class Server {
         m.init();
         this.app.use(m.handler());
       } catch (err) {
-        // throw err;
+        throw err;
       }
     }
   }

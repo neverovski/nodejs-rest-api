@@ -57,14 +57,16 @@ export class Logger {
     }
   }
 
-  error(message: string, error: Error, meta?: any): void {
+  error(message: string, error: Error | any, meta?: any): void {
     if (AppConfig.env !== ENV_TEST) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       this.errorLogger.error({ error }, message, meta);
     }
   }
 
-  fatal(message: string, error: Error, meta?: any): void {
+  fatal(message: string, error: Error | any, meta?: any): void {
     if (AppConfig.env !== ENV_TEST) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       this.fatalLogger.fatal({ error }, message, meta);
     }
   }
@@ -81,8 +83,9 @@ export class Logger {
     }
   }
 
-  warn(message: string, error: Error, meta?: any): void {
+  warn(message: string, error: Error | any, meta?: any): void {
     if (AppConfig.env !== ENV_TEST) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       this.warnLogger.warn({ error }, message, meta);
     }
   }
