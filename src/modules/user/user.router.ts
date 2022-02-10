@@ -14,7 +14,6 @@ import {
   UpdateUserSchema,
   ResetPasswordSchema,
 } from './user.schema';
-import UserService from './user.service';
 
 export default class UserRouter extends RouterCore {
   private readonly controller: UserController;
@@ -22,9 +21,6 @@ export default class UserRouter extends RouterCore {
   constructor() {
     super(Router());
 
-    container.register('UserService', {
-      useClass: UserService,
-    });
     this.controller = container.resolve(UserController);
   }
 

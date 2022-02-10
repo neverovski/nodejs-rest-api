@@ -22,12 +22,27 @@ export default class RepositoryCore<
     await this.delete(query);
   }
 
-  findEntityList(options: OptionCtx<Entity> = {}): Promise<Entity[]> {
+  findEntity(options: OptionCtx<Entity> = {}): Promise<Entity[]> {
     return this.find(options);
   }
 
   findEntityOneOrFail(options: OptionCtx<Entity> = {}): Promise<Entity> {
     return this.findOneOrFail(options);
+  }
+
+  async updateEntity(
+    options: OptionCtx<Entity>,
+    body: DeepPartial<Entity>,
+  ): Promise<Entity> {
+    try {
+      const data = await this.findOneOrFail(options);
+
+      this.merge(data, body);
+
+      return await this.save(data);
+    } catch (err) {
+      throw this.errorHandler(err);
+    }
   }
 
   protected errorHandler(error: unknown) {

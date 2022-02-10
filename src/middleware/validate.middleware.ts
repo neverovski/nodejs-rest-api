@@ -51,13 +51,18 @@ class ValidateMiddleware extends MiddlewareCore {
       if (!validate(data) && validate.errors) {
         const errors: { [key: string]: string } = {};
 
-        validate.errors.forEach((err) => {
-          errors[
+        for (const err of validate.errors) {
+          const name =
             (err.params.missingProperty as string) ||
-              (err.params.additionalProperty as string) ||
-              err.instancePath.slice(1)
-          ] = StringHelper.capitalize(err.message);
-        });
+            (err.params.additionalProperty as string) ||
+            err.instancePath.slice(1);
+
+          if (name) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            errors[name] = StringHelper.capitalize(err.message || '');
+          }
+        }
+
         reject(errors);
       } else {
         resolve();

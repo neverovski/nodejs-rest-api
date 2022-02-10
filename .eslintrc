@@ -5,7 +5,7 @@
     }
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["prettier", "import"],
+  "plugins": ["prettier", "import", "typescript-sort-keys"],
   "extends": [
     "airbnb-typescript/base",
     "plugin:@typescript-eslint/recommended",
@@ -141,6 +141,8 @@
       {
         "ts": "never"
       }
-    ]
+    ],
+    "typescript-sort-keys/interface": "off",
+    "typescript-sort-keys/string-enum": "error"
   }
 }

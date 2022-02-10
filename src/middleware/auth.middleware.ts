@@ -36,7 +36,7 @@ class AuthMiddleware extends MiddlewareCore {
         }
       }
 
-      return next(ResponseHelper.error(HttpExceptionType.FORBIDDEN));
+      return next(ResponseHelper.error(HttpExceptionType.TOKEN_NOT_PROVIDED));
     };
   }
 }

@@ -11,11 +11,7 @@ class JWTService {
   }
 
   sign<T>(payload: T, secret: string, opts?: jwt.SignOptions): string {
-    return jwt.sign(
-      { ...payload, iat: DateHelper.getUnixTimeOfDate() },
-      secret,
-      opts,
-    );
+    return jwt.sign({ ...payload, iat: DateHelper.toUnix() }, secret, opts);
   }
 
   signAsync<T>(
@@ -25,7 +21,7 @@ class JWTService {
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       jwt.sign(
-        { ...payload, iat: DateHelper.getUnixTimeOfDate() },
+        { ...payload, iat: DateHelper.toUnix() },
         secret,
         opts || {},
         (err, encoded) => (err ? reject(err) : resolve(encoded as string)),
@@ -43,11 +39,12 @@ class JWTService {
         if (error && error.name === 'TokenExpiredError') {
           return reject(ResponseHelper.error(HttpExceptionType.TOKEN_EXPIRED));
         }
+
         if (decoded) {
           return resolve(decoded as unknown as T);
         }
 
-        return reject(ResponseHelper.error(HttpExceptionType.TOKEN_MALFORMED));
+        return reject(ResponseHelper.error(HttpExceptionType.TOKEN_VERIFY));
       });
     });
   }
