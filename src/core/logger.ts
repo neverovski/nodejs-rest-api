@@ -20,6 +20,7 @@ export class Logger {
       name: `${app.name.toLowerCase()}::fatal`,
       level: 'fatal',
       errorLikeObjectKeys: ['err', 'error'],
+      serializers: { error: pino.stdSerializers.err },
     });
     this.errorLogger = pino({
       name: `${app.name.toLowerCase()}::error`,
@@ -32,6 +33,7 @@ export class Logger {
       name: `${app.name.toLowerCase()}::warn`,
       level: 'warn',
       errorLikeObjectKeys: ['err', 'error'],
+      serializers: { error: pino.stdSerializers.err },
       PRETTY_PRINT,
     });
     this.infoLogger = pino({

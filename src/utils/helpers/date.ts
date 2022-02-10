@@ -3,49 +3,41 @@ import {
   addMilliseconds,
   isSameDay as isSameDayFns,
   getUnixTime,
-  format as formatDayFns,
+  format,
+  parseISO,
 } from 'date-fns';
 import ms from 'ms';
 
 import { FORMAT_DATE } from '../constants';
 
-export default (() => {
-  const isSameDay = (
-    dateLeft?: Date | number,
-    dateRight?: Date | number,
-  ): boolean => {
-    if (dateLeft && dateRight) {
-      return isSameDayFns(dateLeft, dateRight);
-    }
+export const isSameDay = (
+  dateLeft?: Date | number,
+  dateRight?: Date | number,
+): boolean => {
+  if (dateLeft && dateRight) {
+    return isSameDayFns(dateLeft, dateRight);
+  }
 
-    return false;
-  };
+  return false;
+};
 
-  const format = (date: Date | number, formatString = FORMAT_DATE) => {
-    return formatDayFns(date, formatString);
-  };
+export const toDate = (date: string) => {
+  return parseISO(date);
+};
 
-  const convertToMS = (input: string): number => ms(input);
+export const toFormat = (date: Date | number, formatString = FORMAT_DATE) => {
+  return format(date, formatString);
+};
 
-  const addMillisecondToDate = (
-    input?: Date | number,
-    amount?: number,
-  ): Date => {
-    return addMilliseconds(
-      input && isDate(input) ? input : new Date(),
-      amount || 0,
-    );
-  };
+export const toMs = (input: string): number => ms(input);
 
-  const getUnixTimeOfDate = (input?: Date | number): number => {
-    return getUnixTime(input && isDate(input) ? input : new Date());
-  };
+export const addMillisecondToDate = (
+  date?: Date | number,
+  amount?: number,
+): Date => {
+  return addMilliseconds(date && isDate(date) ? date : new Date(), amount || 0);
+};
 
-  return {
-    isSameDay,
-    convertToMS,
-    addMillisecondToDate,
-    getUnixTimeOfDate,
-    format,
-  };
-})();
+export const toUnix = (date?: Date | number): number => {
+  return getUnixTime(date && isDate(date) ? date : new Date());
+};

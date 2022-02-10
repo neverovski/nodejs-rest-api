@@ -34,13 +34,13 @@ export class UserSubscriber implements EntitySubscriberInterface<UserEntity> {
     }
   }
 
-  async hashPassword(entity: UserEntity): Promise<void> {
+  listenTo() {
+    return UserEntity;
+  }
+
+  private async hashPassword(entity: UserEntity): Promise<void> {
     if (entity.password) {
       entity.password = await hash(entity.password, SALT_PASSWORD_ROUNDS);
     }
-  }
-
-  listenTo() {
-    return UserEntity;
   }
 }
