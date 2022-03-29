@@ -1,8 +1,8 @@
 import { Entity, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
 
-import { EntityCore } from '@core/index';
+import { EntityCore } from '@core';
 import { UserEntity } from '@modules/user';
-import { DB_TABLE_REFRESH_TOKEN } from '@utils/index';
+import { DB_TABLE_REFRESH_TOKEN } from '@utils';
 
 import { IRefreshToken } from '../interface';
 

@@ -2,8 +2,8 @@ import { nanoid } from 'nanoid';
 import { injectable, inject } from 'tsyringe';
 import { getCustomRepository } from 'typeorm';
 
-import { JwtConfig } from '@config/index';
-import { ServiceCore } from '@core/index';
+import { JwtConfig } from '@config';
+import { ServiceCore } from '@core';
 import { IUserService, FullUser } from '@modules/user';
 import { JWTService } from '@providers/jwt';
 import {
@@ -11,7 +11,7 @@ import {
   ResponseHelper,
   TokenType,
   HttpExceptionType,
-} from '@utils/index';
+} from '@utils';
 
 import {
   RefreshToken,
@@ -101,7 +101,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
   }
 
   async update(query: Partial<FullRefreshToken>, body: Partial<RefreshToken>) {
-    await this.repository.update(query, body);
+    await this.repository.updateEntity(query, body);
   }
 
   private async decodeRefreshToken(

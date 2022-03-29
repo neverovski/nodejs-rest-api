@@ -6,7 +6,7 @@ import {
   UpdateEvent,
 } from 'typeorm';
 
-import { SALT_PASSWORD_ROUNDS } from '@utils/index';
+import { SALT_PASSWORD_ROUNDS } from '@utils';
 
 import { UserEntity } from '../entity';
 
@@ -31,6 +31,9 @@ export class UserSubscriber implements EntitySubscriberInterface<UserEntity> {
       } else {
         entity.password = databaseEntity.password;
       }
+    } else if (entity?.password) {
+      await this.hashPassword(entity as UserEntity);
+      entity.confirmTokenPassword = '';
     }
   }
 

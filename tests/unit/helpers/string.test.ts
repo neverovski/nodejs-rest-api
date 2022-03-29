@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { StringHelper } from '@utils/helpers';
+import { StringHelper } from '@utils';
 
 describe('capitalize Function Test', () => {
   it('Should return - true', () => {

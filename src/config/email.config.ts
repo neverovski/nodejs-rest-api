@@ -1,4 +1,4 @@
-import { ConfigCore } from '@core/index';
+import { ConfigCore } from '@core';
 
 class EmailConfig extends ConfigCore {
   readonly driver: string;

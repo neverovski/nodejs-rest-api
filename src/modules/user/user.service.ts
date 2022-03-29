@@ -1,11 +1,7 @@
 import { getCustomRepository } from 'typeorm';
 
-import { ServiceCore } from '@core/index';
-import {
-  ResponseHelper,
-  HttpExceptionType,
-  ValidateHelper,
-} from '@utils/index';
+import { ServiceCore } from '@core';
+import { ResponseHelper, HttpExceptionType, ValidateHelper } from '@utils';
 
 import { IUserService } from './interface';
 import UserRepository from './user.repository';

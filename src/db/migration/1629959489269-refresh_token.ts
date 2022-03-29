@@ -6,7 +6,7 @@ import {
   TableIndex,
 } from 'typeorm';
 
-import { DB_TABLE_REFRESH_TOKEN, DB_TABLE_USER } from '@utils/index';
+import { DB_TABLE_REFRESH_TOKEN, DB_TABLE_USER } from '@utils';
 
 export class RefreshToken1629959489269 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {
@@ -75,13 +75,6 @@ export class RefreshToken1629959489269 implements MigrationInterface {
       }),
     );
 
-    await queryRunner.createIndex(
-      DB_TABLE_REFRESH_TOKEN,
-      new TableIndex({
-        columnNames: ['userId'],
-      }),
-    );
-
     await queryRunner.createForeignKey(
       DB_TABLE_REFRESH_TOKEN,
       new TableForeignKey({
@@ -92,11 +85,13 @@ export class RefreshToken1629959489269 implements MigrationInterface {
       }),
     );
 
-    await queryRunner.createIndex(
-      DB_TABLE_REFRESH_TOKEN,
+    await queryRunner.createIndices(DB_TABLE_REFRESH_TOKEN, [
       new TableIndex({
         columnNames: ['jti'],
       }),
-    );
+      new TableIndex({
+        columnNames: ['userId'],
+      }),
+    ]);
   }
 }

@@ -5,7 +5,7 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-import { DB_TABLE_PROFILE, DB_TABLE_USER } from '@utils/index';
+import { DB_TABLE_PROFILE, DB_TABLE_USER } from '@utils';
 
 export class Profile1629959478687 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {

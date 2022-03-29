@@ -1,7 +1,7 @@
 import { Request, Response, ErrorRequestHandler, NextFunction } from 'express';
 
-import { MiddlewareCore, HttpException, Logger } from '@core/index';
-import { CodeResponse } from '@utils/index';
+import { MiddlewareCore, HttpException } from '@core';
+import { CodeResponse } from '@utils';
 
 class ErrorMiddleware extends MiddlewareCore {
   handler(): ErrorRequestHandler {
@@ -14,17 +14,16 @@ class ErrorMiddleware extends MiddlewareCore {
     ) => {
       let response = CodeResponse.SERVER_ERROR;
 
-      if (error.status === 404) {
+      if (
+        error.name === 'EntityNotFound' ||
+        error.name === 'EntityNotFoundError'
+      ) {
         response = CodeResponse.NOT_FOUND;
-      } else if (error.message === 'ROUTE_NOT_FOUND') {
-        response = CodeResponse.ROUTE_NOT_FOUND;
       } else if (error.code && error.status && error.message) {
         response = { ...error };
       }
 
       const errorRes = new HttpException(response);
-
-      Logger.error(errorRes.message, error);
 
       res.status(errorRes.status).json(errorRes);
     };
