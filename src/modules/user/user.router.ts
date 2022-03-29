@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { container } from 'tsyringe';
 
-import { RouterCore } from '@core/index';
+import { RouterCore } from '@core';
 import {
   AsyncMiddleware,
   ValidateMiddleware,
   AuthMiddleware,
-} from '@middleware/index';
+} from '@middleware';
 
 import UserController from './user.controller';
 import {

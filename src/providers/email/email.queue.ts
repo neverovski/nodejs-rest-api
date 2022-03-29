@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Bull from 'bull';
 import ms from 'ms';
 
-import { EmailConfig } from '@config/index';
-import { Logger, QueueCore } from '@core/index';
-import { EventEmitter } from '@utils/index';
+import { EmailConfig } from '@config';
+import { Logger, Queue } from '@lib';
+import { EventEmitter, LoggerType } from '@utils';
 
 import { EMAIL_QUEUQ, EMAIL_FORGOT_PASSWORD } from './email.constant';
 import EmailService from './email.service';
 import { ForgotPassword } from './email.type';
 
-class EmailQueue extends QueueCore {
+class EmailQueue extends Queue {
   constructor() {
     super(EMAIL_QUEUQ, {
       defaultJobOptions: {
@@ -47,11 +48,14 @@ class EmailQueue extends QueueCore {
             await job.progress(100);
 
             return await Promise.resolve();
-          } catch (err) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            Logger.error(`${EMAIL_QUEUQ} ${EMAIL_FORGOT_PASSWORD}`, err);
+          } catch (error) {
+            Logger.error({
+              message: `${EMAIL_QUEUQ} ${EMAIL_FORGOT_PASSWORD}`,
+              error,
+              type: LoggerType.QUEUE,
+            });
 
-            return Promise.reject(err);
+            return Promise.reject(error);
           }
         },
       );

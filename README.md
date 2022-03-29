@@ -14,7 +14,7 @@ $ npm run start:dev
 ```bash
 $ cp .env.example .env
 $ docker-compose up -d --build
-$ npm run start:prod
+$ npm run build && npm run start:prod
 ```
 
 ## Next steps

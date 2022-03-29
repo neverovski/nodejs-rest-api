@@ -2,7 +2,7 @@
 
 ### Branch name
   - [ ] Add issue identifier
-  - [ ] All commits in this PR should be created `npm run commit` by [conventional-commits](https://www.conventionalcommits.org/en/v1.0.0/)
+  - [ ] All commits in this PR should be by [conventional-commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 **Description:**
 Describe your changes.

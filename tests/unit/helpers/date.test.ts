@@ -1,6 +1,6 @@
 import { expect, assert } from 'chai';
 
-import { DateHelper } from '@utils/helpers';
+import { DateHelper } from '@utils';
 
 describe('toDate Function Test', () => {
   it('Should return - 1623322800', () => {

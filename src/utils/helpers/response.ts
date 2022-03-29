@@ -1,4 +1,4 @@
-import { HttpException } from '@core/index';
+import { HttpException } from '@core';
 
 import {
   CodeResponse,

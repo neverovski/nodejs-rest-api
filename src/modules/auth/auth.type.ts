@@ -1,5 +1,5 @@
 import { FullUser } from '@modules/user';
-import { TokenType } from '@utils/index';
+import { TokenType } from '@utils';
 
 import { IRefreshToken } from './interface';
 

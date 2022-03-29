@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 
-import { AppConfig } from '@config/index';
-import { MiddlewareCore } from '@core/index';
+import { AppConfig } from '@config';
+import { MiddlewareCore } from '@core';
 
 class InitMiddleware extends MiddlewareCore {
   handler(): RequestHandler {

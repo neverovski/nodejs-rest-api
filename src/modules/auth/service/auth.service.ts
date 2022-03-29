@@ -1,16 +1,12 @@
 import { nanoid } from 'nanoid';
 import { injectable, inject } from 'tsyringe';
 
-import { JwtConfig } from '@config/index';
-import { ServiceCore } from '@core/index';
+import { JwtConfig } from '@config';
+import { ServiceCore } from '@core';
 import { IUserService } from '@modules/user';
 import { EmailQueue } from '@providers/email';
 import { JWTService } from '@providers/jwt';
-import {
-  HttpExceptionType,
-  ResponseHelper,
-  ValidateHelper,
-} from '@utils/index';
+import { HttpExceptionType, ResponseHelper, ValidateHelper } from '@utils';
 
 import {
   LoginRequest,

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import { DateHelper, ResponseHelper, HttpExceptionType } from '@utils/index';
+import { DateHelper, ResponseHelper, HttpExceptionType } from '@utils';
 
 class JWTService {
   decode(

@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table, TableUnique } from 'typeorm';
 
-import { DB_TABLE_USER, DB_UQ_USER_EMAIL } from '@utils/index';
+import { DB_TABLE_USER, DB_UQ_USER_EMAIL } from '@utils';
 
 export class User1629959478561 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {

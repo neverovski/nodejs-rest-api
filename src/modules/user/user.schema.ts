@@ -1,4 +1,4 @@
-import { IJsonSchema } from '@core/schema';
+import { IJsonSchema } from '@core';
 
 export const CreateUserSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },

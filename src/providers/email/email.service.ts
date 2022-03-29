@@ -1,7 +1,7 @@
 import { createTransport } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 
-import { EmailConfig } from '@config/index';
+import { EmailConfig } from '@config';
 
 import { SendEmail } from './email.type';
 

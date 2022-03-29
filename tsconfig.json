@@ -31,12 +31,13 @@
     "suppressExcessPropertyErrors": true,
     "suppressImplicitAnyIndexErrors": true,
     "paths": {
-      "@config/*": ["./src/config/*"],
-      "@core/*": ["./src/core/*"],
+      "@config": ["./src/config/index.ts"],
+      "@core": ["./src/core/index.ts"],
       "@db/*": ["./src/db/*"],
-      "@middleware/*": ["./src/middleware/*"],
+      "@lib": ["./src/lib/index.ts"],
+      "@middleware": ["./src/middleware/index.ts"],
       "@modules/*": ["./src/modules/*"],
-      "@utils/*": ["./src/utils/*"],
+      "@utils": ["./src/utils/index.ts"],
       "@providers/*": ["./src/providers/*"]
     },
     "typeRoots": ["./src/@types", "./node_modules/@types"]

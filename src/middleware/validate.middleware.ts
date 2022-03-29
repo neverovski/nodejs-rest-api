@@ -4,9 +4,8 @@ import addKeywords from 'ajv-keywords';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { JSONSchema7 } from 'json-schema';
 
-import { MiddlewareCore } from '@core/index';
-import { IJsonSchema } from '@core/schema';
-import { StringHelper, CodeResponse } from '@utils/index';
+import { MiddlewareCore, IJsonSchema } from '@core';
+import { StringHelper, CodeResponse } from '@utils';
 
 class ValidateMiddleware extends MiddlewareCore {
   protected ajv: Ajv;
@@ -52,13 +51,9 @@ class ValidateMiddleware extends MiddlewareCore {
         const errors: { [key: string]: string } = {};
 
         for (const err of validate.errors) {
-          const name =
-            (err.params.missingProperty as string) ||
-            (err.params.additionalProperty as string) ||
-            err.instancePath.slice(1);
+          const name = err.instancePath.slice(1);
 
           if (name) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             errors[name] = StringHelper.capitalize(err.message || '');
           }
         }

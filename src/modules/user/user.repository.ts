@@ -1,6 +1,6 @@
 import { EntityRepository } from 'typeorm';
 
-import { RepositoryCore } from '@core/index';
+import { RepositoryCore } from '@core';
 
 import { UserEntity } from './entity';
 import { User } from './user.type';

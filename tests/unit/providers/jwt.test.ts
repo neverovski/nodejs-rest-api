@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { nanoid } from 'nanoid';
 
-import { JwtConfig } from '@config/index';
+import { JwtConfig } from '@config';
 import { JWTService } from '@providers/jwt';
 
 type JWT = {

@@ -1,16 +1,33 @@
-FROM node:16
+# Install dependencies only when needed
+FROM node:16-alpine AS deps
 LABEL Dmitry Neverovski <dmitryneverovski@gmail.com>
 
-# Install app dependencies
-COPY package.json /tmp/package.json
-COPY package-lock.json /tmp/package-lock.json
-RUN cd /tmp && npm install
-RUN mkdir -p /app && cp -a /tmp/node_modules /app/
-
-# Bundle app source
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY . /app
-RUN npm run build
+COPY package*.json ./
+RUN npm ci
+
+# Rebuild the source code only when needed
+FROM node:16-alpine AS builder
+LABEL Dmitry Neverovski <dmitryneverovski@gmail.com>
+ARG NODE_ENV
+ENV NODE_ENV ${NODE_ENV:-devolpement}
+
+WORKDIR /app
+COPY . .
+COPY --from=deps /app/node_modules ./node_modules
+RUN NODE_ENV=${NODE_ENV} npm run build
+
+# Production image, copy all the files and run next
+FROM node:16-alpine AS runner
+LABEL Dmitry Neverovski <dmitryneverovski@gmail.com>
+ARG RUNTIME
+ENV RUNTIME ${RUNTIME:-dev}
+
+WORKDIR /app
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
 EXPOSE 5858
-CMD ["npm", "run", "start:prod"]
+CMD npm run start:${RUNTIME}

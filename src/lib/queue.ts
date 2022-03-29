@@ -1,12 +1,12 @@
 import Bull from 'bull';
 import ms from 'ms';
 
-import { RedisConfig } from '@config/index';
-import { EventEmitter } from '@utils/index';
+import { RedisConfig } from '@config';
+import { EventEmitter, LoggerType } from '@utils';
 
 import Logger from './logger';
 
-export default class QueueCore {
+export default class Queue {
   readonly queue: Bull.Queue;
 
   constructor(
@@ -15,9 +15,14 @@ export default class QueueCore {
   ) {
     this.queue = new Bull(name, {
       redis: {
-        port: RedisConfig.port,
         host: RedisConfig.host,
-        password: RedisConfig.password,
+        port: RedisConfig.port,
+        ...(RedisConfig.username && { username: RedisConfig.username }),
+        ...(RedisConfig.username && { password: RedisConfig.password }),
+        ...(RedisConfig.tls && {
+          tls: {},
+          connectTimeout: 30000,
+        }),
       },
       prefix: RedisConfig.queuePrefix,
       ...this.queueOptions,
@@ -41,7 +46,10 @@ export default class QueueCore {
   }
 
   private eventError() {
-    this.queue.on('error', Logger.error);
+    this.queue.on('error', (error) => {
+      Logger.error({ message: 'QueueCore', error, type: LoggerType.QUEUE });
+    });
+
     EventEmitter.once('close', async () => {
       await this.queue.close();
     });

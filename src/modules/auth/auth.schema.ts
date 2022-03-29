@@ -1,4 +1,4 @@
-import { IJsonSchema } from '@core/schema';
+import { IJsonSchema } from '@core';
 
 export const ForgotPasswordSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },
@@ -12,7 +12,6 @@ export const ForgotPasswordSchema: IJsonSchema = {
       email: {
         type: 'string',
         format: 'email',
-        minLength: 1,
         transform: ['trim', 'toLowerCase'],
       },
     },
@@ -48,9 +47,11 @@ export const RefreshTokenSchema: IJsonSchema = {
     $schema: 'http://json-schema.org/draft-07/schema#',
     type: 'object',
     additionalProperties: false,
+    required: ['refreshToken'],
     properties: {
       refreshToken: {
         type: 'string',
+        minLength: 1,
       },
     },
   },
