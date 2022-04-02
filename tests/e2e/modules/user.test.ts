@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 
-import { HttpStatus, CodeResponse, HttpExceptionType } from '@utils/index';
+import { HttpStatus, CodeResponse, HttpExceptionType } from '@utils';
 
 import { router } from '../lib';
 
