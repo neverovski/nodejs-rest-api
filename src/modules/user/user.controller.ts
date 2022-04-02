@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import { injectable, inject } from 'tsyringe';
 
 import { ControllerCore } from '@core';
-import { HttpExceptionType, HttpStatus, ResponseHelper } from '@utils';
+import { HttpExceptionType, HttpStatus } from '@utils';
+import { ResponseHelper } from '@utils/helpers';
 
 import { UserDTO } from './dto';
 import { IUserService } from './interface';

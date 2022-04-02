@@ -38,6 +38,7 @@
       "@middleware": ["./src/middleware/index.ts"],
       "@modules/*": ["./src/modules/*"],
       "@utils": ["./src/utils/index.ts"],
+      "@utils/helpers": ["./src/utils/helpers/index.ts"],
       "@providers/*": ["./src/providers/*"]
     },
     "typeRoots": ["./src/@types", "./node_modules/@types"]

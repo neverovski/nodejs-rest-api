@@ -3,41 +3,52 @@ import {
   addMilliseconds,
   isSameDay as isSameDayFns,
   getUnixTime,
-  format,
   parseISO,
 } from 'date-fns';
+import { format, utcToZonedTime } from 'date-fns-tz';
 import ms from 'ms';
 
 import { FORMAT_DATE } from '../constants';
 
-export const isSameDay = (
-  dateLeft?: Date | number,
-  dateRight?: Date | number,
-): boolean => {
-  if (dateLeft && dateRight) {
-    return isSameDayFns(dateLeft, dateRight);
-  }
+export default (() => {
+  const isSameDay = (
+    dateLeft?: Date | number,
+    dateRight?: Date | number,
+  ): boolean => {
+    if (dateLeft && dateRight) {
+      return isSameDayFns(dateLeft, dateRight);
+    }
 
-  return false;
-};
+    return false;
+  };
 
-export const toDate = (date: string) => {
-  return parseISO(date);
-};
+  const toDate = (date: string) => {
+    return parseISO(date);
+  };
 
-export const toFormat = (date: Date | number, formatString = FORMAT_DATE) => {
-  return format(date, formatString);
-};
+  const toFormat = (date: Date | number, fmt = FORMAT_DATE, tz?: string) => {
+    if (tz) {
+      return format(utcToZonedTime(date, tz), fmt, { timeZone: tz });
+    }
 
-export const toMs = (input: string): number => ms(input);
+    return format(date, fmt);
+  };
 
-export const addMillisecondToDate = (
-  date?: Date | number,
-  amount?: number,
-): Date => {
-  return addMilliseconds(date && isDate(date) ? date : new Date(), amount || 0);
-};
+  const toMs = (input: string): number => ms(input);
 
-export const toUnix = (date?: Date | number): number => {
-  return getUnixTime(date && isDate(date) ? date : new Date());
-};
+  const addMillisecondToDate = (
+    date?: Date | number,
+    amount?: number,
+  ): Date => {
+    return addMilliseconds(
+      date && isDate(date) ? date : new Date(),
+      amount || 0,
+    );
+  };
+
+  const toUnix = (date?: Date | number): number => {
+    return getUnixTime(date && isDate(date) ? date : new Date());
+  };
+
+  return { isSameDay, toDate, toFormat, toMs, addMillisecondToDate, toUnix };
+})();

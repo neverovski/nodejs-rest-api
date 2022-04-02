@@ -8,12 +8,8 @@ import {
   QueryFailedError,
 } from 'typeorm';
 
-import {
-  OptionCtx,
-  DB_UQ_USER_EMAIL,
-  ResponseHelper,
-  HttpExceptionType,
-} from '@utils';
+import { OptionCtx, DB_UQ_USER_EMAIL, HttpExceptionType } from '@utils';
+import { ResponseHelper } from '@utils/helpers';
 
 export default class RepositoryCore<
   Entity extends ObjectLiteral,

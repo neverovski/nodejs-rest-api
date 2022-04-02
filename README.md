@@ -33,7 +33,10 @@ $ npm run build && npm run start:prod
     - [ ] Google
     - [ ] Twitter
     - [ ] Github
-  - Unit test
+  - Test
+    - [ ] Unit
+    - [ ] E2E
+    - [ ] Integration
 
 ## Project Structure
 

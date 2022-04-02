@@ -2,7 +2,8 @@ import Bull from 'bull';
 import ms from 'ms';
 
 import { RedisConfig } from '@config';
-import { EventEmitter, LoggerType } from '@utils';
+import { LoggerType } from '@utils';
+import { EventEmitter } from '@utils/helpers';
 
 import Logger from './logger';
 

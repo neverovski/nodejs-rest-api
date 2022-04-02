@@ -1,9 +1,11 @@
 import { getCustomRepository } from 'typeorm';
 
 import { ServiceCore } from '@core';
-import { ResponseHelper, HttpExceptionType, ValidateHelper } from '@utils';
+import { HttpExceptionType } from '@utils';
+import { ResponseHelper, ValidateHelper } from '@utils/helpers';
 
 import { IUserService } from './interface';
+import { RELATION } from './user.constant';
 import UserRepository from './user.repository';
 import { User, FullUser, Password } from './user.type';
 
@@ -28,7 +30,7 @@ export default class UserService extends ServiceCore implements IUserService {
     await this.repository.updateEntity(
       {
         where: query,
-        relations: ['profile'],
+        relations: RELATION,
       },
       body,
     );
