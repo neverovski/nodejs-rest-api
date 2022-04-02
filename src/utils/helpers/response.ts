@@ -1,4 +1,4 @@
-import { HttpException } from '@core/index';
+import { HttpException } from '@core';
 
 import {
   CodeResponse,
@@ -17,8 +17,5 @@ export default (() => {
     return CodeResponse[code];
   };
 
-  return {
-    error,
-    success,
-  };
+  return { error, success };
 })();

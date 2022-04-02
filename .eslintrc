@@ -5,7 +5,7 @@
     }
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["prettier", "import"],
+  "plugins": ["prettier", "import", "typescript-sort-keys"],
   "extends": [
     "airbnb-typescript/base",
     "plugin:@typescript-eslint/recommended",
@@ -14,7 +14,7 @@
     "prettier"
   ],
   "parserOptions": {
-    "ecmaVersion": 2020,
+    "ecmaVersion": 2021,
     "project": "./tsconfig.json",
     "tsconfigRootDir": "./"
   },
@@ -25,9 +25,10 @@
     "mocha": true
   },
   "rules": {
+    "no-return-await": "off",
     "no-var": "error",
     "no-debugger": "error",
-    "no-console": 0,
+    "no-console": "off",
     "no-restricted-syntax": ["off", "ForOfStatement"],
     "lines-between-class-members": "off",
     "class-methods-use-this": "off",
@@ -61,6 +62,7 @@
       }
     ],
     "prettier/prettier": "error",
+    "@typescript-eslint/return-await": ["error", "in-try-catch"],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/unbound-method": "off",
     "@typescript-eslint/no-misused-promises": "off",
@@ -141,6 +143,8 @@
       {
         "ts": "never"
       }
-    ]
+    ],
+    "typescript-sort-keys/interface": "off",
+    "typescript-sort-keys/string-enum": "error"
   }
 }

@@ -15,3 +15,22 @@ export type JWTPayload = {
 export enum TokenType {
   BEARER = 'Bearer',
 }
+
+export enum LoggerType {
+  DB = 'DB',
+  HTTP = 'Http',
+  QUEUE = 'Queue',
+  SERVER = 'Server',
+}
+
+export type LoggerCtxInfo = {
+  error?: Error | any;
+  info?: string | any;
+  message: string;
+  type?: LoggerType;
+};
+
+export type LoggerCtxError = Required<
+  Pick<LoggerCtxInfo, 'message' | 'error'>
+> &
+  Pick<LoggerCtxInfo, 'type'>;

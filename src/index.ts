@@ -1,8 +1,9 @@
-import { AppConfig } from '@config/index';
-import { Logger } from '@core/index';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { AppConfig } from '@config';
 import db from '@db/index';
-import Middleware, { ErrorMiddleware } from '@middleware/index';
-import { EventEmitter } from '@utils/index';
+import { Logger } from '@lib';
+import Middleware, { ErrorMiddleware } from '@middleware';
+import { EventEmitter } from '@utils/helpers';
 
 import Server from './server';
 
@@ -14,23 +15,21 @@ const app = new Server({
 
 db.connect()
   .then(() => {
-    Logger.debug('Database initialized...');
+    Logger.debug({ message: 'Database initialized...' });
     app
       .init()
       .then(() => {
         EventEmitter.emit('start');
-        Logger.info('Server start initialization...');
+        Logger.info({ message: 'Server start initialization..' });
       })
       .catch((error) => {
         EventEmitter.emit('close');
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        Logger.error('Server fails to initialize...', error);
+        Logger.error({ message: 'Server fails to initialize...', error });
         process.exit(1);
       });
   })
   .catch((error) => {
     EventEmitter.emit('close');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    Logger.error('Database fails to initialize...', error);
+    Logger.error({ message: 'Database fails to initialize...', error });
     process.exit(1);
   });

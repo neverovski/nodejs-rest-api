@@ -8,11 +8,7 @@ import {
 } from 'typeorm';
 
 import { PlatformNetwork } from '@modules/platform';
-import {
-  DB_TABLE_PLATFORM,
-  DB_TABLE_USER,
-  DB_UQ_PLATFORM_SSID,
-} from '@utils/index';
+import { DB_TABLE_PLATFORM, DB_TABLE_USER, DB_UQ_PLATFORM_SSID } from '@utils';
 
 export class Platform1636488492237 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {

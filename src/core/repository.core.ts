@@ -8,12 +8,8 @@ import {
   QueryFailedError,
 } from 'typeorm';
 
-import {
-  OptionCtx,
-  DB_UQ_USER_EMAIL,
-  ResponseHelper,
-  HttpExceptionType,
-} from '@utils/index';
+import { OptionCtx, DB_UQ_USER_EMAIL, HttpExceptionType } from '@utils';
+import { ResponseHelper } from '@utils/helpers';
 
 export default class RepositoryCore<
   Entity extends ObjectLiteral,
@@ -22,20 +18,38 @@ export default class RepositoryCore<
     await this.delete(query);
   }
 
-  findEntityList(options: OptionCtx<Entity> = {}): Promise<Entity[]> {
+  async findEntity(options: OptionCtx<Entity> = {}): Promise<Entity[]> {
     return this.find(options);
   }
 
-  findEntityOneOrFail(options: OptionCtx<Entity> = {}): Promise<Entity> {
+  async findEntityOneOrFail(options: OptionCtx<Entity> = {}): Promise<Entity> {
     return this.findOneOrFail(options);
+  }
+
+  async updateEntity<T>(
+    query: Partial<T>,
+    body: DeepPartial<Entity>,
+  ): Promise<Entity> {
+    try {
+      const entityFromDB = await this.findOneOrFail({ where: query });
+
+      this.merge(entityFromDB, body);
+
+      return await this.save(entityFromDB as DeepPartial<Entity>);
+    } catch (err) {
+      throw this.errorHandler(err);
+    }
   }
 
   protected errorHandler(error: unknown) {
     if (error instanceof QueryFailedError) {
       const err = error.driverError as DatabaseError;
 
-      if (err.code === '23505' && err.constraint === DB_UQ_USER_EMAIL) {
-        return ResponseHelper.error(HttpExceptionType.EMAIL_ALREADY_TAKEN);
+      switch (err.constraint) {
+        case DB_UQ_USER_EMAIL:
+          return ResponseHelper.error(HttpExceptionType.EMAIL_ALREADY_TAKEN);
+        default:
+          return error;
       }
     }
 
@@ -50,7 +64,7 @@ export default class RepositoryCore<
       await this.createQueryBuilder()
         .insert()
         .into(into)
-        .values(entities)
+        .values(entities as unknown as DeepPartial<Entity>[])
         .returning('*')
         .execute()
     ).generatedMaps as E[];
@@ -64,7 +78,7 @@ export default class RepositoryCore<
       await this.createQueryBuilder()
         .insert()
         .into(into)
-        .values(entities)
+        .values(entities as unknown as DeepPartial<Entity>)
         .returning('*')
         .execute()
     ).generatedMaps[0] as E;

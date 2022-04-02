@@ -1,34 +1,27 @@
 import { Response, Request, NextFunction, RequestHandler } from 'express';
 
-import { JwtConfig } from '@config/index';
-import { MiddlewareCore } from '@core/index';
+import { JwtConfig } from '@config';
+import { MiddlewareCore } from '@core';
 import { JWTService } from '@providers/jwt';
-import {
-  JWTPayload,
-  TokenHelper,
-  HttpExceptionType,
-  ResponseHelper,
-} from '@utils/index';
+import { JWTPayload, HttpExceptionType } from '@utils';
+import { ResponseHelper, TokenHelper } from '@utils/helpers';
 
 class AuthMiddleware extends MiddlewareCore {
   handler(): RequestHandler {
     return async (req: Request, _res: Response, next: NextFunction) => {
       const accessToken =
-        TokenHelper.getTokenFromHeader(req.headers) ||
-        TokenHelper.getTokenFromCookies(req.cookies);
+        TokenHelper.getFromHeader(req.headers) ||
+        TokenHelper.getFromCookies(req.cookies);
 
       if (accessToken) {
         try {
-          const data = await JWTService.verifyAsync<JWTPayload>(
-            accessToken,
-            JwtConfig.secretAccessToken,
-          );
+          const { userId, email, role } =
+            await JWTService.verifyAsync<JWTPayload>(
+              accessToken,
+              JwtConfig.secretAccessToken,
+            );
 
-          req.currentUser = {
-            userId: data.userId,
-            email: data.email,
-            role: data.role,
-          };
+          req.currentUser = { userId, email, role };
 
           return next();
         } catch (err) {
@@ -36,7 +29,7 @@ class AuthMiddleware extends MiddlewareCore {
         }
       }
 
-      return next(ResponseHelper.error(HttpExceptionType.FORBIDDEN));
+      return next(ResponseHelper.error(HttpExceptionType.TOKEN_NOT_PROVIDED));
     };
   }
 }

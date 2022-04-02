@@ -1,23 +1,18 @@
 import { plainToInstance, ClassTransformOptions } from 'class-transformer';
 import { Response } from 'express';
 
-import { ResponseHelper, HttpExceptionType, HttpStatus } from '@utils/index';
-
-import Logger from './logger';
+import { HttpExceptionType, HttpStatus } from '@utils';
+import { ResponseHelper } from '@utils/helpers';
 
 export default class ControllerCore {
-  constructor() {
-    this.init();
-  }
-
   response<T, DTO>(
     res: Response,
     ctx?: {
       data: T | T[];
       dto?: { new (): DTO };
       options?: ClassTransformOptions;
-      status?: HttpStatus;
       // page?: Page | null;
+      status?: HttpStatus;
     },
   ) {
     const { data, options, dto } = ctx || {};
@@ -32,10 +27,6 @@ export default class ControllerCore {
       ...(data && { data: dto ? plainToInstance(dto, data, options) : data }),
       // ...(page && { meta: this.pages(page) }),
     });
-  }
-
-  private init(): void {
-    Logger.trace(`${this.constructor.name} initialized...`);
   }
 
   // private pages(data: Page): Meta {

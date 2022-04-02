@@ -4,9 +4,9 @@ import addKeywords from 'ajv-keywords';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { JSONSchema7 } from 'json-schema';
 
-import { MiddlewareCore } from '@core/index';
-import { IJsonSchema } from '@core/schema';
-import { StringHelper, CodeResponse } from '@utils/index';
+import { MiddlewareCore, IJsonSchema } from '@core';
+import { CodeResponse } from '@utils';
+import { StringHelper } from '@utils/helpers';
 
 class ValidateMiddleware extends MiddlewareCore {
   protected ajv: Ajv;
@@ -51,13 +51,14 @@ class ValidateMiddleware extends MiddlewareCore {
       if (!validate(data) && validate.errors) {
         const errors: { [key: string]: string } = {};
 
-        validate.errors.forEach((err) => {
-          errors[
-            (err.params.missingProperty as string) ||
-              (err.params.additionalProperty as string) ||
-              err.instancePath.slice(1)
-          ] = StringHelper.capitalize(err.message);
-        });
+        for (const err of validate.errors) {
+          const name = err.instancePath.slice(1);
+
+          if (name) {
+            errors[name] = StringHelper.capitalize(err.message || '');
+          }
+        }
+
         reject(errors);
       } else {
         resolve();

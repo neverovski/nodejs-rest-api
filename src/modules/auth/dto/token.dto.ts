@@ -1,6 +1,6 @@
 import { Exclude, Expose } from 'class-transformer';
 
-import { TokenType } from '@utils/index';
+import { TokenType } from '@utils';
 
 @Exclude()
 export class TokenDTO {

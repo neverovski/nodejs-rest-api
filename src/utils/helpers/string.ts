@@ -7,7 +7,5 @@ export default (() => {
     return s.charAt(0).toUpperCase() + s.slice(1);
   };
 
-  return {
-    capitalize,
-  };
+  return { capitalize };
 })();

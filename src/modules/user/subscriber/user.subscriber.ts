@@ -6,7 +6,7 @@ import {
   UpdateEvent,
 } from 'typeorm';
 
-import { SALT_PASSWORD_ROUNDS } from '@utils/index';
+import { SALT_PASSWORD_ROUNDS } from '@utils';
 
 import { UserEntity } from '../entity';
 
@@ -31,16 +31,19 @@ export class UserSubscriber implements EntitySubscriberInterface<UserEntity> {
       } else {
         entity.password = databaseEntity.password;
       }
-    }
-  }
-
-  async hashPassword(entity: UserEntity): Promise<void> {
-    if (entity.password) {
-      entity.password = await hash(entity.password, SALT_PASSWORD_ROUNDS);
+    } else if (entity?.password) {
+      await this.hashPassword(entity as UserEntity);
+      entity.confirmTokenPassword = '';
     }
   }
 
   listenTo() {
     return UserEntity;
+  }
+
+  private async hashPassword(entity: UserEntity): Promise<void> {
+    if (entity.password) {
+      entity.password = await hash(entity.password, SALT_PASSWORD_ROUNDS);
+    }
   }
 }

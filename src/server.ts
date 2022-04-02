@@ -6,7 +6,8 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 
-import { MiddlewareCore, Logger } from '@core/index';
+import { MiddlewareCore } from '@core';
+import { Logger } from '@lib';
 
 import Router from './router';
 
@@ -41,10 +42,9 @@ export default class Server {
 
   private addErrorHandler(): void {
     try {
-      this.errorMiddleware.init();
       this.app.use(this.errorMiddleware.handler());
     } catch (err) {
-      throw err;
+      throw new Error('Default error middleware failed.');
     }
   }
 
@@ -55,19 +55,22 @@ export default class Server {
   private async listen(): Promise<void> {
     return new Promise((resolve) => {
       process.on('unhandledRejection', (reason) => {
-        Logger.error('unhandledRejection', reason);
+        Logger.error({ message: 'unhandledRejection', error: reason });
       });
 
       process.on('rejectionHandled', (promise) => {
-        Logger.warn('rejectionHandled', promise);
+        Logger.warn({ message: 'rejectionHandled', error: promise });
       });
 
       process.on('multipleResolves', (type, promise, reason) => {
-        Logger.error('multipleResolves', { type, promise, reason });
+        Logger.error({
+          message: 'multipleResolves',
+          error: { type, promise, reason },
+        });
       });
 
       process.on('uncaughtException', (error) => {
-        Logger.fatal('uncaughtException', error);
+        Logger.fatal({ message: 'uncaughtException', error });
         process.exit(1);
       });
 
@@ -84,7 +87,6 @@ export default class Server {
 
     for (const m of this.initMiddleware) {
       try {
-        m.init();
         this.app.use(m.handler());
       } catch (err) {
         throw err;

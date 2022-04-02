@@ -2,6 +2,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeUpdate,
 } from 'typeorm';
 
 export default class EntityCore<T> {
@@ -18,5 +19,10 @@ export default class EntityCore<T> {
     if (input) {
       Object.assign(this, input);
     }
+  }
+
+  @BeforeUpdate()
+  updateDate() {
+    this.updatedAt = new Date();
   }
 }

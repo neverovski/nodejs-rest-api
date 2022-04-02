@@ -1,7 +1,7 @@
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 
-import { EntityCore } from '@core/index';
-import { DB_TABLE_PROFILE } from '@utils/index';
+import { EntityCore } from '@core';
+import { DB_TABLE_PROFILE } from '@utils';
 
 import { IProfile } from '../interface';
 

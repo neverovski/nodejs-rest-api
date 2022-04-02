@@ -3,7 +3,7 @@ import { IncomingHttpHeaders } from 'http';
 import { TokenType } from '../utility-types';
 
 export default (() => {
-  const getTokenFromHeader = (headers: IncomingHttpHeaders): string | null => {
+  const getFromHeader = (headers: IncomingHttpHeaders): string | null => {
     const authorization = headers.authorization || headers.Authorization;
 
     if (
@@ -17,14 +17,11 @@ export default (() => {
     return null;
   };
 
-  const getTokenFromCookies = (cookies: any): string | null => {
+  const getFromCookies = (cookies: any): string | null => {
     const { accessToken } = cookies as { accessToken: string };
 
     return accessToken || null;
   };
 
-  return {
-    getTokenFromHeader,
-    getTokenFromCookies,
-  };
+  return { getFromHeader, getFromCookies };
 })();

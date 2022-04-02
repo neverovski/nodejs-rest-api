@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { container } from 'tsyringe';
 
-import { RouterCore } from '@core/index';
+import { RouterCore } from '@core';
 import {
   ValidateMiddleware,
   AsyncMiddleware,
   AuthMiddleware,
-} from '@middleware/index';
+} from '@middleware';
 
 import AuthController from './auth.controller';
 import {
@@ -16,7 +16,6 @@ import {
   ForgotPasswordSchema,
   ResetPasswordSchema,
 } from './auth.schema';
-import { AuthService } from './service';
 
 export default class AuthRouter extends RouterCore {
   private readonly controller: AuthController;
@@ -24,9 +23,6 @@ export default class AuthRouter extends RouterCore {
   constructor() {
     super(Router());
 
-    container.register('AuthService', {
-      useClass: AuthService,
-    });
     this.controller = container.resolve(AuthController);
   }
 

@@ -1,11 +1,13 @@
 import { nanoid } from 'nanoid';
+import { injectable, inject } from 'tsyringe';
 
-import { JwtConfig } from '@config/index';
-import { ServiceCore } from '@core/index';
-import { UserService } from '@modules/user';
+import { JwtConfig } from '@config';
+import { ServiceCore } from '@core';
+import { IUserService } from '@modules/user';
 import { EmailQueue } from '@providers/email';
 import { JWTService } from '@providers/jwt';
-import { HttpExceptionType, ResponseHelper } from '@utils/index';
+import { HttpExceptionType } from '@utils';
+import { ResponseHelper, ValidateHelper } from '@utils/helpers';
 
 import {
   LoginRequest,
@@ -15,19 +17,15 @@ import {
   ResetPasswordRequest,
   AccessTokenPayload,
 } from '../auth.type';
-import { IAuthService } from '../interface';
+import { IAuthService, ITokenService } from '../interface';
 
-import TokenService from './token.service';
-
+@injectable()
 export default class AuthService extends ServiceCore implements IAuthService {
-  private readonly tokenService: TokenService;
-  private readonly userService: UserService;
-
-  constructor() {
+  constructor(
+    @inject('TokenService') private tokenService: ITokenService,
+    @inject('UserService') private userService: IUserService,
+  ) {
     super();
-
-    this.userService = new UserService();
-    this.tokenService = new TokenService();
   }
 
   async forgotPassword(body: ForgotPasswordRequest) {
@@ -54,7 +52,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     const { email, password } = body;
     const user = await this.userService.getOne({ email });
 
-    if (!this.userService.validateCredentials(user, password)) {
+    if (!ValidateHelper.credentials(user?.password, password)) {
       throw ResponseHelper.error(HttpExceptionType.INVALID_CREDENTIALS);
     }
 

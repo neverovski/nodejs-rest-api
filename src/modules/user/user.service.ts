@@ -1,10 +1,11 @@
-import { compareSync } from 'bcrypt';
 import { getCustomRepository } from 'typeorm';
 
-import { ServiceCore } from '@core/index';
-import { ResponseHelper, HttpExceptionType } from '@utils/index';
+import { ServiceCore } from '@core';
+import { HttpExceptionType } from '@utils';
+import { ResponseHelper, ValidateHelper } from '@utils/helpers';
 
 import { IUserService } from './interface';
+import { RELATION } from './user.constant';
 import UserRepository from './user.repository';
 import { User, FullUser, Password } from './user.type';
 
@@ -26,21 +27,23 @@ export default class UserService extends ServiceCore implements IUserService {
   }
 
   async update(query: Partial<FullUser>, body: Partial<User>) {
-    await this.repository.updateUser(query, body);
+    await this.repository.updateEntity(
+      {
+        where: query,
+        relations: RELATION,
+      },
+      body,
+    );
   }
 
   async updatePassword(query: Partial<FullUser>, body: Password) {
     const { oldPassword, newPassword } = body;
     const user = await this.repository.findOneOrFail({ where: query });
 
-    if (!this.validateCredentials(user, oldPassword)) {
+    if (!ValidateHelper.credentials(user?.password, oldPassword)) {
       throw ResponseHelper.error(HttpExceptionType.INVALID_CREDENTIALS);
     }
 
-    await this.repository.updateUser(query, { password: newPassword });
-  }
-
-  validateCredentials(user: Pick<User, 'password'>, password: string) {
-    return user.password ? compareSync(password, user.password) : false;
+    await this.repository.save({ ...user, password: newPassword });
   }
 }

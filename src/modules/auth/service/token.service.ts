@@ -1,16 +1,13 @@
 import { nanoid } from 'nanoid';
+import { injectable, inject } from 'tsyringe';
 import { getCustomRepository } from 'typeorm';
 
-import { JwtConfig } from '@config/index';
-import { ServiceCore } from '@core/index';
-import { UserService, FullUser } from '@modules/user';
+import { JwtConfig } from '@config';
+import { ServiceCore } from '@core';
+import { IUserService, FullUser } from '@modules/user';
 import { JWTService } from '@providers/jwt';
-import {
-  DateHelper,
-  ResponseHelper,
-  TokenType,
-  HttpExceptionType,
-} from '@utils/index';
+import { TokenType, HttpExceptionType } from '@utils';
+import { DateHelper, ResponseHelper } from '@utils/helpers';
 
 import {
   RefreshToken,
@@ -22,17 +19,15 @@ import {
 import { ITokenService } from '../interface';
 import { RefreshTokenRepository } from '../repository';
 
+@injectable()
 export default class TokenService extends ServiceCore implements ITokenService {
   private readonly repository: RefreshTokenRepository;
   private readonly typeToken: TokenType;
-  private readonly userService: UserService;
 
-  constructor() {
+  constructor(@inject('UserService') private userService: IUserService) {
     super();
 
     this.typeToken = TokenType.BEARER;
-
-    this.userService = new UserService();
     this.repository = getCustomRepository(RefreshTokenRepository);
   }
 
@@ -54,7 +49,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     body: Omit<RefreshToken, 'jti' | 'expiredAt'>,
   ): Promise<string> {
     const jti = nanoid();
-    const ms = DateHelper.convertToMS(JwtConfig.expiresInRefreshToken);
+    const ms = DateHelper.toMs(JwtConfig.expiresInRefreshToken);
     const expiredAt = DateHelper.addMillisecondToDate(new Date(), ms);
 
     await this.repository.createRefreshToken({ ...body, jti, expiredAt });
@@ -89,7 +84,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const refreshTokenFromDB = await this.getRefreshTokenFromPayload(payload);
 
     if (refreshTokenFromDB?.isRevoked) {
-      throw ResponseHelper.error(HttpExceptionType.TOKEN_EXPIRED);
+      throw ResponseHelper.error(HttpExceptionType.REFRESH_TOKEN_EXPIRED);
     }
 
     const user = await this.getUserFromRefreshTokenPayload(payload);
@@ -102,12 +97,14 @@ export default class TokenService extends ServiceCore implements ITokenService {
   }
 
   async update(query: Partial<FullRefreshToken>, body: Partial<RefreshToken>) {
-    await this.repository.updateRefreshToken(query, body);
+    await this.repository.updateEntity(query, body);
   }
 
-  private decodeRefreshToken(token: string): Promise<RefreshTokenPayload> {
+  private async decodeRefreshToken(
+    token: string,
+  ): Promise<RefreshTokenPayload> {
     try {
-      return JWTService.verifyAsync<RefreshTokenPayload>(
+      return await JWTService.verifyAsync<RefreshTokenPayload>(
         token,
         JwtConfig.secretRefreshToken,
       );
