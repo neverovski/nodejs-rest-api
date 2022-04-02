@@ -1,6 +1,6 @@
-export * as DateHelper from './date';
+export { default as DateHelper } from './date';
 export * from './event-emitter';
-export * as ResponseHelper from './response';
-export * as StringHelper from './string';
-export * as TokenHelper from './token';
-export * as ValidateHelper from './validate';
+export { default as ResponseHelper } from './response';
+export { default as StringHelper } from './string';
+export { default as TokenHelper } from './token';
+export { default as ValidateHelper } from './validate';

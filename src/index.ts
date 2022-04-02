@@ -3,7 +3,7 @@ import { AppConfig } from '@config';
 import db from '@db/index';
 import { Logger } from '@lib';
 import Middleware, { ErrorMiddleware } from '@middleware';
-import { EventEmitter } from '@utils';
+import { EventEmitter } from '@utils/helpers';
 
 import Server from './server';
 

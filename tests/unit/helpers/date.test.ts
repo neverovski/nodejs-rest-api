@@ -1,6 +1,6 @@
 import { expect, assert } from 'chai';
 
-import { DateHelper } from '@utils';
+import { DateHelper } from '@utils/helpers';
 
 describe('toDate Function Test', () => {
   it('Should return - 1623322800', () => {
@@ -35,7 +35,11 @@ describe('toFormat Function Test', () => {
     const date = '2021-06-10T11:00:00.000Z';
 
     expect(
-      DateHelper.toFormat(new Date(Date.parse(date)), 'MM dd yyyy, HH:mm'),
+      DateHelper.toFormat(
+        new Date(Date.parse(date)),
+        'MM dd yyyy, HH:mm',
+        'UTC',
+      ),
     ).to.equal('06 10 2021, 11:00');
   });
 
@@ -43,7 +47,11 @@ describe('toFormat Function Test', () => {
     const date = '2020-12-21T02:45:00+08:00';
 
     expect(
-      DateHelper.toFormat(new Date(Date.parse(date)), 'yyyy-MM-dd HH:mm'),
+      DateHelper.toFormat(
+        new Date(Date.parse(date)),
+        'yyyy-MM-dd HH:mm',
+        'UTC',
+      ),
     ).to.equal('2020-12-20 18:45');
   });
 });

@@ -5,7 +5,8 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { JSONSchema7 } from 'json-schema';
 
 import { MiddlewareCore, IJsonSchema } from '@core';
-import { StringHelper, CodeResponse } from '@utils';
+import { CodeResponse } from '@utils';
+import { StringHelper } from '@utils/helpers';
 
 class ValidateMiddleware extends MiddlewareCore {
   protected ajv: Ajv;

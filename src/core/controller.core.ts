@@ -1,7 +1,8 @@
 import { plainToInstance, ClassTransformOptions } from 'class-transformer';
 import { Response } from 'express';
 
-import { ResponseHelper, HttpExceptionType, HttpStatus } from '@utils';
+import { HttpExceptionType, HttpStatus } from '@utils';
+import { ResponseHelper } from '@utils/helpers';
 
 export default class ControllerCore {
   response<T, DTO>(

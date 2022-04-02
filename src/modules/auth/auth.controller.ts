@@ -2,7 +2,8 @@ import { Response, Request } from 'express';
 import { injectable, inject } from 'tsyringe';
 
 import { ControllerCore } from '@core';
-import { ResponseHelper, HttpExceptionType } from '@utils';
+import { HttpExceptionType } from '@utils';
+import { ResponseHelper } from '@utils/helpers';
 
 import {
   LoginRequest,

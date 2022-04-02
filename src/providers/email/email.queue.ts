@@ -4,7 +4,8 @@ import ms from 'ms';
 
 import { EmailConfig } from '@config';
 import { Logger, Queue } from '@lib';
-import { EventEmitter, LoggerType } from '@utils';
+import { LoggerType } from '@utils';
+import { EventEmitter } from '@utils/helpers';
 
 import { EMAIL_QUEUQ, EMAIL_FORGOT_PASSWORD } from './email.constant';
 import EmailService from './email.service';
