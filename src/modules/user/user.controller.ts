@@ -31,7 +31,7 @@ export default class UserController extends ControllerCore {
   }
 
   async getCurrentUser(req: Request, res: Response) {
-    const { userId } = req.currentUser;
+    const { userId } = req.user as Required<UserContext>;
 
     const data = await this.service.getOne({ id: userId });
 
@@ -39,7 +39,7 @@ export default class UserController extends ControllerCore {
   }
 
   async resetPassword(req: Request<any, any, Password>, res: Response) {
-    const { userId } = req.currentUser;
+    const { userId } = req.user as Required<UserContext>;
 
     await this.service.updatePassword({ id: userId }, req.body);
 
@@ -54,7 +54,7 @@ export default class UserController extends ControllerCore {
     req: Request<any, any, UserUpdateRequest>,
     res: Response,
   ) {
-    const { userId } = req.currentUser;
+    const { userId } = req.user as Required<UserContext>;
 
     await this.service.update({ id: userId }, req.body);
 

@@ -12,11 +12,11 @@ import { UserEntity } from '../entity';
 
 @EventSubscriber()
 export class UserSubscriber implements EntitySubscriberInterface<UserEntity> {
-  beforeInsert(event: InsertEvent<UserEntity>): Promise<void> {
-    return this.hashPassword(event.entity);
+  beforeInsert({ entity }: InsertEvent<UserEntity>): Promise<void> {
+    return this.hashPassword(entity);
   }
 
-  //FIXME:
+  //FIXME: refactoring
   async beforeUpdate({
     entity,
     databaseEntity,
@@ -42,7 +42,7 @@ export class UserSubscriber implements EntitySubscriberInterface<UserEntity> {
   }
 
   private async hashPassword(entity: UserEntity): Promise<void> {
-    if (entity.password) {
+    if (entity?.password) {
       entity.password = await hash(entity.password, SALT_PASSWORD_ROUNDS);
     }
   }

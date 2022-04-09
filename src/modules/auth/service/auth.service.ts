@@ -28,8 +28,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     super();
   }
 
-  async forgotPassword(body: ForgotPasswordRequest) {
-    const { email } = body;
+  async forgotPassword({ email }: ForgotPasswordRequest) {
     const { id } = await this.userService.getOne({ email });
 
     const confirmTokenPassword = nanoid();
@@ -48,34 +47,27 @@ export default class AuthService extends ServiceCore implements IAuthService {
     void EmailQueue.addForgotPasswordToQueue({ token, email });
   }
 
-  async login(body: LoginRequest) {
-    const { email, password } = body;
+  async login({ email, password }: LoginRequest, ctx: Context) {
     const user = await this.userService.getOne({ email });
 
-    if (!ValidateHelper.credentials(user?.password, password)) {
+    if (!ValidateHelper.credentials(password, user?.password)) {
       throw ResponseHelper.error(HttpExceptionType.INVALID_CREDENTIALS);
     }
 
-    return this.tokenService.getToken({ id: user.id, email });
+    return this.tokenService.getToken({ id: user.id, email }, ctx);
   }
 
-  async logout(body: LogoutRequest) {
-    const { userId } = body;
-
+  async logout({ userId }: LogoutRequest) {
     await this.tokenService.update({ userId }, { isRevoked: true });
   }
 
-  async refreshToken(body: RefreshTokenRequest) {
-    const { user } = await this.tokenService.resolveRefreshToken(
-      body.refreshToken,
-    );
+  async refreshToken({ refreshToken }: RefreshTokenRequest, ctx: Context) {
+    const { user } = await this.tokenService.resolveRefreshToken(refreshToken);
 
-    return this.tokenService.getToken({ id: user.id, email: user.email });
+    return this.tokenService.getToken({ id: user.id, email: user.email }, ctx);
   }
 
-  async resetPassword(body: ResetPasswordRequest) {
-    const { password, token } = body;
-
+  async resetPassword({ password, token }: ResetPasswordRequest) {
     const { jti, email } = await JWTService.verifyAsync<AccessTokenPayload>(
       token,
       JwtConfig.secretToken,

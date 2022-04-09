@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/neverovski/nodejs-auth-sql#readme",
   "dependencies": {
+    "@fullerstack/nax-ipware": "^0.10.0",
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",
     "ajv-keywords": "^5.1.0",
@@ -59,12 +60,13 @@
     "nanoid": "^3.3.2",
     "nodemailer": "^6.7.3",
     "pg": "^8.7.3",
-    "pino": "^7.9.2",
+    "pino": "^7.10.0",
     "pino-pretty": "^7.6.1",
     "pino-seq": "^0.9.0",
     "prom-client": "^14.0.1",
     "tsyringe": "^4.6.0",
-    "typeorm": "^0.2.45"
+    "typeorm": "^0.2.45",
+    "ua-parser-js": "^1.0.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
@@ -84,11 +86,12 @@
     "@types/node": "^17.0.23",
     "@types/nodemailer": "^6.4.4",
     "@types/pg": "^8.6.5",
+    "@types/ua-parser-js": "^0.7.36",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
     "chai": "^4.3.6",
     "chai-http": "^4.3.0",
-    "eslint": "^8.12.0",
+    "eslint": "^8.13.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^2.7.1",

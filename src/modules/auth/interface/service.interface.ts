@@ -15,9 +15,9 @@ import {
 
 export interface IAuthService {
   forgotPassword(body: ForgotPasswordRequest): Promise<void>;
-  login(body: LoginRequest): Promise<TokenResponse>;
+  login(body: LoginRequest, ctx: Context): Promise<TokenResponse>;
   logout(body: LogoutRequest): Promise<void>;
-  refreshToken(body: RefreshTokenRequest): Promise<TokenResponse>;
+  refreshToken(body: RefreshTokenRequest, ctx: Context): Promise<TokenResponse>;
   resetPassword(body: ResetPasswordRequest): Promise<void>;
 }
 
@@ -26,7 +26,7 @@ export interface ITokenService {
   generateRefreshToken(
     body: Omit<RefreshToken, 'jwtid' | 'expiredAt'>,
   ): Promise<string>;
-  getToken(body: TokenRequest): Promise<TokenResponse>;
+  getToken(body: TokenRequest, ctx: Context): Promise<TokenResponse>;
   resolveRefreshToken(
     token: string,
   ): Promise<{ token: RefreshToken; user: FullUser }>;
