@@ -23,6 +23,11 @@ export enum LoggerType {
   SERVER = 'Server',
 }
 
+export enum Role {
+  ANONYMOUS = 'anonymous',
+  USER = 'user',
+}
+
 export type LoggerCtxInfo = {
   error?: Error | any;
   info?: string | any;

@@ -66,12 +66,10 @@ export default class TokenService extends ServiceCore implements ITokenService {
     return JWTService.sign(payload, JwtConfig.secretRefreshToken, opts);
   }
 
-  async getToken(body: TokenRequest) {
-    const { id, ...data } = body;
-
+  async getToken({ id, ...data }: TokenRequest, ctx: Context) {
     const [accessToken, refreshToken] = await Promise.all([
       this.generateAccessToken({ ...data, userId: id }),
-      this.generateRefreshToken({ userId: id }),
+      this.generateRefreshToken({ ...ctx, userId: id }),
     ]);
 
     return { tokenType: this.typeToken, accessToken, refreshToken };
@@ -114,11 +112,10 @@ export default class TokenService extends ServiceCore implements ITokenService {
     }
   }
 
-  private getRefreshTokenFromPayload(
-    payload: RefreshTokenPayload,
-  ): Promise<RefreshToken> {
-    const { jti, sub } = payload;
-
+  private getRefreshTokenFromPayload({
+    jti,
+    sub,
+  }: RefreshTokenPayload): Promise<RefreshToken> {
     if (!jti && !sub) {
       throw ResponseHelper.error(HttpExceptionType.TOKEN_MALFORMED);
     }
@@ -126,11 +123,9 @@ export default class TokenService extends ServiceCore implements ITokenService {
     return this.repository.findOneOrFail({ userId: +sub, jti });
   }
 
-  private getUserFromRefreshTokenPayload(
-    payload: RefreshTokenPayload,
-  ): Promise<FullUser> {
-    const { sub } = payload;
-
+  private getUserFromRefreshTokenPayload({
+    sub,
+  }: RefreshTokenPayload): Promise<FullUser> {
     if (!sub) {
       throw ResponseHelper.error(HttpExceptionType.TOKEN_MALFORMED);
     }

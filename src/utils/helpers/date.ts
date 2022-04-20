@@ -1,54 +1,66 @@
 import {
-  isDate,
-  addMilliseconds,
-  isSameDay as isSameDayFns,
-  getUnixTime,
-  parseISO,
+  addMilliseconds as fnsAddMilliseconds,
+  getUnixTime as fnsGetUnixTime,
+  isDate as fnsIsDate,
+  isSameDay as fnsIsSameDay,
+  parseISO as fnsParseISO,
 } from 'date-fns';
-import { format, utcToZonedTime } from 'date-fns-tz';
+import { format as fnsTzFormat, formatInTimeZone } from 'date-fns-tz';
 import ms from 'ms';
 
 import { FORMAT_DATE } from '../constants';
 
 export default (() => {
-  const isSameDay = (
-    dateLeft?: Date | number,
-    dateRight?: Date | number,
-  ): boolean => {
-    if (dateLeft && dateRight) {
-      return isSameDayFns(dateLeft, dateRight);
+  const parseISO = (date: DateCtx) =>
+    typeof date === 'string' ? fnsParseISO(date) : date;
+
+  const isSameDay = (dateLeft?: DateCtx, dateRight?: DateCtx): boolean => {
+    if (
+      dateLeft &&
+      fnsIsDate(new Date(dateLeft)) &&
+      dateRight &&
+      fnsIsDate(new Date(dateRight))
+    ) {
+      return fnsIsSameDay(parseISO(dateLeft), parseISO(dateRight));
     }
 
     return false;
   };
 
-  const toDate = (date: string) => {
-    return parseISO(date);
-  };
+  const toDate = (date: DateCtx) => parseISO(date);
 
-  const toFormat = (date: Date | number, fmt = FORMAT_DATE, tz?: string) => {
-    if (tz) {
-      return format(utcToZonedTime(date, tz), fmt, { timeZone: tz });
-    }
+  const toFormat = (date?: DateCtx, fmt = FORMAT_DATE, tz?: string) =>
+    fnsTzFormat(parseISO(date || new Date()), fmt, {
+      ...(tz && {
+        timeZone: tz,
+      }),
+    });
 
-    return format(date, fmt);
-  };
+  const toUTC = (date: DateCtx, fmt = FORMAT_DATE) =>
+    formatInTimeZone(date, 'UTC', fmt);
 
   const toMs = (input: string): number => ms(input);
 
-  const addMillisecondToDate = (
-    date?: Date | number,
-    amount?: number,
-  ): Date => {
-    return addMilliseconds(
-      date && isDate(date) ? date : new Date(),
+  const addMillisecondToDate = (date?: DateCtx, amount?: number): Date =>
+    fnsAddMilliseconds(
+      date && fnsIsDate(new Date(date)) ? parseISO(date) : new Date(),
       amount || 0,
     );
-  };
 
-  const toUnix = (date?: Date | number): number => {
-    return getUnixTime(date && isDate(date) ? date : new Date());
-  };
+  const toUnix = (date?: DateCtx): number =>
+    fnsGetUnixTime(
+      date && fnsIsDate(new Date(date)) ? parseISO(date) : new Date(),
+    );
 
-  return { isSameDay, toDate, toFormat, toMs, addMillisecondToDate, toUnix };
+  return {
+    isSameDay,
+    toDate,
+    toFormat,
+    toUTC,
+    parseISO,
+    toMs,
+    addMillisecondToDate,
+    toUnix,
+    fnsIsDate,
+  };
 })();

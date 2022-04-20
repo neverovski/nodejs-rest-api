@@ -6,6 +6,7 @@ import pino from 'express-pino-logger';
 import { MiddlewareCore } from '@core';
 import { Logger } from '@lib';
 import { LoggerType } from '@utils';
+import { IPHelper } from '@utils/helpers';
 
 class LoggerMiddleware extends MiddlewareCore {
   handler(): RequestHandler {
@@ -18,11 +19,8 @@ class LoggerMiddleware extends MiddlewareCore {
           url: req.url,
           query: req.query,
           params: req.params,
-          headers: req.headers,
-          proxyAndXForwardedFor: req?.headers['x-forwarded-for'] || '',
-          remoteAddress:
-            req?.headers['x-real-ip'] || req?.connection?.remoteAddress || '',
-          remotePort: req.remotePort,
+          ip: IPHelper.getIP(req),
+          userAgent: req.headers['user-agent'] || '',
         }),
       },
       reqCustomProps: () => ({ type: LoggerType.HTTP }),
