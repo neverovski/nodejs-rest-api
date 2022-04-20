@@ -3,7 +3,7 @@ import { Response, Request, NextFunction, RequestHandler } from 'express';
 import { JwtConfig } from '@config';
 import { MiddlewareCore } from '@core';
 import { JWTService } from '@providers/jwt';
-import { JWTPayload, HttpExceptionType } from '@utils';
+import { JWTPayload, HttpExceptionType, Role } from '@utils';
 import { ResponseHelper, TokenHelper } from '@utils/helpers';
 
 class AuthMiddleware extends MiddlewareCore {
@@ -13,6 +13,11 @@ class AuthMiddleware extends MiddlewareCore {
         TokenHelper.getFromHeader(req.headers) ||
         TokenHelper.getFromCookies(req.cookies);
 
+      req.user = Object.freeze({
+        role: Role.ANONYMOUS,
+        email: '',
+      });
+
       if (accessToken) {
         try {
           const { userId, email, role } =
@@ -21,7 +26,7 @@ class AuthMiddleware extends MiddlewareCore {
               JwtConfig.secretAccessToken,
             );
 
-          req.currentUser = { userId, email, role };
+          req.user = Object.freeze({ userId, email, role });
 
           return next();
         } catch (err) {

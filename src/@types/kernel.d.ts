@@ -7,6 +7,8 @@ type DateInfo = {
   updatedAt: Date;
 };
 
+type DateCtx = string | number | Date;
+
 type Meta = {
   currentPage: number;
   hasNextPage: boolean;

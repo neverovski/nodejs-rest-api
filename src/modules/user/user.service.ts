@@ -36,11 +36,13 @@ export default class UserService extends ServiceCore implements IUserService {
     );
   }
 
-  async updatePassword(query: Partial<FullUser>, body: Password) {
-    const { oldPassword, newPassword } = body;
+  async updatePassword(
+    query: Partial<FullUser>,
+    { oldPassword, newPassword }: Password,
+  ) {
     const user = await this.repository.findOneOrFail({ where: query });
 
-    if (!ValidateHelper.credentials(user?.password, oldPassword)) {
+    if (!ValidateHelper.credentials(oldPassword, user?.password)) {
       throw ResponseHelper.error(HttpExceptionType.INVALID_CREDENTIALS);
     }
 

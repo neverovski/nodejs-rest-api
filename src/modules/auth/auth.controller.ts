@@ -38,13 +38,14 @@ export default class AuthController extends ControllerCore {
   }
 
   async login(req: Request<any, any, LoginRequest>, res: Response) {
-    const data = await this.service.login(req.body);
+    const { body, ctx } = req;
+    const data = await this.service.login(body, ctx);
 
     this.response(res, { data, dto: TokenDTO });
   }
 
   async logout(req: Request, res: Response) {
-    const { userId } = req.currentUser;
+    const { userId } = req.user as Required<UserContext>;
 
     await this.service.logout({ userId });
 
@@ -55,7 +56,8 @@ export default class AuthController extends ControllerCore {
     req: Request<any, any, RefreshTokenRequest>,
     res: Response,
   ) {
-    const data = await this.service.refreshToken(req.body);
+    const { body, ctx } = req;
+    const data = await this.service.refreshToken(body, ctx);
 
     this.response(res, { data, dto: TokenDTO });
   }

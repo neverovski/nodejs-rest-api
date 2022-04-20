@@ -37,6 +37,7 @@ $ npm run build && npm run start:prod
     - [ ] Unit
     - [ ] E2E
     - [ ] Integration
+  - [ ] Swagger
 
 ## Project Structure
 

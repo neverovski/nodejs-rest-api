@@ -7,15 +7,13 @@ import {
 } from '../code-response';
 
 export default (() => {
-  const error = (code: HttpExceptionType): HttpException => {
-    return new HttpException({
+  const error = (code: HttpExceptionType): HttpException =>
+    new HttpException({
       ...CodeResponse[code],
     });
-  };
 
-  const success = (code: HttpExceptionType): IHttpException => {
-    return CodeResponse[code];
-  };
+  const success = (code: HttpExceptionType): IHttpException =>
+    CodeResponse[code];
 
   return { error, success };
 })();
