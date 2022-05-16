@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { injectable, inject } from 'tsyringe';
 
 import { ControllerCore } from '@core';
-import { HttpExceptionType, HttpStatus } from '@utils';
+import { HttpException, HttpStatus } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 import { UserDTO } from './dto';
@@ -25,7 +25,7 @@ export default class UserController extends ControllerCore {
     await this.service.create(req.body);
 
     this.response(res, {
-      data: ResponseHelper.success(HttpExceptionType.USER_CREATED),
+      data: ResponseHelper.success(HttpException.USER_CREATED),
       status: HttpStatus.Created,
     });
   }
@@ -44,9 +44,7 @@ export default class UserController extends ControllerCore {
     await this.service.updatePassword({ id: userId }, req.body);
 
     this.response(res, {
-      data: ResponseHelper.success(
-        HttpExceptionType.PASSWORD_RESET_SUCCESSFULLY,
-      ),
+      data: ResponseHelper.success(HttpException.PASSWORD_RESET_SUCCESSFULLY),
     });
   }
 
@@ -59,7 +57,7 @@ export default class UserController extends ControllerCore {
     await this.service.update({ id: userId }, req.body);
 
     this.response(res, {
-      data: ResponseHelper.success(HttpExceptionType.USER_UPDATE),
+      data: ResponseHelper.success(HttpException.USER_UPDATE),
     });
   }
 }

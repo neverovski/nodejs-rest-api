@@ -3,7 +3,7 @@ import { Response, Request, NextFunction, RequestHandler } from 'express';
 import { JwtConfig } from '@config';
 import { MiddlewareCore } from '@core';
 import { JWTService } from '@providers/jwt';
-import { JWTPayload, HttpExceptionType, Role } from '@utils';
+import { JWTPayload, HttpException, Role } from '@utils';
 import { ResponseHelper, TokenHelper } from '@utils/helpers';
 
 class AuthMiddleware extends MiddlewareCore {
@@ -34,7 +34,7 @@ class AuthMiddleware extends MiddlewareCore {
         }
       }
 
-      return next(ResponseHelper.error(HttpExceptionType.TOKEN_NOT_PROVIDED));
+      return next(ResponseHelper.error(HttpException.TOKEN_NOT_PROVIDED));
     };
   }
 }

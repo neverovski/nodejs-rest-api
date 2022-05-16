@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import { HttpExceptionType } from '@utils';
+import { HttpException } from '@utils';
 import { DateHelper, ResponseHelper } from '@utils/helpers';
 
 class JWTService {
@@ -38,14 +38,14 @@ class JWTService {
     return new Promise((resolve, reject) => {
       jwt.verify(token, secret, (error, decoded) => {
         if (error && error.name === 'TokenExpiredError') {
-          return reject(ResponseHelper.error(HttpExceptionType.TOKEN_EXPIRED));
+          return reject(ResponseHelper.error(HttpException.TOKEN_EXPIRED));
         }
 
         if (decoded) {
           return resolve(decoded as unknown as T);
         }
 
-        return reject(ResponseHelper.error(HttpExceptionType.TOKEN_VERIFY));
+        return reject(ResponseHelper.error(HttpException.TOKEN_VERIFY));
       });
     });
   }

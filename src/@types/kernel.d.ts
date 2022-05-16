@@ -9,6 +9,12 @@ type DateInfo = {
 
 type DateCtx = string | number | Date;
 
+type HttpExceptionType = {
+  code: string;
+  message: string;
+  status: number;
+};
+
 type Meta = {
   currentPage: number;
   hasNextPage: boolean;
