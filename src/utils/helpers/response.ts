@@ -11,7 +11,7 @@ export default (() => {
   const success = (code: HttpException): HttpExceptionType =>
     CodeResponse[code];
 
-  const custom = (ctx: Partial<HttpExceptionType>): HttpExceptionCore => {
+  const custom = (ctx?: Partial<HttpExceptionType>): HttpExceptionCore => {
     return new HttpExceptionCore(ctx);
   };
 

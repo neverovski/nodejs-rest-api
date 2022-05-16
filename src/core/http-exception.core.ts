@@ -5,7 +5,7 @@ export default class HttpExceptionCore extends Error {
   readonly message: string;
   readonly status: number;
 
-  constructor(ctx: Partial<HttpExceptionType>) {
+  constructor(ctx?: Partial<HttpExceptionType>) {
     super();
 
     this.status = ctx?.status || CodeResponse.EXTERNAL.status;
