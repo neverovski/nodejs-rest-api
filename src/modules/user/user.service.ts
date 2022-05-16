@@ -1,11 +1,11 @@
 import { getCustomRepository } from 'typeorm';
 
 import { ServiceCore } from '@core';
-import { HttpExceptionType } from '@utils';
+import { HttpException } from '@utils';
 import { ResponseHelper, ValidateHelper } from '@utils/helpers';
 
 import { IUserService } from './interface';
-import { RELATION } from './user.constant';
+import { USER_RELATION } from './user.constant';
 import UserRepository from './user.repository';
 import { User, FullUser, Password } from './user.type';
 
@@ -30,7 +30,7 @@ export default class UserService extends ServiceCore implements IUserService {
     await this.repository.updateEntity(
       {
         where: query,
-        relations: RELATION,
+        relations: USER_RELATION,
       },
       body,
     );
@@ -43,7 +43,7 @@ export default class UserService extends ServiceCore implements IUserService {
     const user = await this.repository.findOneOrFail({ where: query });
 
     if (!ValidateHelper.credentials(oldPassword, user?.password)) {
-      throw ResponseHelper.error(HttpExceptionType.INVALID_CREDENTIALS);
+      throw ResponseHelper.error(HttpException.INVALID_CREDENTIALS);
     }
 
     await this.repository.save({ ...user, password: newPassword });

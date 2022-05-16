@@ -1,7 +1,7 @@
 import { plainToInstance, ClassTransformOptions } from 'class-transformer';
 import { Response } from 'express';
 
-import { HttpExceptionType, HttpStatus } from '@utils';
+import { HttpException, HttpStatus } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 export default class ControllerCore {
@@ -18,7 +18,7 @@ export default class ControllerCore {
     const { data, options, dto } = ctx || {};
 
     if (!data && ctx?.status === HttpStatus.OK) {
-      throw ResponseHelper.error(HttpExceptionType.NOT_FOUND);
+      throw ResponseHelper.error(HttpException.NOT_FOUND);
     }
 
     const status = !ctx ? HttpStatus.NoContent : ctx?.status || HttpStatus.OK;

@@ -1,3 +1,1 @@
-export const RELATION = {
-  profile: true,
-};
+export const USER_RELATION = ['profile'];

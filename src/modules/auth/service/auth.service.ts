@@ -6,7 +6,7 @@ import { ServiceCore } from '@core';
 import { IUserService } from '@modules/user';
 import { EmailQueue } from '@providers/email';
 import { JWTService } from '@providers/jwt';
-import { HttpExceptionType } from '@utils';
+import { HttpException } from '@utils';
 import { ResponseHelper, ValidateHelper } from '@utils/helpers';
 
 import {
@@ -51,7 +51,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     const user = await this.userService.getOne({ email });
 
     if (!ValidateHelper.credentials(password, user?.password)) {
-      throw ResponseHelper.error(HttpExceptionType.INVALID_CREDENTIALS);
+      throw ResponseHelper.error(HttpException.INVALID_CREDENTIALS);
     }
 
     return this.tokenService.getToken({ id: user.id, email }, ctx);

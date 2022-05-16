@@ -1,12 +1,12 @@
 import { Request, Response, ErrorRequestHandler, NextFunction } from 'express';
 
-import { MiddlewareCore, HttpException } from '@core';
+import { MiddlewareCore, HttpExceptionCore } from '@core';
 import { CodeResponse } from '@utils';
 
 class ErrorMiddleware extends MiddlewareCore {
   handler(): ErrorRequestHandler {
     return (
-      error: HttpException,
+      error: HttpExceptionCore,
       _req: Request,
       res: Response,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -23,7 +23,7 @@ class ErrorMiddleware extends MiddlewareCore {
         response = { ...error };
       }
 
-      const errorRes = new HttpException(response);
+      const errorRes = new HttpExceptionCore(response);
 
       res.status(errorRes.status).json(errorRes);
     };

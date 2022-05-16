@@ -6,7 +6,7 @@ import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
 import { IUserService, FullUser } from '@modules/user';
 import { JWTService } from '@providers/jwt';
-import { TokenType, HttpExceptionType } from '@utils';
+import { TokenType, HttpException } from '@utils';
 import { DateHelper, ResponseHelper } from '@utils/helpers';
 
 import {
@@ -82,13 +82,13 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const refreshTokenFromDB = await this.getRefreshTokenFromPayload(payload);
 
     if (refreshTokenFromDB?.isRevoked) {
-      throw ResponseHelper.error(HttpExceptionType.REFRESH_TOKEN_EXPIRED);
+      throw ResponseHelper.error(HttpException.REFRESH_TOKEN_EXPIRED);
     }
 
     const user = await this.getUserFromRefreshTokenPayload(payload);
 
     if (!user) {
-      throw ResponseHelper.error(HttpExceptionType.TOKEN_MALFORMED);
+      throw ResponseHelper.error(HttpException.TOKEN_MALFORMED);
     }
 
     return { user, token: refreshTokenFromDB };
@@ -117,7 +117,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     sub,
   }: RefreshTokenPayload): Promise<RefreshToken> {
     if (!jti && !sub) {
-      throw ResponseHelper.error(HttpExceptionType.TOKEN_MALFORMED);
+      throw ResponseHelper.error(HttpException.TOKEN_MALFORMED);
     }
 
     return this.repository.findOneOrFail({ userId: +sub, jti });
@@ -127,7 +127,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     sub,
   }: RefreshTokenPayload): Promise<FullUser> {
     if (!sub) {
-      throw ResponseHelper.error(HttpExceptionType.TOKEN_MALFORMED);
+      throw ResponseHelper.error(HttpException.TOKEN_MALFORMED);
     }
 
     return this.userService.getOne({ id: +sub });

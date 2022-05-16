@@ -1,13 +1,10 @@
-export interface IHttpException {
-  code: string;
-  message: string;
-  status: number;
-}
-
-export enum HttpExceptionType {
+export enum HttpException {
   BAD_REQUEST = 'BAD_REQUEST',
+  DB_ERROR = 'DB_ERROR',
+  DELETE_ERROR = 'DELETE_ERROR',
   EMAIL_ALREADY_TAKEN = 'EMAIL_ALREADY_TAKEN',
   EMPTY_BODY = 'EMPTY_BODY',
+  EXTERNAL = 'EXTERNAL',
   FORBIDDEN = 'FORBIDDEN',
   INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
   NOT_FOUND = 'NOT_FOUND',
@@ -43,114 +40,129 @@ export enum HttpStatus {
 }
 
 export const CodeResponse = {
-  [HttpExceptionType.OK]: {
+  [HttpException.OK]: {
     status: HttpStatus.OK,
-    code: HttpExceptionType.OK,
+    code: HttpException.OK,
     message: 'Ok',
   },
-  [HttpExceptionType.PASSWORD_RESET_SENT_EMAIL]: {
+  [HttpException.PASSWORD_RESET_SENT_EMAIL]: {
     message: 'Password reset code sent to email',
     status: HttpStatus.OK,
-    code: HttpExceptionType.PASSWORD_RESET_SENT_EMAIL,
+    code: HttpException.PASSWORD_RESET_SENT_EMAIL,
   },
-  [HttpExceptionType.PASSWORD_RESET_SUCCESSFULLY]: {
+  [HttpException.PASSWORD_RESET_SUCCESSFULLY]: {
     message: 'Password reset successfully',
     status: HttpStatus.OK,
-    code: HttpExceptionType.PASSWORD_RESET_SUCCESSFULLY,
+    code: HttpException.PASSWORD_RESET_SUCCESSFULLY,
   },
-  [HttpExceptionType.USER_CREATED]: {
+  [HttpException.USER_CREATED]: {
     status: HttpStatus.OK,
-    code: HttpExceptionType.USER_CREATED,
+    code: HttpException.USER_CREATED,
     message: 'User created successfully!',
   },
-  [HttpExceptionType.USER_UPDATE]: {
+  [HttpException.USER_UPDATE]: {
     status: HttpStatus.OK,
-    code: HttpExceptionType.USER_UPDATE,
+    code: HttpException.USER_UPDATE,
     message: 'User updated successfully!',
   },
-  [HttpExceptionType.BAD_REQUEST]: {
+  [HttpException.BAD_REQUEST]: {
     status: HttpStatus.BadRequest,
-    code: HttpExceptionType.BAD_REQUEST,
+    code: HttpException.BAD_REQUEST,
     message: 'Bad Request',
   },
-  [HttpExceptionType.EMPTY_BODY]: {
+  [HttpException.EMPTY_BODY]: {
     status: HttpStatus.BadRequest,
-    code: HttpExceptionType.EMPTY_BODY,
+    code: HttpException.EMPTY_BODY,
     message: 'Empty body is not allowed. Please fill the body',
   },
-  [HttpExceptionType.INVALID_CREDENTIALS]: {
+  [HttpException.INVALID_CREDENTIALS]: {
     message: 'Invalid credentials',
     status: HttpStatus.BadRequest,
-    code: HttpExceptionType.INVALID_CREDENTIALS,
+    code: HttpException.INVALID_CREDENTIALS,
   },
-  [HttpExceptionType.TOKEN_NOT_PROVIDED]: {
+  [HttpException.TOKEN_NOT_PROVIDED]: {
     status: HttpStatus.Unauthorized,
-    code: HttpExceptionType.TOKEN_NOT_PROVIDED,
+    code: HttpException.TOKEN_NOT_PROVIDED,
     message: 'Token not provided',
   },
-  [HttpExceptionType.TOKEN_EXPIRED]: {
+  [HttpException.TOKEN_EXPIRED]: {
     status: HttpStatus.Unauthorized,
-    code: HttpExceptionType.TOKEN_EXPIRED,
+    code: HttpException.TOKEN_EXPIRED,
     message: 'Token expired',
   },
-  [HttpExceptionType.REFRESH_TOKEN_EXPIRED]: {
+  [HttpException.REFRESH_TOKEN_EXPIRED]: {
     status: HttpStatus.Unauthorized,
-    code: HttpExceptionType.REFRESH_TOKEN_EXPIRED,
+    code: HttpException.REFRESH_TOKEN_EXPIRED,
     message: 'Refresh token expired',
   },
-  [HttpExceptionType.TOKEN_MALFORMED]: {
+  [HttpException.TOKEN_MALFORMED]: {
     status: HttpStatus.Unauthorized,
-    code: HttpExceptionType.TOKEN_MALFORMED,
+    code: HttpException.TOKEN_MALFORMED,
     message: 'Trying get data from token. Something wrong',
   },
-  [HttpExceptionType.TOKEN_VERIFY]: {
+  [HttpException.TOKEN_VERIFY]: {
     status: HttpStatus.Unauthorized,
-    code: HttpExceptionType.TOKEN_VERIFY,
+    code: HttpException.TOKEN_VERIFY,
     message: 'Token verify error',
   },
-  [HttpExceptionType.REFRESH_TOKEN_VERIFY]: {
+  [HttpException.REFRESH_TOKEN_VERIFY]: {
     status: HttpStatus.Unauthorized,
-    code: HttpExceptionType.REFRESH_TOKEN_VERIFY,
+    code: HttpException.REFRESH_TOKEN_VERIFY,
     message: 'Refresh token verify error',
   },
-  [HttpExceptionType.WRONG_RESET_PASSWORD_TOKEN]: {
+  [HttpException.WRONG_RESET_PASSWORD_TOKEN]: {
     status: HttpStatus.Unauthorized,
-    code: HttpExceptionType.WRONG_RESET_PASSWORD_TOKEN,
+    code: HttpException.WRONG_RESET_PASSWORD_TOKEN,
     message: 'Reset password token is not registered. Probably it already used',
   },
-  [HttpExceptionType.WRONG_EMAIL_CONFIRM_TOKEN]: {
+  [HttpException.WRONG_EMAIL_CONFIRM_TOKEN]: {
     status: HttpStatus.Unauthorized,
-    code: HttpExceptionType.WRONG_EMAIL_CONFIRM_TOKEN,
+    code: HttpException.WRONG_EMAIL_CONFIRM_TOKEN,
     message: 'Confirm email token is not registered. Probably it already used',
   },
-  [HttpExceptionType.FORBIDDEN]: {
+  [HttpException.FORBIDDEN]: {
     status: HttpStatus.Forbidden,
-    code: HttpExceptionType.FORBIDDEN,
+    code: HttpException.FORBIDDEN,
     message: 'Forbidden',
   },
-  [HttpExceptionType.NOT_FOUND]: {
+  [HttpException.NOT_FOUND]: {
     status: HttpStatus.NotFound,
-    code: HttpExceptionType.NOT_FOUND,
+    code: HttpException.NOT_FOUND,
     message: 'Not found',
   },
-  [HttpExceptionType.ROUTE_NOT_FOUND]: {
+  [HttpException.ROUTE_NOT_FOUND]: {
     status: HttpStatus.NotFound,
-    code: HttpExceptionType.ROUTE_NOT_FOUND,
+    code: HttpException.ROUTE_NOT_FOUND,
     message: 'Route not found',
   },
-  [HttpExceptionType.EMAIL_ALREADY_TAKEN]: {
+  [HttpException.EMAIL_ALREADY_TAKEN]: {
     message: 'This email already taken, try use another',
     status: HttpStatus.Conflict,
-    code: HttpExceptionType.EMAIL_ALREADY_TAKEN,
+    code: HttpException.EMAIL_ALREADY_TAKEN,
   },
-  [HttpExceptionType.UNPROCESSABLE_ENTITY]: {
+  [HttpException.UNPROCESSABLE_ENTITY]: {
     status: HttpStatus.UnprocessableEntity,
-    code: HttpExceptionType.UNPROCESSABLE_ENTITY,
+    code: HttpException.UNPROCESSABLE_ENTITY,
     message: 'Validation Failed',
   },
-  [HttpExceptionType.SERVER_ERROR]: {
+  [HttpException.EXTERNAL]: {
+    message: 'External service error',
     status: HttpStatus.InternalServerError,
-    code: HttpExceptionType.SERVER_ERROR,
-    message: 'Server error occurred',
+    code: HttpException.EXTERNAL,
   },
-} as Record<HttpExceptionType, IHttpException>;
+  [HttpException.SERVER_ERROR]: {
+    message: 'Server error occurred',
+    status: HttpStatus.InternalServerError,
+    code: HttpException.SERVER_ERROR,
+  },
+  [HttpException.DB_ERROR]: {
+    message: 'DB error',
+    status: HttpStatus.InternalServerError,
+    code: HttpException.DB_ERROR,
+  },
+  [HttpException.DELETE_ERROR]: {
+    message: 'Deletion is not possible',
+    status: HttpStatus.BadRequest,
+    code: HttpException.DELETE_ERROR,
+  },
+} as Record<HttpException, HttpExceptionType>;

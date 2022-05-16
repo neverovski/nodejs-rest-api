@@ -8,7 +8,7 @@ import {
   QueryFailedError,
 } from 'typeorm';
 
-import { OptionCtx, DB_UQ_USER_EMAIL, HttpExceptionType } from '@utils';
+import { OptionCtx, DB_UQ_USER_EMAIL, HttpException } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 export default class RepositoryCore<
@@ -47,7 +47,7 @@ export default class RepositoryCore<
 
       switch (err.constraint) {
         case DB_UQ_USER_EMAIL:
-          return ResponseHelper.error(HttpExceptionType.EMAIL_ALREADY_TAKEN);
+          return ResponseHelper.error(HttpException.EMAIL_ALREADY_TAKEN);
         default:
           return error;
       }
