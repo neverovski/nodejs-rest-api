@@ -5,64 +5,40 @@ import { HttpStatus, HttpException, CodeResponse } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 describe('ResponseHelper.error Function Test', () => {
-  let message: string;
-  let code: string;
-  let status: number;
-
-  let result: HttpExceptionCore;
-
   Object.values(HttpException).forEach((item) => {
-    beforeEach(() => {
-      message = CodeResponse[item].message;
-      code = CodeResponse[item].code;
-      status = CodeResponse[item].status;
+    const result = ResponseHelper.error(item);
 
-      result = ResponseHelper.error(item);
+    it(`Should return - ${CodeResponse[item].message}`, () => {
+      expect(result).to.be.instanceOf(HttpExceptionCore);
+      expect(result.message).to.be.equal(CodeResponse[item].message);
     });
 
-    it('Should return message', () => {
+    it(`Should return ${CodeResponse[item].code}`, () => {
       expect(result).to.be.instanceOf(HttpExceptionCore);
-      expect(result.message).to.be.equal(message);
+      expect(result.code).to.be.equal(CodeResponse[item].code);
     });
 
-    it('Should return code', () => {
+    it(`Should return ${CodeResponse[item].status}`, () => {
       expect(result).to.be.instanceOf(HttpExceptionCore);
-      expect(result.code).to.be.equal(code);
-    });
-
-    it('Should return status', () => {
-      expect(result).to.be.instanceOf(HttpExceptionCore);
-      expect(result.status).to.be.equal(status);
+      expect(result.status).to.be.equal(CodeResponse[item].status);
     });
   });
 });
 
 describe('ResponseHelper.success Function Test', () => {
-  let message: string;
-  let code: string;
-  let status: number;
-
-  let result: HttpExceptionType;
-
   Object.values(HttpException).forEach((item) => {
-    beforeEach(() => {
-      message = CodeResponse[item].message;
-      code = CodeResponse[item].code;
-      status = CodeResponse[item].status;
+    const result = ResponseHelper.success(item);
 
-      result = ResponseHelper.success(item);
+    it(`Should return - ${CodeResponse[item].message}`, () => {
+      expect(result.message).to.be.equal(CodeResponse[item].message);
     });
 
-    it('Should return message', () => {
-      expect(result.message).to.be.equal(message);
+    it(`Should return ${CodeResponse[item].code}`, () => {
+      expect(result.code).to.be.equal(CodeResponse[item].code);
     });
 
-    it('Should return code', () => {
-      expect(result.code).to.be.equal(code);
-    });
-
-    it('Should return status', () => {
-      expect(result.status).to.be.equal(status);
+    it(`Should return ${CodeResponse[item].status}`, () => {
+      expect(result.status).to.be.equal(CodeResponse[item].status);
     });
   });
 });

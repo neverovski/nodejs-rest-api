@@ -2,21 +2,14 @@ import { expect } from 'chai';
 
 import { IPHelper } from '@utils/helpers';
 
-import { ReqData } from '../data';
+import { ReqMock } from '../mock';
 
 describe('IPHelper.getIP - Function Test', () => {
-  let ip: string;
-  let req: { headers: any; ip: string };
+  ReqMock.forEach((req) => {
+    const ip = IPHelper.getIP(req);
 
-  ReqData.forEach((item) => {
-    beforeEach(() => {
-      req = item;
-
-      ip = IPHelper.getIP({ headers: item.headers });
-    });
-
-    it('Should return ip', () => {
-      expect(req.ip).to.be.equal(ip);
+    it(`Should return - ${ip}`, () => {
+      expect(req.data.ip).to.equal(ip);
     });
   });
 });
