@@ -12,7 +12,7 @@ import UserController from './user.controller';
 import {
   CreateUserSchema,
   UpdateUserSchema,
-  ResetPasswordSchema,
+  ChangePasswordSchema,
 } from './user.schema';
 
 export default class UserRouter extends RouterCore {
@@ -45,10 +45,12 @@ export default class UserRouter extends RouterCore {
     );
 
     this.router.post(
-      '/reset-password',
+      '/current/change-password',
       AuthMiddleware.handler(),
-      ValidateMiddleware.handler(ResetPasswordSchema),
-      AsyncMiddleware(this.controller.resetPassword.bind(this.controller)),
+      ValidateMiddleware.handler(ChangePasswordSchema),
+      AsyncMiddleware(
+        this.controller.changePasswordCurrentUser.bind(this.controller),
+      ),
     );
 
     return this.router;

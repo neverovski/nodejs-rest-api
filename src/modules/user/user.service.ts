@@ -5,7 +5,7 @@ import { HttpException } from '@utils';
 import { ResponseHelper, ValidateHelper } from '@utils/helpers';
 
 import { IUserService } from './interface';
-import { USER_RELATION } from './user.constant';
+import { USER_RELATIONS } from './user.constant';
 import UserRepository from './user.repository';
 import { User, FullUser, Password } from './user.type';
 
@@ -23,14 +23,20 @@ export default class UserService extends ServiceCore implements IUserService {
   }
 
   async getOne(query: Partial<FullUser>) {
-    return this.repository.findOneOrFail({ where: query });
+    try {
+      return await this.repository.findOneOrFail({
+        where: query,
+        relations: USER_RELATIONS,
+      });
+    } catch (error) {
+      throw this.errorHandler(error as Error, HttpException.NOT_FOUND_USER);
+    }
   }
 
   async update(query: Partial<FullUser>, body: Partial<User>) {
     await this.repository.updateEntity(
       {
         where: query,
-        relations: USER_RELATION,
       },
       body,
     );

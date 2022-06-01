@@ -95,7 +95,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
   }
 
   async update(query: Partial<FullRefreshToken>, body: Partial<RefreshToken>) {
-    await this.repository.updateEntity(query, body);
+    await this.repository.updateEntity({ where: query }, body);
   }
 
   private async decodeRefreshToken(

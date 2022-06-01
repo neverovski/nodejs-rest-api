@@ -21,6 +21,19 @@ export default class UserController extends ControllerCore {
     super();
   }
 
+  async changePasswordCurrentUser(
+    req: Request<any, any, Password>,
+    res: Response,
+  ) {
+    const { userId } = req.user as Required<UserContext>;
+
+    await this.service.updatePassword({ id: userId }, req.body);
+
+    this.response(res, {
+      data: ResponseHelper.success(HttpException.PASSWORD_RESET_SUCCESSFULLY),
+    });
+  }
+
   async create(req: Request<any, any, User>, res: Response) {
     await this.service.create(req.body);
 
@@ -36,16 +49,6 @@ export default class UserController extends ControllerCore {
     const data = await this.service.getOne({ id: userId });
 
     this.response(res, { data, dto: UserDTO });
-  }
-
-  async resetPassword(req: Request<any, any, Password>, res: Response) {
-    const { userId } = req.user as Required<UserContext>;
-
-    await this.service.updatePassword({ id: userId }, req.body);
-
-    this.response(res, {
-      data: ResponseHelper.success(HttpException.PASSWORD_RESET_SUCCESSFULLY),
-    });
   }
 
   async updateCurrentUser(

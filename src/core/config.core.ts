@@ -3,7 +3,14 @@ import path from 'path';
 import { config } from 'dotenv';
 import Join, { Root as JoinRoot, Schema } from 'joi';
 
-config({ path: path.join(process.cwd(), '.env') });
+import { ENV_TEST } from '@utils';
+
+config({
+  path: path.join(
+    process.cwd(),
+    process?.env?.NODE_ENV === ENV_TEST ? '.env.test' : '.env',
+  ),
+});
 
 export default class ConfigCore {
   protected get joi(): JoinRoot {

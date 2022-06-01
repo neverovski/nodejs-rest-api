@@ -11,6 +11,7 @@ type DateCtx = string | number | Date;
 
 type HttpExceptionType = {
   code: string;
+  errors?: { [key: string]: string };
   message: string;
   status: number;
 };
