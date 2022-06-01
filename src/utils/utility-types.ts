@@ -28,6 +28,10 @@ export enum Role {
   USER = 'user',
 }
 
+export enum Language {
+  EN = 'en',
+}
+
 export type LoggerCtxInfo = {
   error?: Error | any;
   info?: string | any;

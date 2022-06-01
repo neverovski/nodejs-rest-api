@@ -54,6 +54,7 @@ export const UpdateUserSchema: IJsonSchema = {
       profile: {
         type: 'object',
         additionalProperties: false,
+        minProperties: 1,
         properties: {
           firstName: {
             type: 'string',
@@ -69,7 +70,7 @@ export const UpdateUserSchema: IJsonSchema = {
   },
 };
 
-export const ResetPasswordSchema: IJsonSchema = {
+export const ChangePasswordSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },
   query: { type: 'object', maxProperties: 0 },
   body: {

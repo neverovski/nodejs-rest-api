@@ -1,7 +1,7 @@
 import { Request, Response, ErrorRequestHandler, NextFunction } from 'express';
 
 import { MiddlewareCore, HttpExceptionCore } from '@core';
-import { CodeResponse } from '@utils';
+import { CodeResponse, HttpStatus, HttpException } from '@utils';
 
 class ErrorMiddleware extends MiddlewareCore {
   handler(): ErrorRequestHandler {
@@ -19,6 +19,12 @@ class ErrorMiddleware extends MiddlewareCore {
         error.name === 'EntityNotFoundError'
       ) {
         response = CodeResponse.NOT_FOUND;
+      } else if (error.status === HttpStatus.BadRequest) {
+        response = {
+          ...error,
+          message: error.message || CodeResponse.SERVER_ERROR.message,
+          code: HttpException.BAD_REQUEST,
+        };
       } else if (error.code && error.status && error.message) {
         response = { ...error };
       }

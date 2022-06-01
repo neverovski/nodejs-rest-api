@@ -3,9 +3,10 @@
 import { RequestHandler } from 'express';
 import pino from 'express-pino-logger';
 
+import { AppConfig } from '@config';
 import { MiddlewareCore } from '@core';
 import { Logger } from '@lib';
-import { LoggerType } from '@utils';
+import { LoggerType, ENV_PRODUCTION } from '@utils';
 import { IPHelper } from '@utils/helpers';
 
 class LoggerMiddleware extends MiddlewareCore {
@@ -21,6 +22,16 @@ class LoggerMiddleware extends MiddlewareCore {
           params: req.params,
           ip: IPHelper.getIP(req),
           userAgent: req.headers['user-agent'] || '',
+          ...(AppConfig.env !== ENV_PRODUCTION && {
+            headers: req?.headers || null,
+            body: req?.raw?.body || null,
+          }),
+        }),
+        res: (res) => ({
+          statusCode: res?.statusCode || null,
+          ...(AppConfig.env !== ENV_PRODUCTION && {
+            headers: res?.headers || null,
+          }),
         }),
       },
       reqCustomProps: () => ({ type: LoggerType.HTTP }),

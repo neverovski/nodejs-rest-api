@@ -2,6 +2,7 @@ import { ConfigCore } from '@core';
 
 class SeqConfig extends ConfigCore {
   readonly apiKey: string;
+  readonly monitoring: boolean;
   readonly serverUrl: string;
 
   constructor() {
@@ -9,14 +10,20 @@ class SeqConfig extends ConfigCore {
 
     this.serverUrl = this.set<string>(
       'SEQ_SERVER_URL',
-      this.joi.string().allow(null, ''),
+      this.joi.string().required(),
       '',
     );
 
     this.apiKey = this.set<string>(
       'SEQ_API_KEY',
-      this.joi.string().allow(null, ''),
+      this.joi.string().required(),
       '',
+    );
+
+    this.monitoring = this.set<boolean>(
+      'SEQ_MONITORING',
+      this.joi.boolean(),
+      false,
     );
   }
 }

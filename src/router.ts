@@ -11,7 +11,7 @@ export default (app: Express): void => {
 
   app.use((req: Request, _res: Response, next: NextFunction) =>
     !req.route
-      ? next(ResponseHelper.error(HttpException.ROUTE_NOT_FOUND))
+      ? next(ResponseHelper.error(HttpException.NOT_FOUND_ROUTER))
       : next(),
   );
 };

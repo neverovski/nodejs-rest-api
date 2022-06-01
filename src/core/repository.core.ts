@@ -18,20 +18,21 @@ export default class RepositoryCore<
     await this.delete(query);
   }
 
-  async findEntity(options: OptionCtx<Entity> = {}): Promise<Entity[]> {
-    return this.find(options);
+  async findEntity(ctx: OptionCtx<Entity> = {}): Promise<Entity[]> {
+    return this.find(ctx);
   }
 
-  async findEntityOneOrFail(options: OptionCtx<Entity> = {}): Promise<Entity> {
-    return this.findOneOrFail(options);
+  async findEntityOneOrFail(ctx: OptionCtx<Entity> = {}): Promise<Entity> {
+    return this.findOneOrFail(ctx);
   }
 
-  async updateEntity<T>(
-    query: Partial<T>,
+  async updateEntity(
+    ctx: Required<Pick<OptionCtx<Entity>, 'where'>> &
+      Omit<OptionCtx<Entity>, 'where'>,
     body: DeepPartial<Entity>,
   ): Promise<Entity> {
     try {
-      const entityFromDB = await this.findOneOrFail({ where: query });
+      const entityFromDB = await this.findOneOrFail(ctx);
 
       this.merge(entityFromDB, body);
 
