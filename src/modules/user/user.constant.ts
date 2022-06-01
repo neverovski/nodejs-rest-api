@@ -1,1 +1,1 @@
-export const USER_RELATION = ['profile'];
+export const USER_RELATIONS = ['profile'];

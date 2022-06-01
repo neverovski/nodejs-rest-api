@@ -8,12 +8,13 @@ export enum HttpException {
   FORBIDDEN = 'FORBIDDEN',
   INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
   NOT_FOUND = 'NOT_FOUND',
+  NOT_FOUND_ROUTER = 'NOT_FOUND_ROUTER',
+  NOT_FOUND_USER = 'NOT_FOUND_USER',
   OK = 'OK',
   PASSWORD_RESET_SENT_EMAIL = 'PASSWORD_RESET_SENT_EMAIL',
   PASSWORD_RESET_SUCCESSFULLY = 'PASSWORD_RESET_SUCCESSFULLY',
   REFRESH_TOKEN_EXPIRED = 'SESSION_EXPIRED',
   REFRESH_TOKEN_VERIFY = 'BAD_REFRESH_TOKEN',
-  ROUTE_NOT_FOUND = 'ROUTE_NOT_FOUND',
   SERVER_ERROR = 'SERVER_ERROR',
   TOKEN_EXPIRED = 'TOKEN_EXPIRED',
   TOKEN_MALFORMED = 'TOKEN_MALFORMED',
@@ -130,10 +131,15 @@ export const CodeResponse = {
     code: HttpException.NOT_FOUND,
     message: 'Not found',
   },
-  [HttpException.ROUTE_NOT_FOUND]: {
+  [HttpException.NOT_FOUND_ROUTER]: {
     status: HttpStatus.NotFound,
-    code: HttpException.ROUTE_NOT_FOUND,
+    code: HttpException.NOT_FOUND_ROUTER,
     message: 'Route not found',
+  },
+  [HttpException.NOT_FOUND_USER]: {
+    status: HttpStatus.NotFound,
+    code: HttpException.NOT_FOUND_USER,
+    message: 'User is not found',
   },
   [HttpException.EMAIL_ALREADY_TAKEN]: {
     message: 'This email already taken, try use another',
