@@ -1,5 +1,6 @@
-import { ConfigCore } from '@core';
-import { ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST } from '@utils';
+import { ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST, ENV_CLI } from '@utils';
+
+import ConfigCore from './config.core';
 
 class AppConfig extends ConfigCore {
   readonly env: string;
@@ -12,7 +13,9 @@ class AppConfig extends ConfigCore {
 
     this.env = this.set<string>(
       'NODE_ENV',
-      this.joi.string().valid(ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST),
+      this.joi
+        .string()
+        .valid(ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST, ENV_CLI),
       ENV_DEVELOPMENT,
     );
     this.name = this.set<string>('APP_NAME', this.joi.string().required(), '');

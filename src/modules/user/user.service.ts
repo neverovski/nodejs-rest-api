@@ -1,57 +1,55 @@
-import { getCustomRepository } from 'typeorm';
+import { injectable, inject } from 'tsyringe';
 
 import { ServiceCore } from '@core';
 import { HttpException } from '@utils';
 import { ResponseHelper, ValidateHelper } from '@utils/helpers';
 
-import { IUserService } from './interface';
-import { USER_RELATIONS } from './user.constant';
-import UserRepository from './user.repository';
-import { User, FullUser, Password } from './user.type';
+import { IUserService, IUserRepository } from './interface';
+import { USER_RELATION } from './user.constant';
+import { User, FullUser, Password, UserInject } from './user.type';
 
+@injectable()
 export default class UserService extends ServiceCore implements IUserService {
-  private readonly repository: UserRepository;
-
-  constructor() {
+  constructor(
+    @inject(UserInject.USER_REPOSITORY)
+    private readonly repository: IUserRepository,
+  ) {
     super();
-
-    this.repository = getCustomRepository(UserRepository);
   }
 
-  async create(body: User) {
-    await this.repository.createUser(body);
+  create(body: User) {
+    return this.repository.create(body);
   }
 
-  async getOne(query: Partial<FullUser>) {
-    try {
-      return await this.repository.findOneOrFail({
-        where: query,
-        relations: USER_RELATIONS,
-      });
-    } catch (error) {
-      throw this.errorHandler(error as Error, HttpException.NOT_FOUND_USER);
-    }
+  getOne(query: Partial<FullUser>) {
+    return this.repository.findOneOrFail({
+      where: query,
+      relations: USER_RELATION,
+    });
   }
 
   async update(query: Partial<FullUser>, body: Partial<User>) {
-    await this.repository.updateEntity(
-      {
-        where: query,
-      },
-      body,
-    );
+    const userFromDB = await this.repository.findOneOrFail({
+      where: query,
+    });
+
+    await this.repository.update(userFromDB, body);
+
+    return { id: userFromDB.id };
   }
 
   async updatePassword(
     query: Partial<FullUser>,
     { oldPassword, newPassword }: Password,
   ) {
-    const user = await this.repository.findOneOrFail({ where: query });
+    const { id, password } = await this.repository.findOneOrFail({
+      where: query,
+    });
 
-    if (!ValidateHelper.credentials(oldPassword, user?.password)) {
+    if (!ValidateHelper.credentials(oldPassword, password)) {
       throw ResponseHelper.error(HttpException.INVALID_CREDENTIALS);
     }
 
-    await this.repository.save({ ...user, password: newPassword });
+    await this.repository.update({ id }, { password: newPassword });
   }
 }

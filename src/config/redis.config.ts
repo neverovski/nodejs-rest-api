@@ -1,4 +1,4 @@
-import { ConfigCore } from '@core';
+import ConfigCore from './config.core';
 
 class RedisConfig extends ConfigCore {
   readonly host: string;

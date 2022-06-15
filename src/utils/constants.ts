@@ -1,6 +1,7 @@
 export const ENV_DEVELOPMENT = 'development';
 export const ENV_TEST = 'test';
 export const ENV_PRODUCTION = 'production';
+export const ENV_CLI = 'cli';
 
 export const PRETTY_PRINT = {
   colorize: true,
@@ -19,6 +20,7 @@ export const DB_UQ_PLATFORM_SSID = 'UQ_PLATFORM_SSID';
 
 export const FORMAT_DATE = 'yyyy-MM-dd';
 export const SQL_ID_NAME = 'id';
+export const SORT = ['ASC', 'DESC'];
 
 export const SALT_PASSWORD_ROUNDS = 10;
 export const CACHE_TIME = 2000;

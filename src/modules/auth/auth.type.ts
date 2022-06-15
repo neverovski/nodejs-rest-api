@@ -1,7 +1,18 @@
+import { FindManyOptions } from 'typeorm';
+
 import { FullUser } from '@modules/user';
 import { TokenType } from '@utils';
 
 import { IRefreshToken } from './interface';
+
+export enum AuthInject {
+  AUTH_SERVICE = 'AuthService',
+}
+
+export enum TokenInject {
+  TOKEN_REPOSITORY = 'TokenRepository',
+  TOKEN_SERVICE = 'TokenService',
+}
 
 export type RefreshToken = IRefreshToken;
 export type FullRefreshToken = Id & RefreshToken & DateInfo;
@@ -31,4 +42,11 @@ export type TokenResponse = {
   accessToken: string;
   refreshToken: string;
   tokenType: TokenType;
+};
+
+export type RefreshTokenOption = Pick<
+  FindManyOptions<FullRefreshToken>,
+  'relations' | 'skip' | 'take' | 'order'
+> & {
+  where?: Partial<Id & RefreshToken>;
 };

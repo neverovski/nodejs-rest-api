@@ -3,7 +3,7 @@ import { injectable, inject } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
-import { IUserService } from '@modules/user';
+import { IUserService, UserInject } from '@modules/user';
 import { EmailQueue } from '@providers/email';
 import { JWTService } from '@providers/jwt';
 import { HttpException } from '@utils';
@@ -16,14 +16,15 @@ import {
   ForgotPasswordRequest,
   ResetPasswordRequest,
   AccessTokenPayload,
+  TokenInject,
 } from '../auth.type';
 import { IAuthService, ITokenService } from '../interface';
 
 @injectable()
 export default class AuthService extends ServiceCore implements IAuthService {
   constructor(
-    @inject('TokenService') private tokenService: ITokenService,
-    @inject('UserService') private userService: IUserService,
+    @inject(TokenInject.TOKEN_SERVICE) private tokenService: ITokenService,
+    @inject(UserInject.USER_SERVICE) private userService: IUserService,
   ) {
     super();
   }
@@ -62,7 +63,13 @@ export default class AuthService extends ServiceCore implements IAuthService {
   }
 
   async refreshToken({ refreshToken }: RefreshTokenRequest, ctx: Context) {
-    const { user } = await this.tokenService.resolveRefreshToken(refreshToken);
+    const payload = await this.tokenService.resolveRefreshToken(refreshToken);
+
+    if (!payload?.sub) {
+      throw ResponseHelper.error(HttpException.TOKEN_MALFORMED);
+    }
+
+    const user = await this.userService.getOne({ id: +payload.sub });
 
     return this.tokenService.getToken({ id: user.id, email: user.email }, ctx);
   }

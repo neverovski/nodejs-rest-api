@@ -1,5 +1,6 @@
-import { ConfigCore } from '@core';
 import { CACHE_TIME } from '@utils';
+
+import ConfigCore from './config.core';
 
 class DBConfig extends ConfigCore {
   readonly cacheTime: number;

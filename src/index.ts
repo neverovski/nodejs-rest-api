@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import 'reflect-metadata';
+import './di';
+
 import { AppConfig } from '@config';
 import db from '@db/index';
 import { Logger } from '@lib';

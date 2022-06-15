@@ -34,6 +34,7 @@
       "@config": ["./src/config/index.ts"],
       "@core": ["./src/core/index.ts"],
       "@db/*": ["./src/db/*"],
+      "@i18n": ["./src/i18n/index.ts"],
       "@lib": ["./src/lib/index.ts"],
       "@middleware": ["./src/middleware/index.ts"],
       "@modules/*": ["./src/modules/*"],

@@ -1,15 +1,47 @@
-import { EntityRepository } from 'typeorm';
-
 import { RepositoryCore } from '@core';
 
-import { RefreshToken } from '../auth.type';
+import {
+  RefreshToken,
+  FullRefreshToken,
+  RefreshTokenOption,
+} from '../auth.type';
 import { RefreshTokenEntity } from '../entity';
+import { IRefreshTokenRepository } from '../interface';
 
-@EntityRepository(RefreshTokenEntity)
-export default class RefreshTokenRepository extends RepositoryCore<RefreshTokenEntity> {
-  createRefreshToken(body: RefreshToken): Promise<RefreshToken> {
-    const refreshTokenEntity = new RefreshTokenEntity(body);
+export default class RefreshTokenRepository
+  extends RepositoryCore<RefreshTokenEntity>
+  implements IRefreshTokenRepository
+{
+  constructor() {
+    super(RefreshTokenEntity);
+  }
 
-    return this.manager.save(refreshTokenEntity);
+  async create(body: RefreshToken): Promise<FullRefreshToken> {
+    try {
+      const refreshTokenEntity = this.orm.create(body);
+
+      return await this.orm.save(refreshTokenEntity);
+    } catch (err) {
+      throw this.errorHandler(err);
+    }
+  }
+
+  async findOneOrFail(options: RefreshTokenOption): Promise<FullRefreshToken> {
+    try {
+      return await this.orm.findOneOrFail(options);
+    } catch (err) {
+      throw this.errorHandler(err);
+    }
+  }
+
+  async update(
+    query: Partial<FullRefreshToken>,
+    body: Partial<RefreshToken>,
+  ): Promise<void> {
+    try {
+      await this.orm.update(query, body);
+    } catch (err) {
+      throw this.errorHandler(err);
+    }
   }
 }
