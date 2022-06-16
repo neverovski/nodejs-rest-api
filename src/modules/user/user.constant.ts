@@ -2,7 +2,6 @@ import { JSONSchemaCustom } from '@core';
 
 export const USER_RELATION = {
   profile: true,
-  avatar: true,
 };
 
 export const PROFILE_SCHEMA = {

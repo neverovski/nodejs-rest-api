@@ -6,7 +6,7 @@ import { JSONSchema7 } from 'json-schema';
 
 import { MiddlewareCore, IJsonSchema } from '@core';
 import { CodeResponse } from '@utils';
-import { StringHelper } from '@utils/helpers';
+import { StringHelper, SanitizerHelper } from '@utils/helpers';
 
 class ValidateMiddleware extends MiddlewareCore {
   protected ajv: Ajv;
@@ -18,6 +18,34 @@ class ValidateMiddleware extends MiddlewareCore {
     addFormats(this.ajv);
     addKeywords(this.ajv, ['transform', 'uniqueItemProperties']);
     this.ajv.addFormat('phone', /^\+[0-9]*/);
+
+    this.ajv.addKeyword({
+      keyword: 'sanitize',
+      modifying: true,
+      compile(schema) {
+        return (data, dataCxt) => {
+          if (
+            !dataCxt?.parentDataProperty &&
+            dataCxt?.parentDataProperty !== 0
+          ) {
+            throw new TypeError('Data must be a property of an object');
+          }
+
+          if (
+            typeof schema === 'string' &&
+            schema === 'escape' &&
+            dataCxt?.parentData &&
+            dataCxt?.parentDataProperty
+          ) {
+            dataCxt.parentData[dataCxt.parentDataProperty] =
+              SanitizerHelper.escape(data as string);
+          }
+
+          return true;
+        };
+      },
+      errors: false,
+    });
   }
 
   handler(schemas: IJsonSchema): RequestHandler {
