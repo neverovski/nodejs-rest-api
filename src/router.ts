@@ -1,5 +1,6 @@
 import { Express, Response, NextFunction, Request } from 'express';
 
+import { i18n } from '@i18n';
 import { AuthRouter } from '@modules/auth';
 import { UserRouter } from '@modules/user';
 import { HttpException } from '@utils';
@@ -11,7 +12,11 @@ export default (app: Express): void => {
 
   app.use((req: Request, _res: Response, next: NextFunction) =>
     !req.route
-      ? next(ResponseHelper.error(HttpException.NOT_FOUND_ROUTER))
+      ? next(
+          ResponseHelper.error(HttpException.NOT_FOUND, {
+            message: i18n().notFound.router,
+          }),
+        )
       : next(),
   );
 };

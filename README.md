@@ -17,6 +17,11 @@ $ docker-compose up -d --build
 $ npm run build && npm run start:prod
 ```
 
+## Сreating a migration
+```bash
+$ npm run migrate:create --name=<NAME>
+```
+
 ## Next steps
   - Auth
     - [X] Authenticate user

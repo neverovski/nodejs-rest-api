@@ -1,11 +1,10 @@
-import { FullUser } from '@modules/user';
-
 import {
   TokenResponse,
   RefreshToken,
   FullRefreshToken,
   AcessTokenRequest,
   TokenRequest,
+  RefreshTokenPayload,
 } from '../auth.type';
 
 export interface ITokenService {
@@ -14,9 +13,7 @@ export interface ITokenService {
     body: Omit<RefreshToken, 'jwtid' | 'expiredAt'>,
   ): Promise<string>;
   getToken(body: TokenRequest, ctx: Context): Promise<TokenResponse>;
-  resolveRefreshToken(
-    token: string,
-  ): Promise<{ token: RefreshToken; user: FullUser }>;
+  resolveRefreshToken(token: string): Promise<RefreshTokenPayload>;
   update(
     query: Partial<FullRefreshToken>,
     body: Partial<RefreshToken>,

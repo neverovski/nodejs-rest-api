@@ -1,4 +1,4 @@
-import { IJsonSchema } from '@core';
+import { IJsonSchema, EMAIL_SCHEMA, PASSWORD_SCHEMA } from '@core';
 
 export const ForgotPasswordSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },
@@ -9,11 +9,7 @@ export const ForgotPasswordSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['email'],
     properties: {
-      email: {
-        type: 'string',
-        format: 'email',
-        transform: ['trim', 'toLowerCase'],
-      },
+      ...EMAIL_SCHEMA,
     },
   },
 };
@@ -27,15 +23,8 @@ export const LoginSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['email', 'password'],
     properties: {
-      email: {
-        type: 'string',
-        format: 'email',
-        transform: ['trim', 'toLowerCase'],
-      },
-      password: {
-        type: 'string',
-        minLength: 6,
-      },
+      ...EMAIL_SCHEMA,
+      ...PASSWORD_SCHEMA,
     },
   },
 };
@@ -76,10 +65,7 @@ export const ResetPasswordSchema: IJsonSchema = {
         type: 'string',
         minLength: 1,
       },
-      password: {
-        type: 'string',
-        minLength: 6,
-      },
+      ...PASSWORD_SCHEMA,
     },
   },
 };

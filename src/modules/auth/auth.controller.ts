@@ -10,6 +10,7 @@ import {
   RefreshTokenRequest,
   ForgotPasswordRequest,
   ResetPasswordRequest,
+  AuthInject,
 } from './auth.type';
 import { TokenDTO } from './dto';
 import { IAuthService } from './interface';
@@ -22,7 +23,7 @@ import { IAuthService } from './interface';
  */
 @injectable()
 export default class AuthController extends ControllerCore {
-  constructor(@inject('AuthService') private service: IAuthService) {
+  constructor(@inject(AuthInject.AUTH_SERVICE) private service: IAuthService) {
     super();
   }
 

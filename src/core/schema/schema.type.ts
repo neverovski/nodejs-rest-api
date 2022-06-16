@@ -1,5 +1,7 @@
 import { JSONSchema7 } from 'json-schema';
 
+import { SORT } from '@utils';
+
 export interface JSONSchemaCustom extends JSONSchema7 {
   consumes?: string[];
   properties?: {
@@ -33,6 +35,58 @@ export const ID_SCHEMA = {
   properties: {
     id: {
       type: 'integer',
+    },
+  },
+} as JSONSchemaCustom;
+
+export const EMAIL_SCHEMA = {
+  email: {
+    type: 'string',
+    format: 'email',
+    transform: ['trim', 'toLowerCase'],
+  },
+} as { [key: string]: JSONSchemaCustom };
+
+export const PASSWORD_SCHEMA = {
+  password: {
+    type: 'string',
+    transform: ['trim'],
+    minLength: 6,
+  },
+} as { [key: string]: JSONSchemaCustom };
+
+export const ORDER_ID_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    id: {
+      type: 'string',
+      enum: SORT,
+      transform: ['toUpperCase'],
+    },
+  },
+} as JSONSchemaCustom;
+
+export const ORDER_NAME_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    name: {
+      type: 'string',
+      enum: SORT,
+      transform: ['toUpperCase'],
+    },
+  },
+} as JSONSchemaCustom;
+
+export const ORDER_CREATED_AT_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    createdAt: {
+      type: 'string',
+      enum: SORT,
+      transform: ['toUpperCase'],
     },
   },
 } as JSONSchemaCustom;

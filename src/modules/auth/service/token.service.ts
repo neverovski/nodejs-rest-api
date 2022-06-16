@@ -1,10 +1,8 @@
 import { nanoid } from 'nanoid';
 import { injectable, inject } from 'tsyringe';
-import { getCustomRepository } from 'typeorm';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
-import { IUserService, FullUser } from '@modules/user';
 import { JWTService } from '@providers/jwt';
 import { TokenType, HttpException } from '@utils';
 import { DateHelper, ResponseHelper } from '@utils/helpers';
@@ -15,20 +13,21 @@ import {
   FullRefreshToken,
   AcessTokenRequest,
   TokenRequest,
+  TokenInject,
 } from '../auth.type';
-import { ITokenService } from '../interface';
-import { RefreshTokenRepository } from '../repository';
+import { ITokenService, IRefreshTokenRepository } from '../interface';
 
 @injectable()
 export default class TokenService extends ServiceCore implements ITokenService {
-  private readonly repository: RefreshTokenRepository;
   private readonly typeToken: TokenType;
 
-  constructor(@inject('UserService') private userService: IUserService) {
+  constructor(
+    @inject(TokenInject.TOKEN_REPOSITORY)
+    private repository: IRefreshTokenRepository,
+  ) {
     super();
 
     this.typeToken = TokenType.BEARER;
-    this.repository = getCustomRepository(RefreshTokenRepository);
   }
 
   generateAccessToken(body: AcessTokenRequest) {
@@ -52,7 +51,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const ms = DateHelper.toMs(JwtConfig.expiresInRefreshToken);
     const expiredAt = DateHelper.addMillisecondToDate(new Date(), ms);
 
-    await this.repository.createRefreshToken({ ...body, jti, expiredAt });
+    await this.repository.create({ ...body, jti, expiredAt });
 
     const opts = {
       expiresIn: JwtConfig.expiresInRefreshToken,
@@ -75,9 +74,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     return { tokenType: this.typeToken, accessToken, refreshToken };
   }
 
-  async resolveRefreshToken(
-    token: string,
-  ): Promise<{ token: RefreshToken; user: FullUser }> {
+  async resolveRefreshToken(token: string): Promise<RefreshTokenPayload> {
     const payload = await this.decodeRefreshToken(token);
     const refreshTokenFromDB = await this.getRefreshTokenFromPayload(payload);
 
@@ -85,17 +82,15 @@ export default class TokenService extends ServiceCore implements ITokenService {
       throw ResponseHelper.error(HttpException.REFRESH_TOKEN_EXPIRED);
     }
 
-    const user = await this.getUserFromRefreshTokenPayload(payload);
-
-    if (!user) {
+    if (!payload?.sub) {
       throw ResponseHelper.error(HttpException.TOKEN_MALFORMED);
     }
 
-    return { user, token: refreshTokenFromDB };
+    return payload;
   }
 
   async update(query: Partial<FullRefreshToken>, body: Partial<RefreshToken>) {
-    await this.repository.updateEntity({ where: query }, body);
+    await this.repository.update(query, body);
   }
 
   private async decodeRefreshToken(
@@ -120,16 +115,8 @@ export default class TokenService extends ServiceCore implements ITokenService {
       throw ResponseHelper.error(HttpException.TOKEN_MALFORMED);
     }
 
-    return this.repository.findOneOrFail({ userId: +sub, jti });
-  }
-
-  private getUserFromRefreshTokenPayload({
-    sub,
-  }: RefreshTokenPayload): Promise<FullUser> {
-    if (!sub) {
-      throw ResponseHelper.error(HttpException.TOKEN_MALFORMED);
-    }
-
-    return this.userService.getOne({ id: +sub });
+    return this.repository.findOneOrFail({
+      where: { userId: +sub, jti },
+    });
   }
 }

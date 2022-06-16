@@ -28,10 +28,6 @@ export enum Role {
   USER = 'user',
 }
 
-export enum Language {
-  EN = 'en',
-}
-
 export type LoggerCtxInfo = {
   error?: Error | any;
   info?: string | any;
@@ -43,3 +39,10 @@ export type LoggerCtxError = Required<
   Pick<LoggerCtxInfo, 'message' | 'error'>
 > &
   Pick<LoggerCtxInfo, 'type'>;
+
+export enum PostgresErrorCode {
+  CheckViolation = '23514',
+  ForeignKeyViolation = '23503',
+  NotNullViolation = '23502',
+  UniqueViolation = '23505',
+}

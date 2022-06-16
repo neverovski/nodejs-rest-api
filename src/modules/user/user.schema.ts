@@ -1,4 +1,6 @@
-import { IJsonSchema } from '@core';
+import { IJsonSchema, EMAIL_SCHEMA, PASSWORD_SCHEMA } from '@core';
+
+import { PROFILE_SCHEMA } from './user.constant';
 
 export const CreateUserSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },
@@ -9,30 +11,9 @@ export const CreateUserSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['email', 'profile', 'password'],
     properties: {
-      email: {
-        type: 'string',
-        format: 'email',
-        transform: ['trim', 'toLowerCase'],
-      },
-      password: {
-        type: 'string',
-        minLength: 6,
-      },
-      profile: {
-        type: 'object',
-        additionalProperties: false,
-        required: ['firstName', 'lastName'],
-        properties: {
-          firstName: {
-            type: 'string',
-            minLength: 1,
-          },
-          lastName: {
-            type: 'string',
-            minLength: 1,
-          },
-        },
-      },
+      ...EMAIL_SCHEMA,
+      ...PASSWORD_SCHEMA,
+      ...PROFILE_SCHEMA,
     },
   },
 };
@@ -46,26 +27,8 @@ export const UpdateUserSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['profile'],
     properties: {
-      email: {
-        type: 'string',
-        format: 'email',
-        transform: ['trim', 'toLowerCase'],
-      },
-      profile: {
-        type: 'object',
-        additionalProperties: false,
-        minProperties: 1,
-        properties: {
-          firstName: {
-            type: 'string',
-            minLength: 1,
-          },
-          lastName: {
-            type: 'string',
-            minLength: 1,
-          },
-        },
-      },
+      ...EMAIL_SCHEMA,
+      ...PROFILE_SCHEMA,
     },
   },
 };
@@ -81,10 +44,12 @@ export const ChangePasswordSchema: IJsonSchema = {
     properties: {
       oldPassword: {
         type: 'string',
+        transform: ['trim'],
         minLength: 6,
       },
       newPassword: {
         type: 'string',
+        transform: ['trim'],
         minLength: 6,
       },
     },

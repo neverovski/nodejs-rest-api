@@ -7,7 +7,7 @@ import { ResponseHelper } from '@utils/helpers';
 
 import { UserDTO } from './dto';
 import { IUserService } from './interface';
-import { User, UserUpdateRequest, Password } from './user.type';
+import { User, Password, UserInject } from './user.type';
 
 /**
  * @openapi
@@ -17,7 +17,9 @@ import { User, UserUpdateRequest, Password } from './user.type';
  */
 @injectable()
 export default class UserController extends ControllerCore {
-  constructor(@inject('UserService') private service: IUserService) {
+  constructor(
+    @inject(UserInject.USER_SERVICE) private userService: IUserService,
+  ) {
     super();
   }
 
@@ -25,9 +27,9 @@ export default class UserController extends ControllerCore {
     req: Request<any, any, Password>,
     res: Response,
   ) {
-    const { userId } = req.user as Required<UserContext>;
+    const { userId: id } = req.user as Required<UserContext>;
 
-    await this.service.updatePassword({ id: userId }, req.body);
+    await this.userService.updatePassword({ id }, req.body);
 
     this.response(res, {
       data: ResponseHelper.success(HttpException.PASSWORD_RESET_SUCCESSFULLY),
@@ -35,7 +37,7 @@ export default class UserController extends ControllerCore {
   }
 
   async create(req: Request<any, any, User>, res: Response) {
-    await this.service.create(req.body);
+    await this.userService.create(req.body);
 
     this.response(res, {
       data: ResponseHelper.success(HttpException.USER_CREATED),
@@ -46,18 +48,18 @@ export default class UserController extends ControllerCore {
   async getCurrentUser(req: Request, res: Response) {
     const { userId } = req.user as Required<UserContext>;
 
-    const data = await this.service.getOne({ id: userId });
+    const data = await this.userService.getOne({ id: userId });
 
     this.response(res, { data, dto: UserDTO });
   }
 
   async updateCurrentUser(
-    req: Request<any, any, UserUpdateRequest>,
+    req: Request<any, any, Partial<User>>,
     res: Response,
   ) {
     const { userId } = req.user as Required<UserContext>;
 
-    await this.service.update({ id: userId }, req.body);
+    await this.userService.update({ id: userId }, req.body);
 
     this.response(res, {
       data: ResponseHelper.success(HttpException.USER_UPDATE),
