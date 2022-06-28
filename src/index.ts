@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import 'reflect-metadata';
-import './di';
+import '@providers/index.di';
+import '@modules/index.di';
 
 import { AppConfig } from '@config';
 import db from '@db/index';

@@ -15,32 +15,35 @@ import { DB_UQ_USER_EMAIL, HttpException, PostgresErrorCode } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
+  protected readonly alias: string;
   protected orm: Repository<Entity>;
-  private messageNotFound = i18n().notFound.default;
+  private _notFound = i18n().notFound.default;
 
-  constructor(entity: EntityTarget<Entity>) {
+  constructor(entity: EntityTarget<Entity>, alias?: string) {
     this.orm = DB.dataSource.getRepository(entity);
+    this.alias = alias || 'entity';
+  }
+
+  set notFound(message: string) {
+    this._notFound = message;
   }
 
   protected buildOrder(
-    {
-      order,
-      alias,
-    }: Pick<FindManyOptions<Entity>, 'order'> & { alias: string },
+    { order }: Pick<FindManyOptions<Entity>, 'order'>,
     queryBuilder: SelectQueryBuilder<Entity>,
   ) {
     if (order && Object.keys(order).length) {
       for (const key in order) {
         if ({}.hasOwnProperty.call(order, key)) {
           queryBuilder.addOrderBy(
-            `${alias}.${key}`,
+            `${this.alias}.${key}`,
             order[key] as Order,
             'NULLS LAST',
           );
         }
       }
     } else {
-      queryBuilder.addOrderBy(`${alias}.id`, 'DESC');
+      queryBuilder.addOrderBy(`${this.alias}.id`, 'DESC');
     }
   }
 
@@ -50,7 +53,7 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
       (error as Error)?.name === 'EntityNotFoundError'
     ) {
       return ResponseHelper.error(HttpException.NOT_FOUND, {
-        message: this.messageNotFound,
+        message: this._notFound,
       });
     }
 
@@ -68,9 +71,5 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
     }
 
     return error;
-  }
-
-  protected setMessageNotFound(message: string) {
-    this.messageNotFound = message;
   }
 }

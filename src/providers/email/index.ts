@@ -1,2 +1,2 @@
-export * from './email.constant';
-export { default as EmailQueue } from './email.queue';
+export * from './interface';
+export * from './email.type';

@@ -31,6 +31,7 @@ export default class Queue {
     });
 
     this.eventError();
+    this.init();
   }
 
   private get queueOptions() {
@@ -46,6 +47,14 @@ export default class Queue {
     };
   }
 
+  protected errorHandler(error: unknown) {
+    Logger.error({
+      message: this.constructor.name,
+      error,
+      type: LoggerType.QUEUE,
+    });
+  }
+
   private eventError() {
     this.queue.on('error', (error) => {
       Logger.error({ message: 'QueueCore', error, type: LoggerType.QUEUE });
@@ -53,6 +62,12 @@ export default class Queue {
 
     EventEmitter.once('close', async () => {
       await this.queue.close();
+    });
+  }
+
+  private init() {
+    Logger.info({
+      message: `${this.constructor.name} initialized...`,
     });
   }
 }

@@ -1,18 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Bull from 'bull';
 import ms from 'ms';
+import { singleton, inject } from 'tsyringe';
 
 import { EmailConfig } from '@config';
-import { Logger, Queue } from '@lib';
-import { LoggerType } from '@utils';
+import { Queue } from '@lib';
 import { EventEmitter } from '@utils/helpers';
 
 import { EMAIL_QUEUQ, EMAIL_FORGOT_PASSWORD } from './email.constant';
-import EmailService from './email.service';
-import { ForgotPassword } from './email.type';
+import { ForgotPassword, EmailInject } from './email.type';
+import { IEmailService } from './interface';
 
-class EmailQueue extends Queue {
-  constructor() {
+@singleton()
+export default class EmailQueue extends Queue {
+  constructor(
+    @inject(EmailInject.EMAIL_SERVICE)
+    private readonly emailService: IEmailService,
+  ) {
     super(EMAIL_QUEUQ, {
       defaultJobOptions: {
         attempts: 30,
@@ -38,7 +41,7 @@ class EmailQueue extends Queue {
           try {
             const { email, token } = job.data;
 
-            await EmailService.sendEmail({
+            await this.emailService.sendEmail({
               to: email,
               from: EmailConfig.username,
               subject: 'Forgot password',
@@ -49,19 +52,13 @@ class EmailQueue extends Queue {
             await job.progress(100);
 
             return await Promise.resolve();
-          } catch (error) {
-            Logger.error({
-              message: `${EMAIL_QUEUQ} ${EMAIL_FORGOT_PASSWORD}`,
-              error,
-              type: LoggerType.QUEUE,
-            });
+          } catch (err) {
+            this.errorHandler(err);
 
-            return Promise.reject(error);
+            return Promise.reject(err);
           }
         },
       );
     });
   }
 }
-
-export default new EmailQueue();

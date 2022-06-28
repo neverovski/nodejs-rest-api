@@ -2,10 +2,10 @@ import { expect } from 'chai';
 
 import { TokenHelper } from '@utils/helpers';
 
-import { ReqMock } from '../mock';
+import { ReqData } from '../data';
 
 describe('TokenHelper.getFromHeader - Function Test', () => {
-  ReqMock.forEach((req) => {
+  ReqData.forEach((req) => {
     const accessToken = TokenHelper.getFromHeader(req.headers);
 
     it(`Should return - ${req.data.headerAccessToken || 'null'}`, () => {
@@ -15,7 +15,7 @@ describe('TokenHelper.getFromHeader - Function Test', () => {
 });
 
 describe('TokenHelper.getFromCookies - Function Test', () => {
-  ReqMock.forEach((req) => {
+  ReqData.forEach((req) => {
     const accessToken = TokenHelper.getFromCookies(req.cookies);
 
     it(`Should return - ${req.data.cookieAccessToken || 'null'}`, () => {

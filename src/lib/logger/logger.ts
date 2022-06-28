@@ -1,4 +1,9 @@
-import pino, { DestinationStream, Level, LoggerOptions, Logger } from 'pino';
+import pino, {
+  DestinationStream,
+  Level,
+  LoggerOptions,
+  Logger as LoggerPino,
+} from 'pino';
 
 import {
   ENV_TEST,
@@ -8,17 +13,19 @@ import {
   LoggerCtxInfo,
 } from '@utils';
 
-export default class LoggerCore {
-  readonly pino: Logger;
-  private readonly debugLogger: Logger;
+import { ILogger } from './interface';
+
+export default class Logger implements ILogger {
+  readonly pino: LoggerPino;
+  private readonly debugLogger: LoggerPino;
   private readonly env: string;
-  private readonly errorLogger: Logger;
-  private readonly fatalLogger: Logger;
-  private readonly infoLogger: Logger;
+  private readonly errorLogger: LoggerPino;
+  private readonly fatalLogger: LoggerPino;
+  private readonly infoLogger: LoggerPino;
   private readonly name: string;
   private readonly stream?: DestinationStream;
-  private readonly traceLogger: Logger;
-  private readonly warnLogger: Logger;
+  private readonly traceLogger: LoggerPino;
+  private readonly warnLogger: LoggerPino;
 
   constructor({
     name,
@@ -91,7 +98,7 @@ export default class LoggerCore {
     }
   }
 
-  private createPino(level?: Level): Logger {
+  private createPino(level?: Level): LoggerPino {
     const opt: LoggerOptions = {
       name: `${this.name}${level ? '::' + level : ''}`,
       ...(level && { level }),

@@ -4,8 +4,8 @@ import { injectable, inject } from 'tsyringe';
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
 import { IUserService, UserInject } from '@modules/user';
-import { EmailQueue } from '@providers/email';
-import { JWTService } from '@providers/jwt';
+import { IEmailQueue, EmailInject } from '@providers/email';
+import { IJwtService, JwtInject } from '@providers/jwt';
 import { HttpException } from '@utils';
 import { ResponseHelper, ValidateHelper } from '@utils/helpers';
 
@@ -25,6 +25,8 @@ export default class AuthService extends ServiceCore implements IAuthService {
   constructor(
     @inject(TokenInject.TOKEN_SERVICE) private tokenService: ITokenService,
     @inject(UserInject.USER_SERVICE) private userService: IUserService,
+    @inject(JwtInject.JWT_SERVICE) private jwtService: IJwtService,
+    @inject(EmailInject.EMAIL_QUEUE) private emailQueue: IEmailQueue,
   ) {
     super();
   }
@@ -42,10 +44,10 @@ export default class AuthService extends ServiceCore implements IAuthService {
       email,
     };
 
-    const token = JWTService.sign(payload, JwtConfig.secretToken, opts);
+    const token = this.jwtService.sign(payload, JwtConfig.secretToken, opts);
 
     await this.userService.update({ id }, { confirmTokenPassword });
-    void EmailQueue.addForgotPasswordToQueue({ token, email });
+    void this.emailQueue.addForgotPasswordToQueue({ token, email });
   }
 
   async login({ email, password }: LoginRequest, ctx: Context) {
@@ -75,10 +77,11 @@ export default class AuthService extends ServiceCore implements IAuthService {
   }
 
   async resetPassword({ password, token }: ResetPasswordRequest) {
-    const { jti, email } = await JWTService.verifyAsync<AccessTokenPayload>(
-      token,
-      JwtConfig.secretToken,
-    );
+    const { jti, email } =
+      await this.jwtService.verifyAsync<AccessTokenPayload>(
+        token,
+        JwtConfig.secretToken,
+      );
 
     await this.userService.update(
       { email, confirmTokenPassword: jti },

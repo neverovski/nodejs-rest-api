@@ -6,4 +6,5 @@ import UserService from './user.service';
 import { UserInject } from './user.type';
 
 container.register<IUserService>(UserInject.USER_SERVICE, UserService);
+
 container.register<IUserRepository>(UserInject.USER_REPOSITORY, UserRepository);

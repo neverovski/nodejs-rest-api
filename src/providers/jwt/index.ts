@@ -1,1 +1,2 @@
-export { default as JWTService } from './jwt.service';
+export * from './interface';
+export * from './jwt.type';
