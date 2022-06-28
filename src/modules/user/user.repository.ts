@@ -10,8 +10,8 @@ export default class UserRepository
   implements IUserRepository
 {
   constructor() {
-    super(UserEntity);
-    this.setMessageNotFound(i18n().notFound.user);
+    super(UserEntity, 'u');
+    this.notFound = i18n().notFound.user;
   }
 
   async create(body: User): Promise<Id> {

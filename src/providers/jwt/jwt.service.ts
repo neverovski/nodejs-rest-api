@@ -1,9 +1,20 @@
 import jwt from 'jsonwebtoken';
+import { singleton } from 'tsyringe';
 
+import { ServiceCore } from '@core';
 import { HttpException } from '@utils';
 import { DateHelper, ResponseHelper } from '@utils/helpers';
 
-class JWTService {
+import { IJwtService } from './interface';
+
+@singleton()
+export default class JwtService extends ServiceCore implements IJwtService {
+  constructor() {
+    super();
+
+    this.init();
+  }
+
   decode(
     token: string,
     options?: jwt.DecodeOptions,
@@ -50,5 +61,3 @@ class JWTService {
     });
   }
 }
-
-export default new JWTService();

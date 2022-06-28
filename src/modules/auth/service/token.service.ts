@@ -3,7 +3,7 @@ import { injectable, inject } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
-import { JWTService } from '@providers/jwt';
+import { JwtInject, IJwtService } from '@providers/jwt';
 import { TokenType, HttpException } from '@utils';
 import { DateHelper, ResponseHelper } from '@utils/helpers';
 
@@ -24,6 +24,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
   constructor(
     @inject(TokenInject.TOKEN_REPOSITORY)
     private repository: IRefreshTokenRepository,
+    @inject(JwtInject.JWT_SERVICE) private jwtService: IJwtService,
   ) {
     super();
 
@@ -31,17 +32,18 @@ export default class TokenService extends ServiceCore implements ITokenService {
   }
 
   generateAccessToken(body: AcessTokenRequest) {
-    const opts = {
-      expiresIn: JwtConfig.expiresInAccessToken,
-    };
-    const payload = {
-      ...body,
-      jti: nanoid(),
-      sub: String(body.userId),
-      typ: this.typeToken,
-    };
-
-    return JWTService.signAsync(payload, JwtConfig.secretAccessToken, opts);
+    return this.jwtService.signAsync(
+      {
+        ...body,
+        jti: nanoid(),
+        sub: String(body.userId),
+        typ: this.typeToken,
+      },
+      JwtConfig.secretAccessToken,
+      {
+        expiresIn: JwtConfig.expiresInAccessToken,
+      },
+    );
   }
 
   async generateRefreshToken(
@@ -53,16 +55,17 @@ export default class TokenService extends ServiceCore implements ITokenService {
 
     await this.repository.create({ ...body, jti, expiredAt });
 
-    const opts = {
-      expiresIn: JwtConfig.expiresInRefreshToken,
-    };
-    const payload = {
-      sub: String(body.userId),
-      jti,
-      typ: this.typeToken,
-    };
-
-    return JWTService.sign(payload, JwtConfig.secretRefreshToken, opts);
+    return this.jwtService.sign(
+      {
+        sub: String(body.userId),
+        jti,
+        typ: this.typeToken,
+      },
+      JwtConfig.secretRefreshToken,
+      {
+        expiresIn: JwtConfig.expiresInRefreshToken,
+      },
+    );
   }
 
   async getToken({ id, ...data }: TokenRequest, ctx: Context) {
@@ -97,7 +100,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     token: string,
   ): Promise<RefreshTokenPayload> {
     try {
-      return await JWTService.verifyAsync<RefreshTokenPayload>(
+      return await this.jwtService.verifyAsync<RefreshTokenPayload>(
         token,
         JwtConfig.secretRefreshToken,
       );

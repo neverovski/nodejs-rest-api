@@ -2,10 +2,10 @@ import { expect } from 'chai';
 
 import { IPHelper } from '@utils/helpers';
 
-import { ReqMock } from '../mock';
+import { ReqData } from '../data';
 
 describe('IPHelper.getIP - Function Test', () => {
-  ReqMock.forEach((req) => {
+  ReqData.forEach((req) => {
     const ip = IPHelper.getIP(req);
 
     it(`Should return - ${ip}`, () => {

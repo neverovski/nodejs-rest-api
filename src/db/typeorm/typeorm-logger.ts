@@ -1,8 +1,7 @@
 import { Logger as LoggerOrm } from 'typeorm';
 
+import { Logger } from '@lib';
 import { LoggerType } from '@utils';
-
-import Logger from './logger';
 
 export default class TypeormLogger implements LoggerOrm {
   private readonly message: string;

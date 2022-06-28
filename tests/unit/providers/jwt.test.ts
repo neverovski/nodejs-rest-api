@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { nanoid } from 'nanoid';
 
 import { JwtConfig } from '@config';
-import { JWTService } from '@providers/jwt';
+import JWTService from '@providers/jwt/jwt.service';
 
 type JWT = {
   email: string;
@@ -11,6 +11,8 @@ type JWT = {
   jwtid: string;
   userId: number;
 };
+
+const jwtService = new JWTService();
 
 describe('verifyAsync Function Test', () => {
   let token = '';
@@ -21,13 +23,13 @@ describe('verifyAsync Function Test', () => {
   };
 
   before(() => {
-    token = JWTService.sign(payloadBody, JwtConfig.secretAccessToken, {
+    token = jwtService.sign(payloadBody, JwtConfig.secretAccessToken, {
       expiresIn: JwtConfig.expiresInAccessToken,
     });
   });
 
   it('Should return', async () => {
-    const data = await JWTService.verifyAsync<JWT>(
+    const data = await jwtService.verifyAsync<JWT>(
       token,
       JwtConfig.secretAccessToken,
     );

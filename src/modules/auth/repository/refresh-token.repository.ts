@@ -13,7 +13,7 @@ export default class RefreshTokenRepository
   implements IRefreshTokenRepository
 {
   constructor() {
-    super(RefreshTokenEntity);
+    super(RefreshTokenEntity, 'r');
   }
 
   async create(body: RefreshToken): Promise<FullRefreshToken> {

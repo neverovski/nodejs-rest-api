@@ -3,8 +3,9 @@ import { join } from 'path';
 import { DataSource } from 'typeorm';
 
 import { AppConfig, DBConfig, RedisConfig } from '@config';
-import { TypeormLogger } from '@lib';
 import { ENV_PRODUCTION, ENV_CLI } from '@utils';
+
+import TypeormLogger from './typeorm-logger';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',

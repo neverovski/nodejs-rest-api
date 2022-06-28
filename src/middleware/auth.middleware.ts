@@ -1,12 +1,21 @@
 import { Response, Request, NextFunction, RequestHandler } from 'express';
+import { container } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { MiddlewareCore } from '@core';
-import { JWTService } from '@providers/jwt';
+import { IJwtService, JwtInject } from '@providers/jwt';
 import { JWTPayload, HttpException, Role } from '@utils';
 import { ResponseHelper, TokenHelper } from '@utils/helpers';
 
 class AuthMiddleware extends MiddlewareCore {
+  private readonly jwtService: IJwtService;
+
+  constructor() {
+    super();
+
+    this.jwtService = container.resolve<IJwtService>(JwtInject.JWT_SERVICE);
+  }
+
   handler(): RequestHandler {
     return async (req: Request, _res: Response, next: NextFunction) => {
       const accessToken =
@@ -21,7 +30,7 @@ class AuthMiddleware extends MiddlewareCore {
       if (accessToken) {
         try {
           const { userId, email, role } =
-            await JWTService.verifyAsync<JWTPayload>(
+            await this.jwtService.verifyAsync<JWTPayload>(
               accessToken,
               JwtConfig.secretAccessToken,
             );

@@ -1,9 +1,10 @@
 import pinoToSeq from 'pino-seq';
 
 import { AppConfig, SeqConfig } from '@config';
-import { LoggerCore } from '@core';
 
-export default new LoggerCore({
+import Logger from './logger';
+
+export default new Logger({
   name: AppConfig.name || '',
   env: AppConfig.env,
   ...(SeqConfig.monitoring && {
