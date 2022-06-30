@@ -1,11 +1,10 @@
-import { nanoid } from 'nanoid';
 import { injectable, inject } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
 import { JwtInject, IJwtService } from '@providers/jwt';
 import { TokenType, HttpException } from '@utils';
-import { DateHelper, ResponseHelper } from '@utils/helpers';
+import { StringHelper, DateHelper, ResponseHelper } from '@utils/helpers';
 
 import {
   RefreshToken,
@@ -35,7 +34,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     return this.jwtService.signAsync(
       {
         ...body,
-        jti: nanoid(),
+        jti: StringHelper.uuid(),
         sub: String(body.userId),
         typ: this.typeToken,
       },
@@ -49,7 +48,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
   async generateRefreshToken(
     body: Omit<RefreshToken, 'jti' | 'expiredAt'>,
   ): Promise<string> {
-    const jti = nanoid();
+    const jti = StringHelper.uuid();
     const ms = DateHelper.toMs(JwtConfig.expiresInRefreshToken);
     const expiredAt = DateHelper.addMillisecondToDate(new Date(), ms);
 

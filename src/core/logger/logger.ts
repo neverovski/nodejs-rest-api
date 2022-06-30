@@ -14,6 +14,7 @@ import {
 } from '@utils';
 
 import { ILogger } from './interface';
+import { LoggerInitial } from './logger.type';
 
 export default class Logger implements ILogger {
   readonly pino: LoggerPino;
@@ -27,15 +28,7 @@ export default class Logger implements ILogger {
   private readonly traceLogger: LoggerPino;
   private readonly warnLogger: LoggerPino;
 
-  constructor({
-    name,
-    stream,
-    env,
-  }: {
-    env: string;
-    name: string;
-    stream?: DestinationStream;
-  }) {
+  constructor({ name, stream, env }: LoggerInitial) {
     this.name = name;
     this.stream = stream;
     this.env = env;

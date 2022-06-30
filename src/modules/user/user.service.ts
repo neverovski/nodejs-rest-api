@@ -31,6 +31,7 @@ export default class UserService extends ServiceCore implements IUserService {
   async update(query: Partial<FullUser>, body: Partial<User>) {
     const userFromDB = await this.repository.findOneOrFail({
       where: query,
+      relations: USER_RELATION,
     });
 
     await this.repository.update(userFromDB, body);

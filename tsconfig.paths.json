@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@config": ["./src/config/index.ts"],
+      "@core": ["./src/core/index.ts"],
+      "@core/config": ["./src/core/config/index.ts"],
+      "@core/logger": ["./src/core/logger/index.ts"],
+      "@core/schema": ["./src/core/schema/index.ts"],
+      "@db/*": ["./src/db/*"],
+      "@lib": ["./src/lib/index.ts"],
+      "@middleware": ["./src/middleware/index.ts"],
+      "@modules/*": ["./src/modules/*"],
+      "@utils": ["./src/utils/index.ts"],
+      "@utils/helpers": ["./src/utils/helpers/index.ts"],
+      "@providers/*": ["./src/providers/*"]
+    }
+  }
+}

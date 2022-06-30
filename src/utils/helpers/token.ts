@@ -2,26 +2,22 @@ import { IncomingHttpHeaders } from 'http';
 
 import { TokenType } from '../utility-types';
 
-export default (() => {
-  const getFromHeader = (headers: IncomingHttpHeaders): string | null => {
-    const authorization = headers.authorization || headers.Authorization;
+export const getFromHeader = (headers: IncomingHttpHeaders): string | null => {
+  const authorization = headers.authorization || headers.Authorization;
 
-    if (
-      authorization &&
-      typeof authorization === 'string' &&
-      authorization.startsWith(`${TokenType.BEARER} `)
-    ) {
-      return authorization.split(`${TokenType.BEARER} `)[1] || null;
-    }
+  if (
+    authorization &&
+    typeof authorization === 'string' &&
+    authorization.startsWith(`${TokenType.BEARER} `)
+  ) {
+    return authorization.split(`${TokenType.BEARER} `)[1] || null;
+  }
 
-    return null;
-  };
+  return null;
+};
 
-  const getFromCookies = (cookies: any): string | null => {
-    const { accessToken } = cookies as { accessToken: string };
+export const getFromCookies = (cookies: any): string | null => {
+  const { accessToken } = cookies as { accessToken: string };
 
-    return accessToken || null;
-  };
-
-  return { getFromHeader, getFromCookies };
-})();
+  return accessToken || null;
+};

@@ -10,18 +10,19 @@ import {
 } from 'typeorm';
 
 import DB from '@db/index';
-import { i18n } from '@i18n';
+import { i18n } from '@lib';
 import { DB_UQ_USER_EMAIL, HttpException, PostgresErrorCode } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
   protected readonly alias: string;
   protected orm: Repository<Entity>;
-  private _notFound = i18n().notFound.default;
+  private _notFound: string;
 
   constructor(entity: EntityTarget<Entity>, alias?: string) {
     this.orm = DB.dataSource.getRepository(entity);
     this.alias = alias || 'entity';
+    this._notFound = i18n()['notFound.default'];
   }
 
   set notFound(message: string) {

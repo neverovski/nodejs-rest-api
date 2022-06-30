@@ -1,0 +1,5 @@
+{
+  "notFound.default": "Not found",
+  "notFound.router": "Route not found",
+  "notFound.user": "User is not found"
+}

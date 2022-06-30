@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid';
 import { injectable, inject } from 'tsyringe';
 
 import { JwtConfig } from '@config';
@@ -7,7 +6,7 @@ import { IUserService, UserInject } from '@modules/user';
 import { IEmailQueue, EmailInject } from '@providers/email';
 import { IJwtService, JwtInject } from '@providers/jwt';
 import { HttpException } from '@utils';
-import { ResponseHelper, ValidateHelper } from '@utils/helpers';
+import { ResponseHelper, StringHelper, ValidateHelper } from '@utils/helpers';
 
 import {
   LoginRequest,
@@ -34,7 +33,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
   async forgotPassword({ email }: ForgotPasswordRequest) {
     const { id } = await this.userService.getOne({ email });
 
-    const confirmTokenPassword = nanoid();
+    const confirmTokenPassword = StringHelper.uuid();
     const opts = {
       expiresIn: JwtConfig.expiresInToken,
     };

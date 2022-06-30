@@ -1,11 +1,11 @@
-export default (() => {
-  const capitalize = (s?: string): string => {
-    if (typeof s !== 'string') {
-      return '';
-    }
+import { nanoid } from 'nanoid';
 
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  };
+export const capitalize = (s?: string): string => {
+  if (typeof s !== 'string') {
+    return '';
+  }
 
-  return { capitalize };
-})();
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+export const uuid = () => nanoid();

@@ -1,2 +1,2 @@
-export { default as Logger } from './logger';
+export * from './i18n';
 export { default as Queue } from './queue';

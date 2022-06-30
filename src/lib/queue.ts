@@ -2,10 +2,9 @@ import Bull from 'bull';
 import ms from 'ms';
 
 import { RedisConfig } from '@config';
+import { Logger } from '@core/logger';
 import { LoggerType } from '@utils';
 import { EventEmitter } from '@utils/helpers';
-
-import Logger from './logger';
 
 export default class Queue {
   readonly queue: Bull.Queue;

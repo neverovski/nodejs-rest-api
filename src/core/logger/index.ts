@@ -2,10 +2,10 @@ import pinoToSeq from 'pino-seq';
 
 import { AppConfig, SeqConfig } from '@config';
 
-import Logger from './logger';
+import LoggerInstance from './logger';
 
-export default new Logger({
-  name: AppConfig.name || '',
+export const Logger = new LoggerInstance({
+  name: AppConfig.name,
   env: AppConfig.env,
   ...(SeqConfig.monitoring && {
     stream: pinoToSeq.createStream({

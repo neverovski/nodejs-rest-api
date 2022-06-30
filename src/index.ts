@@ -4,8 +4,8 @@ import '@providers/index.di';
 import '@modules/index.di';
 
 import { AppConfig } from '@config';
+import { Logger } from '@core/logger';
 import db from '@db/index';
-import { Logger } from '@lib';
 import Middleware, { ErrorMiddleware } from '@middleware';
 import { EventEmitter } from '@utils/helpers';
 

@@ -1,4 +1,3 @@
-export * from './schema';
 export { default as ControllerCore } from './controller.core';
 export { default as EntityCore } from './entity.core';
 export { default as HttpExceptionCore } from './http-exception.core';

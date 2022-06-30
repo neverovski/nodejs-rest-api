@@ -1,4 +1,4 @@
-import { JSONSchemaCustom } from '@core';
+import { JSONSchemaCustom } from '@core/schema';
 
 export const USER_RELATION = {
   profile: true,
