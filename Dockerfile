@@ -11,7 +11,7 @@ RUN npm ci
 FROM node:16-alpine AS builder
 LABEL Dmitry Neverovski <dmitryneverovski@gmail.com>
 ARG NODE_ENV
-ENV NODE_ENV ${NODE_ENV:-devolpement}
+ENV NODE_ENV ${NODE_ENV:-development}
 
 WORKDIR /app
 COPY . .

@@ -1,6 +1,6 @@
-import ConfigCore from './config.core';
+import { Config } from '@core/config';
 
-class EmailConfig extends ConfigCore {
+class EmailConfig extends Config {
   readonly driver: string;
   readonly encryption: string;
   readonly host: string;

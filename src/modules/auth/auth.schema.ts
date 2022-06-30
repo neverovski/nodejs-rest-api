@@ -1,4 +1,4 @@
-import { IJsonSchema, EMAIL_SCHEMA, PASSWORD_SCHEMA } from '@core';
+import { IJsonSchema, EMAIL_SCHEMA, PASSWORD_SCHEMA } from '@core/schema';
 
 export const ForgotPasswordSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },

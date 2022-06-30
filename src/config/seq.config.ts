@@ -1,6 +1,6 @@
-import ConfigCore from './config.core';
+import { Config } from '@core/config';
 
-class SeqConfig extends ConfigCore {
+class SeqConfig extends Config {
   readonly apiKey: string;
   readonly monitoring: boolean;
   readonly serverUrl: string;

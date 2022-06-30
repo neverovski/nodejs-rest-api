@@ -1,5 +1,5 @@
 import { RepositoryCore } from '@core';
-import { i18n } from '@i18n';
+import { i18n } from '@lib';
 
 import { UserEntity } from './entity';
 import { IUserRepository } from './interface';
@@ -11,7 +11,8 @@ export default class UserRepository
 {
   constructor() {
     super(UserEntity, 'u');
-    this.notFound = i18n().notFound.user;
+
+    this.notFound = i18n()['notFound.user'];
   }
 
   async create(body: User): Promise<Id> {

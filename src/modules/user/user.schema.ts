@@ -1,4 +1,4 @@
-import { IJsonSchema, EMAIL_SCHEMA, PASSWORD_SCHEMA } from '@core';
+import { IJsonSchema, EMAIL_SCHEMA, PASSWORD_SCHEMA } from '@core/schema';
 
 import { PROFILE_SCHEMA } from './user.constant';
 

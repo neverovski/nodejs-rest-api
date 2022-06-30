@@ -64,7 +64,13 @@ $ npm run migrate:create --name=<NAME>
 
 ## Notes
 
-### 1. Why is my git pre-commit hook not executable by default?
+### 1. PullRequest (PR)
+
+  - [ ] This PR implements new feature, fix bug, or some other changes
+  - [ ] If PR is not ready to review mark it as Draft
+  - [ ] All commits in this PR should be by [conventional-commits](https://www.conventionalcommits.org/en/v1.0.0/)
+
+### 2. Why is my git pre-commit hook not executable by default?
 
 - Because files are not executable by default; they must be set to be executable.
 
@@ -73,7 +79,7 @@ chmod ug+x .husky/*
 chmod ug+x .git/hooks/*
 ```
 
-### 2. [Production Best Practices: Security](https://expressjs.com/en/advanced/best-practice-security.html)
+### 3. [Production Best Practices: Security](https://expressjs.com/en/advanced/best-practice-security.html)
 
 - Don’t use deprecated or vulnerable versions of Express
 - Use TLS

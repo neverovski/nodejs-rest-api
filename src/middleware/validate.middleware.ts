@@ -4,7 +4,8 @@ import addKeywords from 'ajv-keywords';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { JSONSchema7 } from 'json-schema';
 
-import { MiddlewareCore, IJsonSchema } from '@core';
+import { MiddlewareCore } from '@core';
+import { IJsonSchema } from '@core/schema';
 import { CodeResponse } from '@utils';
 import { StringHelper, SanitizerHelper } from '@utils/helpers';
 
