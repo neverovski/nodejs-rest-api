@@ -1,6 +1,6 @@
 {
   "name": "nodejs-auth-sql",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Node.js for Token Based Authentication (access and refresh) with PostgreSQL database.",
   "main": "src/index.ts",
   "scripts": {
