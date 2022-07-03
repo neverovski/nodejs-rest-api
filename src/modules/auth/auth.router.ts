@@ -15,6 +15,7 @@ import {
   LogoutSchema,
   ForgotPasswordSchema,
   ResetPasswordSchema,
+  PlatformSchema,
 } from './auth.schema';
 
 export default class AuthRouter extends RouterCore {
@@ -44,6 +45,12 @@ export default class AuthRouter extends RouterCore {
       AuthMiddleware.handler(),
       ValidateMiddleware.handler(LogoutSchema),
       AsyncMiddleware(this.controller.logout.bind(this.controller)),
+    );
+
+    this.router.post(
+      '/platform',
+      ValidateMiddleware.handler(PlatformSchema),
+      AsyncMiddleware(this.controller.platform.bind(this.controller)),
     );
 
     this.router.post(

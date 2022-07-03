@@ -1,1 +1,2 @@
-export * from './platform.constant';
+export * from './interface';
+export * from './platform.type';

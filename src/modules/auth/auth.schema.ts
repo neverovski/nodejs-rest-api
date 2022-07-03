@@ -1,4 +1,5 @@
 import { IJsonSchema, EMAIL_SCHEMA, PASSWORD_SCHEMA } from '@core/schema';
+import { PlatformNetwork } from '@modules/platform';
 
 export const ForgotPasswordSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },
@@ -50,6 +51,28 @@ export const LogoutSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },
   query: { type: 'object', maxProperties: 0 },
   body: { type: 'object', maxProperties: 0 },
+};
+
+export const PlatformSchema: IJsonSchema = {
+  params: { type: 'object', maxProperties: 0 },
+  query: { type: 'object', maxProperties: 0 },
+  body: {
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    type: 'object',
+    additionalProperties: false,
+    required: ['token', 'platform'],
+    properties: {
+      platform: {
+        type: 'string',
+        enum: Object.values(PlatformNetwork),
+      },
+      token: {
+        type: 'string',
+        transform: ['trim'],
+        minLength: 1,
+      },
+    },
+  },
 };
 
 export const ResetPasswordSchema: IJsonSchema = {

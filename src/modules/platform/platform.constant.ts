@@ -1,5 +1,1 @@
-export enum PlatformNetwork {
-  APPLE = 'apple',
-  FACEBOOK = 'facebook',
-  GOOGLE = 'google',
-}
+export const PLATFORM_RELATION = { user: true };

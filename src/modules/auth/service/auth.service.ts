@@ -2,6 +2,11 @@ import { injectable, inject } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
+import {
+  IPlatformService,
+  PlatformInject,
+  PlatformRequest,
+} from '@modules/platform';
 import { IUserService, UserInject } from '@modules/user';
 import { IEmailQueue, EmailInject } from '@providers/email';
 import { IJwtService, JwtInject } from '@providers/jwt';
@@ -26,6 +31,8 @@ export default class AuthService extends ServiceCore implements IAuthService {
     @inject(UserInject.USER_SERVICE) private userService: IUserService,
     @inject(JwtInject.JWT_SERVICE) private jwtService: IJwtService,
     @inject(EmailInject.EMAIL_QUEUE) private emailQueue: IEmailQueue,
+    @inject(PlatformInject.PLATFORM_SERVICE)
+    private platformService: IPlatformService,
   ) {
     super();
   }
@@ -34,16 +41,17 @@ export default class AuthService extends ServiceCore implements IAuthService {
     const { id } = await this.userService.getOne({ email });
 
     const confirmTokenPassword = StringHelper.uuid();
-    const opts = {
-      expiresIn: JwtConfig.expiresInToken,
-    };
-    const payload = {
-      jti: confirmTokenPassword,
-      sub: String(id),
-      email,
-    };
 
-    const token = this.jwtService.sign(payload, JwtConfig.secretToken, opts);
+    const token = this.jwtService.sign(
+      {
+        jti: confirmTokenPassword,
+        sub: String(id),
+      },
+      JwtConfig.secretToken,
+      {
+        expiresIn: JwtConfig.expiresInToken,
+      },
+    );
 
     await this.userService.update({ id }, { confirmTokenPassword });
     void this.emailQueue.addForgotPasswordToQueue({ token, email });
@@ -56,11 +64,17 @@ export default class AuthService extends ServiceCore implements IAuthService {
       throw ResponseHelper.error(HttpException.INVALID_CREDENTIALS);
     }
 
-    return this.tokenService.getToken({ id: user.id, email }, ctx);
+    return this.tokenService.getToken({ id: user.id, email: user?.email }, ctx);
   }
 
   async logout({ userId }: LogoutRequest) {
     await this.tokenService.update({ userId }, { isRevoked: true });
+  }
+
+  async platform(body: PlatformRequest, ctx: Context) {
+    const { id, email } = await this.platformService.create(body);
+
+    return this.tokenService.getToken({ id, email }, ctx);
   }
 
   async refreshToken({ refreshToken }: RefreshTokenRequest, ctx: Context) {
@@ -72,18 +86,17 @@ export default class AuthService extends ServiceCore implements IAuthService {
 
     const user = await this.userService.getOne({ id: +payload.sub });
 
-    return this.tokenService.getToken({ id: user.id, email: user.email }, ctx);
+    return this.tokenService.getToken({ id: user.id, email: user?.email }, ctx);
   }
 
   async resetPassword({ password, token }: ResetPasswordRequest) {
-    const { jti, email } =
-      await this.jwtService.verifyAsync<AccessTokenPayload>(
-        token,
-        JwtConfig.secretToken,
-      );
+    const { jti, sub } = await this.jwtService.verifyAsync<AccessTokenPayload>(
+      token,
+      JwtConfig.secretToken,
+    );
 
     await this.userService.update(
-      { email, confirmTokenPassword: jti },
+      { id: +sub, confirmTokenPassword: jti },
       { password: password },
     );
   }
