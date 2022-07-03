@@ -39,3 +39,11 @@ POST {{baseUrl}}/api/auth/platform
   "token": "EAACqlwBhn3YBAKmmB4yZBppuBtDUTI7kdRZAZCDhAQCVKCH4bAZCZAEy8vVKJuQWpNyNNtODIL9JLsAbTG4C0gELEaZB3Fp4V6llq1Gw4lVgh0a0M7KAZAN3YWpgXrnQ5Uzp7vDOSz16rTeZCRgezzpZB9AnAZAiV6sCsqtDOOJPFO1noOwxynx6ZB7LBUvM2TRcV8OyU9DEfCVfQZDZD",
   "platform": "facebook"
 }
+
+### PLATFORM - APPLE
+POST {{baseUrl}}/api/auth/platform
+
+{
+  "token": "eyJraWQiOiJlWGF1bm1MIiwiYWxnIjoiUlMyNTYifQ",
+  "platform": "apple"
+}
