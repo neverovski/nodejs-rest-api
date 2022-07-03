@@ -1,11 +1,16 @@
 import { Config } from '@core/config';
-import { FacebookConfig } from '@utils';
+import { AppleConfig, FacebookConfig } from '@utils';
 
 class PlatformConfig extends Config {
+  readonly apple: AppleConfig;
   readonly facebook: FacebookConfig;
 
   constructor() {
     super();
+
+    this.apple = {
+      url: this.set<string>('APPLE_URL', this.joi.string().required(), ''),
+    };
 
     this.facebook = {
       url: this.set<string>('FACEBOOK_URL', this.joi.string().required(), ''),
