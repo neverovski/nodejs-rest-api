@@ -8,6 +8,7 @@ export enum PlatformInject {
 }
 
 export enum PlatformNetwork {
+  APPLE = 'apple',
   FACEBOOK = 'facebook',
 }
 
