@@ -51,3 +51,7 @@ export type FacebookConfig = {
   fields: string;
   url: string;
 };
+
+export type AppleConfig = {
+  url: string;
+};

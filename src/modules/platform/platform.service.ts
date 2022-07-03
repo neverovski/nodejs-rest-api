@@ -1,6 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 
 import { i18n } from '@lib';
+import { IAppleService, AppleInject } from '@providers/apple';
 import { IFacebookService, FacebookInject } from '@providers/facebook';
 import { HttpException } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
@@ -19,6 +20,8 @@ export default class PlatformService implements IPlatformService {
     private readonly facebookService: IFacebookService,
     @inject(PlatformInject.PLATFORM_REPOSITORY)
     private readonly repository: IPlatformRepository,
+    @inject(AppleInject.APPLE_SERVICE)
+    private readonly appleService: IAppleService,
   ) {}
 
   async create(body: PlatformRequest) {
@@ -31,6 +34,8 @@ export default class PlatformService implements IPlatformService {
     switch (platform) {
       case PlatformNetwork.FACEBOOK:
         return this.facebookService.getProfile(token);
+      case PlatformNetwork.APPLE:
+        return this.appleService.getProfile(token);
       default:
         throw ResponseHelper.error(HttpException.NOT_FOUND, {
           message: i18n()['notFound.platform'],
