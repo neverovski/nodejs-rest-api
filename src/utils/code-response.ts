@@ -4,6 +4,7 @@ export enum HttpException {
   DELETE_ERROR = 'DELETE_ERROR',
   EMAIL_ALREADY_TAKEN = 'EMAIL_ALREADY_TAKEN',
   EMPTY_BODY = 'EMPTY_BODY',
+  EMPTY_EMAIL = 'EMPTY_EMAIL',
   EXTERNAL = 'EXTERNAL',
   FORBIDDEN = 'FORBIDDEN',
   INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
@@ -73,6 +74,11 @@ export const CodeResponse = {
     status: HttpStatus.BadRequest,
     code: HttpException.EMPTY_BODY,
     message: 'Empty body is not allowed. Please fill the body',
+  },
+  [HttpException.EMPTY_EMAIL]: {
+    message: 'Empty email is not allowed. Please fill the email',
+    status: HttpStatus.BadRequest,
+    code: HttpException.EMPTY_EMAIL,
   },
   [HttpException.INVALID_CREDENTIALS]: {
     message: 'Invalid credentials',

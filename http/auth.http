@@ -31,3 +31,11 @@ POST {{baseUrl}}/api/auth/refresh-token
 {
   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiZjVuaUFfSWsySXFHZW9kZlNFTzhYIiwidHlwIjoiQmVhcmVyIiwiaWF0IjoxNjM0MTY0OTcxLCJleHAiOjE2MzY3NTY5NzF9.hvD6mfVwECOin5OD8mKU3S5oa1wYf4W9KxDL8D-ss9k"
 }
+
+### PLATFORM - FACEBOOK
+POST {{baseUrl}}/api/auth/platform
+
+{
+  "token": "EAACqlwBhn3YBAKmmB4yZBppuBtDUTI7kdRZAZCDhAQCVKCH4bAZCZAEy8vVKJuQWpNyNNtODIL9JLsAbTG4C0gELEaZB3Fp4V6llq1Gw4lVgh0a0M7KAZAN3YWpgXrnQ5Uzp7vDOSz16rTeZCRgezzpZB9AnAZAiV6sCsqtDOOJPFO1noOwxynx6ZB7LBUvM2TRcV8OyU9DEfCVfQZDZD",
+  "platform": "facebook"
+}

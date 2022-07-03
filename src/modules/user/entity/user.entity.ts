@@ -16,8 +16,8 @@ export default class UserEntity extends EntityCore<IUser> implements IUser {
   @DeleteDateColumn({ type: 'timestamptz' })
   deletedAt?: Date;
 
-  @Column('varchar')
-  email!: string;
+  @Column('varchar', { nullable: true })
+  email?: string;
 
   @Column('bool', { default: false })
   isActive = false;

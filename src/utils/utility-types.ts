@@ -46,3 +46,8 @@ export enum PostgresErrorCode {
   NotNullViolation = '23502',
   UniqueViolation = '23505',
 }
+
+export type FacebookConfig = {
+  fields: string;
+  url: string;
+};

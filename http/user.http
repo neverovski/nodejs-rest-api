@@ -7,7 +7,6 @@ PUT {{baseUrl}}/api/users/current
 Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
 
 {
-  "email": "test@test.test",
   "profile": {
     "firstName": "Dmitry",
     "lastName": "Neverovski"

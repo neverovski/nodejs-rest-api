@@ -1,4 +1,4 @@
-import { PlatformNetwork } from '../platform.constant';
+import { PlatformNetwork } from '../platform.type';
 
 export interface IPlatform {
   name: PlatformNetwork;

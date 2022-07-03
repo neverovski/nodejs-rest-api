@@ -24,3 +24,5 @@ export const SORT = ['ASC', 'DESC'];
 
 export const SALT_PASSWORD_ROUNDS = 10;
 export const CACHE_TIME = 2000;
+
+export const FACEBOOK_LINK = 'https://www.facebook.com';
