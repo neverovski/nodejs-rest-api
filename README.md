@@ -35,6 +35,7 @@ $ npm run migrate:create --name=<NAME>
     - [X] Reset password
   - Platform
     - [X] Facebook
+    - [X] Apple
     - [ ] Google
     - [ ] Twitter
     - [ ] Github
