@@ -1,1 +1,2 @@
-export { default as FacebookService } from './facebook.service';
+export * from './interface';
+export * from './facebook.type';

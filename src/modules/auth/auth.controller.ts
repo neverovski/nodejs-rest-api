@@ -2,6 +2,7 @@ import { Response, Request } from 'express';
 import { injectable, inject } from 'tsyringe';
 
 import { ControllerCore } from '@core';
+import { PlatformRequest } from '@modules/platform';
 import { HttpException } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
@@ -51,6 +52,13 @@ export default class AuthController extends ControllerCore {
     await this.service.logout({ userId });
 
     this.response(res);
+  }
+
+  async platform(req: Request<any, any, PlatformRequest>, res: Response) {
+    const { body, ctx } = req;
+    const data = await this.service.platform(body, ctx);
+
+    this.response(res, { data, dto: TokenDTO });
   }
 
   async refreshToken(
