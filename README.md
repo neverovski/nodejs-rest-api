@@ -36,7 +36,7 @@ $ npm run migrate:create --name=<NAME>
   - Platform
     - [X] Facebook
     - [X] Apple
-    - [ ] Google
+    - [X] Google
     - [ ] Twitter
     - [ ] Github
   - Test
