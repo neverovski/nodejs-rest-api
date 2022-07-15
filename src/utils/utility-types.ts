@@ -55,3 +55,7 @@ export type FacebookConfig = {
 export type AppleConfig = {
   url: string;
 };
+
+export type GoogleConfig = {
+  clientId: string;
+};
