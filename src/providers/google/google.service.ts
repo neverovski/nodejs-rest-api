@@ -53,7 +53,7 @@ export default class GoogleService
 
       throw ResponseHelper.error(HttpException.BAD_REQUEST);
     } catch (err) {
-      this.errorHandler(err);
+      this.handleError(err);
 
       throw ResponseHelper.error(HttpException.TOKEN_VERIFY);
     }

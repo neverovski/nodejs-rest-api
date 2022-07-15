@@ -1,4 +1,4 @@
-import { Express, Response, NextFunction, Request } from 'express';
+import type { Application, Response, NextFunction, Request } from 'express';
 
 import { i18n } from '@lib';
 import { AuthRouter } from '@modules/auth';
@@ -6,7 +6,7 @@ import { UserRouter } from '@modules/user';
 import { HttpException } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
-export default (app: Express): void => {
+export default (app: Application): void => {
   app.use('/api/auth', new AuthRouter().init());
   app.use('/api/users', new UserRouter().init());
 

@@ -68,7 +68,7 @@ export default class PlatformRepository
         return { id: userId, email: user?.email };
       });
     } catch (err) {
-      throw this.errorHandler(err);
+      throw this.handleError(err);
     }
   }
 }

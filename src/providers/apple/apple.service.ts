@@ -37,7 +37,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
         }),
       };
     } catch (err) {
-      this.errorHandler(err);
+      this.handleError(err);
 
       throw ResponseHelper.error(HttpException.TOKEN_VERIFY);
     }
@@ -49,7 +49,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
 
       return keys as AppleKey[];
     } catch (err) {
-      this.errorHandler(err);
+      this.handleError(err);
 
       throw ResponseHelper.error(HttpException.EXTERNAL);
     }
@@ -61,7 +61,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
 
       return signingKey.getPublicKey();
     } catch (err) {
-      this.errorHandler(err);
+      this.handleError(err);
 
       throw ResponseHelper.error(HttpException.EXTERNAL);
     }
@@ -87,7 +87,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
 
       return data;
     } catch (err) {
-      this.errorHandler(err);
+      this.handleError(err);
 
       throw ResponseHelper.error(HttpException.EXTERNAL);
     }

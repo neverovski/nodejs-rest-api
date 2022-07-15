@@ -1,9 +1,9 @@
-import http from 'http';
+import { createServer, Server as HTTPServer } from 'http';
 
 import { json, urlencoded } from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express from 'express';
+import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 
 import { MiddlewareCore } from '@core';
@@ -18,9 +18,9 @@ type ServerType = {
 };
 
 export default class Server {
-  app!: express.Express;
-  httpServer!: http.Server;
+  private app!: Application;
   private readonly errorMiddleware: MiddlewareCore;
+  private http!: HTTPServer;
   private readonly initMiddleware: MiddlewareCore[];
   private readonly port: number;
 
@@ -32,15 +32,16 @@ export default class Server {
 
   async init(): Promise<void> {
     this.app = express();
-    this.httpServer = http.createServer(this.app);
-    this.middleware();
-    this.routes();
-    this.addErrorHandler();
+    this.http = createServer(this.app);
 
-    await this.listen();
+    this.handleMiddleware();
+    this.handleRoute();
+    this.handleError();
+
+    await this.handleListen();
   }
 
-  private addErrorHandler(): void {
+  private handleError(): void {
     try {
       this.app.use(this.errorMiddleware.handler());
     } catch (err) {
@@ -48,11 +49,7 @@ export default class Server {
     }
   }
 
-  private basePathRoute(_req: express.Request, res: express.Response): void {
-    res.json({ message: 'base path' });
-  }
-
-  private async listen(): Promise<void> {
+  private async handleListen(): Promise<void> {
     return new Promise((resolve) => {
       process.on('unhandledRejection', (reason) => {
         Logger.error({ message: 'unhandledRejection', error: reason });
@@ -74,11 +71,11 @@ export default class Server {
         process.exit(1);
       });
 
-      return this.app.listen(this.port, () => resolve());
+      return this.http.listen(this.port, () => resolve());
     });
   }
 
-  private middleware(): void {
+  private handleMiddleware(): void {
     this.app.use(helmet());
     this.app.use(cors());
     this.app.use(json());
@@ -94,8 +91,11 @@ export default class Server {
     }
   }
 
-  private routes(): void {
-    this.app.get('/', this.basePathRoute);
+  private handleRoute(): void {
+    this.app.get('/', (_req: Request, res: Response) =>
+      res.json({ message: 'base path' }),
+    );
+
     Router(this.app);
   }
 }

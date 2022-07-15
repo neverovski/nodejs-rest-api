@@ -44,7 +44,7 @@ export default class FacebookService
         }),
       };
     } catch (err) {
-      this.errorHandler(err);
+      this.handleError(err);
 
       throw ResponseHelper.error(HttpException.TOKEN_VERIFY);
     }

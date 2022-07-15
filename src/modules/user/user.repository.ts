@@ -23,7 +23,7 @@ export default class UserRepository
 
       return { id: userEntity.id };
     } catch (err) {
-      throw this.errorHandler(err);
+      throw this.handleError(err);
     }
   }
 
@@ -31,7 +31,7 @@ export default class UserRepository
     try {
       return await this.orm.findOne(options);
     } catch (err) {
-      throw this.errorHandler(err);
+      throw this.handleError(err);
     }
   }
 
@@ -39,7 +39,7 @@ export default class UserRepository
     try {
       return await this.orm.findOneOrFail(options);
     } catch (err) {
-      throw this.errorHandler(err);
+      throw this.handleError(err);
     }
   }
 
@@ -48,7 +48,7 @@ export default class UserRepository
       this.orm.merge(entity, body);
       await this.orm.save(entity);
     } catch (err) {
-      throw this.errorHandler(err);
+      throw this.handleError(err);
     }
   }
 }

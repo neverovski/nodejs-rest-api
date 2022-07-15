@@ -46,7 +46,7 @@ export default class Queue {
     };
   }
 
-  protected errorHandler(error: unknown) {
+  protected handleError(error: unknown) {
     Logger.error({
       message: this.constructor.name,
       error,
