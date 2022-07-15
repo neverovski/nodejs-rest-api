@@ -53,7 +53,7 @@ export default class EmailQueue extends Queue {
 
             return await Promise.resolve();
           } catch (err) {
-            this.errorHandler(err);
+            this.handleError(err);
 
             return Promise.reject(err);
           }

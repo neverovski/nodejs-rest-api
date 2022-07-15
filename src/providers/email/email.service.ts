@@ -35,7 +35,7 @@ export default class EmailService extends ServiceCore implements IEmailService {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return await this.transporter.sendMail(data);
     } catch (err) {
-      this.errorHandler(err);
+      this.handleError(err);
       throw ResponseHelper.error(HttpException.EXTERNAL);
     }
   }

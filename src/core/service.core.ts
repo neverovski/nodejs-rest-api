@@ -12,7 +12,7 @@ export default class ServiceCore {
     return [];
   }
 
-  protected errorHandler(error: unknown) {
+  protected handleError(error: unknown) {
     Logger.error({
       message: this.constructor.name,
       error,

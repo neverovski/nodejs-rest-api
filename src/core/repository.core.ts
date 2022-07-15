@@ -48,7 +48,7 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
     }
   }
 
-  protected errorHandler(error: unknown) {
+  protected handleError(error: unknown) {
     if (
       (error as Error)?.name === 'EntityNotFound' ||
       (error as Error)?.name === 'EntityNotFoundError'

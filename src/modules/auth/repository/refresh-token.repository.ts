@@ -22,7 +22,7 @@ export default class RefreshTokenRepository
 
       return await this.orm.save(refreshTokenEntity);
     } catch (err) {
-      throw this.errorHandler(err);
+      throw this.handleError(err);
     }
   }
 
@@ -30,7 +30,7 @@ export default class RefreshTokenRepository
     try {
       return await this.orm.findOneOrFail(options);
     } catch (err) {
-      throw this.errorHandler(err);
+      throw this.handleError(err);
     }
   }
 
@@ -41,7 +41,7 @@ export default class RefreshTokenRepository
     try {
       await this.orm.update(query, body);
     } catch (err) {
-      throw this.errorHandler(err);
+      throw this.handleError(err);
     }
   }
 }
