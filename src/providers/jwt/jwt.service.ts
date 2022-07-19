@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { singleton } from 'tsyringe';
 
 import { ServiceCore } from '@core';
 import { HttpException } from '@utils';
@@ -7,7 +6,6 @@ import { DateHelper, ResponseHelper } from '@utils/helpers';
 
 import { IJwtService } from './interface';
 
-@singleton()
 export default class JwtService extends ServiceCore implements IJwtService {
   constructor() {
     super();

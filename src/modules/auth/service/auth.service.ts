@@ -2,13 +2,13 @@ import { injectable, inject } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
+import { INotificationQueue, NotificationInject } from '@modules/notification';
 import {
   IPlatformService,
   PlatformInject,
   PlatformRequest,
 } from '@modules/platform';
 import { IUserService, UserInject } from '@modules/user';
-import { IEmailQueue, EmailInject } from '@providers/email';
 import { IJwtService, JwtInject } from '@providers/jwt';
 import { HttpException } from '@utils';
 import { ResponseHelper, StringHelper, ValidateHelper } from '@utils/helpers';
@@ -30,7 +30,8 @@ export default class AuthService extends ServiceCore implements IAuthService {
     @inject(TokenInject.TOKEN_SERVICE) private tokenService: ITokenService,
     @inject(UserInject.USER_SERVICE) private userService: IUserService,
     @inject(JwtInject.JWT_SERVICE) private jwtService: IJwtService,
-    @inject(EmailInject.EMAIL_QUEUE) private emailQueue: IEmailQueue,
+    @inject(NotificationInject.NOTIFICATION_QUEUE)
+    private notificationQueue: INotificationQueue,
     @inject(PlatformInject.PLATFORM_SERVICE)
     private platformService: IPlatformService,
   ) {
@@ -54,7 +55,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     );
 
     await this.userService.update({ id }, { confirmTokenPassword });
-    void this.emailQueue.addForgotPasswordToQueue({ token, email });
+    void this.notificationQueue.addForgotPasswordToQueue({ token, email });
   }
 
   async login({ email, password }: LoginRequest, ctx: Context) {
