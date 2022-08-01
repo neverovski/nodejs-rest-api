@@ -38,7 +38,8 @@ $ npm run migrate:create --name=<NAME>
     - [X] Apple
     - [X] Google
     - [ ] Twitter
-    - [ ] Github
+    - [ ] Linkedin
+    - [X] Github
   - Test
     - [ ] Unit
     - [ ] E2E
