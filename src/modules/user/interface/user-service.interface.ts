@@ -1,4 +1,4 @@
-import { User, FullUser, Password } from '../user.type';
+import { FullUser, Password, User } from '../user.type';
 
 export interface IUserService {
   create(body: User): Promise<Id>;

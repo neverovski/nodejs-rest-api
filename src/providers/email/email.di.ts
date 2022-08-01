@@ -5,9 +5,12 @@ import EmailService from './email.service';
 import { EmailInject } from './email.type';
 import { IEmailQueue, IEmailService } from './interface';
 
-container.registerSingleton<IEmailService>(
+container.registerInstance<IEmailService>(
   EmailInject.EMAIL_SERVICE,
-  EmailService,
+  new EmailService(),
 );
 
-container.registerSingleton<IEmailQueue>(EmailInject.EMAIL_QUEUE, EmailQueue);
+container.registerInstance<IEmailQueue>(
+  EmailInject.EMAIL_QUEUE,
+  new EmailQueue(),
+);

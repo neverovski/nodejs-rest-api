@@ -47,3 +47,11 @@ POST {{baseUrl}}/api/auth/platform
   "token": "eyJraWQiOiJlWGF1bm1MIiwiYWxnIjoiUlMyNTYifQ",
   "platform": "apple"
 }
+
+### PLATFORM - GITHUB
+POST {{baseUrl}}/api/auth/platform
+
+{
+  "token": "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",
+  "platform": "github"
+}

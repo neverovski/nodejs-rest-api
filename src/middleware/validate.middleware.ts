@@ -1,13 +1,13 @@
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import addKeywords from 'ajv-keywords';
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { JSONSchema7 } from 'json-schema';
 
 import { MiddlewareCore } from '@core';
 import { IJsonSchema } from '@core/schema';
 import { CodeResponse } from '@utils';
-import { StringHelper, SanitizerHelper } from '@utils/helpers';
+import { SanitizerHelper, StringHelper } from '@utils/helpers';
 
 class ValidateMiddleware extends MiddlewareCore {
   protected ajv: Ajv;

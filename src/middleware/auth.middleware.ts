@@ -1,10 +1,10 @@
-import { Response, Request, NextFunction, RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { container } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { MiddlewareCore } from '@core';
 import { IJwtService, JwtInject } from '@providers/jwt';
-import { JWTPayload, HttpException, Role } from '@utils';
+import { HttpException, JWTPayload, Role } from '@utils';
 import { ResponseHelper, TokenHelper } from '@utils/helpers';
 
 class AuthMiddleware extends MiddlewareCore {

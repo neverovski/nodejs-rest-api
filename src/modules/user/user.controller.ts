@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { ControllerCore } from '@core';
 import { HttpException, HttpStatus } from '@utils';
@@ -7,7 +7,7 @@ import { ResponseHelper } from '@utils/helpers';
 
 import { UserDTO } from './dto';
 import { IUserService } from './interface';
-import { User, Password, UserInject } from './user.type';
+import { Password, User, UserInject } from './user.type';
 
 /**
  * @openapi

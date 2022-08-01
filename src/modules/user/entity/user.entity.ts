@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, Unique, DeleteDateColumn } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, OneToOne, Unique } from 'typeorm';
 
 import { EntityCore } from '@core';
 import { DB_TABLE_USER, DB_UQ_USER_EMAIL } from '@utils';

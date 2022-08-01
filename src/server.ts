@@ -1,4 +1,4 @@
-import { createServer, Server as HTTPServer } from 'http';
+import { Server as HTTPServer, createServer } from 'http';
 
 import { json, urlencoded } from 'body-parser';
 import cookieParser from 'cookie-parser';

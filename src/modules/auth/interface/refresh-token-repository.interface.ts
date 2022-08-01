@@ -1,6 +1,6 @@
 import {
-  RefreshToken,
   FullRefreshToken,
+  RefreshToken,
   RefreshTokenOption,
 } from '../auth.type';
 

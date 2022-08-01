@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 import { EntityCore } from '@core';
 import { DB_TABLE_PROFILE } from '@utils';
@@ -12,11 +12,11 @@ export default class ProfileEntity
   extends EntityCore<IProfile>
   implements IProfile
 {
-  @Column('varchar')
-  firstName!: string;
+  @Column('varchar', { nullable: true })
+  firstName?: string;
 
-  @Column('varchar')
-  lastName!: string;
+  @Column('varchar', { nullable: true })
+  lastName?: string;
 
   @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })

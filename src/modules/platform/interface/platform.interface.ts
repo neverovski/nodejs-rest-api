@@ -1,7 +1,7 @@
-import { PlatformNetwork } from '../platform.type';
+import { SocialNetwork } from '@utils';
 
 export interface IPlatform {
-  name: PlatformNetwork;
+  name: SocialNetwork;
   ssid: string;
   url?: string;
   userId: number;

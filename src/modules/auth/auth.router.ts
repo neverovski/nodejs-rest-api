@@ -3,19 +3,19 @@ import { container } from 'tsyringe';
 
 import { RouterCore } from '@core';
 import {
-  ValidateMiddleware,
   AsyncMiddleware,
   AuthMiddleware,
+  ValidateMiddleware,
 } from '@middleware';
 
 import AuthController from './auth.controller';
 import {
-  LoginSchema,
-  RefreshTokenSchema,
-  LogoutSchema,
   ForgotPasswordSchema,
-  ResetPasswordSchema,
+  LoginSchema,
+  LogoutSchema,
   PlatformSchema,
+  RefreshTokenSchema,
+  ResetPasswordSchema,
 } from './auth.schema';
 
 export default class AuthRouter extends RouterCore {

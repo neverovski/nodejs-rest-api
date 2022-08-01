@@ -1,8 +1,8 @@
 import { RepositoryCore } from '@core';
 
 import {
-  RefreshToken,
   FullRefreshToken,
+  RefreshToken,
   RefreshTokenOption,
 } from '../auth.type';
 import { RefreshTokenEntity } from '../entity';

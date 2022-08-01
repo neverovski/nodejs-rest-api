@@ -1,12 +1,12 @@
 import { PlatformRequest } from '@modules/platform';
 
 import {
-  LoginRequest,
-  RefreshTokenRequest,
-  TokenResponse,
-  LogoutRequest,
   ForgotPasswordRequest,
+  LoginRequest,
+  LogoutRequest,
+  RefreshTokenRequest,
   ResetPasswordRequest,
+  TokenResponse,
 } from '../auth.type';
 
 export interface IAuthService {

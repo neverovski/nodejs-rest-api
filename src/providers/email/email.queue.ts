@@ -1,52 +1,53 @@
 import Bull from 'bull';
-import ms from 'ms';
-import { singleton, inject } from 'tsyringe';
+import { container } from 'tsyringe';
 
 import { EmailConfig } from '@config';
 import { Queue } from '@lib';
-import { EventEmitter } from '@utils/helpers';
+import { DateHelper, EventEmitter } from '@utils/helpers';
 
-import { EMAIL_QUEUQ, EMAIL_FORGOT_PASSWORD } from './email.constant';
-import { ForgotPassword, EmailInject } from './email.type';
-import { IEmailService } from './interface';
+import { EMAIL_MESSAGE, EMAIL_QUEUQ } from './email.constant';
+import { EmailInject, EmailMessage } from './email.type';
+import { IEmailQueue, IEmailService } from './interface';
 
-@singleton()
-export default class EmailQueue extends Queue {
-  constructor(
-    @inject(EmailInject.EMAIL_SERVICE)
-    private readonly emailService: IEmailService,
-  ) {
+export default class EmailQueue extends Queue implements IEmailQueue {
+  private readonly emailService: IEmailService;
+
+  constructor() {
     super(EMAIL_QUEUQ, {
       defaultJobOptions: {
         attempts: 30,
         backoff: {
           type: 'exponential',
-          delay: ms('1s'),
+          delay: DateHelper.toMs('1s'),
         },
       },
     });
 
+    this.emailService = container.resolve<IEmailService>(
+      EmailInject.EMAIL_SERVICE,
+    );
+
     this.process();
   }
 
-  addForgotPasswordToQueue(data: ForgotPassword, opt?: Bull.JobOptions) {
-    void this.queue.add(EMAIL_FORGOT_PASSWORD, data, opt);
+  addSendMessageToQueue(data: EmailMessage, opt?: Bull.JobOptions) {
+    void this.queue.add(EMAIL_MESSAGE, data, opt);
   }
 
   private process() {
     EventEmitter.once('start', () => {
       void this.queue.process(
-        EMAIL_FORGOT_PASSWORD,
-        async (job: Bull.Job<ForgotPassword>) => {
+        EMAIL_MESSAGE,
+        async (job: Bull.Job<EmailMessage>) => {
           try {
-            const { email, token } = job.data;
+            const { email, subject, text, html } = job.data;
 
             await this.emailService.sendEmail({
               to: email,
               from: EmailConfig.username,
-              subject: 'Forgot password',
-              text: 'Forgot password',
-              html: `Token: ${token}`,
+              subject,
+              text: text || subject,
+              html: html || subject,
             });
 
             await job.progress(100);

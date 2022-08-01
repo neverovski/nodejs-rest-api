@@ -1,7 +1,7 @@
 import type { JobOptions } from 'bull';
 
-import { ForgotPassword } from '../email.type';
+import { EmailMessage } from '../email.type';
 
 export interface IEmailQueue {
-  addForgotPasswordToQueue(data: ForgotPassword, opt?: JobOptions): void;
+  addSendMessageToQueue(data: EmailMessage, opt?: JobOptions): void;
 }

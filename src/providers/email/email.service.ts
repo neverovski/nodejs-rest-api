@@ -1,6 +1,5 @@
 import { createTransport } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
-import { singleton } from 'tsyringe';
 
 import { EmailConfig } from '@config';
 import { ServiceCore } from '@core';
@@ -10,7 +9,6 @@ import { ResponseHelper } from '@utils/helpers';
 import { SendEmail } from './email.type';
 import { IEmailService } from './interface';
 
-@singleton()
 export default class EmailService extends ServiceCore implements IEmailService {
   private transporter: Mail;
 

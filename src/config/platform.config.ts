@@ -1,9 +1,15 @@
 import { Config } from '@core/config';
-import { AppleConfig, FacebookConfig, GoogleConfig } from '@utils';
+import {
+  AppleConfig,
+  FacebookConfig,
+  GitHubConfig,
+  GoogleConfig,
+} from '@utils';
 
 class PlatformConfig extends Config {
   readonly apple: AppleConfig;
   readonly facebook: FacebookConfig;
+  readonly github: GitHubConfig;
   readonly google: GoogleConfig;
 
   constructor() {
@@ -28,6 +34,10 @@ class PlatformConfig extends Config {
         this.joi.string().required(),
         '',
       ),
+    };
+
+    this.github = {
+      url: this.set<string>('GITHUB_URL', this.joi.string().required(), ''),
     };
   }
 }

@@ -10,12 +10,9 @@ export type SendEmail = Pick<
   'from' | 'to' | 'subject' | 'text' | 'html'
 >;
 
-export type DeployEmail = {
-  subject: string;
-  text: string;
-};
-
-export type ForgotPassword = {
+export type EmailMessage = {
   email: string;
-  token: string;
+  html?: string;
+  subject: string;
+  text?: string;
 };

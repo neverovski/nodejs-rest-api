@@ -1,4 +1,4 @@
-import { hash, compareSync } from 'bcrypt';
+import { compareSync, hash } from 'bcrypt';
 import {
   EntitySubscriberInterface,
   EventSubscriber,

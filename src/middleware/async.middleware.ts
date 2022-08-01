@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 
 export default (handler: RequestHandler<any, any, any, any>) =>
   (req: Request, res: Response, next: NextFunction) =>

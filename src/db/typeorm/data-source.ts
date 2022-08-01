@@ -3,7 +3,7 @@ import { join } from 'path';
 import { DataSource } from 'typeorm';
 
 import { AppConfig, DBConfig, RedisConfig } from '@config';
-import { ENV_PRODUCTION, ENV_CLI } from '@utils';
+import { ENV_CLI, ENV_PRODUCTION } from '@utils';
 
 import TypeormLogger from './typeorm-logger';
 

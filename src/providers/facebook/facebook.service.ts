@@ -3,8 +3,8 @@ import { singleton } from 'tsyringe';
 
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
-import { PlatformProvider, PlatformNetwork } from '@modules/platform';
-import { HttpException, FACEBOOK_LINK } from '@utils';
+import { PlatformProvider } from '@modules/platform';
+import { FACEBOOK_LINK, HttpException, SocialNetwork } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 import { FacebookProfile } from './facebook.type';
@@ -31,7 +31,7 @@ export default class FacebookService
 
       return {
         ssid: data.id,
-        name: PlatformNetwork.FACEBOOK,
+        name: SocialNetwork.FACEBOOK,
         url: `${FACEBOOK_LINK}/${data.id}`,
         ...(data?.email && {
           email: data.email.toLowerCase(),

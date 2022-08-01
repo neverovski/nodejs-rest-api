@@ -1,6 +1,6 @@
 import { container } from 'tsyringe';
 
-import { IPlatformService, IPlatformRepository } from './interface';
+import { IPlatformRepository, IPlatformService } from './interface';
 import PlatformRepository from './platform.repository';
 import PlatformService from './platform.service';
 import { PlatformInject } from './platform.type';

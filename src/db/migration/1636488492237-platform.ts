@@ -2,13 +2,17 @@ import {
   MigrationInterface,
   QueryRunner,
   Table,
-  TableIndex,
   TableForeignKey,
+  TableIndex,
   TableUnique,
 } from 'typeorm';
 
-import { PlatformNetwork } from '@modules/platform';
-import { DB_TABLE_PLATFORM, DB_TABLE_USER, DB_UQ_PLATFORM_SSID } from '@utils';
+import {
+  DB_TABLE_PLATFORM,
+  DB_TABLE_USER,
+  DB_UQ_PLATFORM_SSID,
+  SocialNetwork,
+} from '@utils';
 
 export class Platform1636488492237 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {
@@ -33,7 +37,7 @@ export class Platform1636488492237 implements MigrationInterface {
           {
             name: 'name',
             type: 'enum',
-            enum: Object.values(PlatformNetwork),
+            enum: Object.values(SocialNetwork),
           },
           {
             name: 'ssid',

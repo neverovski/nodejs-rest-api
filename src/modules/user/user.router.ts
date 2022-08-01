@@ -4,15 +4,15 @@ import { container } from 'tsyringe';
 import { RouterCore } from '@core';
 import {
   AsyncMiddleware,
-  ValidateMiddleware,
   AuthMiddleware,
+  ValidateMiddleware,
 } from '@middleware';
 
 import UserController from './user.controller';
 import {
+  ChangePasswordSchema,
   CreateUserSchema,
   UpdateUserSchema,
-  ChangePasswordSchema,
 } from './user.schema';
 
 export default class UserRouter extends RouterCore {

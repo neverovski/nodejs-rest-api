@@ -1,12 +1,12 @@
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { ServiceCore } from '@core';
 import { HttpException } from '@utils';
 import { ResponseHelper, ValidateHelper } from '@utils/helpers';
 
-import { IUserService, IUserRepository } from './interface';
+import { IUserRepository, IUserService } from './interface';
 import { USER_RELATION } from './user.constant';
-import { User, FullUser, Password, UserInject } from './user.type';
+import { FullUser, Password, User, UserInject } from './user.type';
 
 @injectable()
 export default class UserService extends ServiceCore implements IUserService {

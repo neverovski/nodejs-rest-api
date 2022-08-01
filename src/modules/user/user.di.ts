@@ -1,6 +1,6 @@
 import { container } from 'tsyringe';
 
-import { IUserService, IUserRepository } from './interface';
+import { IUserRepository, IUserService } from './interface';
 import UserRepository from './user.repository';
 import UserService from './user.service';
 import { UserInject } from './user.type';
