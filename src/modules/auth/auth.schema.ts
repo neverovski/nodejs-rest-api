@@ -1,5 +1,5 @@
 import { IJsonSchema, EMAIL_SCHEMA, PASSWORD_SCHEMA } from '@core/schema';
-import { PlatformNetwork } from '@modules/platform';
+import { SocialNetwork } from '@utils';
 
 export const ForgotPasswordSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },
@@ -64,7 +64,7 @@ export const PlatformSchema: IJsonSchema = {
     properties: {
       platform: {
         type: 'string',
-        enum: Object.values(PlatformNetwork),
+        enum: Object.values(SocialNetwork),
       },
       token: {
         type: 'string',

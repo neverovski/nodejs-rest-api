@@ -12,11 +12,11 @@ export default class ProfileEntity
   extends EntityCore<IProfile>
   implements IProfile
 {
-  @Column('varchar')
-  firstName!: string;
+  @Column('varchar', { nullable: true })
+  firstName?: string;
 
-  @Column('varchar')
-  lastName!: string;
+  @Column('varchar', { nullable: true })
+  lastName?: string;
 
   @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })

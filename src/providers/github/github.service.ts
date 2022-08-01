@@ -4,42 +4,46 @@ import { singleton } from 'tsyringe';
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
 import { PlatformProvider } from '@modules/platform';
-import { SocialNetwork, HttpException, FACEBOOK_LINK } from '@utils';
+import { SocialNetwork, HttpException } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
-import { FacebookProfile } from './facebook.type';
-import { IFacebookService } from './interface';
+import { GitHubProfile } from './github.type';
+import { IGitHubService } from './interface';
 
 @singleton()
-export default class FacebookService
+export default class GitHubService
   extends ServiceCore
-  implements IFacebookService
+  implements IGitHubService
 {
   private readonly url: string;
 
   constructor() {
     super();
 
-    this.url = `${PlatformConfig.facebook.url}?fields=${PlatformConfig.facebook.fields}&access_token=`;
+    this.url = PlatformConfig.github.url;
 
     this.init();
   }
 
   async getProfile(token: string): Promise<PlatformProvider> {
     try {
-      const { data } = await axios.get<FacebookProfile>(`${this.url}${token}`);
+      const { data } = await axios.get<GitHubProfile>(this.url, {
+        headers: {
+          Accept: 'application/vnd.github+json',
+          Authorization: `token ${token}`,
+        },
+      });
 
       return {
         ssid: data.id,
-        name: SocialNetwork.FACEBOOK,
-        url: `${FACEBOOK_LINK}/${data.id}`,
+        name: SocialNetwork.GITHUB,
+        url: data.html_url || '',
         ...(data?.email && {
           email: data.email.toLowerCase(),
         }),
-        ...((data?.first_name || data?.last_name) && {
+        ...(data?.name && {
           profile: {
-            firstName: data?.first_name || '',
-            lastName: data?.last_name || '',
+            firstName: data.name,
           },
         }),
       };

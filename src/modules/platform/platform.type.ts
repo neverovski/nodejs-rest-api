@@ -1,16 +1,11 @@
 import { FullUser } from '@modules/user';
+import { SocialNetwork } from '@utils';
 
 import { IPlatform } from './interface';
 
 export enum PlatformInject {
   PLATFORM_REPOSITORY = 'PlatformRepository',
   PLATFORM_SERVICE = 'PlatformService',
-}
-
-export enum PlatformNetwork {
-  APPLE = 'apple',
-  FACEBOOK = 'facebook',
-  GOOGLE = 'google',
 }
 
 export type Platform = IPlatform;
@@ -23,6 +18,6 @@ export type PlatformProvider = Omit<Platform, 'userId' | 'user'> &
   PlatformPayload;
 
 export type PlatformRequest = {
-  platform: PlatformNetwork;
+  platform: SocialNetwork;
   token: string;
 };

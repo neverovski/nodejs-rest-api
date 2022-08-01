@@ -3,9 +3,9 @@ import { singleton, inject } from 'tsyringe';
 
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
-import { PlatformProvider, PlatformNetwork } from '@modules/platform';
+import { PlatformProvider } from '@modules/platform';
 import { JwtInject, IJwtService } from '@providers/jwt';
-import { HttpException } from '@utils';
+import { HttpException, SocialNetwork } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 import { AppleKey, AppleTokenPayload } from './apple.type';
@@ -31,7 +31,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
 
       return {
         ssid: data.sub,
-        name: PlatformNetwork.APPLE,
+        name: SocialNetwork.APPLE,
         ...(data?.email && {
           email: data.email.toLowerCase(),
         }),
