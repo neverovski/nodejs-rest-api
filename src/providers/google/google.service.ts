@@ -3,8 +3,8 @@ import { singleton } from 'tsyringe';
 
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
-import { PlatformProvider, PlatformNetwork } from '@modules/platform';
-import { HttpException } from '@utils';
+import { PlatformProvider } from '@modules/platform';
+import { HttpException, SocialNetwork } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 import { IGoogleService } from './interface';
@@ -37,7 +37,7 @@ export default class GoogleService
       if (data) {
         return {
           ssid: data.sub,
-          name: PlatformNetwork.GOOGLE,
+          name: SocialNetwork.GOOGLE,
           ...(data?.email && {
             email: data.email.toLowerCase(),
           }),

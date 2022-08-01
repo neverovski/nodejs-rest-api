@@ -47,6 +47,13 @@ export enum PostgresErrorCode {
   UniqueViolation = '23505',
 }
 
+export enum SocialNetwork {
+  APPLE = 'apple',
+  FACEBOOK = 'facebook',
+  GITHUB = 'github',
+  GOOGLE = 'google',
+}
+
 export type FacebookConfig = {
   fields: string;
   url: string;
@@ -58,4 +65,8 @@ export type AppleConfig = {
 
 export type GoogleConfig = {
   clientId: string;
+};
+
+export type GitHubConfig = {
+  url: string;
 };
