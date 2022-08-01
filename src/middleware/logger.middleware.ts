@@ -6,7 +6,7 @@ import pino from 'express-pino-logger';
 import { AppConfig } from '@config';
 import { MiddlewareCore } from '@core';
 import { Logger } from '@core/logger';
-import { LoggerType, ENV_PRODUCTION } from '@utils';
+import { ENV_PRODUCTION, LoggerType } from '@utils';
 import { IPHelper } from '@utils/helpers';
 
 class LoggerMiddleware extends MiddlewareCore {

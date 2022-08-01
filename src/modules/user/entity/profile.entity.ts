@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 import { EntityCore } from '@core';
 import { DB_TABLE_PROFILE } from '@utils';

@@ -4,7 +4,7 @@ import { singleton } from 'tsyringe';
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
 import { PlatformProvider } from '@modules/platform';
-import { SocialNetwork, HttpException, FACEBOOK_LINK } from '@utils';
+import { FACEBOOK_LINK, HttpException, SocialNetwork } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 import { FacebookProfile } from './facebook.type';

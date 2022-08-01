@@ -4,7 +4,7 @@ import { singleton } from 'tsyringe';
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
 import { PlatformProvider } from '@modules/platform';
-import { SocialNetwork, HttpException } from '@utils';
+import { HttpException, SocialNetwork } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 import { GitHubProfile } from './github.type';

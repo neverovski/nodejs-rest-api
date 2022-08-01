@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { DatabaseError } from 'pg';
 import {
+  EntityTarget,
+  FindManyOptions,
+  ObjectLiteral,
   QueryFailedError,
   Repository,
-  ObjectLiteral,
-  EntityTarget,
   SelectQueryBuilder,
-  FindManyOptions,
 } from 'typeorm';
 
 import DB from '@db/index';

@@ -3,11 +3,11 @@ import { container } from 'tsyringe';
 
 import { EmailConfig } from '@config';
 import { Queue } from '@lib';
-import { EventEmitter, DateHelper } from '@utils/helpers';
+import { DateHelper, EventEmitter } from '@utils/helpers';
 
-import { EMAIL_QUEUQ, EMAIL_MESSAGE } from './email.constant';
-import { EmailMessage, EmailInject } from './email.type';
-import { IEmailService, IEmailQueue } from './interface';
+import { EMAIL_MESSAGE, EMAIL_QUEUQ } from './email.constant';
+import { EmailInject, EmailMessage } from './email.type';
+import { IEmailQueue, IEmailService } from './interface';
 
 export default class EmailQueue extends Queue implements IEmailQueue {
   private readonly emailService: IEmailService;

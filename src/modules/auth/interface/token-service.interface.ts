@@ -1,10 +1,10 @@
 import {
-  TokenResponse,
-  RefreshToken,
-  FullRefreshToken,
   AcessTokenRequest,
-  TokenRequest,
+  FullRefreshToken,
+  RefreshToken,
   RefreshTokenPayload,
+  TokenRequest,
+  TokenResponse,
 } from '../auth.type';
 
 export interface ITokenService {

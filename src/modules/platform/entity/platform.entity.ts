@@ -1,8 +1,8 @@
-import { Entity, Column, JoinColumn, ManyToOne, Unique, Index } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, Unique } from 'typeorm';
 
 import { EntityCore } from '@core';
 import { UserEntity } from '@modules/user/entity';
-import { SocialNetwork, DB_TABLE_PLATFORM, DB_UQ_PLATFORM_SSID } from '@utils';
+import { DB_TABLE_PLATFORM, DB_UQ_PLATFORM_SSID, SocialNetwork } from '@utils';
 
 import { IPlatform } from '../interface';
 

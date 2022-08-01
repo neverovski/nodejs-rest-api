@@ -1,15 +1,15 @@
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { i18n } from '@lib';
-import { IAppleService, AppleInject } from '@providers/apple';
-import { IFacebookService, FacebookInject } from '@providers/facebook';
-import { IGitHubService, GitHubInject } from '@providers/github';
-import { IGoogleService, GoogleInject } from '@providers/google';
+import { AppleInject, IAppleService } from '@providers/apple';
+import { FacebookInject, IFacebookService } from '@providers/facebook';
+import { GitHubInject, IGitHubService } from '@providers/github';
+import { GoogleInject, IGoogleService } from '@providers/google';
 import { HttpException, SocialNetwork } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
-import { IPlatformService, IPlatformRepository } from './interface';
-import { PlatformRequest, PlatformInject } from './platform.type';
+import { IPlatformRepository, IPlatformService } from './interface';
+import { PlatformInject, PlatformRequest } from './platform.type';
 
 @injectable()
 export default class PlatformService implements IPlatformService {

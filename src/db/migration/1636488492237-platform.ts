@@ -2,16 +2,16 @@ import {
   MigrationInterface,
   QueryRunner,
   Table,
-  TableIndex,
   TableForeignKey,
+  TableIndex,
   TableUnique,
 } from 'typeorm';
 
 import {
-  SocialNetwork,
   DB_TABLE_PLATFORM,
   DB_TABLE_USER,
   DB_UQ_PLATFORM_SSID,
+  SocialNetwork,
 } from '@utils';
 
 export class Platform1636488492237 implements MigrationInterface {

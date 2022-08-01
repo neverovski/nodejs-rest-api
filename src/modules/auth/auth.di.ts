@@ -1,10 +1,10 @@
 import { container } from 'tsyringe';
 
-import { TokenInject, AuthInject } from './auth.type';
+import { AuthInject, TokenInject } from './auth.type';
 import {
   IAuthService,
-  ITokenService,
   IRefreshTokenRepository,
+  ITokenService,
 } from './interface';
 import { RefreshTokenRepository } from './repository';
 import { AuthService, TokenService } from './service';

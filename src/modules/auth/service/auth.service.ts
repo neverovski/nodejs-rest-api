@@ -1,4 +1,4 @@
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
@@ -14,12 +14,12 @@ import { HttpException } from '@utils';
 import { ResponseHelper, StringHelper, ValidateHelper } from '@utils/helpers';
 
 import {
-  LoginRequest,
-  RefreshTokenRequest,
-  LogoutRequest,
-  ForgotPasswordRequest,
-  ResetPasswordRequest,
   AccessTokenPayload,
+  ForgotPasswordRequest,
+  LoginRequest,
+  LogoutRequest,
+  RefreshTokenRequest,
+  ResetPasswordRequest,
   TokenInject,
 } from '../auth.type';
 import { IAuthService, ITokenService } from '../interface';

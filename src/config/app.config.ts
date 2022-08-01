@@ -1,5 +1,5 @@
 import { Config } from '@core/config';
-import { ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST, ENV_CLI } from '@utils';
+import { ENV_CLI, ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST } from '@utils';
 
 class AppConfig extends Config {
   readonly env: string;

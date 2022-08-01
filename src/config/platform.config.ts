@@ -2,8 +2,8 @@ import { Config } from '@core/config';
 import {
   AppleConfig,
   FacebookConfig,
-  GoogleConfig,
   GitHubConfig,
+  GoogleConfig,
 } from '@utils';
 
 class PlatformConfig extends Config {

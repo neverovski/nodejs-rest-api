@@ -1,4 +1,4 @@
-import { User, FullUser, UserOption } from '../user.type';
+import { FullUser, User, UserOption } from '../user.type';
 
 export interface IUserRepository {
   create(body: User): Promise<Id>;

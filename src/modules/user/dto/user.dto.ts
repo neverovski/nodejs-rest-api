@@ -1,4 +1,4 @@
-import { Exclude, Type, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 
 import { ProfileDTO } from './profile.dto';
 

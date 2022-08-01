@@ -2,13 +2,13 @@ import Bull from 'bull';
 import { container } from 'tsyringe';
 
 import { Queue, i18n } from '@lib';
-import { IEmailQueue, EmailInject } from '@providers/email';
-import { EventEmitter, DateHelper, StringHelper } from '@utils/helpers';
+import { EmailInject, IEmailQueue } from '@providers/email';
+import { DateHelper, EventEmitter, StringHelper } from '@utils/helpers';
 
 import { INotificationQueue } from './interface';
 import {
-  NOTIFICATION_QUEUQ,
   NOTIFICATION_FORGOT_PASSWORD,
+  NOTIFICATION_QUEUQ,
 } from './notification.constant';
 import { ForgotPassword } from './notification.type';
 

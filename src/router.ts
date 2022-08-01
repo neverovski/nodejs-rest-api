@@ -1,4 +1,4 @@
-import type { Application, Response, NextFunction, Request } from 'express';
+import type { Application, NextFunction, Request, Response } from 'express';
 
 import { i18n } from '@lib';
 import { AuthRouter } from '@modules/auth';

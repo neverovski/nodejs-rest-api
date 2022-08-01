@@ -1,20 +1,20 @@
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
-import { JwtInject, IJwtService } from '@providers/jwt';
-import { TokenType, HttpException } from '@utils';
-import { StringHelper, DateHelper, ResponseHelper } from '@utils/helpers';
+import { IJwtService, JwtInject } from '@providers/jwt';
+import { HttpException, TokenType } from '@utils';
+import { DateHelper, ResponseHelper, StringHelper } from '@utils/helpers';
 
 import {
+  AcessTokenRequest,
+  FullRefreshToken,
   RefreshToken,
   RefreshTokenPayload,
-  FullRefreshToken,
-  AcessTokenRequest,
-  TokenRequest,
   TokenInject,
+  TokenRequest,
 } from '../auth.type';
-import { ITokenService, IRefreshTokenRepository } from '../interface';
+import { IRefreshTokenRepository, ITokenService } from '../interface';
 
 @injectable()
 export default class TokenService extends ServiceCore implements ITokenService {

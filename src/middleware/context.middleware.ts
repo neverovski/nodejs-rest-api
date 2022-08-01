@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 
 import { MiddlewareCore } from '@core';
-import { UserAgentHelper, IPHelper } from '@utils/helpers';
+import { IPHelper, UserAgentHelper } from '@utils/helpers';
 
 class ContextMiddleware extends MiddlewareCore {
   handler(): RequestHandler {

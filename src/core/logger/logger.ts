@@ -7,10 +7,10 @@ import pino, {
 
 import {
   ENV_TEST,
-  PRETTY_PRINT,
-  LoggerType,
   LoggerCtxError,
   LoggerCtxInfo,
+  LoggerType,
+  PRETTY_PRINT,
 } from '@utils';
 
 import { ILogger } from './interface';

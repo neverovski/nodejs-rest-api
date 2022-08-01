@@ -1,5 +1,5 @@
-import { Response, Request } from 'express';
-import { injectable, inject } from 'tsyringe';
+import { Request, Response } from 'express';
+import { inject, injectable } from 'tsyringe';
 
 import { ControllerCore } from '@core';
 import { PlatformRequest } from '@modules/platform';
@@ -7,11 +7,11 @@ import { HttpException } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 import {
+  AuthInject,
+  ForgotPasswordRequest,
   LoginRequest,
   RefreshTokenRequest,
-  ForgotPasswordRequest,
   ResetPasswordRequest,
-  AuthInject,
 } from './auth.type';
 import { TokenDTO } from './dto';
 import { IAuthService } from './interface';

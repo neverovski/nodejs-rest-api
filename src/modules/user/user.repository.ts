@@ -3,7 +3,7 @@ import { i18n } from '@lib';
 
 import { UserEntity } from './entity';
 import { IUserRepository } from './interface';
-import { User, UserOption, FullUser } from './user.type';
+import { FullUser, User, UserOption } from './user.type';
 
 export default class UserRepository
   extends RepositoryCore<UserEntity>
