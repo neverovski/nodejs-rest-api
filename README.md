@@ -17,7 +17,7 @@ $ docker-compose up -d --build
 $ npm run build && npm run start:prod
 ```
 
-## Сreating a migration
+## Creating a migration
 ```bash
 $ npm run migrate:create --name=<NAME>
 ```
@@ -30,7 +30,7 @@ $ npm run migrate:create --name=<NAME>
     - [X] Forgot password
     - [X] Reset password
   - User
-    - [X] Сreate a new user
+    - [X] Create a new user
     - [X] Update user
     - [X] Reset password
   - Platform
@@ -48,21 +48,21 @@ $ npm run migrate:create --name=<NAME>
 
 ## Project Structure
 
-| Name                        | Description                                             |
-| --------------------------- | ------------------------------------------------------- |
-| **src/**                    | Source files                                            |
-| **src/config/**             | Application configuration                               |
-| **src/core/**               | Reusable utilises and library source code like a logger |
-| **src/db/**                 | DB connect and migration                                |
-| **src/middleware/**         | Express Middlewares like error handler feature          |
-| **src/modules/**            | Express Middlewares like error handler feature          |
-| **src/providers/**          | Express Middlewares like error handler feature          |
-| **src/utils/**              | Express Middlewares like error handler feature          |
-| **src/utils/helpers/**      | Express Middlewares like error handler feature          |
-| **build/**                  | Compiled source files will be placed here               |
-| **tests/**                  | Test cases will be placed here                          |
-| **tests/unit/**             | Unit Test cases will be placed here                     |
-| **tests/integration/**      | API routes (Integration) Test cases will be placed here |
+| Name                   | Description                                             |
+|------------------------|---------------------------------------------------------|
+| **src/**               | Source files                                            |
+| **src/config/**        | Application configuration                               |
+| **src/core/**          | Reusable utilises and library source code like a logger |
+| **src/db/**            | DB connect and migration                                |
+| **src/middleware/**    | Express Middlewares like error handler feature          |
+| **src/modules/**       | Express Middlewares like error handler feature          |
+| **src/providers/**     | Express Middlewares like error handler feature          |
+| **src/utils/**         | Express Middlewares like error handler feature          |
+| **src/utils/helpers/** | Express Middlewares like error handler feature          |
+| **build/**             | Compiled source files will be placed here               |
+| **tests/**             | Test cases will be placed here                          |
+| **tests/unit/**        | Unit Test cases will be placed here                     |
+| **tests/integration/** | API routes (Integration) Test cases will be placed here |
 
 ## Notes
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { DatabaseError } from 'pg';
 import {
+  DeepPartial,
   EntityTarget,
   FindManyOptions,
   ObjectLiteral,
@@ -17,16 +18,58 @@ import { ResponseHelper } from '@utils/helpers';
 export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
   protected readonly alias: string;
   protected orm: Repository<Entity>;
-  private _notFound: string;
+  private readonly notFound: string;
 
   constructor(entity: EntityTarget<Entity>, alias?: string) {
     this.orm = DB.dataSource.getRepository(entity);
     this.alias = alias || 'entity';
-    this._notFound = i18n()['notFound.default'];
+    this.notFound = (i18n()[`notFound.${this.alias}`] ||
+      i18n()['notFound.default']) as string;
   }
 
-  set notFound(message: string) {
-    this._notFound = message;
+  async create(body: Entity): Promise<Id> {
+    try {
+      const entity = this.orm.create(body);
+
+      await this.orm.save(entity);
+
+      return { id: entity.id };
+    } catch (err) {
+      throw this.handleError(err);
+    }
+  }
+
+  async delete(query: Partial<Entity>): Promise<void> {
+    try {
+      await this.orm.delete(query);
+    } catch (err) {
+      throw this.handleError(err);
+    }
+  }
+
+  async findOne(options: FindManyOptions<Entity>): Promise<Entity | null> {
+    try {
+      return await this.orm.findOne(options);
+    } catch (err) {
+      throw this.handleError(err);
+    }
+  }
+
+  async findOneOrFail(options: FindManyOptions<Entity>): Promise<Entity> {
+    try {
+      return await this.orm.findOneOrFail(options);
+    } catch (err) {
+      throw this.handleError(err);
+    }
+  }
+
+  async update(entity: Entity, body: DeepPartial<Entity>): Promise<void> {
+    try {
+      this.orm.merge(entity, body);
+      await this.orm.save(entity);
+    } catch (err) {
+      throw this.handleError(err);
+    }
   }
 
   protected buildOrder(
@@ -54,7 +97,7 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
       (error as Error)?.name === 'EntityNotFoundError'
     ) {
       return ResponseHelper.error(HttpException.NOT_FOUND, {
-        message: this._notFound,
+        message: this.notFound,
       });
     }
 

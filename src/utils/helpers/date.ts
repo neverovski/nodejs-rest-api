@@ -8,7 +8,7 @@ import {
 import { format as fnsTzFormat, formatInTimeZone } from 'date-fns-tz';
 import ms from 'ms';
 
-import { FORMAT_DATE } from '../constants';
+import { FORMAT_DATE } from '@utils';
 
 export const parseISO = (date: DateCtx) =>
   typeof date === 'string' ? fnsParseISO(date) : date;

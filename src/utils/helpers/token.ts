@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http';
 
-import { TokenType } from '../utility-types';
+import { TokenType } from '@utils';
 
 export const getFromHeader = (headers: IncomingHttpHeaders): string | null => {
   const authorization = headers.authorization || headers.Authorization;

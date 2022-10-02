@@ -25,7 +25,7 @@ export type TokenPayload = {
 
 export type AccessTokenPayload = Partial<Pick<FullUser, 'email'>> &
   TokenPayload;
-export type AcessTokenRequest = Pick<RefreshToken, 'userId'> &
+export type AccessTokenRequest = Pick<RefreshToken, 'userId'> &
   Partial<Pick<FullUser, 'email'>>;
 
 export type RefreshTokenPayload = TokenPayload;

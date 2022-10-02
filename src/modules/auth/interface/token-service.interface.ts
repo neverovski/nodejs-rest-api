@@ -1,5 +1,5 @@
 import {
-  AcessTokenRequest,
+  AccessTokenRequest,
   FullRefreshToken,
   RefreshToken,
   RefreshTokenPayload,
@@ -8,9 +8,9 @@ import {
 } from '../auth.type';
 
 export interface ITokenService {
-  generateAccessToken(body: AcessTokenRequest): Promise<string>;
+  generateAccessToken(body: AccessTokenRequest): Promise<string>;
   generateRefreshToken(
-    body: Omit<RefreshToken, 'jwtid' | 'expiredAt'>,
+    body: Omit<RefreshToken, 'jwtId' | 'expiredAt'>,
   ): Promise<string>;
   getToken(body: TokenRequest, ctx: Context): Promise<TokenResponse>;
   resolveRefreshToken(token: string): Promise<RefreshTokenPayload>;

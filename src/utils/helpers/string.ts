@@ -12,7 +12,7 @@ export const capitalize = (s?: string): string => {
 
 export const uuid = () => nanoid();
 
-export const replate = (
+export const replace = (
   str: string,
   keys: { [key: string]: string | number },
   delimiter = ['{', '}'],

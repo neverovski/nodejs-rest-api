@@ -5,7 +5,7 @@ import { EmailConfig } from '@config';
 import { Queue } from '@lib';
 import { DateHelper, EventEmitter } from '@utils/helpers';
 
-import { EMAIL_MESSAGE, EMAIL_QUEUQ } from './email.constant';
+import { EMAIL_MESSAGE, EMAIL_QUEUE } from './email.constant';
 import { EmailInject, EmailMessage } from './email.type';
 import { IEmailQueue, IEmailService } from './interface';
 
@@ -13,7 +13,7 @@ export default class EmailQueue extends Queue implements IEmailQueue {
   private readonly emailService: IEmailService;
 
   constructor() {
-    super(EMAIL_QUEUQ, {
+    super(EMAIL_QUEUE, {
       defaultJobOptions: {
         attempts: 30,
         backoff: {

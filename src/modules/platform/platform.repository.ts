@@ -11,7 +11,7 @@ export default class PlatformRepository
   implements IPlatformRepository
 {
   constructor() {
-    super(PlatformEntity, 'p');
+    super(PlatformEntity, 'platform');
   }
 
   async create({

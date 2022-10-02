@@ -1,6 +1,5 @@
 import { HttpExceptionCore } from '@core';
-
-import { CodeResponse, HttpException } from '../code-response';
+import { CodeResponse, HttpException } from '@utils';
 
 export const error = (
   code: HttpException,

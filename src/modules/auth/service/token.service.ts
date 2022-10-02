@@ -7,7 +7,7 @@ import { HttpException, TokenType } from '@utils';
 import { DateHelper, ResponseHelper, StringHelper } from '@utils/helpers';
 
 import {
-  AcessTokenRequest,
+  AccessTokenRequest,
   FullRefreshToken,
   RefreshToken,
   RefreshTokenPayload,
@@ -30,7 +30,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     this.typeToken = TokenType.BEARER;
   }
 
-  generateAccessToken(body: AcessTokenRequest) {
+  generateAccessToken(body: AccessTokenRequest) {
     return this.jwtService.signAsync(
       {
         ...body,

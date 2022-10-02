@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 
 import { HttpExceptionCore } from '@core';
-import { HttpStatus, HttpException, CodeResponse } from '@utils';
+import { CodeResponse, HttpException, HttpStatus } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
 describe('ResponseHelper.error Function Test', () => {
-  Object.values(HttpException).forEach((item) => {
+  Object.values(HttpException).forEach((item: HttpException) => {
     const result = ResponseHelper.error(item);
 
     it(`Should return - ${CodeResponse[item].message}`, () => {
@@ -26,7 +26,7 @@ describe('ResponseHelper.error Function Test', () => {
 });
 
 describe('ResponseHelper.success Function Test', () => {
-  Object.values(HttpException).forEach((item) => {
+  Object.values(HttpException).forEach((item: HttpException) => {
     const result = ResponseHelper.success(item);
 
     it(`Should return - ${CodeResponse[item].message}`, () => {
