@@ -1,10 +1,12 @@
 ### GET CURRENT USER
-GET {{baseUrl}}/api/users/current
-Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
+GET {{host}}/api/users/current
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
 
 ### UPDATE CURRENT USER
-PUT {{baseUrl}}/api/users/current
-Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
+PUT {{host}}/api/users/current
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
 
 {
   "profile": {
@@ -14,11 +16,12 @@ Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
 }
 
 ### CREATE USER
-POST {{baseUrl}}/api/users
+POST {{host}}/api/users
+Content-Type: application/json
 
 {
-  "email": "dmitryneverovski@gmail.com",
-  "password": "123456",
+  "email": "{{email}}",
+  "password": "{{password}}",
   "profile": {
     "firstName": "D.",
     "lastName": "N."
@@ -26,10 +29,11 @@ POST {{baseUrl}}/api/users
 }
 
 ### RESET PASSWORD
-POST {{baseUrl}}/api/users/reset-password
-Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
+POST {{host}}/api/users/reset-password
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
 
 {
-  "oldPassword": "654321",
-  "newPassword": "123456"
+  "oldPassword": "{{password}}",
+  "newPassword": "{{newPassword}}"
 }
