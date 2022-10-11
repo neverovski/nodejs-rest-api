@@ -25,4 +25,12 @@ export const SORT = ['ASC', 'DESC'];
 export const SALT_PASSWORD_ROUNDS = 10;
 export const CACHE_TIME = 2000;
 
+export const COOKIE_ACCESS_TOKEN = 'accessToken';
+export const COOKIE_REFRESH_TOKEN = 'refreshToken';
+
 export const FACEBOOK_LINK = 'https://www.facebook.com';
+
+export const MIN_PASSWORD_LENGTH = 6;
+export const MAX_NAME_LENGTH = 100;
+export const MAX_SORT_STRING_LENGTH = 250;
+export const MAX_LONG_STRING_LENGTH = 5000;

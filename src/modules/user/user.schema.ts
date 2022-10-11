@@ -1,6 +1,7 @@
-import { EMAIL_SCHEMA, IJsonSchema, PASSWORD_SCHEMA } from '@core/schema';
+import { EMAIL_PROPERTY, IJsonSchema } from '@core/schema';
+import { SchemaHelper } from '@utils/helpers';
 
-import { PROFILE_SCHEMA } from './user.constant';
+import { PROFILE_PROPERTY } from './user.constant';
 
 export const CreateUserSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },
@@ -11,9 +12,9 @@ export const CreateUserSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['email', 'profile', 'password'],
     properties: {
-      ...EMAIL_SCHEMA,
-      ...PASSWORD_SCHEMA,
-      ...PROFILE_SCHEMA,
+      ...EMAIL_PROPERTY,
+      ...SchemaHelper.getPassword(),
+      ...PROFILE_PROPERTY,
     },
   },
 };
@@ -27,8 +28,8 @@ export const UpdateUserSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['profile'],
     properties: {
-      ...EMAIL_SCHEMA,
-      ...PROFILE_SCHEMA,
+      ...EMAIL_PROPERTY,
+      ...PROFILE_PROPERTY,
     },
   },
 };
@@ -42,16 +43,8 @@ export const ChangePasswordSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['oldPassword', 'newPassword'],
     properties: {
-      oldPassword: {
-        type: 'string',
-        transform: ['trim'],
-        minLength: 6,
-      },
-      newPassword: {
-        type: 'string',
-        transform: ['trim'],
-        minLength: 6,
-      },
+      ...SchemaHelper.getPassword('oldPassword'),
+      ...SchemaHelper.getPassword('newPassword'),
     },
   },
 };

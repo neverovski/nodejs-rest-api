@@ -1,4 +1,5 @@
 import Ajv from 'ajv';
+import addErrors from 'ajv-errors';
 import addFormats from 'ajv-formats';
 import addKeywords from 'ajv-keywords';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
@@ -16,6 +17,7 @@ class ValidateMiddleware extends MiddlewareCore {
     super();
 
     this.ajv = new Ajv({ allErrors: true, coerceTypes: true });
+    addErrors(this.ajv);
     addFormats(this.ajv);
     addKeywords(this.ajv, ['transform', 'uniqueItemProperties']);
     this.ajv.addFormat('phone', /^\+[0-9]*/);
@@ -79,12 +81,16 @@ class ValidateMiddleware extends MiddlewareCore {
     return new Promise((resolve, reject) => {
       if (!validate(data) && validate.errors) {
         const errors: { [key: string]: string } = {};
+        const len = validate.errors.length;
 
         for (const err of validate.errors) {
-          const name = err.instancePath.slice(1);
+          const name =
+            (err.params.missingProperty as string) ||
+            (err.params.additionalProperty as string) ||
+            err.instancePath.slice(1);
 
-          if (name) {
-            errors[name] = StringHelper.capitalize(err.message || '');
+          if (name || (len === 1 && err.keyword === 'errorMessage')) {
+            errors[name || 'data'] = StringHelper.capitalize(err.message || '');
           }
         }
 
