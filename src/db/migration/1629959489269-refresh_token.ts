@@ -44,17 +44,17 @@ export class RefreshToken1629959489269 implements MigrationInterface {
           },
           {
             name: 'os',
-            type: 'text',
+            type: 'varchar',
             isNullable: true,
           },
           {
             name: 'browser',
-            type: 'text',
+            type: 'varchar',
             isNullable: true,
           },
           {
             name: 'userAgent',
-            type: 'text',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -86,12 +86,8 @@ export class RefreshToken1629959489269 implements MigrationInterface {
     );
 
     await queryRunner.createIndices(DB_TABLE_REFRESH_TOKEN, [
-      new TableIndex({
-        columnNames: ['jti'],
-      }),
-      new TableIndex({
-        columnNames: ['userId'],
-      }),
+      new TableIndex({ columnNames: ['jti'] }),
+      new TableIndex({ columnNames: ['userId'] }),
     ]);
   }
 }

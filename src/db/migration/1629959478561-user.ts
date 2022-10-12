@@ -21,6 +21,7 @@ export class User1629959478561 implements MigrationInterface {
           {
             name: 'email',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'password',
@@ -28,8 +29,8 @@ export class User1629959478561 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'confirmTokenPassword',
-            type: 'text',
+            name: 'emailOTP',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -40,7 +41,7 @@ export class User1629959478561 implements MigrationInterface {
           {
             name: 'isActive',
             type: 'bool',
-            default: false,
+            default: true,
           },
           {
             name: 'createdAt',
@@ -61,12 +62,11 @@ export class User1629959478561 implements MigrationInterface {
       }),
     );
 
-    await queryRunner.createUniqueConstraint(
-      DB_TABLE_USER,
+    await queryRunner.createUniqueConstraints(DB_TABLE_USER, [
       new TableUnique({
         name: DB_UQ_USER_EMAIL,
         columnNames: ['email'],
       }),
-    );
+    ]);
   }
 }

@@ -10,13 +10,13 @@ RUN npm ci
 # Rebuild the source code only when needed
 FROM node:16-alpine AS builder
 LABEL Dmitry Neverovski <dmitryneverovski@gmail.com>
-ARG NODE_ENV
-ENV NODE_ENV ${NODE_ENV:-development}
+ARG APP_ENV
+ENV APP_ENV ${APP_ENV:-development}
 
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
-RUN NODE_ENV=${NODE_ENV} npm run build
+RUN APP_ENV=${APP_ENV} npm run build
 
 # Production image, copy all the files and run next
 FROM node:16-alpine AS runner

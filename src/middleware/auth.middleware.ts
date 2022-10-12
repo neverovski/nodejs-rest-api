@@ -3,17 +3,19 @@ import { container } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { MiddlewareCore } from '@core';
-import { IJwtService, JwtInject } from '@providers/jwt';
+import { CryptoInject, ICryptoService } from '@providers/crypto';
 import { HttpException, JWTPayload, Role } from '@utils';
 import { ResponseHelper, TokenHelper } from '@utils/helpers';
 
 class AuthMiddleware extends MiddlewareCore {
-  private readonly jwtService: IJwtService;
+  private readonly cryptoService: ICryptoService;
 
   constructor() {
     super();
 
-    this.jwtService = container.resolve<IJwtService>(JwtInject.JWT_SERVICE);
+    this.cryptoService = container.resolve<ICryptoService>(
+      CryptoInject.CRYPTO_SERVICE,
+    );
   }
 
   handler(): RequestHandler {
@@ -30,7 +32,7 @@ class AuthMiddleware extends MiddlewareCore {
       if (accessToken) {
         try {
           const { userId, email, role } =
-            await this.jwtService.verifyAsync<JWTPayload>(
+            await this.cryptoService.verifyJWTAsync<JWTPayload>(
               accessToken,
               JwtConfig.secretAccessToken,
             );

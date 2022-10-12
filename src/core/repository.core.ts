@@ -4,6 +4,7 @@ import {
   DeepPartial,
   EntityTarget,
   FindManyOptions,
+  FindOneOptions,
   ObjectLiteral,
   QueryFailedError,
   Repository,
@@ -12,8 +13,15 @@ import {
 
 import DB from '@db/index';
 import { i18n } from '@lib';
-import { DB_UQ_USER_EMAIL, HttpException, PostgresErrorCode } from '@utils';
+import {
+  DB_UQ_USER_EMAIL,
+  HttpException,
+  LoggerType,
+  PostgresErrorCode,
+} from '@utils';
 import { ResponseHelper } from '@utils/helpers';
+
+import { Logger } from './logger';
 
 export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
   protected readonly alias: string;
@@ -27,13 +35,13 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
       i18n()['notFound.default']) as string;
   }
 
-  async create(body: Entity): Promise<Id> {
+  async create<T extends ObjectLiteral>(body: Entity): Promise<T> {
     try {
       const entity = this.orm.create(body);
 
       await this.orm.save(entity);
 
-      return { id: entity.id };
+      return entity as unknown as T;
     } catch (err) {
       throw this.handleError(err);
     }
@@ -47,7 +55,9 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
     }
   }
 
-  async findOne(options: FindManyOptions<Entity>): Promise<Entity | null> {
+  async findOne<T extends FindOneOptions<Entity>>(
+    options: T,
+  ): Promise<Entity | null> {
     try {
       return await this.orm.findOne(options);
     } catch (err) {
@@ -55,7 +65,9 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
     }
   }
 
-  async findOneOrFail(options: FindManyOptions<Entity>): Promise<Entity> {
+  async findOneOrFail<T extends FindManyOptions<Entity>>(
+    options: T,
+  ): Promise<Entity> {
     try {
       return await this.orm.findOneOrFail(options);
     } catch (err) {
@@ -92,6 +104,12 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
   }
 
   protected handleError(error: unknown) {
+    Logger.error({
+      message: this.constructor.name,
+      error,
+      type: LoggerType.DB,
+    });
+
     if (
       (error as Error)?.name === 'EntityNotFound' ||
       (error as Error)?.name === 'EntityNotFoundError'

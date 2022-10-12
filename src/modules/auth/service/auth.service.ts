@@ -9,9 +9,9 @@ import {
   PlatformRequest,
 } from '@modules/platform';
 import { IUserService, UserInject } from '@modules/user';
-import { IJwtService, JwtInject } from '@providers/jwt';
+import { CryptoInject, ICryptoService } from '@providers/crypto';
 import { HttpException } from '@utils';
-import { ResponseHelper, StringHelper, ValidateHelper } from '@utils/helpers';
+import { ResponseHelper, ValidateHelper } from '@utils/helpers';
 
 import {
   AccessTokenPayload,
@@ -29,7 +29,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
   constructor(
     @inject(TokenInject.TOKEN_SERVICE) private tokenService: ITokenService,
     @inject(UserInject.USER_SERVICE) private userService: IUserService,
-    @inject(JwtInject.JWT_SERVICE) private jwtService: IJwtService,
+    @inject(CryptoInject.CRYPTO_SERVICE) private cryptoService: ICryptoService,
     @inject(NotificationInject.NOTIFICATION_QUEUE)
     private notificationQueue: INotificationQueue,
     @inject(PlatformInject.PLATFORM_SERVICE)
@@ -39,13 +39,13 @@ export default class AuthService extends ServiceCore implements IAuthService {
   }
 
   async forgotPassword({ email }: ForgotPasswordRequest) {
-    const { id } = await this.userService.getOne({ email });
+    const { id } = await this.userService.getOneOrFail({ email });
 
-    const confirmTokenPassword = StringHelper.uuid();
+    const emailOTP = this.cryptoService.generateUUID();
 
-    const token = this.jwtService.sign(
+    const token = this.cryptoService.signJWT(
       {
-        jti: confirmTokenPassword,
+        jti: emailOTP,
         sub: String(id),
       },
       JwtConfig.secretToken,
@@ -54,18 +54,18 @@ export default class AuthService extends ServiceCore implements IAuthService {
       },
     );
 
-    await this.userService.update({ id }, { confirmTokenPassword });
+    await this.userService.update({ id }, { emailOTP });
     void this.notificationQueue.addForgotPasswordToQueue({ token, email });
   }
 
   async login({ email, password }: LoginRequest, ctx: Context) {
     const user = await this.userService.getOne({ email });
 
-    if (!ValidateHelper.credentials(password, user?.password)) {
+    if (!user || !ValidateHelper.credentials(password, user?.password)) {
       throw ResponseHelper.error(HttpException.INVALID_CREDENTIALS);
     }
 
-    return this.tokenService.getToken({ id: user.id, email: user?.email }, ctx);
+    return this.tokenService.getToken({ id: user.id, ...user?.payload }, ctx);
   }
 
   async logout({ userId }: LogoutRequest) {
@@ -73,9 +73,11 @@ export default class AuthService extends ServiceCore implements IAuthService {
   }
 
   async platform(body: PlatformRequest, ctx: Context) {
-    const { id, email } = await this.platformService.create(body);
+    const { userId } = await this.platformService.create(body);
 
-    return this.tokenService.getToken({ id, email }, ctx);
+    const user = await this.userService.getOneOrFail({ id: userId });
+
+    return this.tokenService.getToken({ id: user.id, ...user?.payload }, ctx);
   }
 
   async refreshToken({ refreshToken }: RefreshTokenRequest, ctx: Context) {
@@ -85,19 +87,20 @@ export default class AuthService extends ServiceCore implements IAuthService {
       throw ResponseHelper.error(HttpException.TOKEN_MALFORMED);
     }
 
-    const user = await this.userService.getOne({ id: +payload.sub });
+    const user = await this.userService.getOneOrFail({ id: +payload.sub });
 
-    return this.tokenService.getToken({ id: user.id, email: user?.email }, ctx);
+    return this.tokenService.getToken({ id: user.id, ...user?.payload }, ctx);
   }
 
   async resetPassword({ password, token }: ResetPasswordRequest) {
-    const { jti, sub } = await this.jwtService.verifyAsync<AccessTokenPayload>(
-      token,
-      JwtConfig.secretToken,
-    );
+    const { jti, email } =
+      await this.cryptoService.verifyJWTAsync<AccessTokenPayload>(
+        token,
+        JwtConfig.secretToken,
+      );
 
     await this.userService.update(
-      { id: +sub, confirmTokenPassword: jti },
+      { email, emailOTP: jti },
       { password: password },
     );
   }

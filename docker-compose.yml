@@ -1,13 +1,13 @@
-version: '3.8'
+version: '3.9'
 
 services:
   auth-redis:
-    image: redis:6
+    image: redis:7
     container_name: auth-redis
     networks:
       - auth-network
     ports:
-      - 6969:6379
+      - "6969:6379"
     restart: unless-stopped
 
   auth-db:
@@ -22,7 +22,7 @@ services:
     networks:
       - auth-network
     ports:
-      - 54323:5432
+      - "54323:5432"
     restart: unless-stopped
 
 networks:

@@ -1,8 +1,13 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, Unique } from 'typeorm';
 
 import { EntityCore } from '@core';
-import { UserEntity } from '@modules/user/entity';
-import { DB_TABLE_PLATFORM, DB_UQ_PLATFORM_SSID, SocialNetwork } from '@utils';
+import { FullUser } from '@modules/user';
+import {
+  DB_TABLE_PLATFORM,
+  DB_TABLE_USER,
+  DB_UQ_PLATFORM_SSID,
+  SocialNetwork,
+} from '@utils';
 
 import { IPlatform } from '../interface';
 
@@ -20,12 +25,12 @@ export default class PlatformEntity
   @Column('varchar')
   ssid!: string;
 
-  @Column('text', { nullable: true })
+  @Column('varchar', { nullable: true })
   url?: string;
 
-  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(DB_TABLE_USER, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
-  user!: UserEntity;
+  user?: FullUser;
 
   @Index()
   @Column('int')

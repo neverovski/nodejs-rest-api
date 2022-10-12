@@ -1,6 +1,7 @@
 import { Column, DeleteDateColumn, Entity, OneToOne, Unique } from 'typeorm';
 
 import { EntityCore } from '@core';
+import { StringTransformer } from '@db/transformer';
 import { DB_TABLE_USER, DB_UQ_USER_EMAIL } from '@utils';
 
 import { IUser } from '../interface';
@@ -10,17 +11,20 @@ import ProfileEntity from './profile.entity';
 @Entity({ name: DB_TABLE_USER })
 @Unique(DB_UQ_USER_EMAIL, ['email'])
 export default class UserEntity extends EntityCore<IUser> implements IUser {
-  @Column('text', { nullable: true })
-  confirmTokenPassword?: string;
-
-  @DeleteDateColumn({ type: 'timestamptz' })
+  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
   deletedAt?: Date;
 
-  @Column('varchar', { nullable: true })
+  @Column('varchar', {
+    nullable: true,
+    transformer: new StringTransformer(),
+  })
   email?: string;
 
-  @Column('bool', { default: false })
-  isActive = false;
+  @Column('varchar', { nullable: true })
+  emailOTP?: string;
+
+  @Column('bool', { default: true })
+  isActive = true;
 
   @Column('bool', { default: false })
   isConfirmedEmail = false;
@@ -29,8 +33,16 @@ export default class UserEntity extends EntityCore<IUser> implements IUser {
   password?: string;
 
   @OneToOne(() => ProfileEntity, (profile) => profile.user, {
-    eager: true,
     cascade: true,
   })
-  profile!: ProfileEntity;
+  profile?: ProfileEntity;
+
+  get payload() {
+    return {
+      ...(this.email && { email: this.email }),
+      isConfirmedEmail: this.isConfirmedEmail,
+      ...(this?.profile?.firstName && { firstName: this.profile.firstName }),
+      ...(this?.profile?.lastName && { lastName: this.profile.lastName }),
+    };
+  }
 }

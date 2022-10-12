@@ -8,13 +8,14 @@ export enum UserInject {
 }
 
 export type User = IUser;
-export type FullUser = Id & User & DateInfo;
+export type UserPayload = Partial<
+  Pick<User, 'email' | 'isConfirmedEmail'> & {
+    firstName: string;
+    lastName: string;
+  }
+>;
+export type FullUser = Id & User & { payload: UserPayload } & DateInfo;
 
 export type Password = { newPassword: string; oldPassword: string };
 
-export type UserOption = Pick<
-  FindManyOptions<FullUser>,
-  'relations' | 'skip' | 'take' | 'order'
-> & {
-  where?: Partial<FullUser>;
-};
+export type UserOption = Pick<FindManyOptions<FullUser>, 'where' | 'relations'>;

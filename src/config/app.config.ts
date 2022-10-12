@@ -2,6 +2,7 @@ import { Config } from '@core/config';
 import { ENV_CLI, ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST } from '@utils';
 
 class AppConfig extends Config {
+  readonly domain: string;
   readonly env: string;
   readonly host: string;
   readonly name: string;
@@ -10,8 +11,13 @@ class AppConfig extends Config {
   constructor() {
     super();
 
+    this.domain = this.set<string>(
+      'APP_DOMAIN',
+      this.joi.string().required(),
+      'localhost',
+    );
     this.env = this.set<string>(
-      'NODE_ENV',
+      'APP_ENV',
       this.joi
         .string()
         .valid(ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST, ENV_CLI),

@@ -1,6 +1,6 @@
 import { FindManyOptions } from 'typeorm';
 
-import { FullUser } from '@modules/user';
+import { FullUser, UserPayload } from '@modules/user';
 import { TokenType } from '@utils';
 
 import { IRefreshToken } from './interface';
@@ -23,10 +23,8 @@ export type TokenPayload = {
   typ: string;
 };
 
-export type AccessTokenPayload = Partial<Pick<FullUser, 'email'>> &
-  TokenPayload;
-export type AccessTokenRequest = Pick<RefreshToken, 'userId'> &
-  Partial<Pick<FullUser, 'email'>>;
+export type AccessTokenPayload = TokenPayload & UserPayload;
+export type AccessTokenRequest = Pick<RefreshToken, 'userId'> & UserPayload;
 
 export type RefreshTokenPayload = TokenPayload;
 
@@ -47,7 +45,5 @@ export type TokenResponse = {
 
 export type RefreshTokenOption = Pick<
   FindManyOptions<FullRefreshToken>,
-  'relations' | 'skip' | 'take' | 'order'
-> & {
-  where?: Partial<Id & RefreshToken>;
-};
+  'where' | 'relations'
+>;

@@ -1,8 +1,8 @@
 import { IProfile } from './profile.interface';
 
 export interface IUser {
-  confirmTokenPassword?: string;
   email?: string;
+  emailOTP?: string;
   isActive: boolean;
   isConfirmedEmail: boolean;
   password?: string;

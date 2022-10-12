@@ -1,30 +1,38 @@
 import jwt from 'jsonwebtoken';
+import { nanoid } from 'nanoid';
 
 import { ServiceCore } from '@core';
 import { HttpException } from '@utils';
 import { DateHelper, ResponseHelper } from '@utils/helpers';
 
-import { IJwtService } from './interface';
+import { ICryptoService } from './interface';
 
-export default class JwtService extends ServiceCore implements IJwtService {
+export default class CryptoService
+  extends ServiceCore
+  implements ICryptoService
+{
   constructor() {
     super();
 
     this.init();
   }
 
-  decode(
+  decodeJWT(
     token: string,
     options?: jwt.DecodeOptions,
   ): null | { [key: string]: any } | string {
     return jwt.decode(token, options);
   }
 
-  sign<T>(payload: T, secret: string, opts?: jwt.SignOptions): string {
+  generateUUID() {
+    return nanoid();
+  }
+
+  signJWT<T>(payload: T, secret: string, opts?: jwt.SignOptions): string {
     return jwt.sign({ ...payload, iat: DateHelper.toUnix() }, secret, opts);
   }
 
-  signAsync<T>(
+  signJWTAsync<T>(
     payload: T,
     secret: string,
     opts?: jwt.SignOptions,
@@ -39,11 +47,11 @@ export default class JwtService extends ServiceCore implements IJwtService {
     });
   }
 
-  verify<T>(token: string, secret: string) {
+  verifyJWT<T>(token: string, secret: string) {
     return jwt.verify(token, secret) as T;
   }
 
-  verifyAsync<T>(token: string, secret: string): Promise<T> {
+  verifyJWTAsync<T>(token: string, secret: string): Promise<T> {
     return new Promise((resolve, reject) => {
       jwt.verify(token, secret, (error, decoded) => {
         if (error && error.name === 'TokenExpiredError') {

@@ -1,7 +1,6 @@
 export * as CookieHelper from './cookie';
 export * as DateHelper from './date';
 export * from './event-emitter';
-export * as GenerateHelper from './generate';
 export * as IPHelper from './ip';
 export * as ResponseHelper from './response';
 export * as SanitizerHelper from './sanitizer';

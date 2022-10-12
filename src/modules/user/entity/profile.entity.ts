@@ -1,31 +1,30 @@
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 import { EntityCore } from '@core';
-import { DB_TABLE_PROFILE } from '@utils';
+import { DB_TABLE_PROFILE, DB_TABLE_USER } from '@utils';
 
 import { IProfile } from '../interface';
-
-import UserEntity from './user.entity';
+import { FullUser } from '../user.type';
 
 @Entity({ name: DB_TABLE_PROFILE })
 export default class ProfileEntity
   extends EntityCore<IProfile>
   implements IProfile
 {
-  @Column('varchar', { nullable: true })
-  firstName?: string;
+  @Column('varchar')
+  firstName!: string;
 
-  @Column('varchar', { nullable: true })
-  lastName?: string;
+  @Column('varchar')
+  lastName!: string;
 
-  @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  @OneToOne(DB_TABLE_USER, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
-  user!: UserEntity;
+  user?: FullUser;
 
   @Column('int', { unique: true })
   userId!: number;
 
-  public get fullName(): string {
-    return `${this.firstName || ''} ${this.lastName || ''}`.trim();
+  get fullName() {
+    return `${this?.firstName || ''} ${this?.lastName || ''}`.trim();
   }
 }

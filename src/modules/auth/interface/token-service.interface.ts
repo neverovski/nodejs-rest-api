@@ -10,7 +10,7 @@ import {
 export interface ITokenService {
   generateAccessToken(body: AccessTokenRequest): Promise<string>;
   generateRefreshToken(
-    body: Omit<RefreshToken, 'jwtId' | 'expiredAt'>,
+    body: Omit<RefreshToken, 'jti' | 'expiredAt'>,
   ): Promise<string>;
   getToken(body: TokenRequest, ctx: Context): Promise<TokenResponse>;
   resolveRefreshToken(token: string): Promise<RefreshTokenPayload>;

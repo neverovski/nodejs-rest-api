@@ -2,10 +2,14 @@ import { ClassTransformOptions, plainToInstance } from 'class-transformer';
 import { Response } from 'express';
 
 import { HttpException, HttpStatus } from '@utils';
-import { ResponseHelper } from '@utils/helpers';
+import { CookieHelper, ResponseHelper } from '@utils/helpers';
 
 export default class ControllerCore {
-  response<T, DTO>(
+  protected deleteCookie<T extends object>(res: Response, cookies: T) {
+    CookieHelper.deleteMany(res, cookies);
+  }
+
+  protected response<T, DTO>(
     res: Response,
     ctx?: {
       data: T | T[];
@@ -27,6 +31,10 @@ export default class ControllerCore {
       ...(data && { data: dto ? plainToInstance(dto, data, options) : data }),
       // ...(page && { meta: this.pages(page) }),
     });
+  }
+
+  protected setCookie<T>(res: Response, data: T) {
+    CookieHelper.setMany(res, data, { httpOnly: true });
   }
 
   // private pages(data: Page): Meta {

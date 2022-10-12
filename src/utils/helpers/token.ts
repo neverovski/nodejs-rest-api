@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http';
 
-import { TokenType } from '@utils';
+import { COOKIE_ACCESS_TOKEN, TokenType } from '@utils';
 
 export const getFromHeader = (headers: IncomingHttpHeaders): string | null => {
   const authorization = headers.authorization || headers.Authorization;
@@ -16,8 +16,10 @@ export const getFromHeader = (headers: IncomingHttpHeaders): string | null => {
   return null;
 };
 
-export const getFromCookies = (cookies: any): string | null => {
-  const { accessToken } = cookies as { accessToken: string };
-
-  return accessToken || null;
+export const getFromCookies = (
+  cookies?: any,
+  tokenType = COOKIE_ACCESS_TOKEN,
+): string | null => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
+  return cookies?.[tokenType] || null;
 };
