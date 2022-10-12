@@ -1,45 +1,45 @@
 import { expect } from 'chai';
-import { nanoid } from 'nanoid';
 
 import { JwtConfig } from '@config';
-import JWTService from '@providers/jwt/jwt.service';
+import CryptoService from '@providers/crypto/crypto.service';
 
 type JWT = {
   email: string;
   exp: number;
   iat: number;
-  jwtid: string;
+  jwtId: string;
   userId: number;
 };
 
-const jwtService = new JWTService();
+const cryptoService = new CryptoService();
+const jwtId = cryptoService.generateUUID();
 
-describe('verifyAsync Function Test', () => {
+describe('CryptoService Function Test', () => {
   let token = '';
   const payloadBody = {
-    jwtid: nanoid(),
+    jwtId,
     userId: 10,
     email: 'dmitryneverovski@gmail.com',
   };
 
   before(() => {
-    token = jwtService.sign(payloadBody, JwtConfig.secretAccessToken, {
+    token = cryptoService.signJWT(payloadBody, JwtConfig.secretAccessToken, {
       expiresIn: JwtConfig.expiresInAccessToken,
     });
   });
 
   it('Should return', async () => {
-    const data = await jwtService.verifyAsync<JWT>(
+    const data = await cryptoService.verifyJWTAsync<JWT>(
       token,
       JwtConfig.secretAccessToken,
     );
 
     expect(data)
       .to.be.an('object')
-      .have.all.keys('userId', 'email', 'jwtid', 'iat', 'exp');
+      .have.all.keys('userId', 'email', 'jwtId', 'iat', 'exp');
 
     expect(data.email).to.be.a('string').be.eq(payloadBody.email);
-    expect(data.jwtid).to.be.a('string').be.eq(payloadBody.jwtid);
+    expect(data.jwtId).to.be.a('string').be.eq(payloadBody.jwtId);
     expect(data.userId).to.be.a('number').be.eq(payloadBody.userId);
   });
 });

@@ -2,12 +2,12 @@ import { inject, injectable } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
-import { IJwtService, JwtInject } from '@providers/jwt';
+import { CryptoInject, ICryptoService } from '@providers/crypto';
 import { HttpException, TokenType } from '@utils';
-import { DateHelper, ResponseHelper, StringHelper } from '@utils/helpers';
+import { DateHelper, ResponseHelper } from '@utils/helpers';
 
 import {
-  AcessTokenRequest,
+  AccessTokenRequest,
   FullRefreshToken,
   RefreshToken,
   RefreshTokenPayload,
@@ -23,18 +23,18 @@ export default class TokenService extends ServiceCore implements ITokenService {
   constructor(
     @inject(TokenInject.TOKEN_REPOSITORY)
     private repository: IRefreshTokenRepository,
-    @inject(JwtInject.JWT_SERVICE) private jwtService: IJwtService,
+    @inject(CryptoInject.CRYPTO_SERVICE) private cryptoService: ICryptoService,
   ) {
     super();
 
     this.typeToken = TokenType.BEARER;
   }
 
-  generateAccessToken(body: AcessTokenRequest) {
-    return this.jwtService.signAsync(
+  generateAccessToken(body: AccessTokenRequest) {
+    return this.cryptoService.signJWTAsync(
       {
         ...body,
-        jti: StringHelper.uuid(),
+        jti: this.cryptoService.generateUUID(),
         sub: String(body.userId),
         typ: this.typeToken,
       },
@@ -48,13 +48,13 @@ export default class TokenService extends ServiceCore implements ITokenService {
   async generateRefreshToken(
     body: Omit<RefreshToken, 'jti' | 'expiredAt'>,
   ): Promise<string> {
-    const jti = StringHelper.uuid();
+    const jti = this.cryptoService.generateUUID();
     const ms = DateHelper.toMs(JwtConfig.expiresInRefreshToken);
     const expiredAt = DateHelper.addMillisecondToDate(new Date(), ms);
 
     await this.repository.create({ ...body, jti, expiredAt });
 
-    return this.jwtService.sign(
+    return this.cryptoService.signJWT(
       {
         sub: String(body.userId),
         jti,
@@ -99,7 +99,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     token: string,
   ): Promise<RefreshTokenPayload> {
     try {
-      return await this.jwtService.verifyAsync<RefreshTokenPayload>(
+      return await this.cryptoService.verifyJWTAsync<RefreshTokenPayload>(
         token,
         JwtConfig.secretRefreshToken,
       );

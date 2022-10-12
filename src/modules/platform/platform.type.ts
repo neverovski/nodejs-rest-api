@@ -1,3 +1,5 @@
+import { FindManyOptions } from 'typeorm';
+
 import { FullUser } from '@modules/user';
 import { SocialNetwork } from '@utils';
 
@@ -21,3 +23,8 @@ export type PlatformRequest = {
   platform: SocialNetwork;
   token: string;
 };
+
+export type PlatformOption = Pick<
+  FindManyOptions<FullPlatform>,
+  'where' | 'relations'
+>;

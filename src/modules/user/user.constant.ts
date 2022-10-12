@@ -1,29 +1,18 @@
-import { JSONSchemaCustom } from '@core/schema';
+import { JSONSchemaCustom, MAX_NAME_LENGTH } from '@utils';
+import { SchemaHelper } from '@utils/helpers';
 
 export const USER_RELATION = {
   profile: true,
 };
 
-export const PROFILE_SCHEMA = {
+export const PROFILE_PROPERTY = {
   profile: {
     type: 'object',
     additionalProperties: false,
     minProperties: 1,
     properties: {
-      firstName: {
-        type: 'string',
-        transform: ['trim'],
-        sanitize: 'escape',
-        minLength: 1,
-        maxLength: 100,
-      },
-      lastName: {
-        type: 'string',
-        transform: ['trim'],
-        sanitize: 'escape',
-        minLength: 1,
-        maxLength: 100,
-      },
+      ...SchemaHelper.getString('firstName', { maxLength: MAX_NAME_LENGTH }),
+      ...SchemaHelper.getString('lastName', { maxLength: MAX_NAME_LENGTH }),
     },
   },
 } as { [key: string]: JSONSchemaCustom };

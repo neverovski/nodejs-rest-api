@@ -1,4 +1,14 @@
 {
   "validate.file.format": "Wrong file format",
-  "validate.filelimitImage": "This file is too large to upload. The maximum supported file sizes are: 5 MB."
+  "validate.file.limitImage": "This file is too large to upload. The maximum supported file sizes are: {size} MB.",
+  "validate.string": "The ${0#} should be string",
+  "validate.string.format": "The ${0#} must be a string of format {format}, it is ${0}",
+  "validate.number": "The ${0#} should be number",
+  "validate.integer": "The ${0#} should be integer",
+  "validate.boolean": "The ${0#} should be boolean",
+  "validate.object": "{prop} should be object",
+  "validate.minLength": "The ${0#} should be with length >= {size}, it is ${0}",
+  "validate.maxLength": "The ${0#} should be with length <= {size}, it is ${0}",
+  "validate.minimum": "The ${0#} should be <= {size}, it is ${0}",
+  "validate.maximum": "The ${0#} should be <= {size}, it is ${0}"
 }

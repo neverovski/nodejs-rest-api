@@ -1,3 +1,5 @@
+import { FullUser } from '@modules/user';
+
 export interface IRefreshToken {
   browser?: string;
   expiredAt: Date;
@@ -5,6 +7,7 @@ export interface IRefreshToken {
   isRevoked?: boolean;
   jti: string;
   os?: string;
+  user?: FullUser;
   userAgent?: string;
   userId: number;
 }

@@ -10,7 +10,7 @@ import { IConfig } from './interface';
 config({
   path: path.join(
     process.cwd(),
-    process?.env?.NODE_ENV === ENV_TEST ? '.env.test' : '.env',
+    process?.env?.APP_ENV === ENV_TEST ? '.env.test' : '.env',
   ),
 });
 

@@ -21,7 +21,21 @@ export default class UserService extends ServiceCore implements IUserService {
     return this.repository.create(body);
   }
 
+  async delete({ id }: Pick<FullUser, 'id'>) {
+    await this.repository.findOneOrFail({
+      where: { id },
+    });
+    await this.repository.delete({ id });
+  }
+
   getOne(query: Partial<FullUser>) {
+    return this.repository.findOne({
+      where: query,
+      relations: USER_RELATION,
+    });
+  }
+
+  getOneOrFail(query: Partial<FullUser>) {
     return this.repository.findOneOrFail({
       where: query,
       relations: USER_RELATION,
@@ -29,14 +43,14 @@ export default class UserService extends ServiceCore implements IUserService {
   }
 
   async update(query: Partial<FullUser>, body: Partial<User>) {
-    const userFromDB = await this.repository.findOneOrFail({
+    const entity = await this.repository.findOneOrFail({
       where: query,
       relations: USER_RELATION,
     });
 
-    await this.repository.update(userFromDB, body);
+    await this.repository.update(entity, body);
 
-    return { id: userFromDB.id };
+    return { id: entity.id };
   }
 
   async updatePassword(

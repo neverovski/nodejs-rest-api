@@ -28,6 +28,13 @@ export default class PlatformService implements IPlatformService {
 
   async create(body: PlatformRequest) {
     const profile = await this.getProfile(body);
+    const platform = await this.repository.findOne({
+      where: { name: profile.name, ssid: profile.ssid },
+    });
+
+    if (platform?.userId) {
+      return { userId: platform.userId };
+    }
 
     return this.repository.create(profile);
   }

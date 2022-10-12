@@ -1,3 +1,4 @@
+import { JSONSchema7 } from 'json-schema';
 import { FindOneOptions } from 'typeorm';
 
 export type OptionCtx<T> = Pick<
@@ -69,4 +70,27 @@ export type GoogleConfig = {
 
 export type GitHubConfig = {
   url: string;
+};
+
+export type OptionStringSchema = {
+  maxLength?: number;
+  minLength?: number;
+};
+
+export type OptionNumberSchema = {
+  maximum?: number;
+  minimum?: number;
+};
+
+export interface JSONSchemaCustom extends JSONSchema7 {
+  consumes?: string[];
+  properties?: {
+    [key: string]: JSONSchemaCustom | boolean;
+  };
+  transform?: string[];
+}
+
+export type RangeType = {
+  max?: number | string | Date;
+  min?: number | string | Date;
 };

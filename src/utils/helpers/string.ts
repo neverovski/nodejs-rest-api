@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { nanoid } from 'nanoid';
-
 export const capitalize = (s?: string): string => {
   if (typeof s !== 'string') {
     return '';
@@ -10,9 +6,7 @@ export const capitalize = (s?: string): string => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
-export const uuid = () => nanoid();
-
-export const replate = (
+export const replace = (
   str: string,
   keys: { [key: string]: string | number },
   delimiter = ['{', '}'],

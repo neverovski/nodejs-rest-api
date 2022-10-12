@@ -31,12 +31,10 @@ export class Profile1629959478687 implements MigrationInterface {
           {
             name: 'firstName',
             type: 'varchar',
-            isNullable: true,
           },
           {
             name: 'lastName',
             type: 'varchar',
-            isNullable: true,
           },
           {
             name: 'createdAt',

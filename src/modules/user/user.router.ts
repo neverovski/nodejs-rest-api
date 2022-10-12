@@ -44,7 +44,7 @@ export default class UserRouter extends RouterCore {
       AsyncMiddleware(this.controller.updateCurrentUser.bind(this.controller)),
     );
 
-    this.router.post(
+    this.router.put(
       '/current/change-password',
       AuthMiddleware.handler(),
       ValidateMiddleware.handler(ChangePasswordSchema),

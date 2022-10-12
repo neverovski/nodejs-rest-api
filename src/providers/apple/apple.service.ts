@@ -4,7 +4,7 @@ import { inject, singleton } from 'tsyringe';
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
 import { PlatformProvider } from '@modules/platform';
-import { IJwtService, JwtInject } from '@providers/jwt';
+import { CryptoInject, ICryptoService } from '@providers/crypto';
 import { HttpException, SocialNetwork } from '@utils';
 import { ResponseHelper } from '@utils/helpers';
 
@@ -16,7 +16,8 @@ export default class AppleService extends ServiceCore implements IAppleService {
   private readonly client: JwksClient;
 
   constructor(
-    @inject(JwtInject.JWT_SERVICE) private readonly jwtService: IJwtService,
+    @inject(CryptoInject.CRYPTO_SERVICE)
+    private readonly cryptoService: ICryptoService,
   ) {
     super();
 
@@ -73,8 +74,8 @@ export default class AppleService extends ServiceCore implements IAppleService {
       const publicKey = keys.map((key) => this.getPublicKey(key.kid));
       const publicKeys = await Promise.all(publicKey);
       const verifiedTokenPromises = publicKeys.map((key) =>
-        this.jwtService
-          .verifyAsync<AppleTokenPayload>(token, key)
+        this.cryptoService
+          .verifyJWTAsync<AppleTokenPayload>(token, key)
           .catch(() => null),
       );
 

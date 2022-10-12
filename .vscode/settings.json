@@ -1,7 +1,7 @@
 {
   "rest-client.environmentVariables": {
     "dev": {
-      "baseUrl": "http://127.0.0.1:5858"
+      "host": "http://127.0.0.1:5858"
     }
   },
   "rest-client.defaultHeaders": {

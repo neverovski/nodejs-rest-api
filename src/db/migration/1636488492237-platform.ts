@@ -45,7 +45,7 @@ export class Platform1636488492237 implements MigrationInterface {
           },
           {
             name: 'url',
-            type: 'text',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -67,16 +67,15 @@ export class Platform1636488492237 implements MigrationInterface {
       DB_TABLE_PLATFORM,
       new TableUnique({
         name: DB_UQ_PLATFORM_SSID,
-        columnNames: ['ssid'],
+        columnNames: ['ssid', 'name'],
       }),
     );
 
-    await queryRunner.createIndex(
-      DB_TABLE_PLATFORM,
-      new TableIndex({
-        columnNames: ['userId'],
-      }),
-    );
+    await queryRunner.createIndices(DB_TABLE_PLATFORM, [
+      new TableIndex({ columnNames: ['ssid'] }),
+      new TableIndex({ columnNames: ['name'] }),
+      new TableIndex({ columnNames: ['userId'] }),
+    ]);
 
     await queryRunner.createForeignKey(
       DB_TABLE_PLATFORM,

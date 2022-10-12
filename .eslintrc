@@ -37,14 +37,14 @@
     "object-curly-spacing": ["error", "always"],
     "key-spacing": ["error", { "afterColon": true }],
     "no-multi-spaces": "error",
+    "sort-imports": ["error", { "ignoreDeclarationSort": true }],
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "import/prefer-default-export": "off",
     "import/no-duplicates": ["error", { "considerQueryString": true }],
-    "sort-imports": ["error", { "ignoreDeclarationSort": true }],
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "external", "internal", "parent"],
+        "groups": ["builtin", "external", "internal", "parent", "sibling"],
         "newlines-between": "always",
         "alphabetize": {
           "order": "asc",
@@ -52,6 +52,8 @@
         }
       }
     ],
+    "import/exports-last": ["error"],
+    "import/newline-after-import": ["error"],
     "padding-line-between-statements": [
       "error",
       { "blankLine": "always", "prev": "*", "next": "return" },

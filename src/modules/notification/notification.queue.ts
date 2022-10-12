@@ -8,7 +8,7 @@ import { DateHelper, EventEmitter, StringHelper } from '@utils/helpers';
 import { INotificationQueue } from './interface';
 import {
   NOTIFICATION_FORGOT_PASSWORD,
-  NOTIFICATION_QUEUQ,
+  NOTIFICATION_QUEUE,
 } from './notification.constant';
 import { ForgotPassword } from './notification.type';
 
@@ -19,7 +19,7 @@ export default class NotificationQueue
   private readonly emailQueue: IEmailQueue;
 
   constructor() {
-    super(NOTIFICATION_QUEUQ, {
+    super(NOTIFICATION_QUEUE, {
       defaultJobOptions: {
         attempts: 30,
         backoff: {
@@ -49,7 +49,7 @@ export default class NotificationQueue
               void this.emailQueue.addSendMessageToQueue({
                 email,
                 subject: i18n()['email.forgotPassword'],
-                html: StringHelper.replate(i18n()['email.token'], { token }),
+                html: StringHelper.replace(i18n()['email.token'], { token }),
               });
             }
 

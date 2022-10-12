@@ -1,14 +1,8 @@
-import { JSONSchema7 } from 'json-schema';
+import { i18n } from '@lib';
+import { JSONSchemaCustom } from '@utils';
 
-import { SORT } from '@utils';
-
-export interface JSONSchemaCustom extends JSONSchema7 {
-  consumes?: string[];
-  properties?: {
-    [key: string]: JSONSchemaCustom | boolean;
-  };
-  transform?: string[];
-}
+import * as SchemaHelper from '../../utils/helpers/schema';
+import * as StringHelper from '../../utils/helpers/string';
 
 export interface IJsonSchema {
   body: JSONSchemaCustom | { [key: string]: Partial<JSONSchemaCustom> };
@@ -16,16 +10,10 @@ export interface IJsonSchema {
   query: JSONSchemaCustom;
 }
 
-export const PAGE_SCHEMA = {
-  limit: {
-    type: 'integer',
-    minimum: 1,
-  },
-  page: {
-    type: 'integer',
-    minimum: 0,
-  },
-} as { [key: string]: JSONSchemaCustom | boolean };
+export const PAGE_PROPERTY = {
+  ...SchemaHelper.getInteger('limit'),
+  ...SchemaHelper.getInteger('page', { minimum: 0 }),
+} as { [key: string]: JSONSchemaCustom };
 
 export const ID_SCHEMA = {
   $schema: 'http://json-schema.org/draft-07/schema#',
@@ -33,60 +21,20 @@ export const ID_SCHEMA = {
   required: ['id'],
   additionalProperties: false,
   properties: {
-    id: {
-      type: 'integer',
-    },
+    id: SchemaHelper.getInteger('id'),
   },
 } as JSONSchemaCustom;
 
-export const EMAIL_SCHEMA = {
+export const EMAIL_PROPERTY = {
   email: {
     type: 'string',
     format: 'email',
     transform: ['trim', 'toLowerCase'],
+    errorMessage: {
+      type: i18n()['validate.string'],
+      format: StringHelper.replace(i18n()['validate.string.format'], {
+        format: 'test@test.com',
+      }),
+    },
   },
 } as { [key: string]: JSONSchemaCustom };
-
-export const PASSWORD_SCHEMA = {
-  password: {
-    type: 'string',
-    transform: ['trim'],
-    minLength: 6,
-  },
-} as { [key: string]: JSONSchemaCustom };
-
-export const ORDER_ID_SCHEMA = {
-  type: 'object',
-  additionalProperties: false,
-  properties: {
-    id: {
-      type: 'string',
-      enum: SORT,
-      transform: ['toUpperCase'],
-    },
-  },
-} as JSONSchemaCustom;
-
-export const ORDER_NAME_SCHEMA = {
-  type: 'object',
-  additionalProperties: false,
-  properties: {
-    name: {
-      type: 'string',
-      enum: SORT,
-      transform: ['toUpperCase'],
-    },
-  },
-} as JSONSchemaCustom;
-
-export const ORDER_CREATED_AT_SCHEMA = {
-  type: 'object',
-  additionalProperties: false,
-  properties: {
-    createdAt: {
-      type: 'string',
-      enum: SORT,
-      transform: ['toUpperCase'],
-    },
-  },
-} as JSONSchemaCustom;

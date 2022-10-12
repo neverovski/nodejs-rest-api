@@ -1,57 +1,69 @@
 ### LOGIN
-POST {{baseUrl}}/api/auth/login
+POST {{host}}/api/auth/login
+Content-Type: application/json
 
 {
-  "email": "dmitryneverovski@gmail.com",
-  "password": "123456"
+  "email": "{{email}}",
+  "password": "{{password}}"
 }
+> {%
+    client.global.set("accessToken", response.body.data.accessToken);
+    client.global.set("refreshToken", response.body.data.refreshToken);
+  %}
 
 ### LOGOUT
-POST {{baseUrl}}/api/auth/logout
-Authorization: Bearer {{$dotenv HTTP_ACCESS_TOKEN}}
+POST {{host}}/api/auth/logout
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
 
 ### FORGOT PASSWORD
-POST {{baseUrl}}/api/auth/forgot-password
+POST {{host}}/api/auth/forgot-password
+Content-Type: application/json
 
 {
-  "email": "dmitryneverovski@gmail.com"
+  "email": "{{email}}"
 }
 
 ### RESET PASSWORD
-POST {{baseUrl}}/api/auth/reset-password
+POST {{host}}/api/auth/reset-password
+Content-Type: application/json
 
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJyN1p3d1hVdHd6N202VTJkRVRxVkUiLCJzdWIiOiIxIiwiZW1haWwiOiJkbWl0cnluZXZlcm92c2tpQGdtYWlsLmNvbSIsImlhdCI6MTYzNzYwOTM3OCwiZXhwIjoxNjM3Njk1Nzc4fQ._QjP8Zg8COMh6O_FB2o74GxQLnO2-gaF5Wpnzw9RxjY",
-  "password": "654321"
+  "token": "{{passwordToken}}",
+  "password": "{{newPassword}}"
 }
 
 ### REFRESH-TOKEN
-POST {{baseUrl}}/api/auth/refresh-token
+POST {{host}}/api/auth/refresh-token
+Content-Type: application/json
 
 {
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiZjVuaUFfSWsySXFHZW9kZlNFTzhYIiwidHlwIjoiQmVhcmVyIiwiaWF0IjoxNjM0MTY0OTcxLCJleHAiOjE2MzY3NTY5NzF9.hvD6mfVwECOin5OD8mKU3S5oa1wYf4W9KxDL8D-ss9k"
+  "refreshToken": "{{refreshToken}}"
 }
 
 ### PLATFORM - FACEBOOK
-POST {{baseUrl}}/api/auth/platform
+POST {{host}}/api/auth/platform
+Content-Type: application/json
 
 {
-  "token": "EAACqlwBhn3YBAKmmB4yZBppuBtDUTI7kdRZAZCDhAQCVKCH4bAZCZAEy8vVKJuQWpNyNNtODIL9JLsAbTG4C0gELEaZB3Fp4V6llq1Gw4lVgh0a0M7KAZAN3YWpgXrnQ5Uzp7vDOSz16rTeZCRgezzpZB9AnAZAiV6sCsqtDOOJPFO1noOwxynx6ZB7LBUvM2TRcV8OyU9DEfCVfQZDZD",
+  "token": {{facebookToken}},
   "platform": "facebook"
 }
 
 ### PLATFORM - APPLE
-POST {{baseUrl}}/api/auth/platform
+POST {{host}}/api/auth/platform
+Content-Type: application/json
 
 {
-  "token": "eyJraWQiOiJlWGF1bm1MIiwiYWxnIjoiUlMyNTYifQ",
+  "token": {{appleToken}},
   "platform": "apple"
 }
 
 ### PLATFORM - GITHUB
-POST {{baseUrl}}/api/auth/platform
+POST {{host}}/api/auth/platform
+Content-Type: application/json
 
 {
-  "token": "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",
+  "token": {{githubToken}},
   "platform": "github"
 }
