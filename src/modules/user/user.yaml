@@ -1,0 +1,96 @@
+components:
+  requestBodies:
+    ChangePasswordRequest:
+      description: Change password for a user
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              newPassword:
+                $ref: '#/components/schemas/PasswordValue'
+              oldPassword:
+                $ref: '#/components/schemas/PasswordValue'
+
+    UserUpdateRequest:
+      description: Update a user
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+
+    UserCreateRequest:
+      description: Create a user
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+              - profile
+            allOf:
+              - $ref: '#/components/schemas/User'
+              - type: object
+                properties:
+                  password:
+                    $ref: '#/components/schemas/PasswordValue'
+
+  responses:
+    UserOneResponse:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/FullUser'
+  schemas:
+    Profile:
+      type: object
+      properties:
+        firstName:
+          type: string
+          maxLength: 100
+          example: 'Dmitry'
+        lastName:
+          type: string
+          maxLength: 100
+          example: 'Neverovski'
+
+    FullProfile:
+      allOf:
+        - $ref: '#/components/schemas/Profile'
+        - type: object
+          properties:
+            fullName:
+              type: string
+              example: Dmitry Neverovski
+
+
+    User:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/EmailValue'
+        profile:
+          $ref: '#/components/schemas/Profile'
+
+    FullUser:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: number
+              example: 1
+            createdAt:
+              type: string
+              example: 2022-06-06T11:00:00Z
+            isConfirmedEmail:
+              type: boolean
+              example: true
+        - $ref: '#/components/schemas/User'

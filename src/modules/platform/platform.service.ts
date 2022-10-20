@@ -6,7 +6,7 @@ import { FacebookInject, IFacebookService } from '@providers/facebook';
 import { GitHubInject, IGitHubService } from '@providers/github';
 import { GoogleInject, IGoogleService } from '@providers/google';
 import { HttpException, SocialNetwork } from '@utils';
-import { ResponseHelper } from '@utils/helpers';
+import { ExceptionHelper } from '@utils/helpers';
 
 import { IPlatformRepository, IPlatformService } from './interface';
 import { PlatformInject, PlatformRequest } from './platform.type';
@@ -50,7 +50,7 @@ export default class PlatformService implements IPlatformService {
       case SocialNetwork.GITHUB:
         return this.gitHubService.getProfile(token);
       default:
-        throw ResponseHelper.error(HttpException.NOT_FOUND, {
+        throw ExceptionHelper.getError(HttpException.NOT_FOUND, {
           message: i18n()['notFound.platform'],
         });
     }

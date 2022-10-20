@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 
 import { ServiceCore } from '@core';
 import { HttpException } from '@utils';
-import { DateHelper, ResponseHelper } from '@utils/helpers';
+import { DateHelper, ExceptionHelper } from '@utils/helpers';
 
 import { ICryptoService } from './interface';
 
@@ -55,14 +55,14 @@ export default class CryptoService
     return new Promise((resolve, reject) => {
       jwt.verify(token, secret, (error, decoded) => {
         if (error && error.name === 'TokenExpiredError') {
-          return reject(ResponseHelper.error(HttpException.TOKEN_EXPIRED));
+          return reject(ExceptionHelper.getError(HttpException.TOKEN_EXPIRED));
         }
 
         if (decoded) {
           return resolve(decoded as unknown as T);
         }
 
-        return reject(ResponseHelper.error(HttpException.TOKEN_VERIFY));
+        return reject(ExceptionHelper.getError(HttpException.TOKEN_VERIFY));
       });
     });
   }

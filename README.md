@@ -33,6 +33,7 @@ $ npm run migrate:create --name=<NAME>
     - [X] Create a new user
     - [X] Update user
     - [X] Reset password
+    - [X] Delete user
   - Platform
     - [X] Facebook
     - [X] Apple
@@ -44,7 +45,7 @@ $ npm run migrate:create --name=<NAME>
     - [ ] Unit
     - [ ] E2E
     - [ ] Integration
-  - [ ] Swagger
+  - [X] Swagger
 
 ## Project Structure
 

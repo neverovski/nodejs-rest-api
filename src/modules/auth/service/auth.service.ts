@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
+import { i18n } from '@lib';
 import { INotificationQueue, NotificationInject } from '@modules/notification';
 import {
   IPlatformService,
@@ -11,7 +12,7 @@ import {
 import { IUserService, UserInject } from '@modules/user';
 import { CryptoInject, ICryptoService } from '@providers/crypto';
 import { HttpException } from '@utils';
-import { ResponseHelper, ValidateHelper } from '@utils/helpers';
+import { ExceptionHelper, ValidateHelper } from '@utils/helpers';
 
 import {
   AccessTokenPayload,
@@ -46,7 +47,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     const token = this.cryptoService.signJWT(
       {
         jti: emailOTP,
-        sub: String(id),
+        sub: `${id}`,
       },
       JwtConfig.secretToken,
       {
@@ -62,7 +63,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     const user = await this.userService.getOne({ email });
 
     if (!user || !ValidateHelper.credentials(password, user?.password)) {
-      throw ResponseHelper.error(HttpException.INVALID_CREDENTIALS);
+      throw ExceptionHelper.getError(HttpException.INVALID_CREDENTIALS);
     }
 
     return this.tokenService.getToken({ id: user.id, ...user?.payload }, ctx);
@@ -84,7 +85,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     const payload = await this.tokenService.resolveRefreshToken(refreshToken);
 
     if (!payload?.sub) {
-      throw ResponseHelper.error(HttpException.TOKEN_MALFORMED);
+      throw ExceptionHelper.getError(HttpException.TOKEN_MALFORMED);
     }
 
     const user = await this.userService.getOneOrFail({ id: +payload.sub });
@@ -99,9 +100,15 @@ export default class AuthService extends ServiceCore implements IAuthService {
         JwtConfig.secretToken,
       );
 
-    await this.userService.update(
-      { email, emailOTP: jti },
-      { password: password },
-    );
+    try {
+      await this.userService.update(
+        { email, emailOTP: jti },
+        { password: password },
+      );
+    } catch {
+      throw ExceptionHelper.getError(HttpException.UNPROCESSABLE_ENTITY, {
+        errors: { token: i18n()['validate.token.resetPassword'] },
+      });
+    }
   }
 }

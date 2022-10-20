@@ -4,7 +4,7 @@ import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
 import { CryptoInject, ICryptoService } from '@providers/crypto';
 import { HttpException, TokenType } from '@utils';
-import { DateHelper, ResponseHelper } from '@utils/helpers';
+import { DateHelper, ExceptionHelper } from '@utils/helpers';
 
 import {
   AccessTokenRequest,
@@ -81,11 +81,11 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const refreshTokenFromDB = await this.getRefreshTokenFromPayload(payload);
 
     if (refreshTokenFromDB?.isRevoked) {
-      throw ResponseHelper.error(HttpException.REFRESH_TOKEN_EXPIRED);
+      throw ExceptionHelper.getError(HttpException.REFRESH_TOKEN_EXPIRED);
     }
 
     if (!payload?.sub) {
-      throw ResponseHelper.error(HttpException.TOKEN_MALFORMED);
+      throw ExceptionHelper.getError(HttpException.TOKEN_MALFORMED);
     }
 
     return payload;
@@ -114,7 +114,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     sub,
   }: RefreshTokenPayload): Promise<RefreshToken> {
     if (!jti && !sub) {
-      throw ResponseHelper.error(HttpException.TOKEN_MALFORMED);
+      throw ExceptionHelper.getError(HttpException.TOKEN_MALFORMED);
     }
 
     return this.repository.findOneOrFail({

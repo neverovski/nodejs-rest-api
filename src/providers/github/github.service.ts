@@ -5,7 +5,7 @@ import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
 import { PlatformProvider } from '@modules/platform';
 import { HttpException, SocialNetwork } from '@utils';
-import { ResponseHelper } from '@utils/helpers';
+import { ExceptionHelper } from '@utils/helpers';
 
 import { GitHubProfile } from './github.type';
 import { IGitHubService } from './interface';
@@ -50,7 +50,7 @@ export default class GitHubService
     } catch (err) {
       this.handleError(err);
 
-      throw ResponseHelper.error(HttpException.TOKEN_VERIFY);
+      throw ExceptionHelper.getError(HttpException.EXTERNAL);
     }
   }
 }

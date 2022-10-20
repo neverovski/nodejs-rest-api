@@ -1,9 +1,9 @@
-### GET CURRENT USER
+### RETURN A CURRENT USER
 GET {{host}}/api/users/current
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
-### UPDATE CURRENT USER
+### UPDATE A CURRENT USER
 PUT {{host}}/api/users/current
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
@@ -15,7 +15,7 @@ Content-Type: application/json
   }
 }
 
-### CREATE USER
+### CREATE A USER
 POST {{host}}/api/users
 Content-Type: application/json
 
@@ -28,8 +28,8 @@ Content-Type: application/json
   }
 }
 
-### RESET PASSWORD
-POST {{host}}/api/users/reset-password
+### CHANGE PASSWORD FOR A CURRENT USER
+POST {{host}}/api/users/current/change-password
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -37,3 +37,8 @@ Content-Type: application/json
   "oldPassword": "{{password}}",
   "newPassword": "{{newPassword}}"
 }
+
+### DELETE A CURRENT USER
+DELETE {{host}}/api/users/current
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json

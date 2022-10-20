@@ -1,4 +1,10 @@
-import { MigrationInterface, QueryRunner, Table, TableUnique } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableIndex,
+  TableUnique,
+} from 'typeorm';
 
 import { DB_TABLE_USER, DB_UQ_USER_EMAIL } from '@utils';
 
@@ -67,6 +73,10 @@ export class User1629959478561 implements MigrationInterface {
         name: DB_UQ_USER_EMAIL,
         columnNames: ['email'],
       }),
+    ]);
+
+    await queryRunner.createIndices(DB_TABLE_USER, [
+      new TableIndex({ columnNames: ['emailOTP'] }),
     ]);
   }
 }

@@ -5,7 +5,7 @@ import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
 import { PlatformProvider } from '@modules/platform';
 import { FACEBOOK_LINK, HttpException, SocialNetwork } from '@utils';
-import { ResponseHelper } from '@utils/helpers';
+import { ExceptionHelper } from '@utils/helpers';
 
 import { FacebookProfile } from './facebook.type';
 import { IFacebookService } from './interface';
@@ -46,7 +46,7 @@ export default class FacebookService
     } catch (err) {
       this.handleError(err);
 
-      throw ResponseHelper.error(HttpException.TOKEN_VERIFY);
+      throw ExceptionHelper.getError(HttpException.EXTERNAL);
     }
   }
 }

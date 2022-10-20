@@ -44,6 +44,12 @@ export default class UserRouter extends RouterCore {
       AsyncMiddleware(this.controller.updateCurrentUser.bind(this.controller)),
     );
 
+    this.router.delete(
+      '/current',
+      AuthMiddleware.handler(),
+      AsyncMiddleware(this.controller.deleteCurrentUser.bind(this.controller)),
+    );
+
     this.router.put(
       '/current/change-password',
       AuthMiddleware.handler(),

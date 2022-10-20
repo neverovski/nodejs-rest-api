@@ -1,4 +1,11 @@
-import { Column, DeleteDateColumn, Entity, OneToOne, Unique } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  OneToOne,
+  Unique,
+} from 'typeorm';
 
 import { EntityCore } from '@core';
 import { StringTransformer } from '@db/transformer';
@@ -20,6 +27,7 @@ export default class UserEntity extends EntityCore<IUser> implements IUser {
   })
   email?: string;
 
+  @Index()
   @Column('varchar', { nullable: true })
   emailOTP?: string;
 
@@ -41,8 +49,8 @@ export default class UserEntity extends EntityCore<IUser> implements IUser {
     return {
       ...(this.email && { email: this.email }),
       isConfirmedEmail: this.isConfirmedEmail,
-      ...(this?.profile?.firstName && { firstName: this.profile.firstName }),
-      ...(this?.profile?.lastName && { lastName: this.profile.lastName }),
+      ...(this.profile?.firstName && { firstName: this.profile.firstName }),
+      ...(this.profile?.lastName && { lastName: this.profile.lastName }),
     };
   }
 }

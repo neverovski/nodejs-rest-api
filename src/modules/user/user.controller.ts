@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 
 import { ControllerCore } from '@core';
+import { i18n } from '@lib';
 import { HttpException, HttpStatus } from '@utils';
-import { ResponseHelper } from '@utils/helpers';
+import { ExceptionHelper } from '@utils/helpers';
 
 import { UserDTO } from './dto';
 import { IUserService } from './interface';
@@ -23,6 +24,28 @@ export default class UserController extends ControllerCore {
     super();
   }
 
+  /**
+   * @openapi
+   * /api/users/current/change-password:
+   *   put:
+   *      tags: [User]
+   *      summary: Change password for a current user
+   *      description: This can only be done by the logged-in user.
+   *      requestBody:
+   *        $ref: '#/components/requestBodies/ChangePasswordRequest'
+   *      responses:
+   *        200:
+   *          $ref: '#/components/responses/HttpOk'
+   *        401:
+   *          $ref: '#/components/responses/HttpUnauthorized'
+   *        422:
+   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *        500:
+   *          $ref: '#/components/responses/HttpInternalServerError'
+   *      security:
+   *        - CookieAuth: []
+   *        - BearerAuth: []
+   */
   async changePasswordCurrentUser(
     req: Request<any, any, Password>,
     res: Response,
@@ -32,19 +55,88 @@ export default class UserController extends ControllerCore {
     await this.userService.updatePassword({ id }, req.body);
 
     this.response(res, {
-      data: ResponseHelper.success(HttpException.PASSWORD_RESET_SUCCESSFULLY),
+      data: ExceptionHelper.getOk(HttpException.OK, {
+        message: i18n()['message.passwordReset.successfully'],
+      }),
     });
   }
 
+  /**
+   * @openapi
+   * /api/users:
+   *   post:
+   *      tags: [User]
+   *      summary: Create a user
+   *      description: ''
+   *      requestBody:
+   *        $ref: '#/components/requestBodies/UserCreateRequest'
+   *      responses:
+   *        201:
+   *          $ref: '#/components/responses/HttpOk'
+   *        422:
+   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *        500:
+   *          $ref: '#/components/responses/HttpInternalServerError'
+   */
   async create(req: Request<any, any, User>, res: Response) {
     await this.userService.create(req.body);
 
     this.response(res, {
-      data: ResponseHelper.success(HttpException.USER_CREATED),
+      data: ExceptionHelper.getOk(HttpException.OK, {
+        message: i18n()['message.user.created'],
+      }),
       status: HttpStatus.Created,
     });
   }
 
+  /**
+   * @openapi
+   * /api/users/current:
+   *   delete:
+   *      tags: [User]
+   *      summary: Delete a current user
+   *      description: This can only be done by the logged-in user.
+   *      responses:
+   *        204:
+   *          $ref: '#/components/responses/HttpNoContent'
+   *        401:
+   *          $ref: '#/components/responses/HttpUnauthorized'
+   *        500:
+   *          $ref: '#/components/responses/HttpInternalServerError'
+   *      security:
+   *        - CookieAuth: []
+   *        - BearerAuth: []
+   */
+  async deleteCurrentUser(
+    req: Request<any, any, Partial<User>>,
+    res: Response,
+  ) {
+    const { userId } = req.user as Required<UserContext>;
+
+    await this.userService.delete({ id: userId });
+
+    this.deleteCookie(res, req.cookies);
+    this.response(res);
+  }
+
+  /**
+   * @openapi
+   * /api/users/current:
+   *   get:
+   *      tags: [User]
+   *      summary: Return a current user
+   *      description: This can only be done by the logged-in user.
+   *      responses:
+   *        200:
+   *          $ref: '#/components/responses/UserOneResponse'
+   *        401:
+   *          $ref: '#/components/responses/HttpUnauthorized'
+   *        500:
+   *          $ref: '#/components/responses/HttpInternalServerError'
+   *      security:
+   *        - CookieAuth: []
+   *        - BearerAuth: []
+   */
   async getCurrentUser(req: Request, res: Response) {
     const { userId } = req.user as Required<UserContext>;
 
@@ -53,6 +145,28 @@ export default class UserController extends ControllerCore {
     this.response(res, { data, dto: UserDTO });
   }
 
+  /**
+   * @openapi
+   * /api/users/current:
+   *   put:
+   *      tags: [User]
+   *      summary: Update a current user
+   *      description: This can only be done by the logged-in user.
+   *      requestBody:
+   *        $ref: '#/components/requestBodies/UserUpdateRequest'
+   *      responses:
+   *        200:
+   *          $ref: '#/components/responses/HttpOk'
+   *        401:
+   *          $ref: '#/components/responses/HttpUnauthorized'
+   *        422:
+   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *        500:
+   *          $ref: '#/components/responses/HttpInternalServerError'
+   *      security:
+   *        - CookieAuth: []
+   *        - BearerAuth: []
+   */
   async updateCurrentUser(
     req: Request<any, any, Partial<User>>,
     res: Response,
@@ -62,7 +176,9 @@ export default class UserController extends ControllerCore {
     await this.userService.update({ id: userId }, req.body);
 
     this.response(res, {
-      data: ResponseHelper.success(HttpException.USER_UPDATE),
+      data: ExceptionHelper.getOk(HttpException.OK, {
+        message: i18n()['message.user.update'],
+      }),
     });
   }
 }

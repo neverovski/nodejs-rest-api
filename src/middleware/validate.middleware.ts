@@ -7,8 +7,8 @@ import { JSONSchema7 } from 'json-schema';
 
 import { MiddlewareCore } from '@core';
 import { IJsonSchema } from '@core/schema';
-import { CodeResponse } from '@utils';
-import { SanitizerHelper, StringHelper } from '@utils/helpers';
+import { HttpException } from '@utils';
+import { AjvHelper, ExceptionHelper, StringHelper } from '@utils/helpers';
 
 class ValidateMiddleware extends MiddlewareCore {
   protected ajv: Ajv;
@@ -20,33 +20,13 @@ class ValidateMiddleware extends MiddlewareCore {
     addErrors(this.ajv);
     addFormats(this.ajv);
     addKeywords(this.ajv, ['transform', 'uniqueItemProperties']);
-    this.ajv.addFormat('phone', /^\+[0-9]*/);
+
+    this.ajv.addFormat('phone', AjvHelper.phoneFormat);
 
     this.ajv.addKeyword({
       keyword: 'sanitize',
       modifying: true,
-      compile(schema) {
-        return (data, dataCxt) => {
-          if (
-            !dataCxt?.parentDataProperty &&
-            dataCxt?.parentDataProperty !== 0
-          ) {
-            throw new TypeError('Data must be a property of an object');
-          }
-
-          if (
-            typeof schema === 'string' &&
-            schema === 'escape' &&
-            dataCxt?.parentData &&
-            dataCxt?.parentDataProperty
-          ) {
-            dataCxt.parentData[dataCxt.parentDataProperty] =
-              SanitizerHelper.escape(data as string);
-          }
-
-          return true;
-        };
-      },
+      compile: AjvHelper.sanitize,
       errors: false,
     });
   }
@@ -63,11 +43,11 @@ class ValidateMiddleware extends MiddlewareCore {
         await this.validate(schemas.body, req.body);
         next();
       } catch (errors) {
-        res.status(422).json({
-          ...CodeResponse.UNPROCESSABLE_ENTITY,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          errors,
-        });
+        res.status(422).json(
+          ExceptionHelper.getOk(HttpException.UNPROCESSABLE_ENTITY, {
+            errors: errors as { [key: string]: string },
+          }),
+        );
       }
     };
   }
