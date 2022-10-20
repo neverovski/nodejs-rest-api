@@ -2,6 +2,7 @@ import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 
 import { HttpExceptionCore, MiddlewareCore } from '@core';
 import { CodeResponse, HttpException, HttpStatus } from '@utils';
+import { ExceptionHelper } from '@utils/helpers';
 
 class ErrorMiddleware extends MiddlewareCore {
   handler(): ErrorRequestHandler {
@@ -29,7 +30,10 @@ class ErrorMiddleware extends MiddlewareCore {
         response = { ...error };
       }
 
-      const errorRes = new HttpExceptionCore(response);
+      const errorRes = ExceptionHelper.getOk(
+        HttpException.SERVER_ERROR,
+        response,
+      );
 
       res.status(errorRes.status).json(errorRes);
     };

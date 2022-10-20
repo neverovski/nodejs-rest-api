@@ -21,7 +21,8 @@
     "migrate:show": "APP_ENV=cli node -r ts-node/register ./node_modules/typeorm/cli.js migration:show -d ./src/db/typeorm/data-source.ts",
     "prepare": "husky install",
     "prestart": "chmod ug+x .husky/* && chmod ug+x .git/hooks/*",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "swagger": "swagger-jsdoc -o ./swagger/openapi.json -d ./swagger/swagger.js ./swagger.yaml ./src/modules/*/*.controller.ts ./src/modules/*/*.yaml"
   },
   "repository": {
     "type": "git",
@@ -111,8 +112,10 @@
     "husky": "^8.0.1",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
+    "openapi-types": "^12.0.2",
     "prettier": "^2.7.1",
     "reflect-metadata": "^0.1.13",
+    "swagger-jsdoc": "^6.2.5",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.7.0",
     "tsc-watch": "^5.0.3",

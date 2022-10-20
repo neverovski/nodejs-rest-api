@@ -1,10 +1,4 @@
 import { JSONSchema7 } from 'json-schema';
-import { FindOneOptions } from 'typeorm';
-
-export type OptionCtx<T> = Pick<
-  FindOneOptions<T>,
-  'where' | 'order' | 'relations'
->;
 
 export type JWTPayload = {
   email: string;
@@ -89,8 +83,3 @@ export interface JSONSchemaCustom extends JSONSchema7 {
   };
   transform?: string[];
 }
-
-export type RangeType = {
-  max?: number | string | Date;
-  min?: number | string | Date;
-};

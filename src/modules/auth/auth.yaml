@@ -1,0 +1,75 @@
+components:
+  requestBodies:
+    LoginRequest:
+      description: Logs user into the system by email and password
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                $ref: '#/components/schemas/EmailValue'
+              password:
+                $ref: '#/components/schemas/PasswordValue'
+
+    ForgotPasswordRequest:
+      description: Forgot password
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+            properties:
+              email:
+                $ref: '#/components/schemas/EmailValue'
+
+    ResetPasswordRequest:
+      description: Reset password
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - token
+              - password
+            properties:
+              token:
+                $ref: '#/components/schemas/TokenValue'
+              password:
+                $ref: '#/components/schemas/PasswordValue'
+
+    RefreshTokenRequest:
+      description: Refresh token
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - refreshToken
+            properties:
+              refreshToken:
+                $ref: '#/components/schemas/TokenValue'
+
+    PlatformRequest:
+      description: Logs user into the system through a platform (apple, google and etc.)
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - platform
+              - token
+            properties:
+              platform:
+                $ref: '#/components/schemas/PlatformValue'
+              token:
+                $ref: '#/components/schemas/TokenValue'

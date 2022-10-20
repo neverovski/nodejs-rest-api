@@ -8,7 +8,6 @@ import {
   ObjectLiteral,
   QueryFailedError,
   Repository,
-  SelectQueryBuilder,
 } from 'typeorm';
 
 import DB from '@db/index';
@@ -19,7 +18,7 @@ import {
   LoggerType,
   PostgresErrorCode,
 } from '@utils';
-import { ResponseHelper } from '@utils/helpers';
+import { ExceptionHelper } from '@utils/helpers';
 
 import { Logger } from './logger';
 
@@ -84,25 +83,6 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
     }
   }
 
-  protected buildOrder(
-    { order }: Pick<FindManyOptions<Entity>, 'order'>,
-    queryBuilder: SelectQueryBuilder<Entity>,
-  ) {
-    if (order && Object.keys(order).length) {
-      for (const key in order) {
-        if ({}.hasOwnProperty.call(order, key)) {
-          queryBuilder.addOrderBy(
-            `${this.alias}.${key}`,
-            order[key] as Order,
-            'NULLS LAST',
-          );
-        }
-      }
-    } else {
-      queryBuilder.addOrderBy(`${this.alias}.id`, 'DESC');
-    }
-  }
-
   protected handleError(error: unknown) {
     Logger.error({
       message: this.constructor.name,
@@ -114,7 +94,7 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
       (error as Error)?.name === 'EntityNotFound' ||
       (error as Error)?.name === 'EntityNotFoundError'
     ) {
-      return ResponseHelper.error(HttpException.NOT_FOUND, {
+      return ExceptionHelper.getError(HttpException.NOT_FOUND, {
         message: this.notFound,
       });
     }
@@ -125,7 +105,7 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
       if (err.code === PostgresErrorCode.UniqueViolation) {
         switch (err.constraint) {
           case DB_UQ_USER_EMAIL:
-            return ResponseHelper.error(HttpException.EMAIL_ALREADY_TAKEN);
+            return ExceptionHelper.getError(HttpException.EMAIL_ALREADY_TAKEN);
           default:
             return error;
         }

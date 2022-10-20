@@ -6,7 +6,7 @@ import { ServiceCore } from '@core';
 import { PlatformProvider } from '@modules/platform';
 import { CryptoInject, ICryptoService } from '@providers/crypto';
 import { HttpException, SocialNetwork } from '@utils';
-import { ResponseHelper } from '@utils/helpers';
+import { ExceptionHelper } from '@utils/helpers';
 
 import { AppleKey, AppleTokenPayload } from './apple.type';
 import { IAppleService } from './interface';
@@ -40,7 +40,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
     } catch (err) {
       this.handleError(err);
 
-      throw ResponseHelper.error(HttpException.TOKEN_VERIFY);
+      throw ExceptionHelper.getError(HttpException.EXTERNAL);
     }
   }
 
@@ -52,7 +52,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
     } catch (err) {
       this.handleError(err);
 
-      throw ResponseHelper.error(HttpException.EXTERNAL);
+      throw ExceptionHelper.getError(HttpException.EXTERNAL);
     }
   }
 
@@ -64,7 +64,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
     } catch (err) {
       this.handleError(err);
 
-      throw ResponseHelper.error(HttpException.EXTERNAL);
+      throw ExceptionHelper.getError(HttpException.EXTERNAL);
     }
   }
 
@@ -83,14 +83,14 @@ export default class AppleService extends ServiceCore implements IAppleService {
       const data = decodedTokens.filter((elem) => elem).pop();
 
       if (!data) {
-        throw ResponseHelper.error(HttpException.TOKEN_VERIFY);
+        throw ExceptionHelper.getError(HttpException.EXTERNAL);
       }
 
       return data;
     } catch (err) {
       this.handleError(err);
 
-      throw ResponseHelper.error(HttpException.EXTERNAL);
+      throw ExceptionHelper.getError(HttpException.EXTERNAL);
     }
   }
 }

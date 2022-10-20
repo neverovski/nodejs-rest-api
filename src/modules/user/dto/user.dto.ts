@@ -14,6 +14,9 @@ export class UserDTO {
   id!: number;
 
   @Expose()
+  isConfirmedEmail!: boolean;
+
+  @Expose()
   @Type(() => ProfileDTO)
   profile!: ProfileDTO;
 }

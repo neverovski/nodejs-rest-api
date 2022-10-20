@@ -5,7 +5,7 @@ import { JwtConfig } from '@config';
 import { MiddlewareCore } from '@core';
 import { CryptoInject, ICryptoService } from '@providers/crypto';
 import { HttpException, JWTPayload, Role } from '@utils';
-import { ResponseHelper, TokenHelper } from '@utils/helpers';
+import { ExceptionHelper, TokenHelper } from '@utils/helpers';
 
 class AuthMiddleware extends MiddlewareCore {
   private readonly cryptoService: ICryptoService;
@@ -45,7 +45,7 @@ class AuthMiddleware extends MiddlewareCore {
         }
       }
 
-      return next(ResponseHelper.error(HttpException.TOKEN_NOT_PROVIDED));
+      return next(ExceptionHelper.getError(HttpException.TOKEN_NOT_PROVIDED));
     };
   }
 }

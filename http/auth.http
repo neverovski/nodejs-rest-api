@@ -1,4 +1,4 @@
-### LOGIN
+### LOGS USER INTO THE SYSTEM BY EMAIL AND PASSWORD
 POST {{host}}/api/auth/login
 Content-Type: application/json
 
@@ -11,7 +11,7 @@ Content-Type: application/json
     client.global.set("refreshToken", response.body.data.refreshToken);
   %}
 
-### LOGOUT
+### LOGS OUT CURRENT LOGGED-IN USER SESSION
 POST {{host}}/api/auth/logout
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
@@ -33,7 +33,7 @@ Content-Type: application/json
   "password": "{{newPassword}}"
 }
 
-### REFRESH-TOKEN
+### REFRESH TOKEN
 POST {{host}}/api/auth/refresh-token
 Content-Type: application/json
 
@@ -41,29 +41,29 @@ Content-Type: application/json
   "refreshToken": "{{refreshToken}}"
 }
 
-### PLATFORM - FACEBOOK
+### LOGS USER INTO THE SYSTEM THROUGH A FACEBOOK
 POST {{host}}/api/auth/platform
 Content-Type: application/json
 
 {
-  "token": {{facebookToken}},
+  "token": "{{facebookToken}}",
   "platform": "facebook"
 }
 
-### PLATFORM - APPLE
+### LOGS USER INTO THE SYSTEM THROUGH A APPLE
 POST {{host}}/api/auth/platform
 Content-Type: application/json
 
 {
-  "token": {{appleToken}},
+  "token": "{{appleToken}}",
   "platform": "apple"
 }
 
-### PLATFORM - GITHUB
+### LOGS USER INTO THE SYSTEM THROUGH A GITHUB
 POST {{host}}/api/auth/platform
 Content-Type: application/json
 
 {
-  "token": {{githubToken}},
+  "token": "{{githubToken}}",
   "platform": "github"
 }

@@ -1,4 +1,4 @@
-import { CodeResponse } from '@utils';
+import { CodeResponse, HttpException } from '@utils';
 
 export default class HttpExceptionCore extends Error {
   readonly code: string;
@@ -11,9 +11,9 @@ export default class HttpExceptionCore extends Error {
 
     this.status = ctx?.status || CodeResponse.EXTERNAL.status;
     this.code = ctx?.code || CodeResponse.EXTERNAL.code;
-    this.message = ctx?.message || CodeResponse.EXTERNAL.message;
+    this.message = ctx?.message || HttpException.EXTERNAL;
 
-    if (ctx?.errors) {
+    if (ctx?.errors && Object.keys(ctx.errors).length) {
       this.errors = ctx.errors;
     }
   }

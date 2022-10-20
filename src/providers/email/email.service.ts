@@ -4,7 +4,7 @@ import Mail from 'nodemailer/lib/mailer';
 import { EmailConfig } from '@config';
 import { ServiceCore } from '@core';
 import { HttpException } from '@utils';
-import { ResponseHelper } from '@utils/helpers';
+import { ExceptionHelper } from '@utils/helpers';
 
 import { SendEmail } from './email.type';
 import { IEmailService } from './interface';
@@ -34,7 +34,7 @@ export default class EmailService extends ServiceCore implements IEmailService {
       return await this.transporter.sendMail(data);
     } catch (err) {
       this.handleError(err);
-      throw ResponseHelper.error(HttpException.EXTERNAL);
+      throw ExceptionHelper.getError(HttpException.EXTERNAL);
     }
   }
 }
