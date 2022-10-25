@@ -1,8 +1,7 @@
-import { ClassTransformOptions, plainToInstance } from 'class-transformer';
 import { Response } from 'express';
 
-import { HttpException, HttpStatus } from '@utils';
-import { CookieHelper, ExceptionHelper } from '@utils/helpers';
+import { HttpException, HttpStatus, TransformDTO } from '@utils';
+import { CookieHelper, ExceptionHelper, MappingHelper } from '@utils/helpers';
 
 export default class ControllerCore {
   protected deleteCookie<T extends object>(res: Response, cookies: T) {
@@ -11,12 +10,7 @@ export default class ControllerCore {
 
   protected response<T, DTO>(
     res: Response,
-    ctx?: {
-      data: T | T[];
-      dto?: { new (): DTO };
-      options?: ClassTransformOptions;
-      status?: HttpStatus;
-    },
+    ctx?: TransformDTO<T, DTO> & { status?: HttpStatus },
   ) {
     const { data, options, dto } = ctx || {};
 
@@ -27,7 +21,9 @@ export default class ControllerCore {
     const status = !ctx ? HttpStatus.NoContent : ctx?.status || HttpStatus.OK;
 
     res.status(status).json({
-      ...(data && { data: dto ? plainToInstance(dto, data, options) : data }),
+      ...(data && {
+        data: dto ? MappingHelper.toDTO({ dto, data, options }) : data,
+      }),
     });
   }
 

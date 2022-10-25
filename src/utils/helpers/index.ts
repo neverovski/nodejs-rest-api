@@ -5,6 +5,7 @@ export * from './event-emitter';
 export * as ExceptionHelper from './exception';
 export { default as TemplateHelper } from './template';
 export * as IPHelper from './ip';
+export * as MappingHelper from './mapping';
 export * as SchemaHelper from './schema';
 export * as StringHelper from './string';
 export * as TokenHelper from './token';

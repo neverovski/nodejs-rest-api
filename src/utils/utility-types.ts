@@ -1,3 +1,4 @@
+import { ClassTransformOptions } from 'class-transformer';
 import { JSONSchema7 } from 'json-schema';
 
 export type JWTPayload = {
@@ -102,4 +103,10 @@ export type TemplateResponse = {
   html?: string;
   markdown: string;
   subject?: string;
+};
+
+export type TransformDTO<T, DTO> = {
+  data: T;
+  dto?: { new (): DTO };
+  options?: ClassTransformOptions;
 };
