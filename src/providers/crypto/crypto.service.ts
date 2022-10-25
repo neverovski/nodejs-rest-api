@@ -1,5 +1,6 @@
+import crypto from 'crypto';
+
 import jwt from 'jsonwebtoken';
-import { nanoid } from 'nanoid';
 
 import { ServiceCore } from '@core';
 import { HttpException } from '@utils';
@@ -25,7 +26,7 @@ export default class CryptoService
   }
 
   generateUUID() {
-    return nanoid();
+    return crypto.randomUUID();
   }
 
   signJWT<T>(payload: T, secret: string, opts?: jwt.SignOptions): string {
