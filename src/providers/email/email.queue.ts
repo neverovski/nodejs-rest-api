@@ -1,7 +1,6 @@
 import Bull from 'bull';
 import { container } from 'tsyringe';
 
-import { EmailConfig } from '@config';
 import { Queue } from '@lib';
 import { DateHelper, EventEmitter } from '@utils/helpers';
 
@@ -16,6 +15,7 @@ export default class EmailQueue extends Queue implements IEmailQueue {
     super(EMAIL_QUEUE, {
       defaultJobOptions: {
         attempts: 30,
+        removeOnComplete: true,
         backoff: {
           type: 'exponential',
           delay: DateHelper.toMs('1s'),
@@ -40,15 +40,7 @@ export default class EmailQueue extends Queue implements IEmailQueue {
         EMAIL_MESSAGE,
         async (job: Bull.Job<EmailMessage>) => {
           try {
-            const { email, subject, text, html } = job.data;
-
-            await this.emailService.sendEmail({
-              to: email,
-              from: EmailConfig.username,
-              subject,
-              text: text || subject,
-              html: html || subject,
-            });
+            await this.emailService.sendEmail(job.data);
 
             await job.progress(100);
 

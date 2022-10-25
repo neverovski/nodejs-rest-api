@@ -34,3 +34,5 @@ export const MIN_PASSWORD_LENGTH = 6;
 export const MAX_NAME_LENGTH = 100;
 export const MAX_SORT_STRING_LENGTH = 250;
 export const MAX_LONG_STRING_LENGTH = 5000;
+
+export const EXPIRED_OTP = '1h';

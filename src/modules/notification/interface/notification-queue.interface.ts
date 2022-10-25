@@ -1,7 +1,10 @@
 import type { JobOptions } from 'bull';
 
-import { ForgotPassword } from '../notification.type';
+import { Notification } from '../notification.type';
 
 export interface INotificationQueue {
-  addForgotPasswordToQueue(data: ForgotPassword, opt?: JobOptions): void;
+  addPasswordChangedToQueue(param: Notification, opt?: JobOptions): void;
+  addPasswordResetToQueue(param: Notification, opt?: JobOptions): void;
+  addRegistrationToQueue(param: Notification, opt?: JobOptions): void;
+  addVerificationToQueue(param: Notification, opt?: JobOptions): void;
 }

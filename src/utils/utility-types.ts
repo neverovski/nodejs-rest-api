@@ -83,3 +83,23 @@ export interface JSONSchemaCustom extends JSONSchema7 {
   };
   transform?: string[];
 }
+
+export enum Template {
+  EMAIL_VERIFICATION = 'auth/email-verification',
+  PASSWORD_CHANGED = 'user/password-changed',
+  PASSWORD_RESET = 'auth/password-reset',
+  REGISTRATION = 'user/registration',
+}
+
+export type TemplateRequest = {
+  data?: Record<string, any>;
+  isHTML?: boolean;
+  isLayout?: boolean;
+  template: string;
+};
+
+export type TemplateResponse = {
+  html?: string;
+  markdown: string;
+  subject?: string;
+};

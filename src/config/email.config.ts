@@ -4,6 +4,7 @@ class EmailConfig extends Config {
   readonly driver: string;
   readonly encryption: string;
   readonly host: string;
+  readonly name: string;
   readonly password: string;
   readonly port: number;
   readonly username: string;
@@ -37,6 +38,7 @@ class EmailConfig extends Config {
       this.joi.string().required(),
       '',
     );
+    this.name = this.set<string>('MAIL_NAME', this.joi.string().required(), '');
   }
 }
 

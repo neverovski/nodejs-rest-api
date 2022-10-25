@@ -2,7 +2,8 @@ export enum NotificationInject {
   NOTIFICATION_QUEUE = 'NotificationQueue',
 }
 
-export type ForgotPassword = {
+export type Notification = {
+  data?: Record<string, any>;
   email?: string;
-  token: string;
+  userId?: number;
 };

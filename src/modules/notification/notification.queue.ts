@@ -1,16 +1,20 @@
-import Bull from 'bull';
+import type { Job, JobOptions } from 'bull';
 import { container } from 'tsyringe';
 
-import { Queue, i18n } from '@lib';
+import { Queue } from '@lib';
 import { EmailInject, IEmailQueue } from '@providers/email';
-import { DateHelper, EventEmitter, StringHelper } from '@utils/helpers';
+import { EXPIRED_OTP, Template } from '@utils';
+import { DateHelper, EventEmitter } from '@utils/helpers';
 
 import { INotificationQueue } from './interface';
 import {
-  NOTIFICATION_FORGOT_PASSWORD,
+  NOTIFICATION_PASSWORD_CHANGED,
+  NOTIFICATION_PASSWORD_RESET,
   NOTIFICATION_QUEUE,
+  NOTIFICATION_REGISTRATION,
+  NOTIFICATION_VERIFICATION,
 } from './notification.constant';
-import { ForgotPassword } from './notification.type';
+import { Notification } from './notification.type';
 
 export default class NotificationQueue
   extends Queue
@@ -30,39 +34,132 @@ export default class NotificationQueue
     });
 
     this.emailQueue = container.resolve<IEmailQueue>(EmailInject.EMAIL_QUEUE);
+
     this.process();
   }
 
-  addForgotPasswordToQueue(data: ForgotPassword, opt?: Bull.JobOptions) {
-    void this.queue.add(NOTIFICATION_FORGOT_PASSWORD, data, opt);
+  addPasswordChangedToQueue(param: Notification, opt?: JobOptions): void {
+    void this.queue.add(NOTIFICATION_PASSWORD_CHANGED, param, opt);
   }
 
-  private process() {
+  addPasswordResetToQueue(param: Notification, opt?: JobOptions): void {
+    void this.queue.add(NOTIFICATION_PASSWORD_RESET, param, opt);
+  }
+
+  addRegistrationToQueue(param: Notification, opt?: JobOptions): void {
+    void this.queue.add(NOTIFICATION_REGISTRATION, param, opt);
+  }
+
+  addVerificationToQueue(param: Notification, opt?: JobOptions): void {
+    void this.queue.add(NOTIFICATION_VERIFICATION, param, opt);
+  }
+
+  protected process() {
     EventEmitter.once('start', () => {
       void this.queue.process(
-        NOTIFICATION_FORGOT_PASSWORD,
-        async (job: Bull.Job<ForgotPassword>) => {
-          try {
-            const { email, token } = job.data;
+        NOTIFICATION_PASSWORD_RESET,
+        (job: Job<Notification>) => this.passwordReset(job),
+      );
+      void this.queue.process(NOTIFICATION_REGISTRATION, this.registration);
 
-            if (email) {
-              void this.emailQueue.addSendMessageToQueue({
-                email,
-                subject: i18n()['email.forgotPassword'],
-                html: StringHelper.replace(i18n()['email.token'], { token }),
-              });
-            }
+      void this.queue.process(
+        NOTIFICATION_VERIFICATION,
+        (job: Job<Notification>) => this.verification(job),
+      );
 
-            await job.progress(100);
-
-            return await Promise.resolve();
-          } catch (err) {
-            this.handleError(err);
-
-            return Promise.reject(err);
-          }
-        },
+      void this.queue.process(
+        NOTIFICATION_PASSWORD_CHANGED,
+        (job: Job<Notification>) => this.passwordChange(job),
       );
     });
+  }
+
+  private async passwordChange(job: Job<Notification>) {
+    try {
+      console.log('passwordChange');
+      const { email, data } = job.data;
+
+      if (email) {
+        void this.emailQueue.addSendMessageToQueue({
+          to: email,
+          template: Template.PASSWORD_CHANGED,
+          data,
+        });
+      }
+
+      await job.progress(100);
+
+      return await Promise.resolve();
+    } catch (err) {
+      this.handleError(err);
+
+      return Promise.reject(err);
+    }
+  }
+
+  private async passwordReset(job: Job<Notification>) {
+    try {
+      const { email, data } = job.data;
+
+      if (email) {
+        void this.emailQueue.addSendMessageToQueue({
+          to: email,
+          template: Template.PASSWORD_RESET,
+          data,
+        });
+      }
+
+      await job.progress(100);
+
+      return await Promise.resolve();
+    } catch (err) {
+      this.handleError(err);
+
+      return Promise.reject(err);
+    }
+  }
+
+  private async registration(job: Job<Notification>) {
+    try {
+      const { email, data } = job.data;
+
+      if (email) {
+        void this.emailQueue.addSendMessageToQueue({
+          to: email,
+          template: Template.REGISTRATION,
+          data,
+        });
+      }
+
+      await job.progress(100);
+
+      return await Promise.resolve();
+    } catch (err) {
+      this.handleError(err);
+
+      return Promise.reject(err);
+    }
+  }
+
+  private async verification(job: Job<Notification>) {
+    try {
+      const { email, data } = job.data;
+
+      if (email) {
+        void this.emailQueue.addSendMessageToQueue({
+          to: email,
+          template: Template.EMAIL_VERIFICATION,
+          data: { ...data, time: EXPIRED_OTP },
+        });
+      }
+
+      await job.progress(100);
+
+      return await Promise.resolve();
+    } catch (err) {
+      this.handleError(err);
+
+      return Promise.reject(err);
+    }
   }
 }

@@ -42,11 +42,11 @@ export default class AuthService extends ServiceCore implements IAuthService {
   async forgotPassword({ email }: ForgotPasswordRequest) {
     const { id } = await this.userService.getOneOrFail({ email });
 
-    const emailOTP = this.cryptoService.generateUUID();
+    const resetPasswordOTP = this.cryptoService.generateUUID();
 
     const token = this.cryptoService.signJWT(
       {
-        jti: emailOTP,
+        jti: resetPasswordOTP,
         sub: `${id}`,
       },
       JwtConfig.secretToken,
@@ -55,8 +55,11 @@ export default class AuthService extends ServiceCore implements IAuthService {
       },
     );
 
-    await this.userService.update({ id }, { emailOTP });
-    void this.notificationQueue.addForgotPasswordToQueue({ token, email });
+    await this.userService.update({ id }, { resetPasswordOTP });
+    void this.notificationQueue.addPasswordResetToQueue({
+      data: { token },
+      email,
+    });
   }
 
   async login({ email, password }: LoginRequest, ctx: Context) {
@@ -102,9 +105,10 @@ export default class AuthService extends ServiceCore implements IAuthService {
 
     try {
       await this.userService.update(
-        { email, emailOTP: jti },
+        { email, resetPasswordOTP: jti },
         { password: password },
       );
+      void this.notificationQueue.addPasswordChangedToQueue({ email });
     } catch {
       throw ExceptionHelper.getError(HttpException.UNPROCESSABLE_ENTITY, {
         errors: { token: i18n()['validate.token.resetPassword'] },

@@ -27,10 +27,6 @@ export default class UserEntity extends EntityCore<IUser> implements IUser {
   })
   email?: string;
 
-  @Index()
-  @Column('varchar', { nullable: true })
-  emailOTP?: string;
-
   @Column('bool', { default: true })
   isActive = true;
 
@@ -44,6 +40,10 @@ export default class UserEntity extends EntityCore<IUser> implements IUser {
     cascade: true,
   })
   profile?: ProfileEntity;
+
+  @Index()
+  @Column('varchar', { nullable: true })
+  resetPasswordOTP?: string;
 
   get payload() {
     return {

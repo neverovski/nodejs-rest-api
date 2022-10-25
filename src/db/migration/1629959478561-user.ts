@@ -35,7 +35,7 @@ export class User1629959478561 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'emailOTP',
+            name: 'resetPasswordOTP',
             type: 'varchar',
             isNullable: true,
           },
@@ -76,7 +76,7 @@ export class User1629959478561 implements MigrationInterface {
     ]);
 
     await queryRunner.createIndices(DB_TABLE_USER, [
-      new TableIndex({ columnNames: ['emailOTP'] }),
+      new TableIndex({ columnNames: ['resetPasswordOTP'] }),
     ]);
   }
 }
