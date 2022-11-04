@@ -55,13 +55,16 @@ $ npm run migrate:create --name=<NAME>
 | **src/config/**        | Application configuration                               |
 | **src/core/**          | Reusable utilises and library source code like a logger |
 | **src/db/**            | DB connect and migration                                |
+| **src/helpers/**       | DB connect and migration                                |
+| **src/lib/**           | DB connect and migration                                |
 | **src/middleware/**    | Express Middlewares like error handler feature          |
 | **src/modules/**       | Express Middlewares like error handler feature          |
 | **src/providers/**     | Express Middlewares like error handler feature          |
+| **src/templates/**     | Express Middlewares like error handler feature          |
 | **src/utils/**         | Express Middlewares like error handler feature          |
-| **src/utils/helpers/** | Express Middlewares like error handler feature          |
 | **build/**             | Compiled source files will be placed here               |
 | **tests/**             | Test cases will be placed here                          |
+| **tests/e2e/**         | Unit Test cases will be placed here                     |
 | **tests/unit/**        | Unit Test cases will be placed here                     |
 | **tests/integration/** | API routes (Integration) Test cases will be placed here |
 

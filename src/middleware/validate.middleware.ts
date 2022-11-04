@@ -6,9 +6,8 @@ import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { JSONSchema7 } from 'json-schema';
 
 import { MiddlewareCore } from '@core';
-import { IJsonSchema } from '@core/schema';
-import { HttpException } from '@utils';
-import { AjvHelper, ExceptionHelper, StringHelper } from '@utils/helpers';
+import { AjvHelper, StringHelper } from '@helpers';
+import { Exception, HttpCode, IJsonSchema } from '@lib';
 
 class ValidateMiddleware extends MiddlewareCore {
   protected ajv: Ajv;
@@ -41,10 +40,11 @@ class ValidateMiddleware extends MiddlewareCore {
         await this.validate(schemas.params, req.params);
         await this.validate(schemas.query, req.query);
         await this.validate(schemas.body, req.body);
+
         next();
       } catch (errors) {
         res.status(422).json(
-          ExceptionHelper.getOk(HttpException.UNPROCESSABLE_ENTITY, {
+          Exception.getOk(HttpCode.UNPROCESSABLE_ENTITY, {
             errors: errors as { [key: string]: string },
           }),
         );

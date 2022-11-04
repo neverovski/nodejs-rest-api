@@ -1,7 +1,8 @@
 import { Response } from 'express';
 
-import { HttpException, HttpStatus, TransformDTO } from '@utils';
-import { CookieHelper, ExceptionHelper, MappingHelper } from '@utils/helpers';
+import { CookieHelper, MappingHelper } from '@helpers';
+import { Exception, HttpCode, HttpStatus } from '@lib';
+import { TransformDTO } from '@utils';
 
 export default class ControllerCore {
   protected deleteCookie<T extends object>(res: Response, cookies: T) {
@@ -15,7 +16,7 @@ export default class ControllerCore {
     const { data, options, dto } = ctx || {};
 
     if (!data && ctx?.status === HttpStatus.OK) {
-      throw ExceptionHelper.getError(HttpException.NOT_FOUND);
+      throw Exception.getError(HttpCode.NOT_FOUND);
     }
 
     const status = !ctx ? HttpStatus.NoContent : ctx?.status || HttpStatus.OK;

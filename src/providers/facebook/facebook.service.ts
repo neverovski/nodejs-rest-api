@@ -1,16 +1,14 @@
 import axios from 'axios';
-import { singleton } from 'tsyringe';
 
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
+import { Exception, HttpCode } from '@lib';
 import { PlatformProvider } from '@modules/platform';
-import { FACEBOOK_LINK, HttpException, SocialNetwork } from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
+import { FACEBOOK_LINK, SocialNetwork } from '@utils';
 
 import { FacebookProfile } from './facebook.type';
 import { IFacebookService } from './interface';
 
-@singleton()
 export default class FacebookService
   extends ServiceCore
   implements IFacebookService
@@ -46,7 +44,7 @@ export default class FacebookService
     } catch (err) {
       this.handleError(err);
 
-      throw ExceptionHelper.getError(HttpException.EXTERNAL);
+      throw Exception.getError(HttpCode.EXTERNAL);
     }
   }
 }

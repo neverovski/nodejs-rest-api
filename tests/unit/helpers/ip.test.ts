@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 
-import { IPHelper } from '@utils/helpers';
-
+import { IPHelper } from '../../../src/helpers';
 import { ReqData } from '../data';
 
 describe('IPHelper.getIP - Function Test', () => {

@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 
-import { UserAgentHelper } from '@utils/helpers';
-
+import { UserAgentHelper } from '../../../src/helpers';
 import { UserAgentData } from '../data';
 
 describe('UserAgentHelper.getBrowser - Function Test', () => {

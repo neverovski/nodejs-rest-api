@@ -1,6 +1,6 @@
 import { Logger as LoggerOrm } from 'typeorm';
 
-import { Logger } from '@core/logger';
+import { Logger } from '@lib';
 import { LoggerType } from '@utils';
 
 export default class TypeormLogger implements LoggerOrm {
@@ -26,11 +26,13 @@ export default class TypeormLogger implements LoggerOrm {
     }
   }
 
-  logMigration(info: string) {
-    Logger.debug({ message: 'DB migration', info, type: LoggerType.DB });
+  logMigration(_info: string) {
+    console.log('logQuery:', _info);
+    // Logger.debug({ message: 'DB migration', info, type: LoggerType.DB });
   }
 
   logQuery(query: string, parameters?: any[]) {
+    console.log('logQuery:', query);
     const info =
       query +
       (parameters && parameters.length
@@ -69,12 +71,13 @@ export default class TypeormLogger implements LoggerOrm {
     });
   }
 
-  logSchemaBuild(info: string) {
-    Logger.debug({
-      message: 'DB schema build',
-      info,
-      type: LoggerType.DB,
-    });
+  logSchemaBuild(_info: string) {
+    console.log('logSchemaBuild:', _info);
+    // Logger.debug({
+    //   message: 'DB schema build',
+    //   info,
+    //   type: LoggerType.DB,
+    // });
   }
 
   protected stringify(parameters: any[]) {

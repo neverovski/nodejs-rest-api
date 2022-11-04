@@ -1,6 +1,6 @@
-import { Config } from '@core/config';
+import { ConfigInstance } from './instance';
 
-class SeqConfig extends Config {
+class SeqConfig extends ConfigInstance {
   readonly apiKey: string;
   readonly monitoring: boolean;
   readonly serverUrl: string;

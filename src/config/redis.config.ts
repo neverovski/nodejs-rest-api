@@ -1,6 +1,6 @@
-import { Config } from '@core/config';
+import { ConfigInstance } from './instance';
 
-class RedisConfig extends Config {
+class RedisConfig extends ConfigInstance {
   readonly host: string;
   readonly password: string;
   readonly port: number;

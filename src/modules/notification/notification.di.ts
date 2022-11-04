@@ -1,10 +1,10 @@
 import { container } from 'tsyringe';
 
-import { INotificationQueue } from './interface';
-import NotificationQueue from './notification.queue';
+import { INotificationService } from './interface';
+import NotificationService from './notification.service';
 import { NotificationInject } from './notification.type';
 
-container.registerInstance<INotificationQueue>(
-  NotificationInject.NOTIFICATION_QUEUE,
-  new NotificationQueue(),
+container.register<INotificationService>(
+  NotificationInject.NOTIFICATION_SERVICE,
+  NotificationService,
 );

@@ -2,9 +2,9 @@ import { inject, injectable } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
-import { CryptoInject, ICryptoService } from '@providers/crypto';
-import { HttpException, TokenType } from '@utils';
-import { DateHelper, ExceptionHelper } from '@utils/helpers';
+import { DateHelper } from '@helpers';
+import { Crypto, Exception, HttpCode } from '@lib';
+import { TokenType } from '@utils';
 
 import {
   AccessTokenRequest,
@@ -23,7 +23,6 @@ export default class TokenService extends ServiceCore implements ITokenService {
   constructor(
     @inject(TokenInject.TOKEN_REPOSITORY)
     private repository: IRefreshTokenRepository,
-    @inject(CryptoInject.CRYPTO_SERVICE) private cryptoService: ICryptoService,
   ) {
     super();
 
@@ -31,10 +30,10 @@ export default class TokenService extends ServiceCore implements ITokenService {
   }
 
   generateAccessToken(body: AccessTokenRequest) {
-    return this.cryptoService.signJWTAsync(
+    return Crypto.signJWTAsync(
       {
         ...body,
-        jti: this.cryptoService.generateUUID(),
+        jti: Crypto.generateUUID(),
         sub: String(body.userId),
         typ: this.typeToken,
       },
@@ -48,13 +47,13 @@ export default class TokenService extends ServiceCore implements ITokenService {
   async generateRefreshToken(
     body: Omit<RefreshToken, 'jti' | 'expiredAt'>,
   ): Promise<string> {
-    const jti = this.cryptoService.generateUUID();
+    const jti = Crypto.generateUUID();
     const ms = DateHelper.toMs(JwtConfig.expiresInRefreshToken);
     const expiredAt = DateHelper.addMillisecondToDate(new Date(), ms);
 
     await this.repository.create({ ...body, jti, expiredAt });
 
-    return this.cryptoService.signJWT(
+    return Crypto.signJWT(
       {
         sub: String(body.userId),
         jti,
@@ -81,11 +80,11 @@ export default class TokenService extends ServiceCore implements ITokenService {
     const refreshTokenFromDB = await this.getRefreshTokenFromPayload(payload);
 
     if (refreshTokenFromDB?.isRevoked) {
-      throw ExceptionHelper.getError(HttpException.REFRESH_TOKEN_EXPIRED);
+      throw Exception.getError(HttpCode.REFRESH_TOKEN_EXPIRED);
     }
 
     if (!payload?.sub) {
-      throw ExceptionHelper.getError(HttpException.TOKEN_MALFORMED);
+      throw Exception.getError(HttpCode.TOKEN_MALFORMED);
     }
 
     return payload;
@@ -99,7 +98,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     token: string,
   ): Promise<RefreshTokenPayload> {
     try {
-      return await this.cryptoService.verifyJWTAsync<RefreshTokenPayload>(
+      return await Crypto.verifyJWTAsync<RefreshTokenPayload>(
         token,
         JwtConfig.secretRefreshToken,
       );
@@ -114,7 +113,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     sub,
   }: RefreshTokenPayload): Promise<RefreshToken> {
     if (!jti && !sub) {
-      throw ExceptionHelper.getError(HttpException.TOKEN_MALFORMED);
+      throw Exception.getError(HttpCode.TOKEN_MALFORMED);
     }
 
     return this.repository.findOneOrFail({

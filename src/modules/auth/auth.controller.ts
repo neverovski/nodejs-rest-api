@@ -2,10 +2,8 @@ import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 
 import { ControllerCore } from '@core';
-import { i18n } from '@lib';
+import { Exception, HttpCode, i18n } from '@lib';
 import { PlatformRequest } from '@modules/platform';
-import { HttpException } from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
 
 import {
   AuthInject,
@@ -55,7 +53,7 @@ export default class AuthController extends ControllerCore {
     await this.service.forgotPassword(req.body);
 
     this.response(res, {
-      data: ExceptionHelper.getOk(HttpException.OK, {
+      data: Exception.getOk(HttpCode.OK, {
         message: i18n()['message.passwordReset.sentToEmail'],
       }),
     });
@@ -107,7 +105,7 @@ export default class AuthController extends ControllerCore {
    *        - BearerAuth: []
    */
   async logout(req: Request, res: Response) {
-    const { userId } = req.user as Required<UserContext>;
+    const { userId } = req.user;
 
     await this.service.logout({ userId });
 
@@ -197,7 +195,7 @@ export default class AuthController extends ControllerCore {
     await this.service.resetPassword(req.body);
 
     this.response(res, {
-      data: ExceptionHelper.getOk(HttpException.OK, {
+      data: Exception.getOk(HttpCode.OK, {
         message: i18n()['message.passwordReset.successfully'],
       }),
     });

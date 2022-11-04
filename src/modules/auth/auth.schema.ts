@@ -1,6 +1,5 @@
-import { EMAIL_PROPERTY, IJsonSchema } from '@core/schema';
+import { IJsonSchema, Schema } from '@lib';
 import { SocialNetwork } from '@utils';
-import { SchemaHelper } from '@utils/helpers';
 
 export const ForgotPasswordSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },
@@ -11,7 +10,7 @@ export const ForgotPasswordSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['email'],
     properties: {
-      ...EMAIL_PROPERTY,
+      ...Schema.getEmail(),
     },
   },
 };
@@ -25,8 +24,8 @@ export const LoginSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['email', 'password'],
     properties: {
-      ...EMAIL_PROPERTY,
-      ...SchemaHelper.getPassword(),
+      ...Schema.getEmail(),
+      ...Schema.getPassword(),
     },
   },
 };
@@ -39,7 +38,7 @@ export const RefreshTokenSchema: IJsonSchema = {
     type: 'object',
     additionalProperties: false,
     properties: {
-      ...SchemaHelper.getString('refreshToken'),
+      ...Schema.getString('refreshToken'),
     },
   },
 };
@@ -59,8 +58,8 @@ export const PlatformSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['token', 'platform'],
     properties: {
-      ...SchemaHelper.getEnum('platform', SocialNetwork),
-      ...SchemaHelper.getString('token'),
+      ...Schema.getEnum('platform', SocialNetwork),
+      ...Schema.getString('token'),
     },
   },
 };
@@ -74,8 +73,8 @@ export const ResetPasswordSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['token', 'password'],
     properties: {
-      ...SchemaHelper.getString('token'),
-      ...SchemaHelper.getPassword(),
+      ...Schema.getString('token'),
+      ...Schema.getPassword(),
     },
   },
 };

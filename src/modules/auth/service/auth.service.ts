@@ -2,17 +2,18 @@ import { inject, injectable } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
-import { i18n } from '@lib';
-import { INotificationQueue, NotificationInject } from '@modules/notification';
+import { ValidateHelper } from '@helpers';
+import { Crypto, Exception, HttpCode, TemplateType, i18n } from '@lib';
+import {
+  INotificationService,
+  NotificationInject,
+} from '@modules/notification';
 import {
   IPlatformService,
   PlatformInject,
   PlatformRequest,
 } from '@modules/platform';
 import { IUserService, UserInject } from '@modules/user';
-import { CryptoInject, ICryptoService } from '@providers/crypto';
-import { HttpException } from '@utils';
-import { ExceptionHelper, ValidateHelper } from '@utils/helpers';
 
 import {
   AccessTokenPayload,
@@ -30,9 +31,8 @@ export default class AuthService extends ServiceCore implements IAuthService {
   constructor(
     @inject(TokenInject.TOKEN_SERVICE) private tokenService: ITokenService,
     @inject(UserInject.USER_SERVICE) private userService: IUserService,
-    @inject(CryptoInject.CRYPTO_SERVICE) private cryptoService: ICryptoService,
-    @inject(NotificationInject.NOTIFICATION_QUEUE)
-    private notificationQueue: INotificationQueue,
+    @inject(NotificationInject.NOTIFICATION_SERVICE)
+    private notificationService: INotificationService,
     @inject(PlatformInject.PLATFORM_SERVICE)
     private platformService: IPlatformService,
   ) {
@@ -42,9 +42,9 @@ export default class AuthService extends ServiceCore implements IAuthService {
   async forgotPassword({ email }: ForgotPasswordRequest) {
     const { id } = await this.userService.getOneOrFail({ email });
 
-    const resetPasswordOTP = this.cryptoService.generateUUID();
+    const resetPasswordOTP = Crypto.generateUUID();
 
-    const token = this.cryptoService.signJWT(
+    const token = Crypto.signJWT(
       {
         jti: resetPasswordOTP,
         sub: `${id}`,
@@ -56,9 +56,10 @@ export default class AuthService extends ServiceCore implements IAuthService {
     );
 
     await this.userService.update({ id }, { resetPasswordOTP });
-    void this.notificationQueue.addPasswordResetToQueue({
+    void this.notificationService.addToQueue({
       data: { token },
       email,
+      template: TemplateType.PASSWORD_RESET,
     });
   }
 
@@ -66,7 +67,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     const user = await this.userService.getOne({ email });
 
     if (!user || !ValidateHelper.credentials(password, user?.password)) {
-      throw ExceptionHelper.getError(HttpException.INVALID_CREDENTIALS);
+      throw Exception.getError(HttpCode.INVALID_CREDENTIALS);
     }
 
     return this.tokenService.getToken({ id: user.id, ...user?.payload }, ctx);
@@ -88,7 +89,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     const payload = await this.tokenService.resolveRefreshToken(refreshToken);
 
     if (!payload?.sub) {
-      throw ExceptionHelper.getError(HttpException.TOKEN_MALFORMED);
+      throw Exception.getError(HttpCode.TOKEN_MALFORMED);
     }
 
     const user = await this.userService.getOneOrFail({ id: +payload.sub });
@@ -97,20 +98,22 @@ export default class AuthService extends ServiceCore implements IAuthService {
   }
 
   async resetPassword({ password, token }: ResetPasswordRequest) {
-    const { jti, email } =
-      await this.cryptoService.verifyJWTAsync<AccessTokenPayload>(
-        token,
-        JwtConfig.secretToken,
-      );
+    const { jti, email } = await Crypto.verifyJWTAsync<AccessTokenPayload>(
+      token,
+      JwtConfig.secretToken,
+    );
 
     try {
       await this.userService.update(
         { email, resetPasswordOTP: jti },
         { password: password },
       );
-      void this.notificationQueue.addPasswordChangedToQueue({ email });
+      void this.notificationService.addToQueue({
+        email,
+        template: TemplateType.PASSWORD_CHANGED,
+      });
     } catch {
-      throw ExceptionHelper.getError(HttpException.UNPROCESSABLE_ENTITY, {
+      throw Exception.getError(HttpCode.UNPROCESSABLE_ENTITY, {
         errors: { token: i18n()['validate.token.resetPassword'] },
       });
     }

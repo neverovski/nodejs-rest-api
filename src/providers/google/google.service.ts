@@ -1,15 +1,13 @@
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
-import { singleton } from 'tsyringe';
 
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
+import { Exception, HttpCode } from '@lib';
 import { PlatformProvider } from '@modules/platform';
-import { HttpException, SocialNetwork } from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
+import { SocialNetwork } from '@utils';
 
 import { IGoogleService } from './interface';
 
-@singleton()
 export default class GoogleService
   extends ServiceCore
   implements IGoogleService
@@ -39,7 +37,7 @@ export default class GoogleService
     } catch (err) {
       this.handleError(err);
 
-      throw ExceptionHelper.getError(HttpException.EXTERNAL);
+      throw Exception.getError(HttpCode.EXTERNAL);
     }
 
     if (data) {
@@ -59,6 +57,6 @@ export default class GoogleService
       };
     }
 
-    throw ExceptionHelper.getError(HttpException.EXTERNAL);
+    throw Exception.getError(HttpCode.EXTERNAL);
   }
 }

@@ -1,23 +1,12 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { container } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { MiddlewareCore } from '@core';
-import { CryptoInject, ICryptoService } from '@providers/crypto';
-import { HttpException, JWTPayload, Role } from '@utils';
-import { ExceptionHelper, TokenHelper } from '@utils/helpers';
+import { TokenHelper } from '@helpers';
+import { Crypto, Exception, HttpCode } from '@lib';
+import { Role } from '@utils';
 
 class AuthMiddleware extends MiddlewareCore {
-  private readonly cryptoService: ICryptoService;
-
-  constructor() {
-    super();
-
-    this.cryptoService = container.resolve<ICryptoService>(
-      CryptoInject.CRYPTO_SERVICE,
-    );
-  }
-
   handler(): RequestHandler {
     return async (req: Request, _res: Response, next: NextFunction) => {
       const accessToken =
@@ -26,13 +15,13 @@ class AuthMiddleware extends MiddlewareCore {
 
       req.user = Object.freeze({
         role: Role.ANONYMOUS,
-        email: '',
+        userId: 0,
       });
 
       if (accessToken) {
         try {
           const { userId, email, role } =
-            await this.cryptoService.verifyJWTAsync<JWTPayload>(
+            await Crypto.verifyJWTAsync<JwtPayload>(
               accessToken,
               JwtConfig.secretAccessToken,
             );
@@ -45,7 +34,7 @@ class AuthMiddleware extends MiddlewareCore {
         }
       }
 
-      return next(ExceptionHelper.getError(HttpException.TOKEN_NOT_PROVIDED));
+      return next(Exception.getError(HttpCode.TOKEN_NOT_PROVIDED));
     };
   }
 }

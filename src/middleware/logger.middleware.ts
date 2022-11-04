@@ -5,9 +5,9 @@ import pino from 'express-pino-logger';
 
 import { AppConfig } from '@config';
 import { MiddlewareCore } from '@core';
-import { Logger } from '@core/logger';
+import { IPHelper } from '@helpers';
+import { Logger } from '@lib';
 import { ENV_PRODUCTION, LoggerType } from '@utils';
-import { IPHelper } from '@utils/helpers';
 
 class LoggerMiddleware extends MiddlewareCore {
   handler(): RequestHandler {

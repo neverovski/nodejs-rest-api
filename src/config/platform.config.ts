@@ -1,4 +1,3 @@
-import { Config } from '@core/config';
 import {
   AppleConfig,
   FacebookConfig,
@@ -6,7 +5,9 @@ import {
   GoogleConfig,
 } from '@utils';
 
-class PlatformConfig extends Config {
+import { ConfigInstance } from './instance';
+
+class PlatformConfig extends ConfigInstance {
   readonly apple: AppleConfig;
   readonly facebook: FacebookConfig;
   readonly github: GitHubConfig;

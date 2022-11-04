@@ -1,16 +1,14 @@
 import Bull from 'bull';
 import { container } from 'tsyringe';
 
+import { DateHelper, EventEmitter } from '@helpers';
 import { Queue } from '@lib';
-import { DateHelper, EventEmitter } from '@utils/helpers';
 
 import { EMAIL_MESSAGE, EMAIL_QUEUE } from './email.constant';
 import { EmailInject, EmailMessage } from './email.type';
 import { IEmailQueue, IEmailService } from './interface';
 
 export default class EmailQueue extends Queue implements IEmailQueue {
-  private readonly emailService: IEmailService;
-
   constructor() {
     super(EMAIL_QUEUE, {
       defaultJobOptions: {
@@ -23,18 +21,18 @@ export default class EmailQueue extends Queue implements IEmailQueue {
       },
     });
 
-    this.emailService = container.resolve<IEmailService>(
-      EmailInject.EMAIL_SERVICE,
-    );
+    this.start();
+  }
 
-    this.process();
+  private get emailService() {
+    return container.resolve<IEmailService>(EmailInject.EMAIL_SERVICE);
   }
 
   addSendMessageToQueue(data: EmailMessage, opt?: Bull.JobOptions) {
     void this.queue.add(EMAIL_MESSAGE, data, opt);
   }
 
-  private process() {
+  private start() {
     EventEmitter.once('start', () => {
       void this.queue.process(
         EMAIL_MESSAGE,

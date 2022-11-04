@@ -1,6 +1,6 @@
-import { Config } from '@core/config';
+import { ConfigInstance } from './instance';
 
-class JwtConfig extends Config {
+class JwtConfig extends ConfigInstance {
   readonly expiresInAccessToken: string;
   readonly expiresInRefreshToken: string;
   readonly expiresInToken: string;

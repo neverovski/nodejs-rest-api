@@ -1,1 +1,1 @@
-export * from './notification-queue.interface';
+export * from './notification-service.interface';

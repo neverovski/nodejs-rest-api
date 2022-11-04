@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 
-import { TokenHelper } from '@utils/helpers';
-
+import { TokenHelper } from '../../../src/helpers';
 import { ReqData } from '../data';
 
 describe('TokenHelper.getFromHeader - Function Test', () => {

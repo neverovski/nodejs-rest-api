@@ -1,7 +1,8 @@
-import { Config } from '@core/config';
 import { ENV_CLI, ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST } from '@utils';
 
-class AppConfig extends Config {
+import { ConfigInstance } from './instance';
+
+class AppConfig extends ConfigInstance {
   readonly domain: string;
   readonly env: string;
   readonly host: string;

@@ -1,16 +1,14 @@
 import axios from 'axios';
-import { singleton } from 'tsyringe';
 
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
+import { Exception, HttpCode } from '@lib';
 import { PlatformProvider } from '@modules/platform';
-import { HttpException, SocialNetwork } from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
+import { SocialNetwork } from '@utils';
 
 import { GitHubProfile } from './github.type';
 import { IGitHubService } from './interface';
 
-@singleton()
 export default class GitHubService
   extends ServiceCore
   implements IGitHubService
@@ -50,7 +48,7 @@ export default class GitHubService
     } catch (err) {
       this.handleError(err);
 
-      throw ExceptionHelper.getError(HttpException.EXTERNAL);
+      throw Exception.getError(HttpCode.EXTERNAL);
     }
   }
 }

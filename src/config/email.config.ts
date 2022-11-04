@@ -1,6 +1,6 @@
-import { Config } from '@core/config';
+import { ConfigInstance } from './instance';
 
-class EmailConfig extends Config {
+class EmailConfig extends ConfigInstance {
   readonly driver: string;
   readonly encryption: string;
   readonly host: string;

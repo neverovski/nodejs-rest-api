@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { StringHelper } from '@utils/helpers';
+import { StringHelper } from '../../../src/helpers';
 
 describe('StringHelper.capitalize - Function Test', () => {
   it('Should return - What is Lorem Ipsum?', () => {

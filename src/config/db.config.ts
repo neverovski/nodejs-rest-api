@@ -1,7 +1,8 @@
-import { Config } from '@core/config';
 import { CACHE_TIME } from '@utils';
 
-class DBConfig extends Config {
+import { ConfigInstance } from './instance';
+
+class DBConfig extends ConfigInstance {
   readonly cacheTime: number;
   readonly charset: string;
   readonly client: string;

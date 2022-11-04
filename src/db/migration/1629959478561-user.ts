@@ -1,10 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableIndex,
-  TableUnique,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 import { DB_TABLE_USER, DB_UQ_USER_EMAIL } from '@utils';
 
@@ -35,7 +29,7 @@ export class User1629959478561 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'resetPasswordOTP',
+            name: 'resetPasswordCode',
             type: 'varchar',
             isNullable: true,
           },
@@ -65,18 +59,18 @@ export class User1629959478561 implements MigrationInterface {
             isNullable: true,
           },
         ],
+        uniques: [
+          {
+            name: DB_UQ_USER_EMAIL,
+            columnNames: ['email'],
+          },
+        ],
+        indices: [
+          {
+            columnNames: ['resetPasswordCode'],
+          },
+        ],
       }),
     );
-
-    await queryRunner.createUniqueConstraints(DB_TABLE_USER, [
-      new TableUnique({
-        name: DB_UQ_USER_EMAIL,
-        columnNames: ['email'],
-      }),
-    ]);
-
-    await queryRunner.createIndices(DB_TABLE_USER, [
-      new TableIndex({ columnNames: ['resetPasswordOTP'] }),
-    ]);
   }
 }

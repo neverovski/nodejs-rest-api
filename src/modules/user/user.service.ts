@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 
 import { ServiceCore } from '@core';
-import { HttpException } from '@utils';
-import { ExceptionHelper, ValidateHelper } from '@utils/helpers';
+import { ValidateHelper } from '@helpers';
+import { Exception, HttpCode } from '@lib';
 
 import { IUserRepository, IUserService } from './interface';
 import { USER_RELATION } from './user.constant';
@@ -62,7 +62,7 @@ export default class UserService extends ServiceCore implements IUserService {
     });
 
     if (!ValidateHelper.credentials(oldPassword, password)) {
-      throw ExceptionHelper.getError(HttpException.INVALID_CREDENTIALS);
+      throw Exception.getError(HttpCode.INVALID_CREDENTIALS);
     }
 
     await this.repository.update({ id }, { password: newPassword });
