@@ -6,6 +6,7 @@ import { DateHelper } from '@helpers';
 import { Crypto, Exception, HttpCode } from '@lib';
 import { TokenType } from '@utils';
 
+import { IRefreshTokenRepository, ITokenService } from './interface';
 import {
   AccessTokenRequest,
   FullRefreshToken,
@@ -13,8 +14,7 @@ import {
   RefreshTokenPayload,
   TokenInject,
   TokenRequest,
-} from '../auth.type';
-import { IRefreshTokenRepository, ITokenService } from '../interface';
+} from './token.type';
 
 @injectable()
 export default class TokenService extends ServiceCore implements ITokenService {

@@ -13,18 +13,17 @@ import {
   PlatformInject,
   PlatformRequest,
 } from '@modules/platform';
+import { ITokenService, TokenInject } from '@modules/token';
 import { IUserService, UserInject } from '@modules/user';
 
 import {
-  AccessTokenPayload,
   ForgotPasswordRequest,
   LoginRequest,
   LogoutRequest,
   RefreshTokenRequest,
   ResetPasswordRequest,
-  TokenInject,
-} from '../auth.type';
-import { IAuthService, ITokenService } from '../interface';
+} from './auth.type';
+import { IAuthService } from './interface';
 
 @injectable()
 export default class AuthService extends ServiceCore implements IAuthService {
@@ -98,7 +97,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
   }
 
   async resetPassword({ password, token }: ResetPasswordRequest) {
-    const { jti, email } = await Crypto.verifyJWTAsync<AccessTokenPayload>(
+    const { jti, email } = await Crypto.verifyJWTAsync<JwtPayload>(
       token,
       JwtConfig.secretToken,
     );

@@ -5,7 +5,7 @@ import {
   RefreshTokenPayload,
   TokenRequest,
   TokenResponse,
-} from '../auth.type';
+} from '../token.type';
 
 export interface ITokenService {
   generateAccessToken(body: AccessTokenRequest): Promise<string>;

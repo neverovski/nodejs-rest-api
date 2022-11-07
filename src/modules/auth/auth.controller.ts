@@ -4,6 +4,7 @@ import { inject, injectable } from 'tsyringe';
 import { ControllerCore } from '@core';
 import { Exception, HttpCode, i18n } from '@lib';
 import { PlatformRequest } from '@modules/platform';
+import { TokenDTO } from '@modules/token';
 
 import {
   AuthInject,
@@ -12,7 +13,6 @@ import {
   RefreshTokenRequest,
   ResetPasswordRequest,
 } from './auth.type';
-import { TokenDTO } from './dto';
 import { IAuthService } from './interface';
 
 /**

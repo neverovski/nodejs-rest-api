@@ -1,4 +1,5 @@
 import { PlatformRequest } from '@modules/platform';
+import { TokenResponse } from '@modules/token';
 
 import {
   ForgotPasswordRequest,
@@ -6,7 +7,6 @@ import {
   LogoutRequest,
   RefreshTokenRequest,
   ResetPasswordRequest,
-  TokenResponse,
 } from '../auth.type';
 
 export interface IAuthService {

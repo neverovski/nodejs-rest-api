@@ -2,7 +2,7 @@ import {
   FullRefreshToken,
   RefreshToken,
   RefreshTokenOption,
-} from '../auth.type';
+} from '../token.type';
 
 export interface IRefreshTokenRepository {
   create(body: RefreshToken): Promise<FullRefreshToken>;
