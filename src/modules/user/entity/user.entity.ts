@@ -43,7 +43,7 @@ export default class UserEntity extends EntityCore<IUser> implements IUser {
 
   @Index()
   @Column('varchar', { nullable: true })
-  resetPasswordOTP?: string;
+  resetPasswordCode?: string;
 
   get payload() {
     return {

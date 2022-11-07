@@ -3,8 +3,7 @@ import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
 import { Exception, HttpCode } from '@lib';
-import { PlatformProvider } from '@modules/platform';
-import { SocialNetwork } from '@utils';
+import { PlatformPayload, SocialNetwork } from '@utils';
 
 import { IGoogleService } from './interface';
 
@@ -24,7 +23,7 @@ export default class GoogleService
     this.init();
   }
 
-  async getProfile(token: string): Promise<PlatformProvider> {
+  async getProfile(token: string): Promise<PlatformPayload> {
     let data: TokenPayload | undefined;
 
     try {

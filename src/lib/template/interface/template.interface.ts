@@ -1,5 +1,5 @@
-import { TemplateRequest, TemplateResponse } from '../template.type';
+import { TemplateOption, TemplateResponse } from '../template.type';
 
 export interface ITemplate {
-  getMessage(options: TemplateRequest): Promise<TemplateResponse>;
+  getMessage(options: TemplateOption): Promise<TemplateResponse>;
 }

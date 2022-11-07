@@ -52,3 +52,16 @@ export type TransformDTO<T, DTO> = {
   dto?: { new (): DTO };
   options?: ClassTransformOptions;
 };
+
+export type DBClient = 'mysql' | 'mariadb' | 'postgres';
+
+export type PlatformPayload = {
+  email?: Email;
+  name: SocialNetwork;
+  profile?: {
+    firstName?: string;
+    lastName?: string;
+  };
+  ssid: string;
+  url?: string;
+};

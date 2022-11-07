@@ -19,16 +19,13 @@ export default class ConfigInstance implements IConfig {
     return Join;
   }
 
-  set<T>(env: string, validator: Schema, defaultVal: T | null): T {
+  set<T>(env: string, validator: Schema, defaultVal?: T | null): T {
     let item: any;
 
     if (process.env[env] || process.env[env] === '') {
       item = process.env[env];
     } else {
-      if (defaultVal === undefined) {
-        throw new Error(`Missing default value "${env}".`);
-      }
-      item = defaultVal;
+      item = defaultVal ?? null;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

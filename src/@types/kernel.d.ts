@@ -2,6 +2,8 @@ type Id = {
   id: number;
 };
 
+type Email = string;
+
 type DateInfo = {
   createdAt: Date;
   updatedAt: Date;
@@ -9,10 +11,11 @@ type DateInfo = {
 
 type DateCtx = string | number | Date;
 
-type ExceptionType = {
+type ExceptionOption = {
   code: string;
   errors?: { [key: string]: string };
   message: string;
+  name?: string;
   status: number;
 };
 

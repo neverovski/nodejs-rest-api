@@ -91,4 +91,4 @@ export const CODE_RESPONSE = {
     message: `message.code.${HttpCode.DELETE_ERROR}`,
     status: HttpStatus.BadRequest,
   },
-} as Record<HttpCode, ExceptionType>;
+} as Record<HttpCode, ExceptionOption>;

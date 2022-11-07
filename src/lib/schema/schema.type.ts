@@ -14,12 +14,10 @@ export interface JSONSchemaCustom extends JSONSchema7 {
   transform?: string[];
 }
 
-export type OptionNumberSchema = {
-  maximum?: number;
-  minimum?: number;
-};
-
-export type OptionStringSchema = {
+export type SchemaOption = {
+  isNull?: boolean;
   maxLength?: number;
+  maximum?: number;
   minLength?: number;
+  minimum?: number;
 };

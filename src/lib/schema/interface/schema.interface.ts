@@ -1,8 +1,4 @@
-import {
-  JSONSchemaCustom,
-  OptionNumberSchema,
-  OptionStringSchema,
-} from '../schema.type';
+import { JSONSchemaCustom, SchemaOption } from '../schema.type';
 
 export interface ISchema {
   getBoolean(prop: string): { [prop: string]: JSONSchemaCustom };
@@ -10,21 +6,15 @@ export interface ISchema {
   getEnum(prop: string, value: object): { [prop: string]: JSONSchemaCustom };
   getInteger(
     prop: string,
-    opt?: OptionNumberSchema,
+    opt?: SchemaOption,
   ): { [prop: string]: JSONSchemaCustom };
   getNumber(
     prop: string,
-    opt?: OptionNumberSchema,
+    opt?: SchemaOption,
   ): { [key: string]: JSONSchemaCustom };
-  getObjectById(prop: string): { [prop: string]: JSONSchemaCustom };
-  getOrder(prop: string): JSONSchemaCustom;
   getPassword(prop: string): { [prop: string]: JSONSchemaCustom };
   getString(
     prop: string,
-    opt?: OptionStringSchema,
-  ): { [prop: string]: JSONSchemaCustom };
-  getStringAnyOf(
-    prop: string,
-    opt?: OptionStringSchema,
+    opt?: SchemaOption,
   ): { [prop: string]: JSONSchemaCustom };
 }

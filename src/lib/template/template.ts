@@ -7,12 +7,12 @@ import mem from 'mem';
 import * as Mustache from 'mustache';
 
 import { ITemplate } from './interface';
-import { TemplateRequest, TemplateResponse } from './template.type';
+import { TemplateOption, TemplateResponse } from './template.type';
 
 class Template implements ITemplate {
   private readTemplate = mem(this.readTemplateUnMemoized);
 
-  async getMessage(options: TemplateRequest): Promise<TemplateResponse> {
+  async getMessage(options: TemplateOption): Promise<TemplateResponse> {
     const layout = await this.readTemplate('layout.html');
     const template = await this.readTemplate(options.template);
 

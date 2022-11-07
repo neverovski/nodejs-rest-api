@@ -1,6 +1,17 @@
-import { IJsonSchema, Schema } from '@lib';
+import { IJsonSchema, JSONSchemaCustom, Schema } from '@lib';
+import { MAX_NAME_LENGTH } from '@utils';
 
-import { PROFILE_PROPERTY } from './user.constant';
+const PROFILE_PROPERTY = {
+  profile: {
+    type: 'object',
+    additionalProperties: false,
+    minProperties: 1,
+    properties: {
+      ...Schema.getString('firstName', { maxLength: MAX_NAME_LENGTH }),
+      ...Schema.getString('lastName', { maxLength: MAX_NAME_LENGTH }),
+    },
+  },
+} as { [key: string]: JSONSchemaCustom };
 
 export const CreateUserSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },

@@ -1,5 +1,5 @@
-import { PlatformProvider } from '@modules/platform';
+import { PlatformPayload } from '@utils';
 
 export interface IGoogleService {
-  getProfile(token: string): Promise<PlatformProvider>;
+  getProfile(token: string): Promise<PlatformPayload>;
 }

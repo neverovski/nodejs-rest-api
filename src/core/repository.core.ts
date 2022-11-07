@@ -66,10 +66,24 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
     }
   }
 
-  async update(entity: Entity, body: DeepPartial<Entity>): Promise<void> {
+  async save(
+    entity: Entity,
+    partialEntity: DeepPartial<Entity>,
+  ): Promise<void> {
     try {
-      this.orm.merge(entity, body);
+      this.orm.merge(entity, partialEntity);
       await this.orm.save(entity);
+    } catch (err) {
+      throw this.handleError(err);
+    }
+  }
+
+  async update(
+    query: DeepPartial<Entity>,
+    partialEntity: DeepPartial<Entity>,
+  ): Promise<void> {
+    try {
+      await this.orm.update(query, partialEntity);
     } catch (err) {
       throw this.handleError(err);
     }

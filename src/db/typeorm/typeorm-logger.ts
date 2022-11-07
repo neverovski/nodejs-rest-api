@@ -26,9 +26,8 @@ export default class TypeormLogger implements LoggerOrm {
     }
   }
 
-  logMigration(_info: string) {
-    console.log('logQuery:', _info);
-    // Logger.debug({ message: 'DB migration', info, type: LoggerType.DB });
+  logMigration(info: string) {
+    Logger.debug({ message: 'DB migration', info, type: LoggerType.DB });
   }
 
   logQuery(query: string, parameters?: any[]) {
@@ -71,13 +70,12 @@ export default class TypeormLogger implements LoggerOrm {
     });
   }
 
-  logSchemaBuild(_info: string) {
-    console.log('logSchemaBuild:', _info);
-    // Logger.debug({
-    //   message: 'DB schema build',
-    //   info,
-    //   type: LoggerType.DB,
-    // });
+  logSchemaBuild(info: string) {
+    Logger.debug({
+      message: 'DB schema build',
+      info,
+      type: LoggerType.DB,
+    });
   }
 
   protected stringify(parameters: any[]) {

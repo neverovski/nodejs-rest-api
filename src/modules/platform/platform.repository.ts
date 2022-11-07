@@ -1,10 +1,9 @@
 import { RepositoryCore } from '@core';
 import { FullUser } from '@modules/user';
-import { DB_TABLE_PROFILE, DB_TABLE_USER } from '@utils';
+import { DB_TABLE_PROFILE, DB_TABLE_USER, PlatformPayload } from '@utils';
 
 import { PlatformEntity } from './entity';
 import { IPlatformRepository } from './interface';
-import { PlatformProvider } from './platform.type';
 
 export default class PlatformRepository
   extends RepositoryCore<PlatformEntity>
@@ -19,8 +18,8 @@ export default class PlatformRepository
     ssid,
     url,
     profile,
-    ...user
-  }: PlatformProvider): Promise<{ userId: number }> {
+    email,
+  }: PlatformPayload): Promise<{ userId: number }> {
     try {
       return await this.orm.manager.transaction(async (manager) => {
         const queryRaw = `
@@ -33,7 +32,7 @@ export default class PlatformRepository
                 SELECT "id" FROM ${DB_TABLE_USER} WHERE email = $1`;
 
         const { id: userId } = await manager
-          .query(queryRaw, [user?.email || null, true])
+          .query(queryRaw, [email || null, true])
           .then((res: FullUser[]) => res[0] as FullUser);
 
         if (profile && Object.keys(profile).length) {

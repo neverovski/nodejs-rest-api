@@ -10,7 +10,7 @@ import ms from 'ms';
 
 import { FORMAT_DATE } from '@utils';
 
-// FIXME:
+// FIXME: function name
 export const parseISO = (date: DateCtx) =>
   typeof date === 'string' ? fnsParseISO(date) : date;
 

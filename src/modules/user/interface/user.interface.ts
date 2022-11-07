@@ -6,5 +6,5 @@ export interface IUser {
   isConfirmedEmail: boolean;
   password?: string;
   profile?: IProfile;
-  resetPasswordOTP?: string;
+  resetPasswordCode?: string;
 }

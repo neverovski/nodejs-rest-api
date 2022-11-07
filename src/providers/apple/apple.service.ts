@@ -3,8 +3,7 @@ import { JwksClient } from 'jwks-rsa';
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
 import { Crypto, Exception, HttpCode } from '@lib';
-import { PlatformProvider } from '@modules/platform';
-import { SocialNetwork } from '@utils';
+import { PlatformPayload, SocialNetwork } from '@utils';
 
 import { AppleKey, AppleTokenPayload } from './apple.type';
 import { IAppleService } from './interface';
@@ -20,7 +19,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
     this.init();
   }
 
-  async getProfile(token: string): Promise<PlatformProvider> {
+  async getProfile(token: string): Promise<PlatformPayload> {
     try {
       const data = await this.verify(token);
 

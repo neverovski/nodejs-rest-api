@@ -1,12 +1,10 @@
-import axios from 'axios';
-
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
+import { RequestHelper } from '@helpers';
 import { Exception, HttpCode } from '@lib';
-import { PlatformProvider } from '@modules/platform';
-import { SocialNetwork } from '@utils';
+import { PlatformPayload, SocialNetwork } from '@utils';
 
-import { GitHubProfile } from './github.type';
+import { GitHubResponse } from './github.type';
 import { IGitHubService } from './interface';
 
 export default class GitHubService
@@ -23,14 +21,19 @@ export default class GitHubService
     this.init();
   }
 
-  async getProfile(token: string): Promise<PlatformProvider> {
+  async getProfile(token: string): Promise<PlatformPayload> {
     try {
-      const { data } = await axios.get<GitHubProfile>(this.url, {
+      const config = {
         headers: {
           Accept: 'application/vnd.github+json',
           Authorization: `token ${token}`,
         },
-      });
+      };
+
+      const { data } = await RequestHelper.get<GitHubResponse>(
+        this.url,
+        config,
+      );
 
       return {
         ssid: data.id,

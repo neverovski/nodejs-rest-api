@@ -4,7 +4,7 @@ import { INotificationService } from './interface';
 import NotificationService from './notification.service';
 import { NotificationInject } from './notification.type';
 
-container.register<INotificationService>(
+container.registerInstance<INotificationService>(
   NotificationInject.NOTIFICATION_SERVICE,
-  NotificationService,
+  new NotificationService(),
 );

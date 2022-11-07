@@ -1,7 +1,7 @@
-import { ExceptionError } from '../class';
+import ExceptionError from '../exception.error';
 import { HttpCode } from '../exception.type';
 
 export interface IException {
-  getError(code: HttpCode, options?: Partial<ExceptionType>): ExceptionError;
-  getOk(code: HttpCode, options?: Partial<ExceptionType>): ExceptionType;
+  getError(code: HttpCode, options?: Partial<ExceptionOption>): ExceptionError;
+  getOk(code: HttpCode, options?: Partial<ExceptionOption>): ExceptionOption;
 }

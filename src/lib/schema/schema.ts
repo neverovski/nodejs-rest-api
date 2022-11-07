@@ -1,14 +1,10 @@
 import { StringHelper } from '@helpers';
-import { MAX_SORT_STRING_LENGTH, MIN_PASSWORD_LENGTH, SORT } from '@utils';
+import { MAX_SORT_STRING_LENGTH, MIN_PASSWORD_LENGTH } from '@utils';
 
 import { i18n } from '../i18n';
 
 import { ISchema } from './interface';
-import {
-  JSONSchemaCustom,
-  OptionNumberSchema,
-  OptionStringSchema,
-} from './schema.type';
+import { JSONSchemaCustom, SchemaOption } from './schema.type';
 
 class Schema implements ISchema {
   getBoolean(prop: string): { [prop: string]: JSONSchemaCustom } {
@@ -49,7 +45,7 @@ class Schema implements ISchema {
 
   getInteger(
     prop: string,
-    opt?: OptionNumberSchema,
+    opt?: SchemaOption,
   ): { [prop: string]: JSONSchemaCustom } {
     const minimum = opt?.minimum ?? 1;
     const maximum = opt?.maximum ?? 0;
@@ -74,7 +70,7 @@ class Schema implements ISchema {
 
   getNumber(
     prop: string,
-    opt?: OptionNumberSchema,
+    opt?: SchemaOption,
   ): { [prop: string]: JSONSchemaCustom } {
     const minimum = opt?.minimum ?? 1;
     const maximum = opt?.maximum ?? 0;
@@ -92,31 +88,6 @@ class Schema implements ISchema {
           maximum: StringHelper.replace(i18n()['validate.maximum'], {
             size: maximum,
           }),
-        },
-      },
-    };
-  }
-
-  getObjectById(prop: string): { [prop: string]: JSONSchemaCustom } {
-    return {
-      [prop]: {
-        type: ['object', 'null'],
-        properties: {
-          ...this.getInteger('id'),
-        },
-      },
-    };
-  }
-
-  getOrder(prop: string): JSONSchemaCustom {
-    return {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        [prop]: {
-          type: 'string',
-          enum: SORT,
-          transform: ['toUpperCase'],
         },
       },
     };
@@ -140,38 +111,13 @@ class Schema implements ISchema {
 
   getString(
     prop: string,
-    opt?: OptionStringSchema,
+    opt?: SchemaOption,
   ): { [prop: string]: JSONSchemaCustom } {
     const minLength = opt?.minLength ?? 1;
     const maxLength = opt?.maxLength ?? MAX_SORT_STRING_LENGTH;
 
-    return {
-      [prop]: {
-        type: 'string',
-        transform: ['trim'],
-        sanitize: 'escape',
-        minLength,
-        maxLength,
-        errorMessage: {
-          type: i18n()['validate.string'],
-          minLength: StringHelper.replace(i18n()['validate.minLength'], {
-            size: minLength,
-          }),
-          maxLength: StringHelper.replace(i18n()['validate.maxLength'], {
-            size: maxLength,
-          }),
-        },
-      },
-    };
-  }
-
-  getStringAnyOf(
-    prop: string,
-    opt?: OptionStringSchema,
-  ): { [prop: string]: JSONSchemaCustom } {
-    return {
-      [prop]: {
-        anyOf: [
+    const typeNull: JSONSchemaCustom[] = opt?.isNull
+      ? [
           {
             type: 'null',
           },
@@ -179,12 +125,28 @@ class Schema implements ISchema {
             type: 'string',
             maxLength: 0,
           },
+        ]
+      : [];
+
+    return {
+      [prop]: {
+        anyOf: [
+          ...typeNull,
           {
             type: 'string',
             transform: ['trim'],
             sanitize: 'escape',
-            minLength: opt?.minLength ?? 1,
-            maxLength: opt?.maxLength ?? MAX_SORT_STRING_LENGTH,
+            minLength,
+            maxLength,
+            errorMessage: {
+              type: i18n()['validate.string'],
+              minLength: StringHelper.replace(i18n()['validate.minLength'], {
+                size: minLength,
+              }),
+              maxLength: StringHelper.replace(i18n()['validate.maxLength'], {
+                size: maxLength,
+              }),
+            },
           },
         ],
       },

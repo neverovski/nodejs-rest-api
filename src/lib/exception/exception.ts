@@ -1,20 +1,20 @@
 import { i18n } from '../i18n';
 
-import { ExceptionError } from './class';
 import { CODE_RESPONSE } from './exception.constant';
+import ExceptionError from './exception.error';
 import { HttpCode } from './exception.type';
 import { IException } from './interface';
 
 class Exception implements IException {
-  getError(code: HttpCode, options?: Partial<ExceptionType>): ExceptionError {
+  getError(code: HttpCode, options?: Partial<ExceptionOption>): ExceptionError {
     return new ExceptionError(this.handleCode(code, options));
   }
 
-  getOk(code: HttpCode, options?: Partial<ExceptionType>): ExceptionType {
+  getOk(code: HttpCode, options?: Partial<ExceptionOption>): ExceptionOption {
     return this.handleCode(code, options);
   }
 
-  private handleCode(code: HttpCode, options?: Partial<ExceptionType>) {
+  private handleCode(code: HttpCode, options?: Partial<ExceptionOption>) {
     const response = CODE_RESPONSE[code];
 
     return {

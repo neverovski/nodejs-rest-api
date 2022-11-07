@@ -5,7 +5,7 @@ export enum TemplateType {
   REGISTRATION = 'user/registration',
 }
 
-export type TemplateRequest = {
+export type TemplateOption = {
   data?: Record<string, any>;
   isHTML?: boolean;
   isLayout?: boolean;

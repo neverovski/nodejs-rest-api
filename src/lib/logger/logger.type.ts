@@ -8,14 +8,9 @@ export type LoggerInitial = {
   stream?: DestinationStream;
 };
 
-export type LoggerCtxInfo = {
+export type LoggerCtx = {
   error?: Error | any;
   info?: string | any;
   message: string;
   type?: LoggerType;
 };
-
-export type LoggerCtxError = Required<
-  Pick<LoggerCtxInfo, 'message' | 'error'>
-> &
-  Pick<LoggerCtxInfo, 'type'>;

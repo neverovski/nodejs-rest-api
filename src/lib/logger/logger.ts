@@ -9,7 +9,7 @@ import { ENV_TEST, LoggerType } from '@utils';
 
 import { ILogger } from './interface';
 import { PRETTY_PRINT } from './logger.constant';
-import { LoggerCtxError, LoggerCtxInfo, LoggerInitial } from './logger.type';
+import { LoggerCtx, LoggerInitial } from './logger.type';
 
 export default class Logger implements ILogger {
   readonly pino: LoggerPino;
@@ -38,51 +38,39 @@ export default class Logger implements ILogger {
     this.pino = this.createPino();
   }
 
-  debug(data: LoggerCtxInfo): void {
+  debug({ message, ...ctx }: LoggerCtx): void {
     if (this.env !== ENV_TEST) {
-      const { message, ...obj } = data;
-
-      this.debugLogger.debug({ type: LoggerType.SERVER, ...obj }, message);
+      this.debugLogger.debug({ type: LoggerType.SERVER, ...ctx }, message);
     }
   }
 
-  error(data: LoggerCtxError): void {
+  error({ message, ...ctx }: LoggerCtx): void {
     if (this.env !== ENV_TEST) {
-      const { message, ...obj } = data;
-
-      this.errorLogger.error({ type: LoggerType.SERVER, ...obj }, message);
+      this.errorLogger.error({ type: LoggerType.SERVER, ...ctx }, message);
     }
   }
 
-  fatal(data: LoggerCtxError): void {
+  fatal({ message, ...ctx }: LoggerCtx): void {
     if (this.env !== ENV_TEST) {
-      const { message, ...obj } = data;
-
-      this.fatalLogger.fatal({ type: LoggerType.SERVER, ...obj }, message);
+      this.fatalLogger.fatal({ type: LoggerType.SERVER, ...ctx }, message);
     }
   }
 
-  info(data: LoggerCtxInfo): void {
+  info({ message, ...ctx }: LoggerCtx): void {
     if (this.env !== ENV_TEST) {
-      const { message, ...obj } = data;
-
-      this.infoLogger.info({ type: LoggerType.SERVER, ...obj }, message);
+      this.infoLogger.info({ type: LoggerType.SERVER, ...ctx }, message);
     }
   }
 
-  trace(data: LoggerCtxInfo): void {
+  trace({ message, ...ctx }: LoggerCtx): void {
     if (this.env !== ENV_TEST) {
-      const { message, ...obj } = data;
-
-      this.traceLogger.trace({ type: LoggerType.SERVER, ...obj }, message);
+      this.traceLogger.trace({ type: LoggerType.SERVER, ...ctx }, message);
     }
   }
 
-  warn(data: LoggerCtxError): void {
+  warn({ message, ...ctx }: LoggerCtx): void {
     if (this.env !== ENV_TEST) {
-      const { message, ...obj } = data;
-
-      this.warnLogger.warn({ type: LoggerType.SERVER, ...obj }, message);
+      this.warnLogger.warn({ type: LoggerType.SERVER, ...ctx }, message);
     }
   }
 

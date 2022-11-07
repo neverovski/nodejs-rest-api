@@ -1,12 +1,12 @@
-import { HttpCode, HttpStatus } from '../exception.type';
+import { HttpCode, HttpStatus } from './exception.type';
 
 export default class ExceptionError extends Error {
   readonly code: string;
-  readonly errors?: ExceptionType['errors'];
+  readonly errors?: ExceptionOption['errors'];
   readonly message: string;
   readonly status: number;
 
-  constructor(ctx?: Partial<ExceptionType>) {
+  constructor(ctx?: Partial<ExceptionOption>) {
     super();
 
     this.status = ctx?.status || HttpStatus.InternalServerError;

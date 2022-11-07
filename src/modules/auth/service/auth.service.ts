@@ -42,11 +42,11 @@ export default class AuthService extends ServiceCore implements IAuthService {
   async forgotPassword({ email }: ForgotPasswordRequest) {
     const { id } = await this.userService.getOneOrFail({ email });
 
-    const resetPasswordOTP = Crypto.generateUUID();
+    const resetPasswordCode = Crypto.generateUUID();
 
     const token = Crypto.signJWT(
       {
-        jti: resetPasswordOTP,
+        jti: resetPasswordCode,
         sub: `${id}`,
       },
       JwtConfig.secretToken,
@@ -55,7 +55,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
       },
     );
 
-    await this.userService.update({ id }, { resetPasswordOTP });
+    await this.userService.update({ id }, { resetPasswordCode });
     void this.notificationService.addToQueue({
       data: { token },
       email,
@@ -63,7 +63,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     });
   }
 
-  async login({ email, password }: LoginRequest, ctx: Context) {
+  async login({ email, password }: LoginRequest, ctx: RequestCtx) {
     const user = await this.userService.getOne({ email });
 
     if (!user || !ValidateHelper.credentials(password, user?.password)) {
@@ -77,7 +77,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     await this.tokenService.update({ userId }, { isRevoked: true });
   }
 
-  async platform(body: PlatformRequest, ctx: Context) {
+  async platform(body: PlatformRequest, ctx: RequestCtx) {
     const { userId } = await this.platformService.create(body);
 
     const user = await this.userService.getOneOrFail({ id: userId });
@@ -85,7 +85,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     return this.tokenService.getToken({ id: user.id, ...user?.payload }, ctx);
   }
 
-  async refreshToken({ refreshToken }: RefreshTokenRequest, ctx: Context) {
+  async refreshToken({ refreshToken }: RefreshTokenRequest, ctx: RequestCtx) {
     const payload = await this.tokenService.resolveRefreshToken(refreshToken);
 
     if (!payload?.sub) {
@@ -105,7 +105,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
 
     try {
       await this.userService.update(
-        { email, resetPasswordOTP: jti },
+        { email, resetPasswordCode: jti },
         { password: password },
       );
       void this.notificationService.addToQueue({
