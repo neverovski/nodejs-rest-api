@@ -1,8 +1,12 @@
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
-import { RequestHelper } from '@helpers';
-import { Exception, HttpCode } from '@lib';
-import { FACEBOOK_LINK, PlatformPayload, SocialNetwork } from '@utils';
+import { Exception, HttpCode } from '@libs';
+import {
+  FACEBOOK_LINK,
+  PlatformPayload,
+  RequestUtil,
+  SocialNetwork,
+} from '@utils';
 
 import { FacebookResponse } from './facebook.type';
 import { IFacebookService } from './interface';
@@ -23,7 +27,7 @@ export default class FacebookService
 
   async getProfile(token: string): Promise<PlatformPayload> {
     try {
-      const { data } = await RequestHelper.get<FacebookResponse>(
+      const { data } = await RequestUtil.get<FacebookResponse>(
         `${this.url}${token}`,
       );
 

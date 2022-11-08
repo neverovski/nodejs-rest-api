@@ -1,8 +1,7 @@
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
-import { RequestHelper } from '@helpers';
-import { Exception, HttpCode } from '@lib';
-import { PlatformPayload, SocialNetwork } from '@utils';
+import { Exception, HttpCode } from '@libs';
+import { PlatformPayload, RequestUtil, SocialNetwork } from '@utils';
 
 import { GitHubResponse } from './github.type';
 import { IGitHubService } from './interface';
@@ -30,10 +29,7 @@ export default class GitHubService
         },
       };
 
-      const { data } = await RequestHelper.get<GitHubResponse>(
-        this.url,
-        config,
-      );
+      const { data } = await RequestUtil.get<GitHubResponse>(this.url, config);
 
       return {
         ssid: data.id,

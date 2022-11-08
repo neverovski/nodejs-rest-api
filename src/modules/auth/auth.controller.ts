@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 
 import { ControllerCore } from '@core';
-import { Exception, HttpCode, i18n } from '@lib';
+import { Exception, HttpCode, i18n } from '@libs';
 import { PlatformRequest } from '@modules/platform';
 import { TokenDTO } from '@modules/token';
 

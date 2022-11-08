@@ -2,7 +2,7 @@ import { OAuth2Client, TokenPayload } from 'google-auth-library';
 
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
-import { Exception, HttpCode } from '@lib';
+import { Exception, HttpCode } from '@libs';
 import { PlatformPayload, SocialNetwork } from '@utils';
 
 import { IGoogleService } from './interface';

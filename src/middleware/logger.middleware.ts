@@ -5,9 +5,8 @@ import pino from 'express-pino-logger';
 
 import { AppConfig } from '@config';
 import { MiddlewareCore } from '@core';
-import { IPHelper } from '@helpers';
-import { Logger } from '@lib';
-import { ENV_PRODUCTION, LoggerType } from '@utils';
+import { Logger } from '@libs';
+import { ENV_PRODUCTION, IpUtil, LoggerType } from '@utils';
 
 class LoggerMiddleware extends MiddlewareCore {
   handler(): RequestHandler {
@@ -20,7 +19,7 @@ class LoggerMiddleware extends MiddlewareCore {
           url: req.url,
           query: req.query,
           params: req.params,
-          ip: IPHelper.getIP(req),
+          ip: IpUtil.getIP(req),
           userAgent: req.headers['user-agent'] || '',
           ...(AppConfig.env !== ENV_PRODUCTION && {
             headers: req?.headers || null,

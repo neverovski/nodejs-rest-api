@@ -1,4 +1,4 @@
-import { TemplateType } from '@lib';
+import { TemplateType } from '@libs';
 
 export enum NotificationInject {
   NOTIFICATION_SERVICE = 'NotificationService',

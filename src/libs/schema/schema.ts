@@ -1,5 +1,8 @@
-import { StringHelper } from '@helpers';
-import { MAX_SORT_STRING_LENGTH, MIN_PASSWORD_LENGTH } from '@utils';
+import {
+  MAX_SORT_STRING_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  StringUtil,
+} from '@utils';
 
 import { i18n } from '../i18n';
 
@@ -26,7 +29,7 @@ class Schema implements ISchema {
         transform: ['trim', 'toLowerCase'],
         errorMessage: {
           type: i18n()['validate.string'],
-          format: StringHelper.replace(i18n()['validate.string.format'], {
+          format: StringUtil.replace(i18n()['validate.string.format'], {
             format: 'test@test.com',
           }),
         },
@@ -57,10 +60,10 @@ class Schema implements ISchema {
         ...(maximum && { maximum }),
         errorMessage: {
           type: i18n()['validate.integer'],
-          minimum: StringHelper.replace(i18n()['validate.minimum'], {
+          minimum: StringUtil.replace(i18n()['validate.minimum'], {
             size: minimum,
           }),
-          maximum: StringHelper.replace(i18n()['validate.maximum'], {
+          maximum: StringUtil.replace(i18n()['validate.maximum'], {
             size: maximum,
           }),
         },
@@ -82,10 +85,10 @@ class Schema implements ISchema {
         ...(maximum && { maximum }),
         errorMessage: {
           type: i18n()['validate.number'],
-          minimum: StringHelper.replace(i18n()['validate.minimum'], {
+          minimum: StringUtil.replace(i18n()['validate.minimum'], {
             size: minimum,
           }),
-          maximum: StringHelper.replace(i18n()['validate.maximum'], {
+          maximum: StringUtil.replace(i18n()['validate.maximum'], {
             size: maximum,
           }),
         },
@@ -101,7 +104,7 @@ class Schema implements ISchema {
         minLength: MIN_PASSWORD_LENGTH,
         errorMessage: {
           type: i18n()['validate.string'],
-          minLength: StringHelper.replace(i18n()['validate.minLength'], {
+          minLength: StringUtil.replace(i18n()['validate.minLength'], {
             size: MIN_PASSWORD_LENGTH,
           }),
         },
@@ -116,7 +119,7 @@ class Schema implements ISchema {
     const minLength = opt?.minLength ?? 1;
     const maxLength = opt?.maxLength ?? MAX_SORT_STRING_LENGTH;
 
-    const typeNull: JSONSchemaCustom[] = opt?.isNull
+    const arrNull: JSONSchemaCustom[] = opt?.isNull
       ? [
           {
             type: 'null',
@@ -131,7 +134,7 @@ class Schema implements ISchema {
     return {
       [prop]: {
         anyOf: [
-          ...typeNull,
+          ...arrNull,
           {
             type: 'string',
             transform: ['trim'],
@@ -140,10 +143,10 @@ class Schema implements ISchema {
             maxLength,
             errorMessage: {
               type: i18n()['validate.string'],
-              minLength: StringHelper.replace(i18n()['validate.minLength'], {
+              minLength: StringUtil.replace(i18n()['validate.minLength'], {
                 size: minLength,
               }),
-              maxLength: StringHelper.replace(i18n()['validate.maxLength'], {
+              maxLength: StringUtil.replace(i18n()['validate.maxLength'], {
                 size: maxLength,
               }),
             },

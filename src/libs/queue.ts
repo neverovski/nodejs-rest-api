@@ -1,8 +1,7 @@
 import Bull from 'bull';
 
 import { RedisConfig } from '@config';
-import { DateHelper, EventEmitter } from '@helpers';
-import { LoggerType } from '@utils';
+import { DateUtil, EventEmitter, LoggerType } from '@utils';
 
 import { Logger } from './logger';
 
@@ -25,12 +24,12 @@ export default class Queue {
         }),
       },
       prefix: RedisConfig.queuePrefix,
-      limiter: { max: 30, duration: DateHelper.toMs('5s') },
+      limiter: { max: 30, duration: DateUtil.toMs('5s') },
       defaultJobOptions: {
         attempts: 30,
         backoff: {
           type: 'fixed',
-          delay: DateHelper.toMs('1m'),
+          delay: DateUtil.toMs('1m'),
         },
       },
       ...opts,

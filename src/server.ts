@@ -7,7 +7,7 @@ import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 
 import { MiddlewareCore } from '@core';
-import { Logger } from '@lib';
+import { Logger } from '@libs';
 
 import Router from './router';
 

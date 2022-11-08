@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 
 import DB from '@db/index';
-import { Exception, HttpCode, Logger, i18n } from '@lib';
+import { Exception, HttpCode, Logger, i18n } from '@libs';
 import { DB_UQ_USER_EMAIL, LoggerType, PostgresErrorCode } from '@utils';
 
 export default class RepositoryCore<Entity extends Id & ObjectLiteral> {

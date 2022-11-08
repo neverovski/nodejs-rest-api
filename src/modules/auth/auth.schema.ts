@@ -1,4 +1,4 @@
-import { IJsonSchema, Schema } from '@lib';
+import { IJsonSchema, Schema } from '@libs';
 import { SocialNetwork } from '@utils';
 
 export const ForgotPasswordSchema: IJsonSchema = {

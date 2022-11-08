@@ -2,16 +2,15 @@ import { NextFunction, Request, RequestHandler, Response } from 'express';
 
 import { JwtConfig } from '@config';
 import { MiddlewareCore } from '@core';
-import { TokenHelper } from '@helpers';
-import { Crypto, Exception, HttpCode } from '@lib';
-import { Role } from '@utils';
+import { Crypto, Exception, HttpCode } from '@libs';
+import { Role, TokenUtil } from '@utils';
 
 class AuthMiddleware extends MiddlewareCore {
   handler(): RequestHandler {
     return async (req: Request, _res: Response, next: NextFunction) => {
       const accessToken =
-        TokenHelper.getFromHeader(req.headers) ||
-        TokenHelper.getFromCookies(req.cookies);
+        TokenUtil.getFromHeader(req.headers) ||
+        TokenUtil.getFromCookies(req.cookies);
 
       req.user = Object.freeze({
         role: Role.ANONYMOUS,

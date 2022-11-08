@@ -6,8 +6,8 @@ import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { JSONSchema7 } from 'json-schema';
 
 import { MiddlewareCore } from '@core';
-import { AjvHelper, StringHelper } from '@helpers';
-import { Exception, HttpCode, IJsonSchema } from '@lib';
+import { Exception, HttpCode, IJsonSchema } from '@libs';
+import { AjvUtil, StringUtil } from '@utils';
 
 class ValidateMiddleware extends MiddlewareCore {
   protected ajv: Ajv;
@@ -20,12 +20,12 @@ class ValidateMiddleware extends MiddlewareCore {
     addFormats(this.ajv);
     addKeywords(this.ajv, ['transform', 'uniqueItemProperties']);
 
-    this.ajv.addFormat('phone', AjvHelper.phoneFormat);
+    this.ajv.addFormat('phone', AjvUtil.phoneFormat);
 
     this.ajv.addKeyword({
       keyword: 'sanitize',
       modifying: true,
-      compile: AjvHelper.sanitize,
+      compile: AjvUtil.sanitize,
       errors: false,
     });
   }
@@ -70,7 +70,7 @@ class ValidateMiddleware extends MiddlewareCore {
             err.instancePath.slice(1);
 
           if (name || (len === 1 && err.keyword === 'errorMessage')) {
-            errors[name || 'data'] = StringHelper.capitalize(err.message || '');
+            errors[name || 'data'] = StringUtil.capitalize(err.message || '');
           }
         }
 

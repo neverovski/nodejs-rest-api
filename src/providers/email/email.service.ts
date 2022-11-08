@@ -3,7 +3,7 @@ import Mail from 'nodemailer/lib/mailer';
 
 import { EmailConfig } from '@config';
 import { ServiceCore } from '@core';
-import { Exception, HttpCode, Template } from '@lib';
+import { Exception, HttpCode, Template } from '@libs';
 
 import { EmailMessage } from './email.type';
 import { IEmailService } from './interface';

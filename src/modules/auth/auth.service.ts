@@ -2,8 +2,7 @@ import { inject, injectable } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
-import { ValidateHelper } from '@helpers';
-import { Crypto, Exception, HttpCode, TemplateType, i18n } from '@lib';
+import { Crypto, Exception, HttpCode, TemplateType, i18n } from '@libs';
 import {
   INotificationService,
   NotificationInject,
@@ -15,6 +14,7 @@ import {
 } from '@modules/platform';
 import { ITokenService, TokenInject } from '@modules/token';
 import { IUserService, UserInject } from '@modules/user';
+import { ValidateUtil } from '@utils';
 
 import {
   ForgotPasswordRequest,
@@ -65,7 +65,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
   async login({ email, password }: LoginRequest, ctx: RequestCtx) {
     const user = await this.userService.getOne({ email });
 
-    if (!user || !ValidateHelper.credentials(password, user?.password)) {
+    if (!user || !ValidateUtil.credentials(password, user?.password)) {
       throw Exception.getError(HttpCode.INVALID_CREDENTIALS);
     }
 

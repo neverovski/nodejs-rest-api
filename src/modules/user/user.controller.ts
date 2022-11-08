@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 
 import { ControllerCore } from '@core';
-import { Exception, HttpCode, HttpStatus, i18n } from '@lib';
+import { Exception, HttpCode, HttpStatus, i18n } from '@libs';
 
 import { UserDTO } from './dto';
 import { IUserService } from './interface';

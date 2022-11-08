@@ -1,12 +1,11 @@
 import { Response } from 'express';
 
-import { CookieHelper, MappingHelper } from '@helpers';
-import { Exception, HttpCode, HttpStatus } from '@lib';
-import { TransformDTO } from '@utils';
+import { Exception, HttpCode, HttpStatus } from '@libs';
+import { CookieUtil, MappingUtil, TransformDTO } from '@utils';
 
 export default class ControllerCore {
   protected deleteCookie<T extends object>(res: Response, cookies: T) {
-    CookieHelper.deleteMany(res, cookies);
+    CookieUtil.deleteMany(res, cookies);
   }
 
   protected response<T, DTO>(
@@ -23,12 +22,12 @@ export default class ControllerCore {
 
     res.status(status).json({
       ...(data && {
-        data: dto ? MappingHelper.toDTO({ dto, data, options }) : data,
+        data: dto ? MappingUtil.toDTO({ dto, data, options }) : data,
       }),
     });
   }
 
   protected setCookie<T>(res: Response, data: T) {
-    CookieHelper.setMany(res, data, { httpOnly: true });
+    CookieUtil.setMany(res, data, { httpOnly: true });
   }
 }

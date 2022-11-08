@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 
 import { MiddlewareCore } from '@core';
-import { IPHelper, UserAgentHelper } from '@helpers';
+import { IpUtil, UserAgentUtil } from '@utils';
 
 class ContextMiddleware extends MiddlewareCore {
   handler(): RequestHandler {
@@ -10,10 +10,10 @@ class ContextMiddleware extends MiddlewareCore {
 
       req.ctx = Object.freeze({
         ...req.ctx,
-        ip: IPHelper.getIP(req),
+        ip: IpUtil.getIP(req),
         userAgent,
-        os: UserAgentHelper.getOS(userAgent),
-        browser: UserAgentHelper.getBrowser(userAgent),
+        os: UserAgentUtil.getOS(userAgent),
+        browser: UserAgentUtil.getBrowser(userAgent),
       });
 
       next();

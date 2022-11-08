@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 
-import { IPHelper } from '../../../src/helpers';
+import { IpUtil } from '../../../src/utils';
 import { ReqData } from '../data';
 
-describe('IPHelper.getIP - Function Test', () => {
+describe('IpUtil.getIP - Function Test', () => {
   ReqData.forEach((req) => {
-    const ip = IPHelper.getIP(req);
+    const ip = IpUtil.getIP(req);
 
     it(`Should return - ${ip}`, () => {
       expect(req.data.ip).to.equal(ip);

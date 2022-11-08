@@ -2,7 +2,7 @@ import { JwksClient } from 'jwks-rsa';
 
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
-import { Crypto, Exception, HttpCode } from '@lib';
+import { Crypto, Exception, HttpCode } from '@libs';
 import { PlatformPayload, SocialNetwork } from '@utils';
 
 import { AppleKey, AppleTokenPayload } from './apple.type';

@@ -1,6 +1,6 @@
 import type { Application, NextFunction, Request, Response } from 'express';
 
-import { Exception, HttpCode, i18n } from '@lib';
+import { Exception, HttpCode, i18n } from '@libs';
 import { AuthRouter } from '@modules/auth';
 import { UserRouter } from '@modules/user';
 

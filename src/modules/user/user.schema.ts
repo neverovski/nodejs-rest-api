@@ -1,4 +1,4 @@
-import { IJsonSchema, JSONSchemaCustom, Schema } from '@lib';
+import { IJsonSchema, JSONSchemaCustom, Schema } from '@libs';
 import { MAX_NAME_LENGTH } from '@utils';
 
 const PROFILE_PROPERTY = {

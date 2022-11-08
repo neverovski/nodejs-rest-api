@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { AppConfig, JwtConfig } from '@config';
 import { COOKIE_ACCESS_TOKEN, COOKIE_REFRESH_TOKEN } from '@utils';
 
-import * as DateHelper from './date';
+import * as DateUtil from './date';
 
 const isObject = (item: any): boolean => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -54,9 +54,9 @@ export const setMany = <T>(
           {
             ...(options && { ...options }),
             ...(expiresIn && {
-              expires: DateHelper.addMillisecondToDate(
+              expires: DateUtil.addMillisecondToDate(
                 new Date(),
-                DateHelper.toMs(expiresIn),
+                DateUtil.toMs(expiresIn),
               ),
             }),
           },

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import { Exception, HttpCode, i18n } from '@lib';
+import { Exception, HttpCode, i18n } from '@libs';
 import { AppleInject, IAppleService } from '@providers/apple';
 import { FacebookInject, IFacebookService } from '@providers/facebook';
 import { GitHubInject, IGitHubService } from '@providers/github';

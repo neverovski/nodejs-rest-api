@@ -5,5 +5,9 @@ export interface IUserRepository {
   delete(query: Partial<FullUser>): Promise<void>;
   findOne(options: UserOption): Promise<FullUser | null>;
   findOneOrFail(options: UserOption): Promise<FullUser>;
-  update(entity: Partial<FullUser>, body: Partial<User>): Promise<void>;
+  save(entity: Partial<FullUser>, partialEntity: Partial<User>): Promise<void>;
+  update(
+    entity: Partial<FullUser>,
+    partialEntity: Partial<User>,
+  ): Promise<void>;
 }

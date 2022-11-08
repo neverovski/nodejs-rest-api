@@ -5,7 +5,7 @@ import {
   Exception,
   HttpCode,
   HttpStatus,
-} from '../../../src/lib';
+} from '../../../src/libs';
 
 describe('Exception.getError Function Test', () => {
   Object.values(HttpCode).forEach((item: HttpCode) => {

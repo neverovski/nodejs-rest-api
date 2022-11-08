@@ -2,9 +2,8 @@ import { inject, injectable } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { ServiceCore } from '@core';
-import { DateHelper } from '@helpers';
-import { Crypto, Exception, HttpCode } from '@lib';
-import { TokenType } from '@utils';
+import { Crypto, Exception, HttpCode } from '@libs';
+import { DateUtil, TokenType } from '@utils';
 
 import { IRefreshTokenRepository, ITokenService } from './interface';
 import {
@@ -48,8 +47,8 @@ export default class TokenService extends ServiceCore implements ITokenService {
     body: Omit<RefreshToken, 'jti' | 'expiredAt'>,
   ): Promise<string> {
     const jti = Crypto.generateUUID();
-    const ms = DateHelper.toMs(JwtConfig.expiresInRefreshToken);
-    const expiredAt = DateHelper.addMillisecondToDate(new Date(), ms);
+    const ms = DateUtil.toMs(JwtConfig.expiresInRefreshToken);
+    const expiredAt = DateUtil.addMillisecondToDate(new Date(), ms);
 
     await this.repository.create({ ...body, jti, expiredAt });
 

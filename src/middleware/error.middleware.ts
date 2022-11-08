@@ -1,7 +1,7 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 
 import { MiddlewareCore } from '@core';
-import { CODE_RESPONSE, Exception, HttpCode, HttpStatus } from '@lib';
+import { CODE_RESPONSE, Exception, HttpCode, HttpStatus } from '@libs';
 
 class ErrorMiddleware extends MiddlewareCore {
   handler(): ErrorRequestHandler {

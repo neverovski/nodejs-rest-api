@@ -1,6 +1,6 @@
 import { Logger as LoggerOrm } from 'typeorm';
 
-import { Logger } from '@lib';
+import { Logger } from '@libs';
 import { LoggerType } from '@utils';
 
 export default class TypeormLogger implements LoggerOrm {
@@ -31,7 +31,6 @@ export default class TypeormLogger implements LoggerOrm {
   }
 
   logQuery(query: string, parameters?: any[]) {
-    console.log('logQuery:', query);
     const info =
       query +
       (parameters && parameters.length

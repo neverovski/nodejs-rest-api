@@ -2,7 +2,7 @@ import crypto from 'crypto';
 
 import jwt from 'jsonwebtoken';
 
-import { DateHelper } from '@helpers';
+import { DateUtil } from '@utils';
 
 import { Exception, HttpCode } from '../exception';
 
@@ -21,7 +21,7 @@ class Crypto implements ICrypto {
   }
 
   signJWT<T>(payload: T, secret: string, opts?: jwt.SignOptions): string {
-    return jwt.sign({ ...payload, iat: DateHelper.toUnix() }, secret, opts);
+    return jwt.sign({ ...payload, iat: DateUtil.toUnix() }, secret, opts);
   }
 
   signJWTAsync<T>(
@@ -31,7 +31,7 @@ class Crypto implements ICrypto {
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       jwt.sign(
-        { ...payload, iat: DateHelper.toUnix() },
+        { ...payload, iat: DateUtil.toUnix() },
         secret,
         opts || {},
         (err, encoded) => (err ? reject(err) : resolve(encoded as string)),

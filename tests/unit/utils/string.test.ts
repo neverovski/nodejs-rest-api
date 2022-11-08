@@ -1,27 +1,27 @@
 import { expect } from 'chai';
 
-import { StringHelper } from '../../../src/helpers';
+import { StringUtil } from '../../../src/utils';
 
-describe('StringHelper.capitalize - Function Test', () => {
+describe('StringUtil.capitalize - Function Test', () => {
   it('Should return - What is Lorem Ipsum?', () => {
-    expect(StringHelper.capitalize('what is Lorem Ipsum?')).to.equal(
+    expect(StringUtil.capitalize('what is Lorem Ipsum?')).to.equal(
       'What is Lorem Ipsum?',
     );
   });
 
   it('Should return - When An UnKNoWn P1rInter', () => {
-    expect(StringHelper.capitalize('when An UnKNoWn P1rInter')).to.equal(
+    expect(StringUtil.capitalize('when An UnKNoWn P1rInter')).to.equal(
       'When An UnKNoWn P1rInter',
     );
   });
 
   it('Should return - Where does it come from?', () => {
-    expect(StringHelper.capitalize('Where does it come from?')).to.equal(
+    expect(StringUtil.capitalize('Where does it come from?')).to.equal(
       'Where does it come from?',
     );
   });
 
   it('Should return - <Empty>', () => {
-    expect(StringHelper.capitalize('')).to.equal('');
+    expect(StringUtil.capitalize('')).to.equal('');
   });
 });

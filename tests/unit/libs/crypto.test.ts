@@ -1,8 +1,7 @@
 import { expect } from 'chai';
 
-import { JwtConfig } from '@config';
-
-import { Crypto } from '../../../src/lib';
+import { JwtConfig } from '../../../src/config';
+import { Crypto } from '../../../src/libs';
 
 type JWT = {
   email: string;

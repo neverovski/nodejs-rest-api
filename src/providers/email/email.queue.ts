@@ -1,8 +1,8 @@
 import type { Job, JobOptions } from 'bull';
 import { container } from 'tsyringe';
 
-import { DateHelper, EventEmitter } from '@helpers';
-import { Queue } from '@lib';
+import { Queue } from '@libs';
+import { DateUtil, EventEmitter } from '@utils';
 
 import { EMAIL_MESSAGE, EMAIL_QUEUE } from './email.constant';
 import { EmailInject, EmailMessage } from './email.type';
@@ -18,7 +18,7 @@ export default class EmailQueue extends Queue implements IEmailQueue {
         removeOnComplete: true,
         backoff: {
           type: 'exponential',
-          delay: DateHelper.toMs('1s'),
+          delay: DateUtil.toMs('1s'),
         },
       },
     });

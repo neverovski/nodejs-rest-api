@@ -5,9 +5,9 @@ import '@modules/index.di';
 
 import { AppConfig } from '@config';
 import db from '@db/index';
-import { EventEmitter } from '@helpers';
-import { Logger } from '@lib';
+import { Logger } from '@libs';
 import Middleware, { ErrorMiddleware } from '@middleware';
+import { EventEmitter } from '@utils';
 
 import Server from './server';
 

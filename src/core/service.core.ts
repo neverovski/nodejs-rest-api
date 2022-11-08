@@ -1,4 +1,4 @@
-import { Logger } from '@lib';
+import { Logger } from '@libs';
 import { LoggerType } from '@utils';
 
 export default class ServiceCore {
