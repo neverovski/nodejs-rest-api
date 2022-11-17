@@ -65,7 +65,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     );
   }
 
-  async getToken({ id, ...data }: TokenRequest, ctx: RequestCtx) {
+  async getToken({ id, ...data }: TokenRequest, ctx: UserAgentCtx) {
     const [accessToken, refreshToken] = await Promise.all([
       this.generateAccessToken({ ...data, userId: id }),
       this.generateRefreshToken({ ...ctx, userId: id }),

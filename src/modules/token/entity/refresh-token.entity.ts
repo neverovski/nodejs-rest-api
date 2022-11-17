@@ -12,13 +12,13 @@ export default class RefreshTokenEntity
   implements IRefreshToken
 {
   @Column('varchar', { nullable: true })
-  browser?: string;
+  browser?: string | null;
 
   @Column('timestamptz')
   expiredAt!: Date;
 
-  @Column('cidr', { nullable: true })
-  ip?: string;
+  @Column('varchar', { nullable: true })
+  ip?: string | null;
 
   @Column('boolean', { default: false })
   isRevoked? = false;
@@ -28,14 +28,14 @@ export default class RefreshTokenEntity
   jti!: string;
 
   @Column('varchar', { nullable: true })
-  os?: string;
+  os?: string | null;
 
   @ManyToOne(DB_TABLE_USER, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user?: FullUser;
 
   @Column('varchar', { nullable: true })
-  userAgent?: string;
+  userAgent?: string | null;
 
   @Index()
   @Column('int')

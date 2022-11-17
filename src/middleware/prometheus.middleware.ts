@@ -8,7 +8,7 @@ import { Registry } from 'prom-client';
 import { AppConfig } from '@config';
 import { MiddlewareCore } from '@core';
 
-class MetricsMiddleware extends MiddlewareCore {
+class PrometheusMiddleware extends MiddlewareCore {
   private readonly httpDurationMetricName: string;
   private readonly prefix: string;
   private readonly register: Registry;
@@ -39,4 +39,4 @@ class MetricsMiddleware extends MiddlewareCore {
   }
 }
 
-export default new MetricsMiddleware();
+export default new PrometheusMiddleware();

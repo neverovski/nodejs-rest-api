@@ -62,7 +62,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     });
   }
 
-  async login({ email, password }: LoginRequest, ctx: RequestCtx) {
+  async login({ email, password }: LoginRequest, ctx: UserAgentCtx) {
     const user = await this.userService.getOne({ email });
 
     if (!user || !ValidateUtil.credentials(password, user?.password)) {
@@ -76,7 +76,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     await this.tokenService.update({ userId }, { isRevoked: true });
   }
 
-  async platform(body: PlatformRequest, ctx: RequestCtx) {
+  async platform(body: PlatformRequest, ctx: UserAgentCtx) {
     const { userId } = await this.platformService.create(body);
 
     const user = await this.userService.getOneOrFail({ id: userId });
@@ -84,7 +84,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
     return this.tokenService.getToken({ id: user.id, ...user?.payload }, ctx);
   }
 
-  async refreshToken({ refreshToken }: RefreshTokenRequest, ctx: RequestCtx) {
+  async refreshToken({ refreshToken }: RefreshTokenRequest, ctx: UserAgentCtx) {
     const payload = await this.tokenService.resolveRefreshToken(refreshToken);
 
     if (!payload?.sub) {

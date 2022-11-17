@@ -5,6 +5,7 @@ import { RouterCore } from '@core';
 import {
   AsyncMiddleware,
   AuthMiddleware,
+  UserAgentMiddleware,
   ValidateMiddleware,
 } from '@middleware';
 
@@ -30,12 +31,14 @@ export default class AuthRouter extends RouterCore {
   init(): Router {
     this.router.post(
       '/login',
+      UserAgentMiddleware.handler(),
       ValidateMiddleware.handler(LoginSchema),
       AsyncMiddleware(this.controller.login.bind(this.controller)),
     );
 
     this.router.post(
       '/refresh-token',
+      UserAgentMiddleware.handler(),
       ValidateMiddleware.handler(RefreshTokenSchema),
       AsyncMiddleware(this.controller.refreshToken.bind(this.controller)),
     );
@@ -49,6 +52,7 @@ export default class AuthRouter extends RouterCore {
 
     this.router.post(
       '/platform',
+      UserAgentMiddleware.handler(),
       ValidateMiddleware.handler(PlatformSchema),
       AsyncMiddleware(this.controller.platform.bind(this.controller)),
     );

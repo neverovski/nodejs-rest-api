@@ -19,9 +19,9 @@ class LoggerMiddleware extends MiddlewareCore {
           url: req.url,
           query: req.query,
           params: req.params,
-          ip: IpUtil.getIP(req),
           userAgent: req.headers['user-agent'] || '',
           ...(AppConfig.env !== ENV_PRODUCTION && {
+            ip: IpUtil.getIp(req),
             headers: req?.headers || null,
             body: req?.raw?.body || null,
           }),

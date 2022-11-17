@@ -1,13 +1,13 @@
 import { FullUser } from '@modules/user';
 
 export interface IRefreshToken {
-  browser?: string;
+  browser?: string | null;
   expiredAt: Date;
-  ip?: string;
+  ip?: string | null;
   isRevoked?: boolean;
   jti: string;
-  os?: string;
+  os?: string | null;
   user?: FullUser;
-  userAgent?: string;
+  userAgent?: string | null;
   userId: number;
 }

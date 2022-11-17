@@ -12,7 +12,7 @@ export interface ITokenService {
   generateRefreshToken(
     body: Omit<RefreshToken, 'jti' | 'expiredAt'>,
   ): Promise<string>;
-  getToken(body: TokenRequest, ctx: RequestCtx): Promise<TokenResponse>;
+  getToken(body: TokenRequest, ctx: UserAgentCtx): Promise<TokenResponse>;
   resolveRefreshToken(token: string): Promise<RefreshTokenPayload>;
   update(
     query: Partial<FullRefreshToken>,

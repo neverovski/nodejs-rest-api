@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 
 import { TokenUtil } from '../../../src/utils';
-import { ReqData } from '../data';
+import { ReqMock } from '../data-mocks';
 
 describe('TokenUtil.getFromHeader - Function Test', () => {
-  ReqData.forEach((req) => {
+  ReqMock.forEach((req) => {
     const accessToken = TokenUtil.getFromHeader(req.headers);
 
     it(`Should return - ${req.data.headerAccessToken || 'null'}`, () => {
@@ -14,7 +14,7 @@ describe('TokenUtil.getFromHeader - Function Test', () => {
 });
 
 describe('TokenUtil.getFromCookies - Function Test', () => {
-  ReqData.forEach((req) => {
+  ReqMock.forEach((req) => {
     const accessToken = TokenUtil.getFromCookies(req.cookies);
 
     it(`Should return - ${req.data.cookieAccessToken || 'null'}`, () => {

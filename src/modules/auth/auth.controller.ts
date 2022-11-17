@@ -78,9 +78,11 @@ export default class AuthController extends ControllerCore {
    *        500:
    *          $ref: '#/components/responses/HttpInternalServerError'
    */
-  async login(req: Request<any, any, LoginRequest>, res: Response) {
-    const { body, ctx } = req;
-    const data = await this.service.login(body, ctx);
+  async login(
+    { body, userAgent }: Request<any, any, LoginRequest>,
+    res: Response,
+  ) {
+    const data = await this.service.login(body, userAgent);
 
     this.setCookie(res, data);
     this.response(res, { data, dto: TokenDTO });
@@ -130,9 +132,11 @@ export default class AuthController extends ControllerCore {
    *        500:
    *          $ref: '#/components/responses/HttpInternalServerError'
    */
-  async platform(req: Request<any, any, PlatformRequest>, res: Response) {
-    const { body, ctx } = req;
-    const data = await this.service.platform(body, ctx);
+  async platform(
+    { body, userAgent }: Request<any, any, PlatformRequest>,
+    res: Response,
+  ) {
+    const data = await this.service.platform(body, userAgent);
 
     this.setCookie(res, data);
     this.response(res, { data, dto: TokenDTO });
@@ -158,14 +162,13 @@ export default class AuthController extends ControllerCore {
    *          $ref: '#/components/responses/HttpInternalServerError'
    */
   async refreshToken(
-    req: Request<any, any, RefreshTokenRequest>,
+    { body, userAgent, ...req }: Request<any, any, RefreshTokenRequest>,
     res: Response,
   ) {
-    const { body, ctx } = req;
     const refreshToken =
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       (req?.cookies?.refreshToken as string) || body.refreshToken || '';
-    const data = await this.service.refreshToken({ refreshToken }, ctx);
+    const data = await this.service.refreshToken({ refreshToken }, userAgent);
 
     this.setCookie(res, data);
     this.response(res, { data, dto: TokenDTO });

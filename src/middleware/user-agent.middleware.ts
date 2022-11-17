@@ -3,14 +3,13 @@ import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { MiddlewareCore } from '@core';
 import { IpUtil, UserAgentUtil } from '@utils';
 
-class ContextMiddleware extends MiddlewareCore {
+class UserAgentMiddleware extends MiddlewareCore {
   handler(): RequestHandler {
     return (req: Request, _res: Response, next: NextFunction) => {
       const userAgent = req.headers['user-agent'] || '';
 
-      req.ctx = Object.freeze({
-        ...req.ctx,
-        ip: IpUtil.getIP(req),
+      req.userAgent = Object.freeze({
+        ip: IpUtil.getIp(req),
         userAgent,
         os: UserAgentUtil.getOS(userAgent),
         browser: UserAgentUtil.getBrowser(userAgent),
@@ -21,4 +20,4 @@ class ContextMiddleware extends MiddlewareCore {
   }
 }
 
-export default new ContextMiddleware();
+export default new UserAgentMiddleware();

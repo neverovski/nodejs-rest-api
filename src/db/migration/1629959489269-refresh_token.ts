@@ -33,7 +33,7 @@ export class RefreshToken1629959489269 implements MigrationInterface {
           },
           {
             name: 'ip',
-            type: 'cidr',
+            type: 'varchar',
             isNullable: true,
           },
           {

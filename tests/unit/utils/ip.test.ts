@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 
 import { IpUtil } from '../../../src/utils';
-import { ReqData } from '../data';
+import { ReqMock } from '../data-mocks';
 
 describe('IpUtil.getIP - Function Test', () => {
-  ReqData.forEach((req) => {
-    const ip = IpUtil.getIP(req);
+  ReqMock.forEach((req) => {
+    const ip = IpUtil.getIp(req);
 
-    it(`Should return - ${ip}`, () => {
+    it(`Should return - ${ip || ''}`, () => {
       expect(req.data.ip).to.equal(ip);
     });
   });

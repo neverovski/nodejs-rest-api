@@ -9,17 +9,17 @@ type JwtPayload = {
 
 type UserPayload = Pick<JwtPayload, 'email' | 'role' | 'userId'>;
 
-type RequestCtx = {
+type UserAgentCtx = {
   browser?: string;
-  ip?: string;
+  ip?: string | null;
   os?: string;
   userAgent?: string;
 };
 
 declare namespace Express {
   export interface Request {
-    ctx: RequestCtx;
     params: any;
     user: UserPayload;
+    userAgent?: UserAgentCtx;
   }
 }
