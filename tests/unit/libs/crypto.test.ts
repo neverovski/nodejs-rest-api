@@ -2,6 +2,7 @@ import { expect } from 'chai';
 
 import { JwtConfig } from '../../../src/config';
 import { Crypto } from '../../../src/libs';
+import { DateUtil } from '../../../src/utils';
 
 type JWT = {
   email: string;
@@ -21,14 +22,14 @@ describe('Crypto Function Test', () => {
     email: 'dmitryneverovski@gmail.com',
   };
 
-  before(() => {
-    token = Crypto.signJWT(payloadBody, JwtConfig.secretAccessToken, {
-      expiresIn: JwtConfig.expiresInAccessToken,
+  before(async () => {
+    token = await Crypto.signJwt(payloadBody, JwtConfig.secretAccessToken, {
+      expiresIn: DateUtil.toMs(JwtConfig.expiresInAccessToken),
     });
   });
 
   it('Should return', async () => {
-    const data = await Crypto.verifyJWTAsync<JWT>(
+    const data = await Crypto.verifyJwt<JWT>(
       token,
       JwtConfig.secretAccessToken,
     );

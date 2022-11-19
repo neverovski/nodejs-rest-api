@@ -1,17 +1,15 @@
-import type { DecodeOptions, SignOptions } from 'jsonwebtoken';
+import { SignerOptions, VerifierOptions } from 'fast-jwt';
 
 export interface ICrypto {
-  decodeJWT(
-    token: string,
-    options?: DecodeOptions,
-  ): null | { [key: string]: any } | string;
   generateUUID(): string;
-  signJWT<T>(payload: T, secret: string, opts?: SignOptions): string;
-  signJWTAsync<T>(
+  signJwt<T>(
     payload: T,
     secret: string,
-    opts?: SignOptions,
+    options?: Partial<SignerOptions>,
   ): Promise<string>;
-  verifyJWT<T>(token: string, secret: string): T;
-  verifyJWTAsync<T>(token: string, secret: string): Promise<T>;
+  verifyJwt<T>(
+    token: string,
+    secret: string,
+    options?: Partial<VerifierOptions>,
+  ): Promise<T>;
 }

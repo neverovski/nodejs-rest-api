@@ -14,7 +14,7 @@ import {
 } from '@modules/platform';
 import { ITokenService, TokenInject } from '@modules/token';
 import { IUserService, UserInject } from '@modules/user';
-import { ValidateUtil } from '@utils';
+import { DateUtil, ValidateUtil } from '@utils';
 
 import {
   ForgotPasswordRequest,
@@ -43,14 +43,14 @@ export default class AuthService extends ServiceCore implements IAuthService {
 
     const resetPasswordCode = Crypto.generateUUID();
 
-    const token = Crypto.signJWT(
+    const token = Crypto.signJwt(
       {
         jti: resetPasswordCode,
         sub: `${id}`,
       },
       JwtConfig.secretToken,
       {
-        expiresIn: JwtConfig.expiresInToken,
+        expiresIn: DateUtil.toMs(JwtConfig.expiresInToken),
       },
     );
 
@@ -97,7 +97,7 @@ export default class AuthService extends ServiceCore implements IAuthService {
   }
 
   async resetPassword({ password, token }: ResetPasswordRequest) {
-    const { jti, email } = await Crypto.verifyJWTAsync<JwtPayload>(
+    const { jti, email } = await Crypto.verifyJwt<JwtPayload>(
       token,
       JwtConfig.secretToken,
     );

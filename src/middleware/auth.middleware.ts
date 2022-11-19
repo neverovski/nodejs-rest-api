@@ -19,11 +19,10 @@ class AuthMiddleware extends MiddlewareCore {
 
       if (accessToken) {
         try {
-          const { userId, email, role } =
-            await Crypto.verifyJWTAsync<JwtPayload>(
-              accessToken,
-              JwtConfig.secretAccessToken,
-            );
+          const { userId, email, role } = await Crypto.verifyJwt<JwtPayload>(
+            accessToken,
+            JwtConfig.secretAccessToken,
+          );
 
           req.user = Object.freeze({ userId, email, role });
 

@@ -1,6 +1,11 @@
 import crypto from 'crypto';
 
-import jwt from 'jsonwebtoken';
+import {
+  SignerOptions,
+  TokenError,
+  createSigner,
+  createVerifier,
+} from 'fast-jwt';
 
 import { DateUtil } from '@utils';
 
@@ -9,54 +14,38 @@ import { Exception, HttpCode } from '../exception';
 import { ICrypto } from './interface';
 
 class Crypto implements ICrypto {
-  decodeJWT(
-    token: string,
-    options?: jwt.DecodeOptions,
-  ): null | { [key: string]: any } | string {
-    return jwt.decode(token, options);
-  }
-
   generateUUID() {
     return crypto.randomUUID();
   }
 
-  signJWT<T>(payload: T, secret: string, opts?: jwt.SignOptions): string {
-    return jwt.sign({ ...payload, iat: DateUtil.toUnix() }, secret, opts);
-  }
-
-  signJWTAsync<T>(
+  async signJwt<T>(
     payload: T,
     secret: string,
-    opts?: jwt.SignOptions,
+    options?: Partial<SignerOptions>,
   ): Promise<string> {
-    return new Promise((resolve, reject) => {
-      jwt.sign(
-        { ...payload, iat: DateUtil.toUnix() },
-        secret,
-        opts || {},
-        (err, encoded) => (err ? reject(err) : resolve(encoded as string)),
-      );
-    });
+    // eslint-disable-next-line @typescript-eslint/require-await
+    const sign = createSigner({ ...options, key: async () => secret });
+
+    try {
+      return await sign({ ...payload, iat: DateUtil.toUnix() });
+    } catch {
+      throw Exception.getError(HttpCode.TOKEN_VERIFY);
+    }
   }
 
-  verifyJWT<T>(token: string, secret: string) {
-    return jwt.verify(token, secret) as T;
-  }
+  async verifyJwt<T>(token: string, secret: string): Promise<T> {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    const verify = createVerifier({ key: async () => secret });
 
-  verifyJWTAsync<T>(token: string, secret: string): Promise<T> {
-    return new Promise((resolve, reject) => {
-      jwt.verify(token, secret, (error, decoded) => {
-        if (error && error.name === 'TokenExpiredError') {
-          return reject(Exception.getError(HttpCode.TOKEN_EXPIRED));
-        }
-
-        if (decoded) {
-          return resolve(decoded as unknown as T);
-        }
-
-        return reject(Exception.getError(HttpCode.TOKEN_VERIFY));
-      });
-    });
+    try {
+      return (await verify(token)) as T;
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (err && err?.code === TokenError.codes.expired) {
+        throw Exception.getError(HttpCode.TOKEN_EXPIRED);
+      }
+      throw Exception.getError(HttpCode.TOKEN_VERIFY);
+    }
   }
 }
 

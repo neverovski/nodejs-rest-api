@@ -65,7 +65,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
       const publicKey = keys.map((key) => this.getPublicKey(key.kid));
       const publicKeys = await Promise.all(publicKey);
       const verifiedTokenPromises = publicKeys.map((key) =>
-        Crypto.verifyJWTAsync<AppleTokenPayload>(token, key).catch(() => null),
+        Crypto.verifyJwt<AppleTokenPayload>(token, key).catch(() => null),
       );
 
       const decodedTokens = await Promise.all(verifiedTokenPromises);

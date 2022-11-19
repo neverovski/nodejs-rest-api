@@ -29,7 +29,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
   }
 
   generateAccessToken(body: AccessTokenRequest) {
-    return Crypto.signJWTAsync(
+    return Crypto.signJwt(
       {
         ...body,
         jti: Crypto.generateUUID(),
@@ -38,7 +38,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
       },
       JwtConfig.secretAccessToken,
       {
-        expiresIn: JwtConfig.expiresInAccessToken,
+        expiresIn: DateUtil.toMs(JwtConfig.expiresInAccessToken),
       },
     );
   }
@@ -52,7 +52,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
 
     await this.repository.create({ ...body, jti, expiredAt });
 
-    return Crypto.signJWT(
+    return Crypto.signJwt(
       {
         sub: String(body.userId),
         jti,
@@ -60,7 +60,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
       },
       JwtConfig.secretRefreshToken,
       {
-        expiresIn: JwtConfig.expiresInRefreshToken,
+        expiresIn: DateUtil.toMs(JwtConfig.expiresInRefreshToken),
       },
     );
   }
@@ -97,7 +97,7 @@ export default class TokenService extends ServiceCore implements ITokenService {
     token: string,
   ): Promise<RefreshTokenPayload> {
     try {
-      return await Crypto.verifyJWTAsync<RefreshTokenPayload>(
+      return await Crypto.verifyJwt<RefreshTokenPayload>(
         token,
         JwtConfig.secretRefreshToken,
       );
