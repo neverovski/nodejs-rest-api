@@ -7,7 +7,7 @@ import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 
 import { MiddlewareCore } from '@core';
-import { Logger } from '@core/logger';
+import { Logger } from '@libs';
 
 import Router from './router';
 
@@ -38,7 +38,7 @@ export default class Server {
     this.handleRoute();
     this.handleError();
 
-    await this.handleListen();
+    await this.run();
   }
 
   private handleError(): void {
@@ -47,32 +47,6 @@ export default class Server {
     } catch (err) {
       throw new Error('Default error middleware failed.');
     }
-  }
-
-  private async handleListen(): Promise<void> {
-    return new Promise((resolve) => {
-      process.on('unhandledRejection', (reason) => {
-        Logger.error({ message: 'unhandledRejection', error: reason });
-      });
-
-      process.on('rejectionHandled', (promise) => {
-        Logger.warn({ message: 'rejectionHandled', error: promise });
-      });
-
-      process.on('multipleResolves', (type, promise, reason) => {
-        Logger.error({
-          message: 'multipleResolves',
-          error: { type, promise, reason },
-        });
-      });
-
-      process.on('uncaughtException', (error) => {
-        Logger.fatal({ message: 'uncaughtException', error });
-        process.exit(1);
-      });
-
-      return this.http.listen(this.port, () => resolve());
-    });
   }
 
   private handleMiddleware(): void {
@@ -97,5 +71,31 @@ export default class Server {
     );
 
     Router(this.app);
+  }
+
+  private async run(): Promise<void> {
+    return new Promise((resolve) => {
+      process.on('unhandledRejection', (reason) => {
+        Logger.error({ message: 'unhandledRejection', error: reason });
+      });
+
+      process.on('rejectionHandled', (promise) => {
+        Logger.warn({ message: 'rejectionHandled', error: promise });
+      });
+
+      process.on('multipleResolves', (type, promise, reason) => {
+        Logger.error({
+          message: 'multipleResolves',
+          error: { type, promise, reason },
+        });
+      });
+
+      process.on('uncaughtException', (error) => {
+        Logger.fatal({ message: 'uncaughtException', error });
+        process.exit(1);
+      });
+
+      return this.http.listen(this.port, () => resolve());
+    });
   }
 }

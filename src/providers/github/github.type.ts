@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-export type GitHubProfile = {
+export type GitHubResponse = {
   email?: string;
   html_url?: string;
   id: string;

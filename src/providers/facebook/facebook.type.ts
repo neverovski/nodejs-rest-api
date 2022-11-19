@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-export type FacebookProfile = {
+export type FacebookResponse = {
   email?: string;
   first_name?: string;
   id: string;

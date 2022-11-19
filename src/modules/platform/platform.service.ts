@@ -1,12 +1,11 @@
 import { inject, injectable } from 'tsyringe';
 
-import { i18n } from '@lib';
+import { Exception, HttpCode, i18n } from '@libs';
 import { AppleInject, IAppleService } from '@providers/apple';
 import { FacebookInject, IFacebookService } from '@providers/facebook';
 import { GitHubInject, IGitHubService } from '@providers/github';
 import { GoogleInject, IGoogleService } from '@providers/google';
-import { HttpException, SocialNetwork } from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
+import { SocialNetwork } from '@utils';
 
 import { IPlatformRepository, IPlatformService } from './interface';
 import { PlatformInject, PlatformRequest } from './platform.type';
@@ -50,7 +49,7 @@ export default class PlatformService implements IPlatformService {
       case SocialNetwork.GITHUB:
         return this.gitHubService.getProfile(token);
       default:
-        throw ExceptionHelper.getError(HttpException.NOT_FOUND, {
+        throw Exception.getError(HttpCode.NOT_FOUND, {
           message: i18n()['notFound.platform'],
         });
     }

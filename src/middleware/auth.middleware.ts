@@ -1,41 +1,28 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { container } from 'tsyringe';
 
 import { JwtConfig } from '@config';
 import { MiddlewareCore } from '@core';
-import { CryptoInject, ICryptoService } from '@providers/crypto';
-import { HttpException, JWTPayload, Role } from '@utils';
-import { ExceptionHelper, TokenHelper } from '@utils/helpers';
+import { Crypto, Exception, HttpCode } from '@libs';
+import { Role, TokenUtil } from '@utils';
 
 class AuthMiddleware extends MiddlewareCore {
-  private readonly cryptoService: ICryptoService;
-
-  constructor() {
-    super();
-
-    this.cryptoService = container.resolve<ICryptoService>(
-      CryptoInject.CRYPTO_SERVICE,
-    );
-  }
-
   handler(): RequestHandler {
     return async (req: Request, _res: Response, next: NextFunction) => {
       const accessToken =
-        TokenHelper.getFromHeader(req.headers) ||
-        TokenHelper.getFromCookies(req.cookies);
+        TokenUtil.getFromHeader(req.headers) ||
+        TokenUtil.getFromCookies(req.cookies);
 
       req.user = Object.freeze({
         role: Role.ANONYMOUS,
-        email: '',
+        userId: 0,
       });
 
       if (accessToken) {
         try {
-          const { userId, email, role } =
-            await this.cryptoService.verifyJWTAsync<JWTPayload>(
-              accessToken,
-              JwtConfig.secretAccessToken,
-            );
+          const { userId, email, role } = await Crypto.verifyJwt<JwtPayload>(
+            accessToken,
+            JwtConfig.secretAccessToken,
+          );
 
           req.user = Object.freeze({ userId, email, role });
 
@@ -45,7 +32,7 @@ class AuthMiddleware extends MiddlewareCore {
         }
       }
 
-      return next(ExceptionHelper.getError(HttpException.TOKEN_NOT_PROVIDED));
+      return next(Exception.getError(HttpCode.TOKEN_NOT_PROVIDED));
     };
   }
 }

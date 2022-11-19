@@ -4,7 +4,7 @@ import FacebookService from './facebook.service';
 import { FacebookInject } from './facebook.type';
 import { IFacebookService } from './interface';
 
-container.registerSingleton<IFacebookService>(
+container.registerInstance<IFacebookService>(
   FacebookInject.FACEBOOK_SERVICE,
-  FacebookService,
+  new FacebookService(),
 );

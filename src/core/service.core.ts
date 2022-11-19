@@ -1,6 +1,5 @@
+import { Logger } from '@libs';
 import { LoggerType } from '@utils';
-
-import { Logger } from './logger';
 
 export default class ServiceCore {
   protected handleError(error: unknown) {

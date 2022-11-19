@@ -1,8 +1,11 @@
+import { TemplateType } from '@libs';
+
 export enum NotificationInject {
-  NOTIFICATION_QUEUE = 'NotificationQueue',
+  NOTIFICATION_SERVICE = 'NotificationService',
 }
 
-export type ForgotPassword = {
+export type Notification = {
+  data?: Record<string, any>;
   email?: string;
-  token: string;
+  template: TemplateType;
 };

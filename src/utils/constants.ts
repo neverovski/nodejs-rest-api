@@ -3,12 +3,6 @@ export const ENV_TEST = 'test';
 export const ENV_PRODUCTION = 'production';
 export const ENV_CLI = 'cli';
 
-export const PRETTY_PRINT = {
-  colorize: true,
-  translateTime: 'SYS:yyyy-mm-dd HH:MM:ss',
-  ignore: 'hostname',
-};
-
 // Table
 export const DB_TABLE_USER = 'users';
 export const DB_TABLE_PROFILE = 'profiles';
@@ -34,3 +28,5 @@ export const MIN_PASSWORD_LENGTH = 6;
 export const MAX_NAME_LENGTH = 100;
 export const MAX_SORT_STRING_LENGTH = 250;
 export const MAX_LONG_STRING_LENGTH = 5000;
+
+export const EXPIRED_OTP = '1h';

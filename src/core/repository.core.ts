@@ -11,16 +11,8 @@ import {
 } from 'typeorm';
 
 import DB from '@db/index';
-import { i18n } from '@lib';
-import {
-  DB_UQ_USER_EMAIL,
-  HttpException,
-  LoggerType,
-  PostgresErrorCode,
-} from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
-
-import { Logger } from './logger';
+import { Exception, HttpCode, Logger, i18n } from '@libs';
+import { DB_UQ_USER_EMAIL, LoggerType, PostgresErrorCode } from '@utils';
 
 export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
   protected readonly alias: string;
@@ -74,10 +66,24 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
     }
   }
 
-  async update(entity: Entity, body: DeepPartial<Entity>): Promise<void> {
+  async save(
+    entity: Entity,
+    partialEntity: DeepPartial<Entity>,
+  ): Promise<void> {
     try {
-      this.orm.merge(entity, body);
+      this.orm.merge(entity, partialEntity);
       await this.orm.save(entity);
+    } catch (err) {
+      throw this.handleError(err);
+    }
+  }
+
+  async update(
+    query: DeepPartial<Entity>,
+    partialEntity: DeepPartial<Entity>,
+  ): Promise<void> {
+    try {
+      await this.orm.update(query, partialEntity);
     } catch (err) {
       throw this.handleError(err);
     }
@@ -94,7 +100,7 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
       (error as Error)?.name === 'EntityNotFound' ||
       (error as Error)?.name === 'EntityNotFoundError'
     ) {
-      return ExceptionHelper.getError(HttpException.NOT_FOUND, {
+      return Exception.getError(HttpCode.NOT_FOUND, {
         message: this.notFound,
       });
     }
@@ -105,7 +111,7 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
       if (err.code === PostgresErrorCode.UniqueViolation) {
         switch (err.constraint) {
           case DB_UQ_USER_EMAIL:
-            return ExceptionHelper.getError(HttpException.EMAIL_ALREADY_TAKEN);
+            return Exception.getError(HttpCode.EMAIL_ALREADY_TAKEN);
           default:
             return error;
         }

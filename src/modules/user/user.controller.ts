@@ -2,9 +2,7 @@ import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 
 import { ControllerCore } from '@core';
-import { i18n } from '@lib';
-import { HttpException, HttpStatus } from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
+import { Exception, HttpCode, HttpStatus, i18n } from '@libs';
 
 import { UserDTO } from './dto';
 import { IUserService } from './interface';
@@ -50,12 +48,12 @@ export default class UserController extends ControllerCore {
     req: Request<any, any, Password>,
     res: Response,
   ) {
-    const { userId: id } = req.user as Required<UserContext>;
+    const { userId: id } = req.user;
 
     await this.userService.updatePassword({ id }, req.body);
 
     this.response(res, {
-      data: ExceptionHelper.getOk(HttpException.OK, {
+      data: Exception.getOk(HttpCode.OK, {
         message: i18n()['message.passwordReset.successfully'],
       }),
     });
@@ -82,7 +80,7 @@ export default class UserController extends ControllerCore {
     await this.userService.create(req.body);
 
     this.response(res, {
-      data: ExceptionHelper.getOk(HttpException.OK, {
+      data: Exception.getOk(HttpCode.OK, {
         message: i18n()['message.user.created'],
       }),
       status: HttpStatus.Created,
@@ -111,7 +109,7 @@ export default class UserController extends ControllerCore {
     req: Request<any, any, Partial<User>>,
     res: Response,
   ) {
-    const { userId } = req.user as Required<UserContext>;
+    const { userId } = req.user;
 
     await this.userService.delete({ id: userId });
 
@@ -138,7 +136,7 @@ export default class UserController extends ControllerCore {
    *        - BearerAuth: []
    */
   async getCurrentUser(req: Request, res: Response) {
-    const { userId } = req.user as Required<UserContext>;
+    const { userId } = req.user;
 
     const data = await this.userService.getOne({ id: userId });
 
@@ -171,12 +169,12 @@ export default class UserController extends ControllerCore {
     req: Request<any, any, Partial<User>>,
     res: Response,
   ) {
-    const { userId } = req.user as Required<UserContext>;
+    const { userId } = req.user;
 
     await this.userService.update({ id: userId }, req.body);
 
     this.response(res, {
-      data: ExceptionHelper.getOk(HttpException.OK, {
+      data: Exception.getOk(HttpCode.OK, {
         message: i18n()['message.user.update'],
       }),
     });

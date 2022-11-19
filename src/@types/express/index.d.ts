@@ -1,20 +1,25 @@
-type UserContext = {
-  email: string;
+type JwtPayload = {
+  email?: string;
+  jti: string;
   role: string;
-  userId?: number;
+  sub: number;
+  typ: string;
+  userId: number;
 };
 
-type Context = {
+type UserPayload = Pick<JwtPayload, 'email' | 'role' | 'userId'>;
+
+type UserAgentCtx = {
   browser?: string;
-  ip?: string;
+  ip?: string | null;
   os?: string;
   userAgent?: string;
 };
 
 declare namespace Express {
   export interface Request {
-    ctx: Context;
     params: any;
-    user: UserContext;
+    user: UserPayload;
+    userAgent?: UserAgentCtx;
   }
 }

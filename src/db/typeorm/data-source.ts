@@ -8,12 +8,12 @@ import { ENV_CLI, ENV_PRODUCTION } from '@utils';
 import TypeormLogger from './typeorm-logger';
 
 export const AppDataSource = new DataSource({
-  type: 'postgres',
+  type: DBConfig.client,
   host: DBConfig.host,
   port: DBConfig.port,
   username: DBConfig.user,
   password: DBConfig.password,
-  database: DBConfig.database,
+  database: DBConfig.databaseName,
   entities: [join(__dirname, '../../modules/**/*.entity{.ts,.js}')],
   migrations: [join(__dirname, '../migration/*{.ts,.js}')],
   subscribers: [join(__dirname, '../../modules/**/*.subscriber{.ts,.js}')],

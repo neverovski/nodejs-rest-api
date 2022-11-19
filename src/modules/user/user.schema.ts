@@ -1,7 +1,17 @@
-import { EMAIL_PROPERTY, IJsonSchema } from '@core/schema';
-import { SchemaHelper } from '@utils/helpers';
+import { IJsonSchema, JSONSchemaCustom, Schema } from '@libs';
+import { MAX_NAME_LENGTH } from '@utils';
 
-import { PROFILE_PROPERTY } from './user.constant';
+const PROFILE_PROPERTY = {
+  profile: {
+    type: 'object',
+    additionalProperties: false,
+    minProperties: 1,
+    properties: {
+      ...Schema.getString('firstName', { maxLength: MAX_NAME_LENGTH }),
+      ...Schema.getString('lastName', { maxLength: MAX_NAME_LENGTH }),
+    },
+  },
+} as { [key: string]: JSONSchemaCustom };
 
 export const CreateUserSchema: IJsonSchema = {
   params: { type: 'object', maxProperties: 0 },
@@ -12,8 +22,8 @@ export const CreateUserSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['email', 'profile', 'password'],
     properties: {
-      ...EMAIL_PROPERTY,
-      ...SchemaHelper.getPassword(),
+      ...Schema.getEmail(),
+      ...Schema.getPassword(),
       ...PROFILE_PROPERTY,
     },
   },
@@ -28,7 +38,7 @@ export const UpdateUserSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['profile'],
     properties: {
-      ...EMAIL_PROPERTY,
+      ...Schema.getEmail(),
       ...PROFILE_PROPERTY,
     },
   },
@@ -43,8 +53,8 @@ export const ChangePasswordSchema: IJsonSchema = {
     additionalProperties: false,
     required: ['oldPassword', 'newPassword'],
     properties: {
-      ...SchemaHelper.getPassword('oldPassword'),
-      ...SchemaHelper.getPassword('newPassword'),
+      ...Schema.getPassword('oldPassword'),
+      ...Schema.getPassword('newPassword'),
     },
   },
 };

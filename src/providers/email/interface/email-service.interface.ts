@@ -1,5 +1,5 @@
-import { SendEmail } from '../email.type';
+import { EmailMessage } from '../email.type';
 
 export interface IEmailService {
-  sendEmail<T>(data: SendEmail): Promise<T>;
+  sendEmail(data: EmailMessage): Promise<void>;
 }

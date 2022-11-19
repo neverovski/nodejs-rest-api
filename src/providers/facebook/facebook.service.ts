@@ -1,16 +1,16 @@
-import axios from 'axios';
-import { singleton } from 'tsyringe';
-
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
-import { PlatformProvider } from '@modules/platform';
-import { FACEBOOK_LINK, HttpException, SocialNetwork } from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
+import { Exception, HttpCode } from '@libs';
+import {
+  FACEBOOK_LINK,
+  PlatformPayload,
+  RequestUtil,
+  SocialNetwork,
+} from '@utils';
 
-import { FacebookProfile } from './facebook.type';
+import { FacebookResponse } from './facebook.type';
 import { IFacebookService } from './interface';
 
-@singleton()
 export default class FacebookService
   extends ServiceCore
   implements IFacebookService
@@ -25,9 +25,11 @@ export default class FacebookService
     this.init();
   }
 
-  async getProfile(token: string): Promise<PlatformProvider> {
+  async getProfile(token: string): Promise<PlatformPayload> {
     try {
-      const { data } = await axios.get<FacebookProfile>(`${this.url}${token}`);
+      const { data } = await RequestUtil.get<FacebookResponse>(
+        `${this.url}${token}`,
+      );
 
       return {
         ssid: data.id,
@@ -36,17 +38,15 @@ export default class FacebookService
         ...(data?.email && {
           email: data.email.toLowerCase(),
         }),
-        ...((data?.first_name || data?.last_name) && {
-          profile: {
-            firstName: data?.first_name || '',
-            lastName: data?.last_name || '',
-          },
-        }),
+        profile: {
+          firstName: data?.first_name || '',
+          lastName: data?.last_name || '',
+        },
       };
     } catch (err) {
       this.handleError(err);
 
-      throw ExceptionHelper.getError(HttpException.EXTERNAL);
+      throw Exception.getError(HttpCode.EXTERNAL);
     }
   }
 }

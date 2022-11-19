@@ -1,6 +1,6 @@
 import { Logger as LoggerOrm } from 'typeorm';
 
-import { Logger } from '@core/logger';
+import { Logger } from '@libs';
 import { LoggerType } from '@utils';
 
 export default class TypeormLogger implements LoggerOrm {

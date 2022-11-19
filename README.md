@@ -49,21 +49,23 @@ $ npm run migrate:create --name=<NAME>
 
 ## Project Structure
 
-| Name                   | Description                                             |
-|------------------------|---------------------------------------------------------|
-| **src/**               | Source files                                            |
-| **src/config/**        | Application configuration                               |
-| **src/core/**          | Reusable utilises and library source code like a logger |
-| **src/db/**            | DB connect and migration                                |
-| **src/middleware/**    | Express Middlewares like error handler feature          |
-| **src/modules/**       | Express Middlewares like error handler feature          |
-| **src/providers/**     | Express Middlewares like error handler feature          |
-| **src/utils/**         | Express Middlewares like error handler feature          |
-| **src/utils/helpers/** | Express Middlewares like error handler feature          |
-| **build/**             | Compiled source files will be placed here               |
-| **tests/**             | Test cases will be placed here                          |
-| **tests/unit/**        | Unit Test cases will be placed here                     |
-| **tests/integration/** | API routes (Integration) Test cases will be placed here |
+| Name                   | Description                                              |
+|------------------------|----------------------------------------------------------|
+| **src/**               | Source files                                             |
+| **src/config/**        | Application configuration                                |
+| **src/core/**          |                                                          |
+| **src/db/**            | DB connect, migration, seed and etc.                     |
+| **src/libs/**          | Library source code like a logger, schema, i18n and etc. |
+| **src/middleware/**    | Contains all the middleware that we need                 |
+| **src/modules/**       |                                                          |
+| **src/providers/**     |                                                          |
+| **src/templates/**     |                                                          |
+| **src/utils/**         | Common functions that would be used repetitively         |
+| **build/**             | Compiled source files will be placed here                |
+| **tests/**             | Test cases will be placed here                           |
+| **tests/e2e/**         |                                                          |
+| **tests/unit/**        | Unit Test cases will be placed here                      |
+| **tests/integration/** | API routes (Integration) Test cases will be placed here  |
 
 ## Notes
 

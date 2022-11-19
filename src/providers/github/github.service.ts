@@ -1,16 +1,11 @@
-import axios from 'axios';
-import { singleton } from 'tsyringe';
-
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
-import { PlatformProvider } from '@modules/platform';
-import { HttpException, SocialNetwork } from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
+import { Exception, HttpCode } from '@libs';
+import { PlatformPayload, RequestUtil, SocialNetwork } from '@utils';
 
-import { GitHubProfile } from './github.type';
+import { GitHubResponse } from './github.type';
 import { IGitHubService } from './interface';
 
-@singleton()
 export default class GitHubService
   extends ServiceCore
   implements IGitHubService
@@ -25,14 +20,16 @@ export default class GitHubService
     this.init();
   }
 
-  async getProfile(token: string): Promise<PlatformProvider> {
+  async getProfile(token: string): Promise<PlatformPayload> {
     try {
-      const { data } = await axios.get<GitHubProfile>(this.url, {
+      const config = {
         headers: {
           Accept: 'application/vnd.github+json',
           Authorization: `token ${token}`,
         },
-      });
+      };
+
+      const { data } = await RequestUtil.get<GitHubResponse>(this.url, config);
 
       return {
         ssid: data.id,
@@ -50,7 +47,7 @@ export default class GitHubService
     } catch (err) {
       this.handleError(err);
 
-      throw ExceptionHelper.getError(HttpException.EXTERNAL);
+      throw Exception.getError(HttpCode.EXTERNAL);
     }
   }
 }

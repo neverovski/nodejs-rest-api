@@ -1,6 +1,6 @@
-import { Config } from '@core/config';
+import { ConfigInstance } from './instance';
 
-class RedisConfig extends Config {
+class RedisConfig extends ConfigInstance {
   readonly host: string;
   readonly password: string;
   readonly port: number;
@@ -11,37 +11,39 @@ class RedisConfig extends Config {
   constructor() {
     super();
 
-    this.port = this.set<number>(
-      'REDIS_PORT',
-      this.joi.number().required(),
-      6379,
-    );
-
     this.host = this.set<string>(
       'REDIS_HOST',
-      this.joi.string().required(),
+      this.joi.string().allow(null, ''),
       '127.0.0.1',
     );
 
     this.password = this.set<string>(
       'REDIS_PASSWORD',
       this.joi.string().allow(null, ''),
-      '',
+    );
+
+    this.port = this.set<number>(
+      'REDIS_PORT',
+      this.joi.number().allow(null, ''),
+      6379,
     );
 
     this.queuePrefix = this.set<string>(
-      'QUEUE_PREFIX',
-      this.joi.string().required(),
-      'ANGELS',
+      'REDIS_QUEUE_PREFIX',
+      this.joi.string().allow(null, ''),
+      'AUTH',
+    );
+
+    this.tls = this.set<boolean>(
+      'REDIS_TLS',
+      this.joi.boolean().allow(null, ''),
+      false,
     );
 
     this.username = this.set<string>(
       'REDIS_USERNAME',
       this.joi.string().allow(null, ''),
-      '',
     );
-
-    this.tls = this.set<boolean>('REDIS_TLS', this.joi.boolean(), false);
   }
 }
 

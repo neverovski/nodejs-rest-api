@@ -1,15 +1,12 @@
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
-import { singleton } from 'tsyringe';
 
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
-import { PlatformProvider } from '@modules/platform';
-import { HttpException, SocialNetwork } from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
+import { Exception, HttpCode } from '@libs';
+import { PlatformPayload, SocialNetwork } from '@utils';
 
 import { IGoogleService } from './interface';
 
-@singleton()
 export default class GoogleService
   extends ServiceCore
   implements IGoogleService
@@ -26,7 +23,7 @@ export default class GoogleService
     this.init();
   }
 
-  async getProfile(token: string): Promise<PlatformProvider> {
+  async getProfile(token: string): Promise<PlatformPayload> {
     let data: TokenPayload | undefined;
 
     try {
@@ -39,7 +36,7 @@ export default class GoogleService
     } catch (err) {
       this.handleError(err);
 
-      throw ExceptionHelper.getError(HttpException.EXTERNAL);
+      throw Exception.getError(HttpCode.EXTERNAL);
     }
 
     if (data) {
@@ -59,6 +56,6 @@ export default class GoogleService
       };
     }
 
-    throw ExceptionHelper.getError(HttpException.EXTERNAL);
+    throw Exception.getError(HttpCode.EXTERNAL);
   }
 }

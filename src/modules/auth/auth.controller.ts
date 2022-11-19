@@ -2,10 +2,9 @@ import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 
 import { ControllerCore } from '@core';
-import { i18n } from '@lib';
+import { Exception, HttpCode, i18n } from '@libs';
 import { PlatformRequest } from '@modules/platform';
-import { HttpException } from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
+import { TokenDTO } from '@modules/token';
 
 import {
   AuthInject,
@@ -14,7 +13,6 @@ import {
   RefreshTokenRequest,
   ResetPasswordRequest,
 } from './auth.type';
-import { TokenDTO } from './dto';
 import { IAuthService } from './interface';
 
 /**
@@ -55,7 +53,7 @@ export default class AuthController extends ControllerCore {
     await this.service.forgotPassword(req.body);
 
     this.response(res, {
-      data: ExceptionHelper.getOk(HttpException.OK, {
+      data: Exception.getOk(HttpCode.OK, {
         message: i18n()['message.passwordReset.sentToEmail'],
       }),
     });
@@ -80,9 +78,11 @@ export default class AuthController extends ControllerCore {
    *        500:
    *          $ref: '#/components/responses/HttpInternalServerError'
    */
-  async login(req: Request<any, any, LoginRequest>, res: Response) {
-    const { body, ctx } = req;
-    const data = await this.service.login(body, ctx);
+  async login(
+    { body, userAgent }: Request<any, any, LoginRequest>,
+    res: Response,
+  ) {
+    const data = await this.service.login(body, userAgent);
 
     this.setCookie(res, data);
     this.response(res, { data, dto: TokenDTO });
@@ -107,7 +107,7 @@ export default class AuthController extends ControllerCore {
    *        - BearerAuth: []
    */
   async logout(req: Request, res: Response) {
-    const { userId } = req.user as Required<UserContext>;
+    const { userId } = req.user;
 
     await this.service.logout({ userId });
 
@@ -132,9 +132,11 @@ export default class AuthController extends ControllerCore {
    *        500:
    *          $ref: '#/components/responses/HttpInternalServerError'
    */
-  async platform(req: Request<any, any, PlatformRequest>, res: Response) {
-    const { body, ctx } = req;
-    const data = await this.service.platform(body, ctx);
+  async platform(
+    { body, userAgent }: Request<any, any, PlatformRequest>,
+    res: Response,
+  ) {
+    const data = await this.service.platform(body, userAgent);
 
     this.setCookie(res, data);
     this.response(res, { data, dto: TokenDTO });
@@ -160,14 +162,13 @@ export default class AuthController extends ControllerCore {
    *          $ref: '#/components/responses/HttpInternalServerError'
    */
   async refreshToken(
-    req: Request<any, any, RefreshTokenRequest>,
+    { body, userAgent, ...req }: Request<any, any, RefreshTokenRequest>,
     res: Response,
   ) {
-    const { body, ctx } = req;
     const refreshToken =
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       (req?.cookies?.refreshToken as string) || body.refreshToken || '';
-    const data = await this.service.refreshToken({ refreshToken }, ctx);
+    const data = await this.service.refreshToken({ refreshToken }, userAgent);
 
     this.setCookie(res, data);
     this.response(res, { data, dto: TokenDTO });
@@ -197,7 +198,7 @@ export default class AuthController extends ControllerCore {
     await this.service.resetPassword(req.body);
 
     this.response(res, {
-      data: ExceptionHelper.getOk(HttpException.OK, {
+      data: Exception.getOk(HttpCode.OK, {
         message: i18n()['message.passwordReset.successfully'],
       }),
     });

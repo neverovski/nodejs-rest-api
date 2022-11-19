@@ -1,19 +1,7 @@
 import { container } from 'tsyringe';
 
-import { AuthInject, TokenInject } from './auth.type';
-import {
-  IAuthService,
-  IRefreshTokenRepository,
-  ITokenService,
-} from './interface';
-import { RefreshTokenRepository } from './repository';
-import { AuthService, TokenService } from './service';
+import AuthService from './auth.service';
+import { AuthInject } from './auth.type';
+import { IAuthService } from './interface';
 
 container.register<IAuthService>(AuthInject.AUTH_SERVICE, AuthService);
-
-container.register<ITokenService>(TokenInject.TOKEN_SERVICE, TokenService);
-
-container.register<IRefreshTokenRepository>(
-  TokenInject.TOKEN_REPOSITORY,
-  RefreshTokenRepository,
-);

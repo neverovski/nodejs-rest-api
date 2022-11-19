@@ -1,10 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableForeignKey,
-  TableIndex,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 import { DB_TABLE_REFRESH_TOKEN, DB_TABLE_USER } from '@utils';
 
@@ -39,7 +33,7 @@ export class RefreshToken1629959489269 implements MigrationInterface {
           },
           {
             name: 'ip',
-            type: 'cidr',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -72,22 +66,21 @@ export class RefreshToken1629959489269 implements MigrationInterface {
             default: 'now()',
           },
         ],
+        foreignKeys: [
+          {
+            columnNames: ['userId'],
+            referencedColumnNames: ['id'],
+            referencedTableName: DB_TABLE_USER,
+            onDelete: 'CASCADE',
+          },
+        ],
+        indices: [
+          {
+            columnNames: ['jti'],
+          },
+          { columnNames: ['userId'] },
+        ],
       }),
     );
-
-    await queryRunner.createForeignKey(
-      DB_TABLE_REFRESH_TOKEN,
-      new TableForeignKey({
-        columnNames: ['userId'],
-        referencedColumnNames: ['id'],
-        referencedTableName: DB_TABLE_USER,
-        onDelete: 'CASCADE',
-      }),
-    );
-
-    await queryRunner.createIndices(DB_TABLE_REFRESH_TOKEN, [
-      new TableIndex({ columnNames: ['jti'] }),
-      new TableIndex({ columnNames: ['userId'] }),
-    ]);
   }
 }

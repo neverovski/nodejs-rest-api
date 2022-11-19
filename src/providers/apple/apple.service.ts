@@ -1,24 +1,17 @@
 import { JwksClient } from 'jwks-rsa';
-import { inject, singleton } from 'tsyringe';
 
 import { PlatformConfig } from '@config';
 import { ServiceCore } from '@core';
-import { PlatformProvider } from '@modules/platform';
-import { CryptoInject, ICryptoService } from '@providers/crypto';
-import { HttpException, SocialNetwork } from '@utils';
-import { ExceptionHelper } from '@utils/helpers';
+import { Crypto, Exception, HttpCode } from '@libs';
+import { PlatformPayload, SocialNetwork } from '@utils';
 
 import { AppleKey, AppleTokenPayload } from './apple.type';
 import { IAppleService } from './interface';
 
-@singleton()
 export default class AppleService extends ServiceCore implements IAppleService {
   private readonly client: JwksClient;
 
-  constructor(
-    @inject(CryptoInject.CRYPTO_SERVICE)
-    private readonly cryptoService: ICryptoService,
-  ) {
+  constructor() {
     super();
 
     this.client = new JwksClient({ jwksUri: PlatformConfig.apple.url });
@@ -26,7 +19,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
     this.init();
   }
 
-  async getProfile(token: string): Promise<PlatformProvider> {
+  async getProfile(token: string): Promise<PlatformPayload> {
     try {
       const data = await this.verify(token);
 
@@ -40,19 +33,17 @@ export default class AppleService extends ServiceCore implements IAppleService {
     } catch (err) {
       this.handleError(err);
 
-      throw ExceptionHelper.getError(HttpException.EXTERNAL);
+      throw Exception.getError(HttpCode.EXTERNAL);
     }
   }
 
   private async getKeys(): Promise<AppleKey[]> {
     try {
-      const keys = await this.client.getKeys();
-
-      return keys as AppleKey[];
+      return (await this.client.getKeys()) as AppleKey[];
     } catch (err) {
       this.handleError(err);
 
-      throw ExceptionHelper.getError(HttpException.EXTERNAL);
+      throw Exception.getError(HttpCode.EXTERNAL);
     }
   }
 
@@ -64,7 +55,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
     } catch (err) {
       this.handleError(err);
 
-      throw ExceptionHelper.getError(HttpException.EXTERNAL);
+      throw Exception.getError(HttpCode.EXTERNAL);
     }
   }
 
@@ -74,23 +65,21 @@ export default class AppleService extends ServiceCore implements IAppleService {
       const publicKey = keys.map((key) => this.getPublicKey(key.kid));
       const publicKeys = await Promise.all(publicKey);
       const verifiedTokenPromises = publicKeys.map((key) =>
-        this.cryptoService
-          .verifyJWTAsync<AppleTokenPayload>(token, key)
-          .catch(() => null),
+        Crypto.verifyJwt<AppleTokenPayload>(token, key).catch(() => null),
       );
 
       const decodedTokens = await Promise.all(verifiedTokenPromises);
       const data = decodedTokens.filter((elem) => elem).pop();
 
       if (!data) {
-        throw ExceptionHelper.getError(HttpException.EXTERNAL);
+        throw Exception.getError(HttpCode.EXTERNAL);
       }
 
       return data;
     } catch (err) {
       this.handleError(err);
 
-      throw ExceptionHelper.getError(HttpException.EXTERNAL);
+      throw Exception.getError(HttpCode.EXTERNAL);
     }
   }
 }

@@ -1,11 +1,4 @@
-import { JSONSchema7 } from 'json-schema';
-
-export type JWTPayload = {
-  email: string;
-  role: string;
-  sub: number;
-  userId: number;
-};
+import type { ClassTransformOptions } from 'class-transformer';
 
 export enum TokenType {
   BEARER = 'Bearer',
@@ -22,18 +15,6 @@ export enum Role {
   ANONYMOUS = 'anonymous',
   USER = 'user',
 }
-
-export type LoggerCtxInfo = {
-  error?: Error | any;
-  info?: string | any;
-  message: string;
-  type?: LoggerType;
-};
-
-export type LoggerCtxError = Required<
-  Pick<LoggerCtxInfo, 'message' | 'error'>
-> &
-  Pick<LoggerCtxInfo, 'type'>;
 
 export enum PostgresErrorCode {
   CheckViolation = '23514',
@@ -66,20 +47,21 @@ export type GitHubConfig = {
   url: string;
 };
 
-export type OptionStringSchema = {
-  maxLength?: number;
-  minLength?: number;
+export type TransformDTO<T, DTO> = {
+  data: T;
+  dto?: { new (): DTO };
+  options?: ClassTransformOptions;
 };
 
-export type OptionNumberSchema = {
-  maximum?: number;
-  minimum?: number;
-};
+export type DBClient = 'mysql' | 'mariadb' | 'postgres';
 
-export interface JSONSchemaCustom extends JSONSchema7 {
-  consumes?: string[];
-  properties?: {
-    [key: string]: JSONSchemaCustom | boolean;
+export type PlatformPayload = {
+  email?: Email;
+  name: SocialNetwork;
+  profile?: {
+    firstName?: string;
+    lastName?: string;
   };
-  transform?: string[];
-}
+  ssid: string;
+  url?: string;
+};

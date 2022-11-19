@@ -4,7 +4,7 @@ import AppleService from './apple.service';
 import { AppleInject } from './apple.type';
 import { IAppleService } from './interface';
 
-container.registerSingleton<IAppleService>(
+container.registerInstance<IAppleService>(
   AppleInject.APPLE_SERVICE,
-  AppleService,
+  new AppleService(),
 );
