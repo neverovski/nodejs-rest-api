@@ -1,11 +1,9 @@
-import type { DestinationStream } from 'pino';
-
 import { LoggerType } from '@utils';
 
 export type LoggerInitial = {
   env: string;
   name: string;
-  stream?: DestinationStream;
+  transport: { options: any; target: string };
 };
 
 export type LoggerCtx = {

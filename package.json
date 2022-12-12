@@ -38,6 +38,7 @@
   },
   "homepage": "https://github.com/neverovski/nodejs-auth-sql#readme",
   "dependencies": {
+    "@autotelic/pino-seq-transport": "^0.1.0",
     "ajv": "^8.11.2",
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^2.1.1",
@@ -68,8 +69,8 @@
     "nodemailer": "^6.8.0",
     "pg": "^8.8.0",
     "pino": "^8.7.0",
+    "pino-http": "^8.2.1",
     "pino-pretty": "^9.1.1",
-    "pino-seq": "^0.9.0",
     "prom-client": "^14.1.0",
     "tsyringe": "^4.7.0",
     "typeorm": "^0.3.11",

@@ -1,14 +1,8 @@
-import pino, {
-  DestinationStream,
-  Level,
-  LoggerOptions,
-  Logger as LoggerPino,
-} from 'pino';
+import pino, { Level, Logger as LoggerPino } from 'pino';
 
-import { ENV_TEST, LoggerType } from '@utils';
+import { ENV_DEVELOPMENT, ENV_TEST, LogLevel, LoggerType } from '@utils';
 
 import { ILogger } from './interface';
-import { PRETTY_PRINT } from './logger.constant';
 import { LoggerCtx, LoggerInitial } from './logger.type';
 
 export default class Logger implements ILogger {
@@ -19,27 +13,27 @@ export default class Logger implements ILogger {
   private readonly fatalLogger: LoggerPino;
   private readonly infoLogger: LoggerPino;
   private readonly name: string;
-  private readonly stream?: DestinationStream;
   private readonly traceLogger: LoggerPino;
+  private readonly transport: LoggerInitial['transport'];
   private readonly warnLogger: LoggerPino;
 
-  constructor({ name, stream, env }: LoggerInitial) {
+  constructor({ name, transport, env }: LoggerInitial) {
     this.name = name;
-    this.stream = stream;
+    this.transport = transport;
     this.env = env;
 
-    this.fatalLogger = this.createPino('fatal');
-    this.errorLogger = this.createPino('error');
-    this.warnLogger = this.createPino('warn');
-    this.infoLogger = this.createPino('info');
-    this.debugLogger = this.createPino('debug');
-    this.traceLogger = this.createPino('trace');
+    this.fatalLogger = this.createPino(LogLevel.FATAL);
+    this.errorLogger = this.createPino(LogLevel.ERROR);
+    this.warnLogger = this.createPino(LogLevel.WARN);
+    this.infoLogger = this.createPino(LogLevel.INFO);
+    this.debugLogger = this.createPino(LogLevel.DEBUG);
+    this.traceLogger = this.createPino(LogLevel.TRACE);
 
     this.pino = this.createPino();
   }
 
   debug({ message, ...ctx }: LoggerCtx): void {
-    if (this.env !== ENV_TEST) {
+    if (this.env === ENV_DEVELOPMENT) {
       this.debugLogger.debug({ type: LoggerType.SERVER, ...ctx }, message);
     }
   }
@@ -57,7 +51,7 @@ export default class Logger implements ILogger {
   }
 
   info({ message, ...ctx }: LoggerCtx): void {
-    if (this.env !== ENV_TEST) {
+    if (this.env === ENV_DEVELOPMENT) {
       this.infoLogger.info({ type: LoggerType.SERVER, ...ctx }, message);
     }
   }
@@ -75,8 +69,8 @@ export default class Logger implements ILogger {
   }
 
   private createPino(level?: Level): LoggerPino {
-    const opt: LoggerOptions = {
-      name: `${this.name}${level ? '::' + level : ''}`,
+    return pino({
+      name: this.name,
       ...(level && { level }),
       ...(level !== 'info' &&
         level !== 'trace' &&
@@ -84,9 +78,7 @@ export default class Logger implements ILogger {
           errorLikeObjectKeys: ['err', 'error'],
           serializers: { error: pino.stdSerializers.err },
         }),
-      ...(level !== 'fatal' && { PRETTY_PRINT }),
-    };
-
-    return this.stream ? pino(opt, this.stream) : pino(opt);
+      transport: this.transport,
+    });
   }
 }
