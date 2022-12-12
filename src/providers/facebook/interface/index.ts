@@ -1,1 +1,1 @@
-export * from './facebook-service.interface';
+export * from './facebook.service.interface';

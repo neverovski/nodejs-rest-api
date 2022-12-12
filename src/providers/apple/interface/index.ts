@@ -1,1 +1,1 @@
-export * from './apple-service.interface';
+export * from './apple.service.interface';

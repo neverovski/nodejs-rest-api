@@ -1,1 +1,1 @@
-export * from './google-service.interface';
+export * from './google.service.interface';
