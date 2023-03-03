@@ -6,9 +6,9 @@
   "scripts": {
     "commit-msg": "commitlint --edit ${1}",
     "pre-commit": "npm run lint && npm run test:unit && npm run build",
-    "release:major": "standard-version --release-as major && git push --follow-tags && npm publish",
-    "release:minor": "standard-version --release-as minor && git push --follow-tags && npm publish",
-    "release:patch": "standard-version --release-as patch && git push --follow-tags && npm publish",
+    "release:major": "standard-version --release-as major && git push --follow-tags",
+    "release:minor": "standard-version --release-as minor && git push --follow-tags",
+    "release:patch": "standard-version --release-as patch && git push --follow-tags",
     "start:dev": "tsc-watch --onSuccess \"ts-node ./src/index.ts\" | pino-pretty",
     "start:prod": "node build/index.js | pino-pretty",
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
