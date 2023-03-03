@@ -4,6 +4,11 @@
   "description": "Node.js for Token Based Authentication (access and refresh) with PostgreSQL database.",
   "main": "src/index.ts",
   "scripts": {
+    "commit-msg": "commitlint --edit ${1}",
+    "pre-commit": "npm run lint && npm run test:unit && npm run build",
+    "release:major": "standard-version --release-as major && git push --follow-tags && npm publish",
+    "release:minor": "standard-version --release-as minor && git push --follow-tags && npm publish",
+    "release:patch": "standard-version --release-as patch && git push --follow-tags && npm publish",
     "start:dev": "tsc-watch --onSuccess \"ts-node ./src/index.ts\" | pino-pretty",
     "start:prod": "node build/index.js | pino-pretty",
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
@@ -20,7 +25,6 @@
     "migrate:revert": "NODE_ENV=cli node -r ts-node/register ./node_modules/typeorm/cli.js migration:revert -d ./src/db/typeorm/data-source.ts",
     "migrate:show": "APP_ENV=cli node -r ts-node/register ./node_modules/typeorm/cli.js migration:show -d ./src/db/typeorm/data-source.ts",
     "prepare": "husky install",
-    "prestart": "chmod ug+x .husky/* && chmod ug+x .git/hooks/*",
     "swagger": "swagger-jsdoc -o ./swagger/openapi.json -d ./swagger/swagger.js ./swagger.yaml ./src/modules/*/*.controller.ts ./src/modules/*/*.yaml"
   },
   "repository": {
@@ -34,7 +38,7 @@
   },
   "engines": {
     "node": "^18",
-    "npm": "^8"
+    "npm": ">=8"
   },
   "homepage": "https://github.com/neverovski/nodejs-auth-sql#readme",
   "dependencies": {
@@ -77,6 +81,9 @@
     "ua-parser-js": "^1.0.32"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
+    "@commitlint/cz-commitlint": "^17.4.4",
     "@types/bcrypt": "^5.0.0",
     "@types/body-parser": "^1.19.2",
     "@types/bull": "^3.15.9",
@@ -97,6 +104,7 @@
     "@typescript-eslint/parser": "^5.46.1",
     "chai": "^4.3.7",
     "chai-http": "^4.3.0",
+    "commitizen": "^4.3.0",
     "eslint": "^8.29.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.5.0",
@@ -110,11 +118,17 @@
     "openapi-types": "^12.1.0",
     "prettier": "^2.8.1",
     "reflect-metadata": "^0.1.13",
+    "standard-version": "^9.5.0",
     "swagger-jsdoc": "^6.2.5",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.2",
     "tsc-watch": "^5.0.3",
     "tsconfig-paths": "^4.1.1",
     "typescript": "^4.9.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
   }
 }

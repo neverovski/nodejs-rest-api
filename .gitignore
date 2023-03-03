@@ -89,6 +89,10 @@ typings/
 .dynamodb/
 
 .idea
+.idea/httpRequests
 .DS_Store
-/data
+data
 build
+storage/
+.clinic
+tmp
