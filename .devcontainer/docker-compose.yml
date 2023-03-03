@@ -1,6 +1,24 @@
 version: '3.9'
 
 services:
+  auth-server:
+    image: auth-server
+    container_name: auth-server
+    working_dir: /app
+    env_file: ../.env
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        APP_ENV: ${APP_ENV}
+        APP_PORT: ${APP_PORT}
+    volumes:
+      - ..:/app
+    networks:
+      - auth-network
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+
   auth-redis:
     image: redis:7
     container_name: auth-redis
@@ -14,7 +32,7 @@ services:
     image: postgres:14
     container_name: auth-db
     volumes:
-      - ./data/postgresql/server:/var/lib/postgresql/data
+      - ../data/postgresql/server:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}

@@ -1,0 +1,13 @@
+{
+  "name": "AUTH-SERVER",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "auth-server",
+  "workspaceFolder": "/app",
+  "customizations": {
+    "vscode": {
+      "extensions": ["mads-hartmann.bash-ide-vscode"]
+    }
+  },
+  "runArgs": ["--env-file", ".env"],
+  "remoteUser": "auth"
+}
