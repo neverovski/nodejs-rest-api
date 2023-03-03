@@ -11,8 +11,8 @@ import {
 } from 'typeorm';
 
 import DB from '@db/index';
-import { Exception, HttpCode, Logger, i18n } from '@libs';
-import { DB_UQ_USER_EMAIL, LoggerType, PostgresErrorCode } from '@utils';
+import { Exception, HttpCode, i18n } from '@libs';
+import { DB_UQ_USER_EMAIL, PostgresErrorCode } from '@utils';
 
 export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
   protected readonly alias: string;
@@ -90,11 +90,11 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
   }
 
   protected handleError(error: unknown) {
-    Logger.error({
-      message: this.constructor.name,
-      error,
-      type: LoggerType.DB,
-    });
+    // Logger.error({
+    //   message: this.constructor.name,
+    //   error,
+    //   type: LoggerType.DB,
+    // });
 
     if (
       (error as Error)?.name === 'EntityNotFound' ||

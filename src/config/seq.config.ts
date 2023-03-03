@@ -1,24 +1,27 @@
 import { ConfigInstance } from './instance';
 
 class SeqConfig extends ConfigInstance {
-  readonly apiKey: string;
-  readonly monitoring: boolean;
-  readonly serverUrl: string;
+  readonly apiKey: string | null;
+  readonly isEnabled: boolean;
+  readonly serverUrl: string | null;
 
   constructor() {
     super();
 
-    this.apiKey = this.set<string>('SEQ_API_KEY', this.joi.string().required());
+    this.apiKey = this.set<string | null>(
+      'SEQ_API_KEY',
+      this.joi.string().allow(null, ''),
+    );
 
-    this.monitoring = this.set<boolean>(
-      'SEQ_MONITORING',
+    this.isEnabled = this.set<boolean>(
+      'SEQ_ENABLED',
       this.joi.boolean(),
       false,
     );
 
-    this.serverUrl = this.set<string>(
+    this.serverUrl = this.set<string | null>(
       'SEQ_SERVER_URL',
-      this.joi.string().required(),
+      this.joi.string().allow(null, ''),
     );
   }
 }

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "module": "CommonJS",
     "target": "ES2022",
+    "lib": ["ES2022"],
     "removeComments": true,
     "noImplicitAny": false,
     "outDir": "./build",
@@ -29,6 +30,7 @@
     "noStrictGenericChecks": true,
     "suppressExcessPropertyErrors": true,
     "suppressImplicitAnyIndexErrors": true,
+    "skipLibCheck": true, //avoid checking .d.ts files within node_modules
     "typeRoots": ["./src/@types", "./node_modules/@types"]
   },
   "include": ["./src", "./tests"],

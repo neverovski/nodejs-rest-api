@@ -4,13 +4,6 @@ export enum TokenType {
   BEARER = 'Bearer',
 }
 
-export enum LoggerType {
-  DB = 'DB',
-  HTTP = 'Http',
-  QUEUE = 'Queue',
-  SERVER = 'Server',
-}
-
 export enum Role {
   ANONYMOUS = 'anonymous',
   USER = 'user',
@@ -65,3 +58,19 @@ export type PlatformPayload = {
   ssid: string;
   url?: string;
 };
+
+export enum LoggerType {
+  DB = 'DB',
+  HTTP = 'Http',
+  QUEUE = 'Queue',
+  SERVER = 'Server',
+}
+
+export enum LogLevel {
+  DEBUG = 'debug',
+  ERROR = 'error',
+  FATAL = 'fatal',
+  INFO = 'info',
+  TRACE = 'trace',
+  WARN = 'warn',
+}

@@ -1,10 +1,14 @@
 {
   "rest-client.environmentVariables": {
-    "dev": {
+    "local": {
       "host": "http://127.0.0.1:5858"
     }
   },
   "rest-client.defaultHeaders": {
     "Content-Type": "application/json"
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
   }
 }

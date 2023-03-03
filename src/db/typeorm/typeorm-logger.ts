@@ -1,7 +1,8 @@
 import { Logger as LoggerOrm } from 'typeorm';
 
+import { AppConfig } from '@config';
 import { Logger } from '@libs';
-import { LoggerType } from '@utils';
+import { ENV_DEVELOPMENT, LoggerType } from '@utils';
 
 export default class TypeormLogger implements LoggerOrm {
   private readonly message: string;
@@ -26,58 +27,61 @@ export default class TypeormLogger implements LoggerOrm {
     }
   }
 
-  logMigration(info: string) {
-    Logger.debug({ message: 'DB migration', info, type: LoggerType.DB });
+  logMigration() {
+    // Logger.debug({ message: 'DB migration', info, type: LoggerType.DB });
   }
 
   logQuery(query: string, parameters?: any[]) {
-    const info =
-      query +
-      (parameters && parameters.length
-        ? ` -- PARAMETERS: ${this.stringify(parameters)}`
-        : '');
+    if (AppConfig.env === ENV_DEVELOPMENT) {
+      query +=
+        parameters && parameters.length
+          ? ` -- PARAMETERS: ${this.transformJsonToString(parameters)}`
+          : '';
+    }
 
-    Logger.debug({ message: this.message, info, type: LoggerType.DB });
+    Logger.info({ message: this.message, query, type: LoggerType.DB });
   }
 
   logQueryError(error: string, query: string, parameters?: any[]) {
-    const info =
-      query +
-      (parameters && parameters.length
-        ? ` -- PARAMETERS: ${this.stringify(parameters)}`
-        : '');
+    if (AppConfig.env === ENV_DEVELOPMENT) {
+      query +=
+        parameters && parameters.length
+          ? ` -- PARAMETERS: ${this.transformJsonToString(parameters)}`
+          : '';
+    }
 
     Logger.error({
       message: `${this.message} error`,
       error,
-      info,
+      query,
       type: LoggerType.DB,
     });
   }
 
   logQuerySlow(_time: number, query: string, parameters?: any[]) {
-    const info =
-      query +
-      (parameters && parameters.length
-        ? ` -- PARAMETERS: ${this.stringify(parameters)}`
-        : '');
+    if (AppConfig.env === ENV_DEVELOPMENT) {
+      query +=
+        parameters && parameters.length
+          ? ` -- PARAMETERS: ${this.transformJsonToString(parameters)}`
+          : '';
+    }
 
     Logger.info({
       message: `${this.message} slow`,
-      info,
+      query,
       type: LoggerType.DB,
     });
   }
 
-  logSchemaBuild(info: string) {
-    Logger.debug({
-      message: 'DB schema build',
-      info,
-      type: LoggerType.DB,
-    });
+  logSchemaBuild() {
+    // Logger.debug({
+    //   message: 'DB schema build',
+    //   info,
+    //   type: LoggerType.DB,
+    // });
   }
 
-  protected stringify(parameters: any[]) {
+  protected transformJsonToString(parameters: any[]) {
     try {
       return JSON.stringify(parameters);
     } catch (error) {

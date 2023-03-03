@@ -14,7 +14,7 @@
     "prettier"
   ],
   "parserOptions": {
-    "ecmaVersion": 2021,
+    "ecmaVersion": 2022,
     "project": "./tsconfig.json",
     "tsconfigRootDir": "./"
   },
@@ -86,7 +86,6 @@
             "private-static-field",
             "public-abstract-field",
             "protected-abstract-field",
-            "private-abstract-field",
             "field",
 
             // Constructors
@@ -104,7 +103,6 @@
             "private-static-get",
             "public-abstract-get",
             "protected-abstract-get",
-            "private-abstract-get",
             "get",
 
             // Setters
@@ -116,7 +114,6 @@
             "private-static-set",
             "public-abstract-set",
             "protected-abstract-set",
-            "private-abstract-set",
             "set",
 
             // Methods
@@ -128,7 +125,6 @@
             "private-static-method",
             "public-abstract-method",
             "protected-abstract-method",
-            "private-abstract-method",
             "method"
           ],
           "order": "alphabetically"
