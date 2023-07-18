@@ -1,23 +1,25 @@
-type Id = {
-  id: number;
-};
-
+type Id = number;
 type Email = string;
+
+type IdObject = { id: Id };
 
 type DateInfo = {
   createdAt: Date;
   updatedAt: Date;
 };
 
-type DateCtx = string | number | Date;
-
-type ExceptionOption = {
-  code: string;
-  errors?: { [key: string]: string };
-  message: string;
-  name?: string;
-  status: number;
+type CookieParam = {
+  domain: string;
+  expiresIn: string;
+  maxAge?: number;
 };
+
+type TokePayload = {
+  accessToken?: string;
+  refreshToken?: string;
+};
+
+type DateCtx = string | number | Date;
 
 type DeepPartial<T> = T extends object
   ? {

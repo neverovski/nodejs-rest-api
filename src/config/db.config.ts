@@ -1,74 +1,84 @@
-import { CACHE_TIME, DBClient } from '@utils';
+import { CACHE_TIME } from '@common/constants';
+import { IDbConfig } from '@common/interfaces';
+import { DbClient } from '@common/types';
+import { ConfigCore } from '@core';
 
-import { ConfigInstance } from './instance';
+class DbConfig extends ConfigCore implements IDbConfig {
+  cacheEnabled!: boolean;
+  cacheTime!: number;
+  charset!: string;
+  client!: DbClient;
+  databaseName!: string;
+  host!: string;
+  logEnabled!: boolean;
+  password!: string;
+  port!: number;
+  sslCertBase64!: string;
+  sslEnabled!: boolean;
+  user!: string;
 
-class DBConfig extends ConfigInstance {
-  readonly cacheTime: number;
-  readonly charset: string;
-  readonly client: DBClient;
-  readonly databaseName: string;
-  readonly debug: boolean;
-  readonly host: string;
-  readonly password: string;
-  readonly port: number;
-  readonly ssl: string;
-  readonly user: string;
+  init() {
+    this.cacheEnabled = this.set(
+      'DB_CACHE_ENABLED',
+      this.schema.boolean().allow(null, '').default(false),
+    );
 
-  constructor() {
-    super();
-
-    this.cacheTime = this.set<number>(
+    this.cacheTime = this.set(
       'DB_CACHE_TIME',
-      this.joi.number().allow(null, ''),
-      CACHE_TIME,
+      this.schema.number().allow(null, '').default(CACHE_TIME),
     );
 
-    this.charset = this.set<string>(
+    this.charset = this.set(
       'DB_CHARSET',
-      this.joi.string().valid('utf8').allow(null, ''),
-      'utf8',
+      this.schema.string().valid('utf8').allow(null, '').default('utf8'),
     );
 
-    this.client = this.set<DBClient>(
+    this.client = this.set(
       'DB_CLIENT',
-      this.joi.string().valid('postgres').allow(null, ''),
-      'postgres',
+      this.schema
+        .string()
+        .valid('postgres')
+        .allow(null, '')
+        .default('postgres'),
     );
 
-    this.databaseName = this.set<string>(
+    this.databaseName = this.set(
       'DB_NAME',
-      this.joi.string().min(4).max(100).required(),
+      this.schema.string().min(4).max(100).required(),
     );
 
-    this.debug = this.set<boolean>(
-      'DB_DEBUG',
-      this.joi.boolean().allow(null, ''),
-      false,
+    this.logEnabled = this.set(
+      'DB_LOG_ENABLED',
+      this.schema.boolean().allow(null, '').default(true),
     );
 
-    this.host = this.set<string>(
+    this.host = this.set(
       'DB_HOST',
-      this.joi.string().min(4).max(100).allow(null, ''),
-      '127.0.0.1',
+      this.schema.string().min(4).max(100).allow(null, '').default('127.0.0.1'),
     );
 
-    this.password = this.set<string>(
-      'DB_PASSWORD',
-      this.joi.string().required(),
+    this.password = this.set('DB_PASSWORD', this.schema.string().required());
+
+    this.port = this.set(
+      'DB_PORT',
+      this.schema.number().allow(null, '').default(5432),
     );
 
-    this.port = this.set<number>('DB_PORT', this.joi.number().required());
-
-    this.ssl = this.set<string>(
-      'DB_SSL_CERT',
-      this.joi.string().allow(null, ''),
+    this.sslCertBase64 = this.set(
+      'DB_SSL_CERT_BASE64',
+      this.schema.string().allow(null, ''),
     );
 
-    this.user = this.set<string>(
+    this.sslEnabled = this.set(
+      'DB_SSL_ENABLED',
+      this.schema.boolean().allow(null, '').default(false),
+    );
+
+    this.user = this.set(
       'DB_USER',
-      this.joi.string().min(4).max(100).required(),
+      this.schema.string().min(4).max(100).required(),
     );
   }
 }
 
-export default new DBConfig();
+export default new DbConfig();

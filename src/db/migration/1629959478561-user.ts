@@ -1,6 +1,8 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-import { DB_TABLE_USER, DB_UQ_USER_EMAIL } from '@utils';
+import { DB_TABLE_USER } from '@common/constants';
+
+import { UQ_USER_EMAIL } from '../constraints';
 
 export class User1629959478561 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {
@@ -29,19 +31,9 @@ export class User1629959478561 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'resetPasswordCode',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
             name: 'isConfirmedEmail',
             type: 'bool',
             default: false,
-          },
-          {
-            name: 'isActive',
-            type: 'bool',
-            default: true,
           },
           {
             name: 'createdAt',
@@ -53,23 +45,8 @@ export class User1629959478561 implements MigrationInterface {
             type: 'timestamptz',
             default: 'now()',
           },
-          {
-            name: 'deletedAt',
-            type: 'timestamptz',
-            isNullable: true,
-          },
         ],
-        uniques: [
-          {
-            name: DB_UQ_USER_EMAIL,
-            columnNames: ['email'],
-          },
-        ],
-        indices: [
-          {
-            columnNames: ['resetPasswordCode'],
-          },
-        ],
+        uniques: [UQ_USER_EMAIL],
       }),
     );
   }

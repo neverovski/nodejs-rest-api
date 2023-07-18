@@ -1,27 +1,22 @@
-import { ConfigInstance } from './instance';
+import { ISeqConfig } from '@common/interfaces';
+import { ConfigCore } from '@core';
 
-class SeqConfig extends ConfigInstance {
-  readonly apiKey: string | null;
-  readonly isEnabled: boolean;
-  readonly serverUrl: string | null;
+class SeqConfig extends ConfigCore implements ISeqConfig {
+  apiKey!: string | null;
+  enabled!: boolean;
+  serverUrl!: string | null;
 
-  constructor() {
-    super();
+  init() {
+    this.apiKey = this.set('SEQ_API_KEY', this.schema.string().allow(null, ''));
 
-    this.apiKey = this.set<string | null>(
-      'SEQ_API_KEY',
-      this.joi.string().allow(null, ''),
-    );
-
-    this.isEnabled = this.set<boolean>(
+    this.enabled = this.set(
       'SEQ_ENABLED',
-      this.joi.boolean(),
-      false,
+      this.schema.boolean().allow(null, '').default(false),
     );
 
-    this.serverUrl = this.set<string | null>(
+    this.serverUrl = this.set(
       'SEQ_SERVER_URL',
-      this.joi.string().allow(null, ''),
+      this.schema.string().allow(null, ''),
     );
   }
 }

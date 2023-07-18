@@ -1,16 +1,24 @@
-type JwtPayload = {
+type UserPayload = {
   email?: string;
-  jti: string;
   role: string;
-  sub: number;
-  typ: string;
   userId: number;
 };
 
-type UserPayload = Pick<JwtPayload, 'email' | 'role' | 'userId'>;
+type JwtPayload = {
+  jti: string;
+  sub: number;
+  typ: string;
+} & UserPayload;
 
-type UserAgentCtx = {
+type PaginationCtx = {
+  limit: number;
+  offset: number;
+  page: number;
+};
+
+type UserSessionCtx = {
   browser?: string;
+  domain?: string;
   ip?: string | null;
   os?: string;
   userAgent?: string;
@@ -19,7 +27,8 @@ type UserAgentCtx = {
 declare namespace Express {
   export interface Request {
     params: any;
+    raw: any;
     user: UserPayload;
-    userAgent?: UserAgentCtx;
+    userSession?: UserSessionCtx;
   }
 }

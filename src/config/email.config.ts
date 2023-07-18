@@ -1,39 +1,26 @@
-import { ConfigInstance } from './instance';
+import { IEmailConfig } from '@common/interfaces';
+import { ConfigCore } from '@core';
 
-class EmailConfig extends ConfigInstance {
-  readonly driver: string;
-  readonly encryption: string;
-  readonly host: string;
-  readonly name: string;
-  readonly password: string;
-  readonly port: number;
-  readonly username: string;
+class EmailConfig extends ConfigCore implements IEmailConfig {
+  driver!: string;
+  encryption!: string;
+  host!: string;
+  name!: string;
+  password!: string;
+  port!: number;
+  username!: string;
 
-  constructor() {
-    super();
-
-    this.driver = this.set<string>('MAIL_DRIVER', this.joi.string().required());
-
-    this.encryption = this.set<string>(
+  init() {
+    this.driver = this.set('MAIL_DRIVER', this.schema.string().required());
+    this.encryption = this.set(
       'MAIL_ENCRYPTION',
-      this.joi.string().required(),
+      this.schema.string().required(),
     );
-
-    this.host = this.set<string>('MAIL_HOST', this.joi.string().required());
-
-    this.name = this.set<string>('MAIL_NAME', this.joi.string().required());
-
-    this.password = this.set<string>(
-      'MAIL_PASSWORD',
-      this.joi.string().required(),
-    );
-
-    this.port = this.set<number>('MAIL_PORT', this.joi.number().required());
-
-    this.username = this.set<string>(
-      'MAIL_USERNAME',
-      this.joi.string().required(),
-    );
+    this.host = this.set('MAIL_HOST', this.schema.string().required());
+    this.name = this.set('MAIL_NAME', this.schema.string().required());
+    this.password = this.set('MAIL_PASSWORD', this.schema.string().required());
+    this.port = this.set<number>('MAIL_PORT', this.schema.number().required());
+    this.username = this.set('MAIL_USERNAME', this.schema.string().required());
   }
 }
 

@@ -1,3 +1,3 @@
-import DBConnection from './db.connection';
-
-export default new DBConnection();
+export { default as DbConnection } from './db.connection';
+export * from './transformer';
+export * from './db.util';

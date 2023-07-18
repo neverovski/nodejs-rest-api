@@ -1,44 +1,46 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { DatabaseError } from 'pg';
 import {
   DeepPartial,
   EntityTarget,
-  FindManyOptions,
   FindOneOptions,
   ObjectLiteral,
   QueryFailedError,
   Repository,
 } from 'typeorm';
 
-import DB from '@db/index';
-import { Exception, HttpCode, i18n } from '@libs';
-import { DB_UQ_USER_EMAIL, PostgresErrorCode } from '@utils';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@common/exceptions';
+import { DbConnection, DbUtil } from '@db';
 
-export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
+export class RepositoryCore<E extends Id & ObjectLiteral = any> {
   protected readonly alias: string;
-  protected orm: Repository<Entity>;
-  private readonly notFound: string;
+  protected orm: Repository<E>;
 
-  constructor(entity: EntityTarget<Entity>, alias?: string) {
-    this.orm = DB.dataSource.getRepository(entity);
+  constructor(entity: EntityTarget<E>, alias?: string) {
+    this.orm = DbConnection.dataSource.getRepository(entity);
+
     this.alias = alias || 'entity';
-    this.notFound = (i18n()[`notFound.${this.alias}`] ||
-      i18n()['notFound.default']) as string;
   }
 
-  async create<T extends ObjectLiteral>(body: Entity): Promise<T> {
+  async create<T extends ObjectLiteral = any>(
+    body: DeepPartial<T>,
+  ): Promise<E> {
     try {
-      const entity = this.orm.create(body);
-
-      await this.orm.save(entity);
-
-      return entity as unknown as T;
+      return await this.orm
+        .createQueryBuilder()
+        .insert()
+        .values(body as unknown as E)
+        .returning('*')
+        .execute()
+        .then((res) => res?.generatedMaps[0] as E);
     } catch (err) {
       throw this.handleError(err);
     }
   }
 
-  async delete(query: Partial<Entity>): Promise<void> {
+  async delete(query: DeepPartial<E>): Promise<void> {
     try {
       await this.orm.delete(query);
     } catch (err) {
@@ -46,9 +48,7 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
     }
   }
 
-  async findOne<T extends FindOneOptions<Entity>>(
-    options: T,
-  ): Promise<Entity | null> {
+  async findOne(options: FindOneOptions<E>): Promise<E | null> {
     try {
       return await this.orm.findOne(options);
     } catch (err) {
@@ -56,9 +56,7 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
     }
   }
 
-  async findOneOrFail<T extends FindManyOptions<Entity>>(
-    options: T,
-  ): Promise<Entity> {
+  async findOneOrFail(options: FindOneOptions<E>): Promise<E> {
     try {
       return await this.orm.findOneOrFail(options);
     } catch (err) {
@@ -66,58 +64,29 @@ export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
     }
   }
 
-  async save(
-    entity: Entity,
-    partialEntity: DeepPartial<Entity>,
+  async update<T extends ObjectLiteral = any>(
+    query: DeepPartial<T>,
+    partialBody: DeepPartial<T>,
   ): Promise<void> {
     try {
-      this.orm.merge(entity, partialEntity);
-      await this.orm.save(entity);
+      await this.orm.update(query, partialBody);
     } catch (err) {
       throw this.handleError(err);
     }
   }
 
-  async update(
-    query: DeepPartial<Entity>,
-    partialEntity: DeepPartial<Entity>,
-  ): Promise<void> {
-    try {
-      await this.orm.update(query, partialEntity);
-    } catch (err) {
-      throw this.handleError(err);
-    }
-  }
-
-  protected handleError(error: unknown) {
-    // Logger.error({
-    //   message: this.constructor.name,
-    //   error,
-    //   type: LoggerType.DB,
-    // });
-
+  protected handleError(err: unknown) {
     if (
-      (error as Error)?.name === 'EntityNotFound' ||
-      (error as Error)?.name === 'EntityNotFoundError'
+      (err as Error)?.name === 'EntityNotFound' ||
+      (err as Error)?.name === 'EntityNotFoundError'
     ) {
-      return Exception.getError(HttpCode.NOT_FOUND, {
-        message: this.notFound,
-      });
+      return new NotFoundException();
     }
 
-    if (error instanceof QueryFailedError) {
-      const err = error.driverError as DatabaseError;
-
-      if (err.code === PostgresErrorCode.UniqueViolation) {
-        switch (err.constraint) {
-          case DB_UQ_USER_EMAIL:
-            return Exception.getError(HttpCode.EMAIL_ALREADY_TAKEN);
-          default:
-            return error;
-        }
-      }
+    if (err instanceof QueryFailedError) {
+      return DbUtil.handlerError(err.driverError as DatabaseError);
     }
 
-    return error;
+    return new InternalServerErrorException();
   }
 }

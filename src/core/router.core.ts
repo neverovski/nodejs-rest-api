@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-export default abstract class RouterCore {
+export abstract class RouterCore {
   protected readonly router: Router;
 
   constructor(router: Router) {

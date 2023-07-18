@@ -1,0 +1,6 @@
+{
+  "message.passwordReset.sentToEmail": "Password reset code sent to email",
+  "message.passwordReset.successfully": "Password reset successfully",
+  "message.user.created": "User created successfully!",
+  "message.user.update": "User updated successfully!"
+}

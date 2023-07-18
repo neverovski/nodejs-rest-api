@@ -1,11 +1,9 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-import {
-  DB_TABLE_PLATFORM,
-  DB_TABLE_USER,
-  DB_UQ_PLATFORM_SSID,
-  SocialNetwork,
-} from '@utils';
+import { DB_TABLE_PLATFORM, DB_TABLE_USER } from '@common/constants';
+import { SocialNetwork } from '@common/enums';
+
+import { UQ_PLATFORM } from '../constraints';
 
 export class Platform1636488492237 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {
@@ -52,12 +50,7 @@ export class Platform1636488492237 implements MigrationInterface {
             default: 'now()',
           },
         ],
-        uniques: [
-          {
-            name: DB_UQ_PLATFORM_SSID,
-            columnNames: ['ssid', 'name'],
-          },
-        ],
+        uniques: [UQ_PLATFORM],
         foreignKeys: [
           {
             columnNames: ['userId'],

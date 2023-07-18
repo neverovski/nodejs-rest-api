@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access,@typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { RequestHandler } from 'express';
+import type { Request, RequestHandler } from 'express';
 import pino from 'pino-http';
 
+import { ENV_DEVELOPMENT } from '@common/constants';
+import { LogLevel, LoggerType } from '@common/enums';
 import { AppConfig } from '@config';
 import { MiddlewareCore } from '@core';
-import { Logger } from '@libs';
-import { ENV_DEVELOPMENT, IpUtil, LogLevel, LoggerType } from '@utils';
+import { Logger } from '@providers/logger';
 
 class LoggerMiddleware extends MiddlewareCore {
   handler(): RequestHandler {
@@ -17,11 +16,13 @@ class LoggerMiddleware extends MiddlewareCore {
           return 'Resource not found';
         }
 
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         return `${req?.method} completed`;
       },
 
       // Define a custom receive message
       customReceivedMessage: (req) => {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         return `Request received: ${req?.method}`;
       },
 
@@ -41,28 +42,32 @@ class LoggerMiddleware extends MiddlewareCore {
         return LogLevel.INFO;
       },
       serializers: {
-        req: (req) => ({
-          id: req.id,
-          method: req.method,
-          url: req.url,
-          query: req.query,
-          params: req.params,
-          userAgent: req.headers['user-agent'] || '',
-          ip: IpUtil.getIp(req),
-          ...(AppConfig.env === ENV_DEVELOPMENT && {
-            headers: req?.headers || null,
-            body: req?.raw?.body || null,
-          }),
-        }),
+        req: (req: Request) => {
+          return {
+            id: req.id,
+            method: req.method,
+            url: req.url,
+            query: req.query,
+            params: req.params,
+            session: req?.userSession,
+            ...(AppConfig.env === ENV_DEVELOPMENT && {
+              headers: req?.headers || null,
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+              body: req?.raw?.body || null,
+            }),
+          };
+        },
         res: (res) => ({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           statusCode: res?.statusCode || null,
           ...(AppConfig.env === ENV_DEVELOPMENT && {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             headers: res?.headers || null,
           }),
         }),
       },
       customProps: () => ({ type: LoggerType.HTTP }),
-      logger: Logger.pino,
+      logger: Logger.logger,
     });
   }
 }

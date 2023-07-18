@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import promBundle from 'express-prom-bundle';
 import { Registry } from 'prom-client';
 
@@ -30,7 +30,6 @@ class PrometheusMiddleware extends MiddlewareCore {
       promClient: {
         collectDefaultMetrics: {
           prefix: this.prefix,
-          timeout: 5000,
           register: this.register,
         },
       },

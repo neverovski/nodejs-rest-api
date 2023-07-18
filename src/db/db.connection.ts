@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm';
 
 import { AppDataSource } from './typeorm/data-source';
 
-export default class DBConnection {
+class DbConnection {
   readonly dataSource: DataSource;
 
   constructor() {
@@ -15,3 +15,5 @@ export default class DBConnection {
     return this.dataSource.initialize();
   }
 }
+
+export default new DbConnection();

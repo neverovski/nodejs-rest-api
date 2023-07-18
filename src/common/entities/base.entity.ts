@@ -1,11 +1,11 @@
 import {
-  BeforeUpdate,
   CreateDateColumn,
+  ObjectLiteral,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-export default class EntityCore<T> {
+export class BaseEntity<T = ObjectLiteral> {
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
 
@@ -19,10 +19,5 @@ export default class EntityCore<T> {
     if (input) {
       Object.assign(this, input);
     }
-  }
-
-  @BeforeUpdate()
-  updateDate() {
-    this.updatedAt = new Date();
   }
 }

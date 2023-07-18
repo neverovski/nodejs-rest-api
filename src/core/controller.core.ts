@@ -1,33 +1,64 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 
-import { Exception, HttpCode, HttpStatus } from '@libs';
-import { CookieUtil, MappingUtil, TransformDTO } from '@utils';
+import { COOKIE_ACCESS_TOKEN, COOKIE_REFRESH_TOKEN } from '@common/constants';
+import { PageDto, PageMetaDto } from '@common/dtos';
+import { TransformCtx } from '@common/types';
+import { DateUtil, MappingUtil } from '@common/utils';
 
-export default class ControllerCore {
-  protected deleteCookie<T extends object>(res: Response, cookies: T) {
-    CookieUtil.deleteMany(res, cookies);
-  }
+export class ControllerCore {
+  // protected responseHttpOk() {
+  //   return {
+  //     code: CodeException.OK,
+  //     message: i18n()['message.ok'],
+  //     status: HttpStatus.OK,
+  //   };
+  // }
 
-  protected response<T, DTO>(
+  protected storeTokenInCookie<T extends TokePayload>(
     res: Response,
-    ctx?: TransformDTO<T, DTO> & { status?: HttpStatus },
+    authToken: Partial<T>,
+    options: CookieParam,
   ) {
-    const { data, options, dto } = ctx || {};
+    const maxAge = DateUtil.toMs(options?.expiresIn || '1s');
 
-    if (!data && ctx?.status === HttpStatus.OK) {
-      throw Exception.getError(HttpCode.NOT_FOUND);
-    }
+    res.cookie(COOKIE_ACCESS_TOKEN, authToken?.accessToken, {
+      domain: options?.domain || '',
+      secure: true,
+      sameSite: 'strict',
+      maxAge: options?.maxAge ?? maxAge,
+      path: '/',
+    });
 
-    const status = !ctx ? HttpStatus.NoContent : ctx?.status || HttpStatus.OK;
-
-    res.status(status).json({
-      ...(data && {
-        data: dto ? MappingUtil.toDTO({ dto, data, options }) : data,
-      }),
+    //TODO: only api/v1/refresh
+    res.cookie(COOKIE_REFRESH_TOKEN, authToken?.refreshToken, {
+      domain: options?.domain || '',
+      secure: true,
+      sameSite: 'strict',
+      maxAge: options?.maxAge ?? maxAge,
+      httpOnly: true,
+      path: '/',
     });
   }
 
-  protected setCookie<T>(res: Response, data: T) {
-    CookieUtil.setMany(res, data, { httpOnly: true });
+  protected transformDataToDto<T, C>(
+    dataIn: T | T[],
+    { dataClass, transformOptions, pagination, itemCount }: TransformCtx<T, C>,
+  ) {
+    const dataOut = MappingUtil.toDto({
+      cls: dataClass,
+      data: dataIn,
+      options: transformOptions,
+    });
+
+    if (pagination) {
+      const meta = new PageMetaDto({
+        pageOption: pagination,
+        itemCount: itemCount ?? 0,
+      });
+
+      return new PageDto(dataOut as T[], meta);
+    }
+
+    return dataOut;
   }
 }

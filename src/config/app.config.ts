@@ -1,45 +1,74 @@
-import { ENV_CLI, ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST } from '@utils';
+import {
+  ENV_CLI,
+  ENV_DEVELOPMENT,
+  ENV_PRODUCTION,
+  ENV_SEED,
+  ENV_TEST,
+} from '@common/constants';
+import { IAppConfig } from '@common/interfaces';
+import { Cors } from '@common/types';
+import { ConfigCore } from '@core';
 
-import { ConfigInstance } from './instance';
+class AppConfig extends ConfigCore implements IAppConfig {
+  cors!: Cors;
+  domain!: string;
+  env!:
+    | typeof ENV_CLI
+    | typeof ENV_DEVELOPMENT
+    | typeof ENV_PRODUCTION
+    | typeof ENV_SEED
+    | typeof ENV_TEST;
 
-class AppConfig extends ConfigInstance {
-  readonly domain: string;
-  readonly env: string;
-  readonly host: string;
-  readonly name: string;
-  readonly port: number;
+  host!: string;
+  logEnabled!: boolean;
+  name!: string;
+  port!: number;
 
-  constructor() {
-    super();
-
-    this.domain = this.set<string>(
+  init() {
+    this.domain = this.set(
       'APP_DOMAIN',
-      this.joi.string().allow(null, ''),
-      'localhost',
+      this.schema.string().allow(null, '').default('localhost'),
     );
 
-    this.env = this.set<string>(
-      'APP_ENV',
-      this.joi
+    this.env = this.set(
+      'NODE_ENV',
+      this.schema
         .string()
-        .valid(ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST, ENV_CLI)
-        .allow(null, ''),
-      ENV_DEVELOPMENT,
+        .valid(ENV_DEVELOPMENT, ENV_PRODUCTION, ENV_TEST, ENV_CLI, ENV_SEED)
+        .allow(null, '')
+        .default(ENV_PRODUCTION),
     );
 
-    this.host = this.set<string>(
+    this.host = this.set(
       'APP_HOST',
-      this.joi.string().allow(null, ''),
-      'http://localhost',
+      this.schema.string().allow(null, '').default('http://localhost'),
     );
 
-    this.name = this.set<string>('APP_NAME', this.joi.string().required(), '');
+    this.logEnabled = this.set<boolean>(
+      'APP_LOG_ENABLED',
+      this.schema.boolean().allow(null, '').default(true),
+    );
+
+    this.name = this.set(
+      'APP_NAME',
+      this.schema.string().allow(null, '').default(''),
+    );
 
     this.port = this.set<number>(
       'APP_PORT',
-      this.joi.number().port().allow(null, ''),
-      5656,
+      this.schema.number().allow(null, '').default(5656),
     );
+
+    this.cors = {
+      credentials: this.set<boolean>(
+        'APP_CORS_CREDENTIALS',
+        this.schema.boolean().allow(null, '').default(true),
+      ),
+      origin: this.set(
+        'APP_CORS_ORIGINS',
+        this.schema.string().allow(null, '').default('localhost'),
+      ),
+    };
   }
 }
 

@@ -1,48 +1,49 @@
-import { ConfigInstance } from './instance';
+import { IRedisConfig } from '@common/interfaces';
+import { ConfigCore } from '@core';
 
-class RedisConfig extends ConfigInstance {
-  readonly host: string;
-  readonly password: string;
-  readonly port: number;
-  readonly queuePrefix: string;
-  readonly tls: boolean;
-  readonly username: string;
+class RedisConfig extends ConfigCore implements IRedisConfig {
+  clusterModeEnabled!: boolean;
+  host!: string;
+  password!: string;
+  port!: number;
+  queuePrefix!: string;
+  tls!: boolean;
+  username!: string;
 
-  constructor() {
-    super();
+  init() {
+    this.clusterModeEnabled = this.set(
+      'REDIS_CLUSTER_MODE_ENABLED',
+      this.schema.boolean().allow(null, '').default(false),
+    );
 
-    this.host = this.set<string>(
+    this.host = this.set(
       'REDIS_HOST',
-      this.joi.string().allow(null, ''),
-      '127.0.0.1',
+      this.schema.string().allow(null, '').default('127.0.0.1'),
     );
 
     this.password = this.set<string>(
       'REDIS_PASSWORD',
-      this.joi.string().allow(null, ''),
+      this.schema.string().allow(null, ''),
     );
 
     this.port = this.set<number>(
       'REDIS_PORT',
-      this.joi.number().allow(null, ''),
-      6379,
+      this.schema.number().allow(null, '').default(6379),
     );
 
     this.queuePrefix = this.set<string>(
       'REDIS_QUEUE_PREFIX',
-      this.joi.string().allow(null, ''),
-      'AUTH',
+      this.schema.string().allow(null, '').default('worker'),
     );
 
     this.tls = this.set<boolean>(
       'REDIS_TLS',
-      this.joi.boolean().allow(null, ''),
-      false,
+      this.schema.boolean().allow(null, '').default(false),
     );
 
     this.username = this.set<string>(
       'REDIS_USERNAME',
-      this.joi.string().allow(null, ''),
+      this.schema.string().allow(null, ''),
     );
   }
 }

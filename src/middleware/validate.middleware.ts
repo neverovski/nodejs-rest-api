@@ -2,65 +2,75 @@ import Ajv from 'ajv';
 import addErrors from 'ajv-errors';
 import addFormats from 'ajv-formats';
 import addKeywords from 'ajv-keywords';
-import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { JSONSchema7 } from 'json-schema';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
 
+import { REG_PHONE } from '@common/constants';
+import { AjvFormatKey } from '@common/enums';
+import { UnprocessableEntityException } from '@common/exceptions';
+import { ExceptionMessage, JsonSchema, JsonSchemaProp } from '@common/types';
+import { AjvUtil, StringUtil } from '@common/utils';
 import { MiddlewareCore } from '@core';
-import { Exception, HttpCode, IJsonSchema } from '@libs';
-import { AjvUtil, StringUtil } from '@utils';
 
 class ValidateMiddleware extends MiddlewareCore {
-  protected ajv: Ajv;
+  private ajv: Ajv;
 
   constructor() {
     super();
+    this.ajv = new Ajv({ $data: true, allErrors: true, coerceTypes: true });
 
-    this.ajv = new Ajv({ allErrors: true, coerceTypes: true });
-    addErrors(this.ajv);
     addFormats(this.ajv);
+    addErrors(this.ajv);
     addKeywords(this.ajv, ['transform', 'uniqueItemProperties']);
 
-    this.ajv.addFormat('phone', AjvUtil.phoneFormat);
-
-    this.ajv.addKeyword({
-      keyword: 'sanitize',
-      modifying: true,
-      compile: AjvUtil.sanitize,
-      errors: false,
-    });
+    this.registerFormat();
+    this.registerKeyword();
   }
 
-  handler(schemas: IJsonSchema): RequestHandler {
+  handler(schemas: JsonSchemaProp): RequestHandler {
     return async (
       req: Request<Record<string, unknown>, any, Record<string, unknown>>,
       res: Response,
       next: NextFunction,
     ) => {
       try {
-        await this.validate(schemas.params, req.params);
-        await this.validate(schemas.query, req.query);
-        await this.validate(schemas.body, req.body);
+        if (schemas.params) {
+          await this.validate(schemas.params, req.params);
+        }
+
+        if (schemas.query) {
+          await this.validate(schemas.query, req.query);
+        }
+
+        if (schemas.body) {
+          await this.validate(schemas.body, req.body);
+        }
 
         next();
-      } catch (errors) {
-        res.status(422).json(
-          Exception.getOk(HttpCode.UNPROCESSABLE_ENTITY, {
-            errors: errors as { [key: string]: string },
-          }),
-        );
+      } catch (err: unknown) {
+        res
+          .status(422)
+          .json(new UnprocessableEntityException(err as ExceptionMessage));
       }
     };
   }
 
+  private registerFormat() {
+    this.ajv.addFormat(AjvFormatKey.PHONE, REG_PHONE);
+  }
+
+  private registerKeyword() {
+    this.ajv.addKeyword(AjvUtil.getSanitize());
+  }
+
   private async validate(
-    schema: JSONSchema7,
+    schema: JsonSchema,
     data: Record<string, unknown>,
   ): Promise<void> {
     const validate = this.ajv.compile(schema);
 
     return new Promise((resolve, reject) => {
       if (!validate(data) && validate.errors) {
-        const errors: { [key: string]: string } = {};
+        const errors: Array<{ key: string; value: string }> = [];
         const len = validate.errors.length;
 
         for (const err of validate.errors) {
@@ -70,14 +80,19 @@ class ValidateMiddleware extends MiddlewareCore {
             err.instancePath.slice(1);
 
           if (name || (len === 1 && err.keyword === 'errorMessage')) {
-            errors[name || 'data'] = StringUtil.capitalize(err.message || '');
+            errors.push({
+              key: name || 'data',
+              value: StringUtil.capitalizeOnlyFirstChar(err.message || ''),
+            });
           }
         }
 
         reject(errors);
-      } else {
-        resolve();
+
+        return;
       }
+
+      resolve();
     });
   }
 }

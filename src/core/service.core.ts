@@ -1,16 +1,17 @@
-import { Logger } from '@libs';
-import { LoggerType } from '@utils';
+import { LoggerType } from '@common/enums';
+import { Logger } from '@providers/logger';
 
-export default class ServiceCore {
+export class ServiceCore {
   protected handleError(error: unknown) {
-    Logger.error({
-      message: this.constructor.name,
-      error,
-      type: LoggerType.SERVER,
+    Logger.error(error, {
+      name: this.constructor.name,
+      type: LoggerType.SERVICE,
     });
   }
 
   protected init() {
-    Logger.info({ message: `${this.constructor.name} initialized...` });
+    Logger.debug(`${this.constructor.name} initialized...`, {
+      type: LoggerType.SERVICE,
+    });
   }
 }

@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-import { DB_TABLE_REFRESH_TOKEN, DB_TABLE_USER } from '@utils';
+import { DB_TABLE_REFRESH_TOKEN, DB_TABLE_USER } from '@common/constants';
 
 export class RefreshToken1629959489269 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {

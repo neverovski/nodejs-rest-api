@@ -1,28 +1,27 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
 
+import { COOKIE_ACCESS_TOKEN, ROLE_ANONYMOUS } from '@common/constants';
+import { TokenType } from '@common/enums';
+import { TokenNotProvidedException } from '@common/exceptions';
 import { JwtConfig } from '@config';
 import { MiddlewareCore } from '@core';
-import { Crypto, Exception, HttpCode } from '@libs';
-import { Role, TokenUtil } from '@utils';
+import { TokenService } from '@providers/token';
 
 class AuthMiddleware extends MiddlewareCore {
   handler(): RequestHandler {
     return async (req: Request, _res: Response, next: NextFunction) => {
-      const accessToken =
-        TokenUtil.getFromHeader(req.headers) ||
-        TokenUtil.getFromCookies(req.cookies);
+      const token =
+        this.extractTokenFromHeader(req) || this.extractTokenFromCookies(req);
 
-      req.user = Object.freeze({
-        role: Role.ANONYMOUS,
-        userId: 0,
-      });
+      req.user = this.getUserForAnonymousRole();
 
-      if (accessToken) {
+      if (token) {
         try {
-          const { userId, email, role } = await Crypto.verifyJwt<JwtPayload>(
-            accessToken,
-            JwtConfig.secretAccessToken,
-          );
+          const { userId, email, role } =
+            await TokenService.verifyJwt<JwtPayload>(
+              token,
+              JwtConfig.accessToken.secret,
+            );
 
           req.user = Object.freeze({ userId, email, role });
 
@@ -32,8 +31,27 @@ class AuthMiddleware extends MiddlewareCore {
         }
       }
 
-      return next(Exception.getError(HttpCode.TOKEN_NOT_PROVIDED));
+      return next(new TokenNotProvidedException());
     };
+  }
+
+  private extractTokenFromCookies(req: Request): string | null {
+    if (req.cookies && COOKIE_ACCESS_TOKEN in req.cookies) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return req.cookies.accessToken as string;
+    }
+
+    return null;
+  }
+
+  private extractTokenFromHeader(req: Request): string | null {
+    const [type, token] = req.headers.authorization?.split(' ') ?? [];
+
+    return type === TokenType.BEARER && token ? token : null;
+  }
+
+  private getUserForAnonymousRole(): UserPayload {
+    return { userId: 0, role: ROLE_ANONYMOUS };
   }
 }
 

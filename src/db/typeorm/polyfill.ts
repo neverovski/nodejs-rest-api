@@ -3,9 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { SelectQueryBuilder } from 'typeorm';
 
-import { SQL_ID_NAME } from '@utils';
-
-import { VIRTUAL_COLUMN_KEY } from '../decorators';
+import { SQL_ID_NAME } from '@common/constants';
+import { VIRTUAL_COLUMN_KEY } from '@common/decorators';
 
 declare module 'typeorm' {
   interface SelectQueryBuilder<Entity> {
