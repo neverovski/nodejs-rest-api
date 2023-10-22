@@ -2,6 +2,10 @@
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](http://prettier.io) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
+## Description
+
+A sample NodeJs application, demonstrating how to use JWT Authentication, with access tokens and refresh tokens.
+
 ## Installation
 
 Development environment requirements:
@@ -10,25 +14,51 @@ Development environment requirements:
 
 ## Project initialization
 
-### 1. [LOCAL] stage use DevContainer or docker-compose command
-```shell
-  cp .env.dev .env
-  docker compose -f ./.devcontainer/docker-compose.yml --env-file .env up -d --build
+### 1. Installation
+
+```bash
+$ cp .env.dev .env
+$ docker compose up -d --build
+$ npm install
 ```
 
-### 2. Migration
-```shell
-  npm run migrate:create --name=<NAME>
-  npm run migrate:run
+### 2. Running the migration
+
+```bash
+$ npm run migrate:run
 ```
 
-## Next steps
+### 3. Running the app
+
+```bash
+# development mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+### 4. Running the test
+
+```bash
+# unit tests
+$ npm run test
+
+# integration tests
+$ npm run test:integration
+
+# e2e tests
+$ npm run test:e2e
+```
+
+## Roadmap
   - Auth
     - [X] Authenticate user
     - [X] Refresh token
     - [X] Logout a user
     - [X] Forgot password
     - [X] Reset password
+    - [ ] Add Redis cache
   - User
     - [X] Create a new user
     - [X] Update user
@@ -38,7 +68,6 @@ Development environment requirements:
     - [X] Facebook
     - [X] Apple
     - [X] Google
-    - [ ] Twitter
     - [ ] Linkedin
     - [X] Github
   - Test
@@ -51,33 +80,33 @@ Development environment requirements:
 
 ### 1. Enable Git hooks
 
-```
-  npx husky install
-  npx husky add .husky/commit-msg 'npm run commit-msg'
-  npx husky add .husky/pre-commit 'npm run pre-commit'
+```bash
+$ npx husky install
+$ npx husky add .husky/commit-msg 'npm run commit-msg'
+$ npx husky add .husky/pre-commit 'npm run pre-commit'
 ```
 
 ### 2. Why is my git pre-commit hook not executable by default?
 
 - Because files are not executable by default; they must be set to be executable.
 
-```
-  chmod ug+x .husky/*
-  chmod ug+x .git/hooks/*
+```bash
+$ chmod ug+x .husky/*
+$ chmod ug+x .git/hooks/*
 ```
 
 ### 3. Git commit
 
-```shell
-  npm run commit
+```bash
+$ npm run commit
 ```
 
 ### 4. Project release
 
-```shell
-  npm run release:patch // Patch release 0.1.0 -> 0.1.1
-  npm run release:minor // Minor release 0.1.1 -> 0.2.0
-  npm run release:major // Major release 0.2.0 -> 1.0.0
+```bash
+$ npm run release:patch // Patch release 0.1.0 -> 0.1.1
+$ npm run release:minor // Minor release 0.1.1 -> 0.2.0
+$ npm run release:major // Major release 0.2.0 -> 1.0.0
 ```
 
 ### 5. Project Structure
