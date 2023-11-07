@@ -1,6 +1,6 @@
-import type { JSONSchema7 } from 'json-schema';
+import { JSONSchema7 } from 'json-schema';
 
-import { AjvSanitizeKey } from '@common/enums';
+import { AjvSanitizeKey } from '../enums/ajv.enum';
 
 export type JsonSchema = JSONSchema7 & {
   consumes?: string[];
@@ -10,9 +10,14 @@ export type JsonSchema = JSONSchema7 & {
   formatMinimum?: any;
   maximum?: number;
   minimum?: number;
+  patternProperties?: {
+    [key: string]: JsonSchema;
+  };
+  precision?: number;
   properties?: {
     [key: string]: JsonSchema | boolean;
   };
+  reverseSort?: boolean;
   sanitize?: AjvSanitizeKey;
   transform?: string[];
   uniqueItemProperties?: string[];
@@ -24,13 +29,14 @@ export type JsonSchemaProp = {
 
 export type SchemaOption = {
   isOptional?: boolean;
+  skipRepeatSymbols?: string[];
 } & Pick<
   JsonSchema,
-  | 'sanitize'
   | 'maxLength'
   | 'minLength'
   | 'minimum'
   | 'maximum'
   | 'format'
   | 'transform'
+  | 'errorMessage'
 >;

@@ -1,12 +1,13 @@
+import { Exception, HttpCode, HttpStatus, i18n } from '@libs';
 import { Request, Response } from 'express';
-import { inject, injectable } from 'tsyringe';
+import { inject } from 'tsyringe';
 
 import { ControllerCore } from '@core';
-import { Exception, HttpCode, HttpStatus, i18n } from '@libs';
 
-import { UserDTO } from './dto';
+import { UserDto } from './dto';
 import { IUserService } from './interface';
-import { Password, User, UserInject } from './user.type';
+import { UserInject } from './user.enum';
+import { PasswordChangeRequest, User } from './user.type';
 
 /**
  * @openapi
@@ -14,11 +15,8 @@ import { Password, User, UserInject } from './user.type';
  *   name: User
  *   description: user
  */
-@injectable()
-export default class UserController extends ControllerCore {
-  constructor(
-    @inject(UserInject.USER_SERVICE) private userService: IUserService,
-  ) {
+export class UserController extends ControllerCore {
+  constructor(@inject(UserInject.SERVICE) private userService: IUserService) {
     super();
   }
 
@@ -45,7 +43,7 @@ export default class UserController extends ControllerCore {
    *        - BearerAuth: []
    */
   async changePasswordCurrentUser(
-    req: Request<any, any, Password>,
+    req: Request<any, any, PasswordChangeRequest>,
     res: Response,
   ) {
     const { userId: id } = req.user;

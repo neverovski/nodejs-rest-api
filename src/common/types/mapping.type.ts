@@ -1,7 +1,11 @@
 import { ClassConstructor, ClassTransformOptions } from 'class-transformer';
 
-export type MappingTransform<T, C> = {
-  cls?: ClassConstructor<C>;
-  data: T;
+import { PageOptionDto } from '@common/dtos';
+
+export type MappingParams<T, V> = {
+  cls?: ClassConstructor<T>;
+  data: V;
+  itemCount?: number;
   options?: ClassTransformOptions;
+  pageOption?: PageOptionDto;
 };

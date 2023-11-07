@@ -18,6 +18,7 @@ export class RefreshToken1629959489269 implements MigrationInterface {
             isPrimary: true,
             isGenerated: true,
           },
+
           {
             name: 'userId',
             type: 'int',
@@ -55,6 +56,7 @@ export class RefreshToken1629959489269 implements MigrationInterface {
             name: 'expiredAt',
             type: 'timestamptz',
           },
+
           {
             name: 'createdAt',
             type: 'timestamptz',

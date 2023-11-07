@@ -18,6 +18,7 @@ export class Profile1629959478687 implements MigrationInterface {
             isPrimary: true,
             isGenerated: true,
           },
+
           {
             name: 'userId',
             type: 'int',
@@ -31,6 +32,7 @@ export class Profile1629959478687 implements MigrationInterface {
             name: 'lastName',
             type: 'varchar',
           },
+
           {
             name: 'createdAt',
             type: 'timestamptz',

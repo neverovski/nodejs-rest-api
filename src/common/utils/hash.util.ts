@@ -8,14 +8,15 @@ import {
 } from '@common/constants';
 
 export class HashUtil {
-  static generateRandomNumber(min = 100000, max = 999999) {
-    return Math.floor(Math.random() * (max - min) + min);
+  static generateHashFromString(str: string): string {
+    return crypto.createHash('md5').update(str).digest('hex');
   }
 
-  static generateString(str: string): string {
-    const name = crypto.createHash('md5').update(str).digest('hex');
+  static generateRandomNumber(len: number) {
+    const min = Math.pow(10, len - 1);
+    const max = Math.pow(10, len) - 1;
 
-    return name.slice(0, Math.round(name.length / 2));
+    return Math.floor(Math.random() * (max - min) + min);
   }
 
   static generateUuid() {

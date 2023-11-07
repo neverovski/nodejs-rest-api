@@ -1,10 +1,11 @@
-import { IProfile } from './profile.interface';
+import { IBase } from '@common/interfaces';
 
-export interface IUser {
-  email?: string;
-  isActive: boolean;
-  isConfirmedEmail: boolean;
-  password?: string;
-  profile?: IProfile;
-  resetPasswordCode?: string;
+import { Profile } from '../user.type';
+
+export interface IUser extends IBase {
+  email?: string | null;
+  isEmailConfirmed?: boolean;
+  password?: string | null;
+  payload: UserPayload;
+  profile?: Profile;
 }

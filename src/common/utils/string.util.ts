@@ -15,13 +15,6 @@ export class StringUtil {
       .replace(/\\/g, '&#92;');
   }
 
-  static escapeSearchQuery(query: string) {
-    return query.replace(
-      /(\+|\-|\=|&&|\|\||\>|\<|\!|\(|\)|\{|\}|\[|\]|\^|"|~|\*|\?|\:|\\|\/)/g,
-      '\\$&',
-    );
-  }
-
   static isNumber(val?: any) {
     const num = val !== '' ? Number(val ?? undefined) : undefined;
 

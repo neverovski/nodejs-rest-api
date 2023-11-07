@@ -1,10 +1,10 @@
-import { PageOptionDto } from '@common/dtos';
+import { ObjectLiteral } from 'typeorm/common/ObjectLiteral';
 
-import { MappingTransform } from './mapping.type';
+import { FindOption } from './sql.type';
 
-export type TransformCtx<T, C> = {
-  dataClass: MappingTransform<T, C>['cls'];
-  itemCount?: number;
-  pagination?: PageOptionDto;
-  transformOptions?: MappingTransform<T, C>['options'];
-};
+export type Context<T = ObjectLiteral> = Partial<
+  PayloadContext &
+    Pick<FindOption<T>, 'relations' | 'select' | 'order'> & {
+      cacheKey: string;
+    }
+>;

@@ -1,5 +1,5 @@
-import { PlatformPayload } from '@utils';
+import { PlatformPayload } from '@common/types';
 
 export interface IAppleService {
-  getProfile(token: string): Promise<PlatformPayload>;
+  getPlatformPayload(token: string): Promise<PlatformPayload>;
 }

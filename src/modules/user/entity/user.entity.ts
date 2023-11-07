@@ -1,54 +1,38 @@
-import {
-  Column,
-  DeleteDateColumn,
-  Entity,
-  Index,
-  OneToOne,
-  Unique,
-} from 'typeorm';
+import { Column, Entity, OneToOne, Unique } from 'typeorm';
 
-import { EntityCore } from '@core';
+import { DB_TABLE_USER } from '@common/constants';
+import { BaseCreatedByEntity } from '@common/entities';
+import { UQ_USER_EMAIL } from '@db/constraints';
 import { StringTransformer } from '@db/transformer';
-import { DB_TABLE_USER, DB_UQ_USER_EMAIL } from '@utils';
 
 import { IUser } from '../interface';
+import { Profile } from '../user.type';
 
-import ProfileEntity from './profile.entity';
+import { ProfileEntity } from './profile.entity';
 
 @Entity({ name: DB_TABLE_USER })
-@Unique(DB_UQ_USER_EMAIL, ['email'])
-export default class UserEntity extends EntityCore<IUser> implements IUser {
-  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
-  deletedAt?: Date;
-
+@Unique(UQ_USER_EMAIL.name, UQ_USER_EMAIL.columnNames)
+export class UserEntity extends BaseCreatedByEntity<IUser> implements IUser {
   @Column('varchar', {
     nullable: true,
-    transformer: new StringTransformer(),
+    transformer: new StringTransformer({ isLowerCase: true }),
   })
-  email?: string;
-
-  @Column('bool', { default: true })
-  isActive = true;
+  email?: string | null;
 
   @Column('bool', { default: false })
-  isConfirmedEmail = false;
+  isEmailConfirmed?: boolean;
 
   @Column('varchar', { nullable: true })
-  password?: string;
+  password?: string | null;
 
-  @OneToOne(() => ProfileEntity, (profile) => profile.user, {
-    cascade: true,
-  })
-  profile?: ProfileEntity;
+  @OneToOne(() => ProfileEntity, (profile) => profile.user)
+  profile?: Profile;
 
-  @Index()
-  @Column('varchar', { nullable: true })
-  resetPasswordCode?: string;
-
-  get payload() {
+  get payload(): UserPayload {
     return {
+      userId: this.id,
       ...(this.email && { email: this.email }),
-      isConfirmedEmail: this.isConfirmedEmail,
+      isEmailConfirmed: this.isEmailConfirmed || false,
       ...(this.profile?.firstName && { firstName: this.profile.firstName }),
       ...(this.profile?.lastName && { lastName: this.profile.lastName }),
     };

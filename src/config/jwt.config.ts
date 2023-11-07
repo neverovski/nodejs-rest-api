@@ -1,6 +1,7 @@
-import { IJwtConfig } from '@common/interfaces';
 import { JwtType } from '@common/types';
 import { ConfigCore } from '@core';
+
+import { IJwtConfig } from './interface';
 
 class JwtConfig extends ConfigCore implements IJwtConfig {
   accessToken!: JwtType;

@@ -1,13 +1,23 @@
-import { FullUser, User, UserOption } from '../user.type';
+import { RepositoryCtx } from '@common/types';
+
+import {
+  CreateUser,
+  FullUser,
+  UpdateUser,
+  UserOption,
+  UserQuery,
+} from '../user.type';
 
 export interface IUserRepository {
-  create(body: User): Promise<Id>;
-  delete(query: Partial<FullUser>): Promise<void>;
-  findOne(options: UserOption): Promise<FullUser | null>;
+  countByQuery(options: UserOption): Promise<number>;
+  create(entity: CreateUser, ctx?: RepositoryCtx): Promise<FullUser>;
+  delete(query: UserQuery): Promise<void>;
+  findByQuery(options: UserOption): Promise<FullUser[]>;
+  findOne(options: UserOption, ctx?: RepositoryCtx): Promise<FullUser | null>;
   findOneOrFail(options: UserOption): Promise<FullUser>;
-  save(entity: Partial<FullUser>, partialEntity: Partial<User>): Promise<void>;
   update(
-    entity: Partial<FullUser>,
-    partialEntity: Partial<User>,
+    query: UserQuery,
+    entity: UpdateUser,
+    ctx?: RepositoryCtx,
   ): Promise<void>;
 }

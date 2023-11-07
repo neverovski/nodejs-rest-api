@@ -1,25 +1,23 @@
-import { InternalServerErrorException } from '@common/exceptions';
-
 export class RequestUtil {
   static async get<T>(url: string, config?: RequestInit): Promise<T> {
-    return RequestUtil.buildQuery<T>(url, config);
+    return this.buildJsonQuery<T>(url, config);
   }
 
-  static async post<T>(
+  static async post<T, V>(
     url: string,
-    data: any,
+    data: V,
     config?: RequestInit,
   ): Promise<T> {
     const body = JSON.stringify(data);
 
-    return RequestUtil.buildQuery<T>(url, {
+    return this.buildJsonQuery<T>(url, {
       method: 'POST',
       body,
       ...config,
     });
   }
 
-  private static async buildQuery<T>(
+  private static async buildJsonQuery<T>(
     url: string,
     config?: RequestInit,
   ): Promise<T> {
@@ -33,9 +31,11 @@ export class RequestUtil {
         return (await res.json()) as T;
       }
 
-      throw new InternalServerErrorException();
+      return await res.text().then((text) => {
+        throw new Error(text);
+      });
     } catch (err) {
-      throw new InternalServerErrorException();
+      throw err;
     }
   }
 }

@@ -1,35 +1,33 @@
-import { PlatformConfig } from '@config';
-import { ServiceCore } from '@core';
-import { Exception, HttpCode } from '@libs';
-import {
-  FACEBOOK_LINK,
-  PlatformPayload,
-  RequestUtil,
-  SocialNetwork,
-} from '@utils';
+import { LoggerCtx, SocialNetwork } from '@common/enums';
+import { PlatformPayload } from '@common/types';
+import { RequestUtil, UrlUtil } from '@common/utils';
+import { IPlatformConfig, PlatformConfig } from '@config';
+import { ProviderServiceCore } from '@core/service';
 
+import { FACEBOOK_LINK } from './facebook.constant';
 import { FacebookResponse } from './facebook.type';
 import { IFacebookService } from './interface';
 
-export default class FacebookService
-  extends ServiceCore
+export class FacebookService
+  extends ProviderServiceCore
   implements IFacebookService
 {
-  private readonly url: string;
+  private readonly platformConfig: IPlatformConfig;
 
   constructor() {
-    super();
+    super(LoggerCtx.FACEBOOK);
 
-    this.url = `${PlatformConfig.facebook.url}?fields=${PlatformConfig.facebook.fields}&access_token=`;
-
-    this.init();
+    this.platformConfig = PlatformConfig;
   }
 
-  async getProfile(token: string): Promise<PlatformPayload> {
+  async getPlatformPayload(token: string): Promise<PlatformPayload> {
     try {
-      const { data } = await RequestUtil.get<FacebookResponse>(
-        `${this.url}${token}`,
-      );
+      const url = UrlUtil.createUrl(this.platformConfig.facebook.url, {
+        fields: this.platformConfig.facebook.fields,
+        access_token: token,
+      });
+
+      const data = await RequestUtil.get<FacebookResponse>(url);
 
       return {
         ssid: data.id,
@@ -39,14 +37,12 @@ export default class FacebookService
           email: data.email.toLowerCase(),
         }),
         profile: {
-          firstName: data?.first_name || '',
           lastName: data?.last_name || '',
+          firstName: data?.first_name || '',
         },
       };
     } catch (err) {
-      this.handleError(err);
-
-      throw Exception.getError(HttpCode.EXTERNAL);
+      throw this.handleError(err);
     }
   }
 }

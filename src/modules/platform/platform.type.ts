@@ -1,23 +1,13 @@
-import { FindManyOptions } from 'typeorm';
-
-import { SocialNetwork } from '@utils';
+import { SocialNetwork } from '@common/enums';
+import { OptionManyCtx } from '@common/types';
 
 import { IPlatform } from './interface';
 
-export enum PlatformInject {
-  PLATFORM_REPOSITORY = 'PlatformRepository',
-  PLATFORM_SERVICE = 'PlatformService',
-}
-
 export type Platform = IPlatform;
-export type FullPlatform = Id & Platform & DateInfo;
+export type FullPlatform = IdObject & Platform & DateInfo;
 
 export type PlatformRequest = {
   platform: SocialNetwork;
   token: string;
 };
-
-export type PlatformOption = Pick<
-  FindManyOptions<FullPlatform>,
-  'where' | 'relations'
->;
+export type PlatformOption = OptionManyCtx<FullPlatform, FullPlatform>;

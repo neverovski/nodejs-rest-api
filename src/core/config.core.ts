@@ -4,7 +4,7 @@ import { config } from 'dotenv';
 
 import { ENV_TEST } from '@common/constants';
 import { JoiCtx } from '@common/types';
-import { JoiUtil } from '@common/utils/joi.util';
+import { JoiUtil } from '@common/utils';
 
 config({
   path: path.join(

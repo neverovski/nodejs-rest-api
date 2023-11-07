@@ -1,21 +1,25 @@
-import { FindManyOptions } from 'typeorm';
+import { Context, FindOption, RepositoryCtx } from '@common/types';
 
-import { IUser } from './interface';
+import { IProfile, IUser } from './interface';
 
-export enum UserInject {
-  USER_REPOSITORY = 'UserRepository',
-  USER_SERVICE = 'UserService',
-}
+export type Profile = IProfile;
+export type FullProfile = IdObject & Profile & DateInfo;
 
 export type User = IUser;
-export type UserPayload = Partial<
-  Pick<User, 'email' | 'isConfirmedEmail'> & {
-    firstName: string;
-    lastName: string;
-  }
->;
-export type FullUser = Id & User & { payload: UserPayload } & DateInfo;
+export type FullUser = IdObject & User & DateInfo;
 
-export type Password = { newPassword: string; oldPassword: string };
+export type CreateUser = Omit<User, 'payload' | 'createdBy' | 'updatedBy'>;
+export type UpdateUser = DeepPartial<CreateUser>;
 
-export type UserOption = Pick<FindManyOptions<FullUser>, 'where' | 'relations'>;
+export type PasswordChangeRequest = {
+  newPassword: string;
+  oldPassword: string;
+};
+
+export type UserQuery = DeepPartial<Omit<FullUser, 'payload'>>;
+export type UserOption = FindOption<UserQuery>;
+export type UserCtx = Context<UserQuery>;
+
+export type UserRepositoryCtx = RepositoryCtx & {
+  skipEmailOnConflict?: boolean;
+};

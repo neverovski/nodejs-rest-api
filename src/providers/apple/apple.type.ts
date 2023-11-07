@@ -21,7 +21,3 @@ export type AppleTokenPayload = {
   nonce_supported: boolean;
   sub: string; // user's unique ID by apple
 };
-
-export enum AppleInject {
-  APPLE_SERVICE = 'AppleService',
-}

@@ -1,9 +1,21 @@
 import { plainToInstance } from 'class-transformer';
 
-import { MappingTransform } from '@common/types';
+import { MappingParams } from '@common/types';
 
 export class MappingUtil {
-  static toDto<T, C>({ data, options, cls }: MappingTransform<T, C>): T {
-    return (cls ? plainToInstance(cls, data, options) : data) as T;
+  static objToDto<T extends Record<string, any>, V extends Array<any>>(
+    params: MappingParams<T, V>,
+  ): T[];
+  static objToDto<T extends Record<string, any>, V>(
+    params: MappingParams<T, V>,
+  ): T;
+  static objToDto<T extends Record<string, any>, V>({
+    data,
+    options,
+    cls,
+  }: MappingParams<T, V | V[]>): T | T[] {
+    return cls
+      ? plainToInstance(cls, data, options)
+      : (data as unknown as T | T[]);
   }
 }

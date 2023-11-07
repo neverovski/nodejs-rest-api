@@ -8,5 +8,4 @@ export enum AjvKeywordKey {
 
 export enum AjvSanitizeKey {
   ESCAPE = 'escape',
-  ESCAPE_SEARCH = 'escapeSearch',
 }

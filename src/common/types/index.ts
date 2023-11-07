@@ -3,6 +3,7 @@ export * from './context.type';
 export * from './exception.type';
 export * from './mapping.type';
 export * from './page.type';
+export * from './queue.type';
 export * from './schema.type';
 export * from './social.type';
 export * from './sql.type';

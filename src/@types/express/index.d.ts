@@ -1,6 +1,8 @@
 type UserPayload = {
   email?: string;
-  role: string;
+  firstName?: string;
+  isEmailConfirmed: boolean;
+  lastName?: string;
   userId: number;
 };
 
@@ -10,18 +12,18 @@ type JwtPayload = {
   typ: string;
 } & UserPayload;
 
-type PaginationCtx = {
-  limit: number;
-  offset: number;
-  page: number;
-};
-
-type UserSessionCtx = {
+type UserSession = {
   browser?: string;
   domain?: string;
+  engine?: string;
   ip?: string | null;
   os?: string;
   userAgent?: string;
+};
+
+type PayloadContext = {
+  user: UserPayload;
+  userSession?: UserSession;
 };
 
 declare namespace Express {

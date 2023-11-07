@@ -7,7 +7,7 @@ import { StringUtil } from '@common/utils';
 import { AppConfig, DbConfig, RedisConfig } from '@config';
 
 import { redisClusterConnect, redisConnect } from './cache-connect';
-import { Logger } from './logger';
+import { DbLogger } from './logger';
 
 export const AppDataSource = new DataSource({
   type: DbConfig.client,
@@ -25,7 +25,7 @@ export const AppDataSource = new DataSource({
   synchronize: false,
   logging: DbConfig.logEnabled,
   ...(!(AppConfig.env === ENV_CLI || AppConfig.env === ENV_SEED) && {
-    logger: new Logger(),
+    logger: new DbLogger(),
   }),
   ...(DbConfig.cacheEnabled && {
     cache: RedisConfig.clusterModeEnabled

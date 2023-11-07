@@ -14,5 +14,6 @@ export const SALT_SPLIT_SYMBOL = '.';
 export const HASH_KEY_LENGTH = 64;
 export const HASH_ENCODING = 'hex';
 
-export const FACEBOOK_LINK = 'https://www.facebook.com';
 export const BIG_INT = Number.MAX_SAFE_INTEGER;
+
+export const AUTH_REFRESH_LINK = '/api/v1/auth/refresh';

@@ -27,10 +27,6 @@ export class AjvUtil {
             dataCxt.parentData[dataCxt.parentDataProperty] =
               StringUtil.escape(data);
             break;
-          case AjvSanitizeKey.ESCAPE_SEARCH:
-            dataCxt.parentData[dataCxt.parentDataProperty] =
-              StringUtil.escapeSearchQuery(data);
-            break;
         }
       }
 

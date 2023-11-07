@@ -1,5 +1,6 @@
-import { IRedisConfig } from '@common/interfaces';
 import { ConfigCore } from '@core';
+
+import { IRedisConfig } from './interface';
 
 class RedisConfig extends ConfigCore implements IRedisConfig {
   clusterModeEnabled!: boolean;

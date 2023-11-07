@@ -20,6 +20,7 @@ export class User1629959478561 implements MigrationInterface {
             isPrimary: true,
             isGenerated: true,
           },
+
           {
             name: 'email',
             type: 'varchar',
@@ -35,6 +36,7 @@ export class User1629959478561 implements MigrationInterface {
             type: 'bool',
             default: false,
           },
+
           {
             name: 'createdAt',
             type: 'timestamptz',

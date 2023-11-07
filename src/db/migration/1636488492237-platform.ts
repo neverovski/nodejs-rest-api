@@ -21,6 +21,7 @@ export class Platform1636488492237 implements MigrationInterface {
             isPrimary: true,
             isGenerated: true,
           },
+
           {
             name: 'userId',
             type: 'int',
@@ -39,6 +40,7 @@ export class Platform1636488492237 implements MigrationInterface {
             type: 'varchar',
             isNullable: true,
           },
+
           {
             name: 'createdAt',
             type: 'timestamptz',

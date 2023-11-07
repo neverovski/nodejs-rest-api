@@ -1,9 +1,9 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 
-import { ProfileDTO } from './profile.dto';
+import { ProfileDto } from './profile.dto';
 
 @Exclude()
-export class UserDTO {
+export class UserDto {
   @Expose()
   createdAt!: Date;
 
@@ -17,6 +17,6 @@ export class UserDTO {
   isConfirmedEmail!: boolean;
 
   @Expose()
-  @Type(() => ProfileDTO)
-  profile!: ProfileDTO;
+  @Type(() => ProfileDto)
+  profile!: ProfileDto;
 }

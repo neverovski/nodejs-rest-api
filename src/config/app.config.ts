@@ -5,9 +5,10 @@ import {
   ENV_SEED,
   ENV_TEST,
 } from '@common/constants';
-import { IAppConfig } from '@common/interfaces';
 import { Cors } from '@common/types';
 import { ConfigCore } from '@core';
+
+import { IAppConfig } from './interface';
 
 class AppConfig extends ConfigCore implements IAppConfig {
   cors!: Cors;
@@ -20,7 +21,6 @@ class AppConfig extends ConfigCore implements IAppConfig {
     | typeof ENV_TEST;
 
   host!: string;
-  logEnabled!: boolean;
   name!: string;
   port!: number;
 
@@ -42,11 +42,6 @@ class AppConfig extends ConfigCore implements IAppConfig {
     this.host = this.set(
       'APP_HOST',
       this.schema.string().allow(null, '').default('http://localhost'),
-    );
-
-    this.logEnabled = this.set<boolean>(
-      'APP_LOG_ENABLED',
-      this.schema.boolean().allow(null, '').default(true),
     );
 
     this.name = this.set(

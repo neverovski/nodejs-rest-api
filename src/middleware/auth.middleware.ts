@@ -1,13 +1,22 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import { container } from 'tsyringe';
 
 import { COOKIE_ACCESS_TOKEN, ROLE_ANONYMOUS } from '@common/constants';
 import { TokenType } from '@common/enums';
 import { TokenNotProvidedException } from '@common/exceptions';
 import { JwtConfig } from '@config';
 import { MiddlewareCore } from '@core';
-import { TokenService } from '@providers/token';
+import { ITokenService, TokenInject } from '@providers/token';
 
 class AuthMiddleware extends MiddlewareCore {
+  protected readonly tokenService: ITokenService;
+
+  constructor() {
+    super();
+
+    this.tokenService = container.resolve<ITokenService>(TokenInject.SERVICE);
+  }
+
   handler(): RequestHandler {
     return async (req: Request, _res: Response, next: NextFunction) => {
       const token =
@@ -18,7 +27,7 @@ class AuthMiddleware extends MiddlewareCore {
       if (token) {
         try {
           const { userId, email, role } =
-            await TokenService.verifyJwt<JwtPayload>(
+            await this.tokenService.verifyJwt<JwtPayload>(
               token,
               JwtConfig.accessToken.secret,
             );

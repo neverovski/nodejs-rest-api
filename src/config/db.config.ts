@@ -1,7 +1,8 @@
 import { CACHE_TIME } from '@common/constants';
-import { IDbConfig } from '@common/interfaces';
 import { DbClient } from '@common/types';
 import { ConfigCore } from '@core';
+
+import { IDbConfig } from './interface';
 
 class DbConfig extends ConfigCore implements IDbConfig {
   cacheEnabled!: boolean;

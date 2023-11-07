@@ -1,35 +1,32 @@
-import { PlatformConfig } from '@config';
-import { ServiceCore } from '@core';
-import { Exception, HttpCode } from '@libs';
-import { PlatformPayload, RequestUtil, SocialNetwork } from '@utils';
+import { LoggerCtx, SocialNetwork } from '@common/enums';
+import { PlatformPayload } from '@common/types';
+import { RequestUtil } from '@common/utils';
+import { IPlatformConfig, PlatformConfig } from '@config';
+import { ProviderServiceCore } from '@core/service';
 
 import { GitHubResponse } from './github.type';
 import { IGitHubService } from './interface';
 
-export default class GitHubService
-  extends ServiceCore
+export class GitHubService
+  extends ProviderServiceCore
   implements IGitHubService
 {
-  private readonly url: string;
+  private readonly platformConfig: IPlatformConfig;
 
   constructor() {
-    super();
+    super(LoggerCtx.GITHUB);
 
-    this.url = PlatformConfig.github.url;
-
-    this.init();
+    this.platformConfig = PlatformConfig;
   }
 
-  async getProfile(token: string): Promise<PlatformPayload> {
+  async getPlatformPayload(token: string): Promise<PlatformPayload> {
     try {
-      const config = {
-        headers: {
-          Accept: 'application/vnd.github+json',
-          Authorization: `token ${token}`,
-        },
-      };
+      const config = this.getConfig(token);
 
-      const { data } = await RequestUtil.get<GitHubResponse>(this.url, config);
+      const data = await RequestUtil.get<GitHubResponse>(
+        this.platformConfig.github.url,
+        config,
+      );
 
       return {
         ssid: data.id,
@@ -45,9 +42,16 @@ export default class GitHubService
         }),
       };
     } catch (err) {
-      this.handleError(err);
-
-      throw Exception.getError(HttpCode.EXTERNAL);
+      throw this.handleError(err);
     }
+  }
+
+  private getConfig(token: string) {
+    return {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `token ${token}`,
+      },
+    };
   }
 }

@@ -1,5 +1,6 @@
-import { IEmailConfig } from '@common/interfaces';
 import { ConfigCore } from '@core';
+
+import { IEmailConfig } from './interface';
 
 class EmailConfig extends ConfigCore implements IEmailConfig {
   driver!: string;

@@ -1,14 +1,14 @@
 import { ValueTransformer } from 'typeorm';
 
 type StringProp = {
-  excludeLowerCase?: boolean;
+  isLowerCase?: boolean;
 };
 
 export class StringTransformer implements ValueTransformer {
-  private readonly excludeLowerCase!: boolean;
+  private readonly isLowerCase!: boolean | null;
 
   constructor(props?: StringProp) {
-    this.excludeLowerCase = props?.excludeLowerCase || false;
+    this.isLowerCase = props?.isLowerCase || null;
   }
 
   from(value: string | null) {
@@ -22,6 +22,6 @@ export class StringTransformer implements ValueTransformer {
 
     const str = String(value).trim();
 
-    return this?.excludeLowerCase ? str : str.toLowerCase();
+    return this?.isLowerCase ? str.toLowerCase() : str;
   }
 }

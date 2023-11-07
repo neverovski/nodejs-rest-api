@@ -25,7 +25,7 @@ export type FacebookConfigType = {
 };
 
 export type GoogleConfigType = {
-  clientId: string;
+  url: string;
 };
 
 export type GitHubConfigType = {

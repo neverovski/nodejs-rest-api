@@ -1,4 +1,3 @@
-import { IPlatformConfig } from '@common/interfaces';
 import {
   AppleConfigType,
   FacebookConfigType,
@@ -6,6 +5,8 @@ import {
   GoogleConfigType,
 } from '@common/types';
 import { ConfigCore } from '@core';
+
+import { IPlatformConfig } from './interface';
 
 class PlatformConfig extends ConfigCore implements IPlatformConfig {
   apple!: AppleConfigType;
@@ -31,10 +32,7 @@ class PlatformConfig extends ConfigCore implements IPlatformConfig {
     };
 
     this.google = {
-      clientId: this.set<string>(
-        'GOOGLE_CLIENT_ID',
-        this.schema.string().required(),
-      ),
+      url: this.set<string>('GOOGLE_URL', this.schema.string().required()),
     };
   }
 }

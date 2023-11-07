@@ -1,13 +1,24 @@
 import type { Request, RequestHandler } from 'express';
 import pino from 'pino-http';
+import { container } from 'tsyringe';
 
 import { ENV_DEVELOPMENT } from '@common/constants';
-import { LogLevel, LoggerType } from '@common/enums';
+import { LogLevel, LoggerCtx } from '@common/enums';
 import { AppConfig } from '@config';
 import { MiddlewareCore } from '@core';
-import { Logger } from '@providers/logger';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 
 class LoggerMiddleware extends MiddlewareCore {
+  protected readonly logger: ILoggerService;
+  private readonly loggerCtx: LoggerCtx;
+
+  constructor() {
+    super();
+
+    this.loggerCtx = LoggerCtx.HTTP;
+    this.logger = container.resolve<ILoggerService>(LoggerInject.SERVICE);
+  }
+
   handler(): RequestHandler {
     return pino({
       // Define a custom success message
@@ -66,10 +77,24 @@ class LoggerMiddleware extends MiddlewareCore {
           }),
         }),
       },
-      customProps: () => ({ type: LoggerType.HTTP }),
-      logger: Logger.logger,
+      customProps: () => ({ context: this.loggerCtx }),
+      logger: this.logger.pino,
     });
   }
+
+  // private getLogLevel(statusCode: number, err: any) {
+  //   if (statusCode >= 400 && statusCode < 500) {
+  //     return LogLevel.WARN;
+  //   } else if (statusCode >= 500 || err) {
+  //     return LogLevel.ERROR;
+  //   }
+
+  //   return LogLevel.INFO;
+  // }
+
+  // private getMessage(statusCode: number) {
+  //   return `Response with status code ${statusCode}`;
+  // }
 }
 
 export default new LoggerMiddleware();

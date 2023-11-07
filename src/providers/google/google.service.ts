@@ -1,61 +1,57 @@
-import { OAuth2Client, TokenPayload } from 'google-auth-library';
+import { TokenPayload } from 'google-auth-library';
 
-import { PlatformConfig } from '@config';
-import { ServiceCore } from '@core';
-import { Exception, HttpCode } from '@libs';
-import { PlatformPayload, SocialNetwork } from '@utils';
+import { LoggerCtx, SocialNetwork } from '@common/enums';
+import { PlatformPayload } from '@common/types';
+import { RequestUtil, UrlUtil } from '@common/utils';
+import { IPlatformConfig, PlatformConfig } from '@config';
+import { ProviderServiceCore } from '@core/service';
+import { i18n } from '@i18n';
 
 import { IGoogleService } from './interface';
 
-export default class GoogleService
-  extends ServiceCore
+export class GoogleService
+  extends ProviderServiceCore
   implements IGoogleService
 {
-  private readonly client: OAuth2Client;
-  private readonly clientId: string;
+  private readonly platformConfig: IPlatformConfig;
 
   constructor() {
-    super();
+    super(LoggerCtx.GOOGLE);
 
-    this.clientId = PlatformConfig.google.clientId;
-    this.client = new OAuth2Client();
-
-    this.init();
+    this.platformConfig = PlatformConfig;
   }
 
-  async getProfile(token: string): Promise<PlatformPayload> {
-    let data: TokenPayload | undefined;
+  async getPlatformPayload(token: string): Promise<PlatformPayload> {
+    const tokenPayload = await this.getTokenPayload(token);
 
+    if (!tokenPayload) {
+      throw this.handleError({ message: i18n()['notFound.default'] });
+    }
+
+    return {
+      ssid: tokenPayload.sub,
+      name: SocialNetwork.GOOGLE,
+      ...(tokenPayload?.email && {
+        email: tokenPayload.email.toLowerCase(),
+      }),
+      ...((tokenPayload?.given_name || tokenPayload?.family_name) && {
+        profile: {
+          firstName: tokenPayload?.given_name || '',
+          lastName: tokenPayload?.family_name || '',
+        },
+      }),
+    };
+  }
+
+  private async getTokenPayload(token: string) {
     try {
-      const ticket = await this.client.verifyIdToken({
-        idToken: token,
-        audience: [this.clientId],
+      const url = UrlUtil.createUrl(this.platformConfig.google.url, {
+        access_token: token,
       });
 
-      data = ticket.getPayload();
+      return await RequestUtil.get<TokenPayload>(url);
     } catch (err) {
-      this.handleError(err);
-
-      throw Exception.getError(HttpCode.EXTERNAL);
+      throw this.handleError(err);
     }
-
-    if (data) {
-      return {
-        ssid: data.sub,
-        name: SocialNetwork.GOOGLE,
-        ...(data?.email && {
-          email: data.email.toLowerCase(),
-        }),
-        url: data.profile || '',
-        ...((data?.given_name || data?.family_name) && {
-          profile: {
-            firstName: data?.given_name || '',
-            lastName: data?.family_name || '',
-          },
-        }),
-      };
-    }
-
-    throw Exception.getError(HttpCode.EXTERNAL);
   }
 }
