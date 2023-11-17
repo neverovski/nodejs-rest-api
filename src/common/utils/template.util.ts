@@ -5,12 +5,12 @@ import { marked } from 'marked';
 import { decorator as MemDecorator } from 'mem';
 import * as Mustache from 'mustache';
 
-import { FOLDER_TEMPLATE, LAYOUT_NAME } from '@common/constants';
+import { FOLDER_TEMPLATE_NAME, LAYOUT_PATH } from '@common/constants';
 import { TemplateOption, TemplateResponse } from '@common/types';
 
 export class TemplateUtil {
   static async getMessage(options: TemplateOption): Promise<TemplateResponse> {
-    const template = await this.getTemplateByName(options.template);
+    const template = await this.getTemplateByPath(options.templatePath);
 
     const markdownRaw = Mustache.render(template, options.data);
 
@@ -22,19 +22,19 @@ export class TemplateUtil {
   }
 
   @MemDecorator()
-  protected static async getTemplateByName(name: string) {
-    if (!name.endsWith('.html')) {
-      name = `${name}.md`;
+  protected static async getTemplateByPath(path: string) {
+    if (!path.endsWith('.html')) {
+      path = `${path}.md`;
     }
 
-    return fs.readFile(resolve(FOLDER_TEMPLATE, name), 'utf8');
+    return fs.readFile(resolve(FOLDER_TEMPLATE_NAME, path), 'utf8');
   }
 
   private static async convertMarkdownToHtml(
     markdown: string,
     options: TemplateOption,
   ) {
-    const layout = await this.getTemplateByName(LAYOUT_NAME);
+    const layout = await this.getTemplateByPath(LAYOUT_PATH);
 
     if (options.isHTML && options.isLayout) {
       return Mustache.render(layout, { content: marked(markdown) });

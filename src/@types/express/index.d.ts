@@ -32,6 +32,6 @@ declare namespace Express {
     params: any;
     raw: any;
     user: UserPayload;
-    userSession?: UserSessionCtx;
+    userSession?: UserSession;
   }
 }

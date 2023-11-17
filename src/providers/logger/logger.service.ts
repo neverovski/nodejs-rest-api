@@ -11,7 +11,6 @@ import pinoElasticsearch from 'pino-elasticsearch';
 
 import { ENV_DEVELOPMENT, ENV_TEST } from '@common/constants';
 import { LogClient, LogLevel } from '@common/enums';
-import { StringUtil } from '@common/utils';
 import { AppConfig, IAppConfig, ILoggerConfig, LoggerConfig } from '@config';
 
 import { ILoggerService } from './interface';
@@ -162,9 +161,9 @@ export class LoggerService implements ILoggerService {
       esVersion: 8,
       flushBytes: 1000,
       auth: { apiKey: this.loggerConfig.apiKey as string },
-      ...(this.loggerConfig.sslCertBase64 && {
+      ...(this.loggerConfig?.ssl?.ca && {
         tls: {
-          ca: StringUtil.transformBase64ToSSL(this.loggerConfig.sslCertBase64),
+          ca: this.loggerConfig.ssl.ca,
           rejectUnauthorized: false,
         },
       }),

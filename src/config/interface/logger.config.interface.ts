@@ -4,6 +4,7 @@ import { ConfigSSL } from '@common/types';
 export interface ILoggerConfig {
   apiKey?: string;
   client: LogClient;
-  ssl?: ConfigSSL;
+  enabled: boolean;
+  ssl?: Pick<ConfigSSL, 'ca'>;
   url?: string;
 }

@@ -9,7 +9,7 @@ class LoggerConfig extends ConfigCore implements ILoggerConfig {
   apiKey?: string | undefined;
   client!: LogClient;
   enabled!: boolean;
-  ssl!: ConfigSSL;
+  ssl!: Pick<ConfigSSL, 'ca'>;
   url?: string | undefined;
 
   init() {

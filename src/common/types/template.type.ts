@@ -1,8 +1,10 @@
+import { TemplatePath } from '@common/enums';
+
 export type TemplateOption = {
   data?: Record<string, any>;
   isHTML?: boolean;
   isLayout?: boolean;
-  template: string;
+  templatePath: TemplatePath;
 };
 
 export type TemplateResponse = {

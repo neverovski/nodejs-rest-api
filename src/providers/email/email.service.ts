@@ -28,9 +28,9 @@ export class EmailService extends ProviderServiceCore implements IEmailService {
 
   async sendEmail(options: EmailMessage): Promise<void> {
     try {
-      if (options.template) {
+      if (options.templatePath) {
         const { subject, html, markdown } = await TemplateUtil.getMessage({
-          template: options.template,
+          templatePath: options.templatePath,
           data: options.data,
           isLayout: true,
           isHTML: true,
