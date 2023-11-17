@@ -6,7 +6,7 @@ import {
   UpdateUserRequest,
   UserPasswordChangeRequest,
   UserRequest,
-} from '../user.type';
+} from '../types';
 
 export interface IUserController {
   changePasswordCurrentUser(

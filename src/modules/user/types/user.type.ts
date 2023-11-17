@@ -2,15 +2,16 @@ import type { Request as ExpressRequest } from 'express';
 
 import { Context, FindOption, RepositoryCtx } from '@common/types';
 
-import { IProfile, IUser } from './interface';
+import { IUser } from '../interface';
 
-export type Profile = IProfile;
-export type FullProfile = IdObject & Profile & DateInfo;
+import { CreateProfile } from './profile.type';
 
 export type User = IUser;
 export type FullUser = IdObject & User & DateInfo;
 
-export type CreateUser = User;
+export type CreateUser = Omit<User, 'getPayload' | 'profile'> & {
+  profile?: Pick<CreateProfile, 'userId'>;
+};
 export type UpdateUser = DeepPartial<CreateUser>;
 
 export type UserPasswordChange = {

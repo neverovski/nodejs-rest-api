@@ -1,29 +1,27 @@
 import { container } from 'tsyringe';
 
 import { IPlatformRepository, IPlatformService } from './interface';
-import PlatformService from './platform.service';
-import { PlatformInject } from './platform.type';
-import PlatformRepository from './repository/platform.repository';
+import { PlatformInject } from './platform.enum';
+import { PlatformService } from './platform.service';
+import { PlatformRepository } from './repository';
 
-container.registerSingleton<IPlatformRepository>(
-  PlatformInject.PLATFORM_REPOSITORY,
-  PlatformRepository,
-);
-
-container.register<IPlatformService>(
-  PlatformInject.PLATFORM_SERVICE,
-  PlatformService,
-);
-
-export class AppleDependencies {
+export class PlatformDi {
   static init() {
+    this.registerRepository();
     this.registerService();
   }
 
+  private static registerRepository() {
+    container.registerInstance<IPlatformRepository>(
+      PlatformInject.REPOSITORY,
+      container.resolve(PlatformRepository),
+    );
+  }
+
   private static registerService() {
-    container.registerInstance<IAppleService>(
-      AppleInject.SERVICE,
-      container.resolve(AppleService),
+    container.registerInstance<IPlatformService>(
+      PlatformInject.SERVICE,
+      container.resolve(PlatformService),
     );
   }
 }

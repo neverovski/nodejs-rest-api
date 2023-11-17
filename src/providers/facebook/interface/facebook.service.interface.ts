@@ -1,5 +1,5 @@
 import { PlatformPayload } from '@common/types';
 
 export interface IFacebookService {
-  getPlatformPayload(token: string): Promise<PlatformPayload>;
+  getPayload(token: string): Promise<PlatformPayload>;
 }

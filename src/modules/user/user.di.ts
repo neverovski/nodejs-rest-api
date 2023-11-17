@@ -1,6 +1,7 @@
 import { container } from 'tsyringe';
 
 import {
+  IProfileRepository,
   IUserController,
   IUserRepository,
   IUserSchema,
@@ -8,6 +9,7 @@ import {
   IUserValidatorService,
 } from './interface';
 import { UserRepository } from './repository';
+import { ProfileRepository } from './repository/profile.repository';
 import { UserService, UserValidatorService } from './service';
 import { UserController } from './user.controller';
 import { UserInject } from './user.enum';
@@ -15,6 +17,7 @@ import { UserSchema } from './user.schema';
 
 export class UserDi {
   static init() {
+    this.registerRepositoryProfile();
     this.registerRepository();
     this.registerService();
     this.registerSchema();
@@ -28,6 +31,13 @@ export class UserDi {
 
   private static registerRepository() {
     container.register<IUserRepository>(UserInject.REPOSITORY, UserRepository);
+  }
+
+  private static registerRepositoryProfile() {
+    container.register<IProfileRepository>(
+      UserInject.REPOSITORY_PROFILE,
+      ProfileRepository,
+    );
   }
 
   private static registerSchema() {

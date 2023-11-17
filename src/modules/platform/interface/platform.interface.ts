@@ -1,8 +1,8 @@
-import { SocialNetwork } from '@common/enums';
+import { PlatformName } from '@common/enums';
 import type { FullUser } from '@modules/user';
 
 export interface IPlatform {
-  name: SocialNetwork;
+  name: PlatformName;
   ssid: string;
   url?: string | null;
   user?: FullUser;

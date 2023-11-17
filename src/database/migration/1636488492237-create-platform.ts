@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 import { DB_TABLE_PLATFORM, DB_TABLE_USER } from '@common/constants';
-import { SocialNetwork } from '@common/enums';
+import { PlatformName } from '@common/enums';
 
 import { UQ_PLATFORM } from '../constraints';
 
@@ -29,7 +29,7 @@ export class CreatePlatform1636488492237 implements MigrationInterface {
           {
             name: 'name',
             type: 'enum',
-            enum: Object.values(SocialNetwork),
+            enum: Object.values(PlatformName),
           },
           {
             name: 'ssid',

@@ -1,6 +1,7 @@
 export enum UserInject {
   CONTROLLER = 'UserController',
   REPOSITORY = 'UserRepository',
+  REPOSITORY_PROFILE = 'UserProfileRepository',
   SCHEMA = 'UserSchema',
   SERVICE = 'UserService',
   SERVICE_VALIDATOR = 'UserValidatorService',

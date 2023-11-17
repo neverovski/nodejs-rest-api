@@ -1,4 +1,4 @@
-import { SocialNetwork } from '@common/enums';
+import { PlatformName } from '@common/enums';
 
 export type PlatformPayload = {
   avatar?: {
@@ -7,7 +7,7 @@ export type PlatformPayload = {
     thumbnailPath?: string;
   };
   email?: Email;
-  name: SocialNetwork;
+  name: PlatformName;
   profile?: {
     firstName?: string;
     lastName?: string;

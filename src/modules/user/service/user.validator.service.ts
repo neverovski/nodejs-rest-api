@@ -3,7 +3,7 @@ import { HashUtil } from '@common/utils';
 import { i18n } from '@i18n';
 
 import { IUserValidatorService } from '../interface';
-import { FullUser, PasswordChangeRequest } from '../user.type';
+import { FullUser, UserPasswordChange } from '../types';
 
 export class UserValidatorService implements IUserValidatorService {
   async checkCredentials(
@@ -22,8 +22,8 @@ export class UserValidatorService implements IUserValidatorService {
     }
   }
 
-  checkNewPassword(body: PasswordChangeRequest) {
-    if (body.newPassword === body.oldPassword) {
+  checkNewPassword(data: UserPasswordChange) {
+    if (data.newPassword === data.oldPassword) {
       throw new UnprocessableEntityException([
         {
           key: 'newPassword',

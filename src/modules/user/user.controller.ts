@@ -7,14 +7,14 @@ import { i18n } from '@i18n';
 
 import { UserDto } from './dto';
 import { IUserController, IUserService } from './interface';
-import { UserInject } from './user.enum';
 import {
   CreateUserRequest,
   DeleteUserRequest,
   UpdateUserRequest,
   UserPasswordChangeRequest,
   UserRequest,
-} from './user.type';
+} from './types';
+import { UserInject } from './user.enum';
 
 /**
  * @openapi

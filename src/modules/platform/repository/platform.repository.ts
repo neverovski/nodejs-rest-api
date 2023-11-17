@@ -1,11 +1,17 @@
 import { inject } from 'tsyringe';
 
-import { PlatformPayload } from '@common/types';
+import { PlatformPayload, RepositoryCtx } from '@common/types';
 import { RepositoryCore } from '@core';
 import { DatabaseInject, IDatabaseService } from '@database';
-import { FullUser, IUserRepository, UserInject } from '@modules/user';
+import {
+  CreateUser,
+  FullUser,
+  IUserRepository,
+  UserInject,
+} from '@modules/user';
 
 import { PlatformEntity } from '../entity/platform.entity';
+import { IPlatformRepository } from '../interface';
 
 export class PlatformRepository
   extends RepositoryCore<PlatformEntity>
@@ -20,29 +26,24 @@ export class PlatformRepository
     super(databaseService.dataSource, PlatformEntity);
   }
 
-  async createPlatformAndUser({
+  async createByPayload({
     profile,
-    avatar,
     email,
     ...platform
   }: PlatformPayload): Promise<FullUser> {
     try {
       return await this.repository.manager.transaction(async (manager) => {
-        const user =
-          (await this.userRepository.findOne(
-            { where: { email } },
-            { manager },
-          )) ||
-          (await this.userRepository.create(
-            {
-              email,
-              profile,
-              avatar,
-              isEmailConfirmed: true,
-              isVerified: true,
-            },
-            { manager },
-          ));
+        let user = await this.userRepository.findOne(
+          { where: { email } },
+          { manager },
+        );
+
+        if (!user) {
+          user = await this.createUser({
+            profile: profile as CreateUser['profile'],
+            email,
+          });
+        }
 
         await manager
           .createQueryBuilder(PlatformEntity, this.alias)
@@ -55,5 +56,14 @@ export class PlatformRepository
     } catch (err) {
       throw this.handleError(err);
     }
+  }
+
+  private createUser(data?: CreateUser, ctx?: RepositoryCtx) {
+    const manager = ctx?.manager || this.repository.manager;
+
+    return this.userRepository.create(
+      { ...data, isEmailConfirmed: true },
+      { manager },
+    );
   }
 }

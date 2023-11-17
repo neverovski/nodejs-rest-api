@@ -1,22 +1,19 @@
 import { inject } from 'tsyringe';
-import { EntityManager } from 'typeorm';
 
 import { RepositoryCtx } from '@common/types';
 import { RepositoryCore } from '@core';
 import { DatabaseInject, IDatabaseService } from '@database';
 
-import { ProfileEntity } from '../entity/profile.entity';
 import { UserEntity } from '../entity/user.entity';
-import { IUserRepository } from '../interface';
+import { IProfileRepository, IUserRepository } from '../interface';
 import {
   CreateUser,
-  FullProfile,
   FullUser,
-  Profile,
   UpdateUser,
   UserQuery,
   UserRepositoryCtx,
-} from '../user.type';
+} from '../types';
+import { UserInject } from '../user.enum';
 
 export class UserRepository
   extends RepositoryCore<UserEntity>
@@ -24,6 +21,8 @@ export class UserRepository
 {
   constructor(
     @inject(DatabaseInject.SERVICE) databaseService: IDatabaseService,
+    @inject(UserInject.REPOSITORY_PROFILE)
+    private readonly profileRepository: IProfileRepository,
   ) {
     super(databaseService.dataSource, UserEntity);
   }
@@ -50,9 +49,9 @@ export class UserRepository
         .then((res) => res?.generatedMaps[0] as FullUser);
 
       if (profile) {
-        const profileRaw = await this.createOrUpdateProfile(
+        const profileRaw = await this.profileRepository.createOrUpdate(
           { ...profile, userId: userRaw.id },
-          { ...ctx, manager },
+          { manager },
         );
 
         manager.merge(UserEntity, userRaw, { profile: profileRaw });
@@ -69,44 +68,13 @@ export class UserRepository
   ): Promise<void> {
     return this.transactionManager(async (manager) => {
       if (profile && query.id) {
-        await this.createOrUpdateProfile(
+        await this.profileRepository.createOrUpdate(
           { ...profile, userId: query.id },
-          { ...ctx, manager },
+          { manager },
         );
       }
 
       await manager.update(UserEntity, query, entity);
     }, ctx);
-  }
-
-  //TODO: create profile repository
-  private async createOrUpdateProfile(
-    entity: Partial<Profile>,
-    ctx?: UserRepositoryCtx,
-  ): Promise<FullProfile> {
-    try {
-      const manager: EntityManager = ctx?.manager || this.repository.manager;
-      const keys = Object.keys(entity);
-
-      const queryBuilder = manager
-        .createQueryBuilder(ProfileEntity, this.alias)
-        .insert()
-        .values(entity);
-
-      if (ctx?.skipEmailOnConflict) {
-        queryBuilder.onConflict(
-          '("userId") DO UPDATE SET "userId" = EXCLUDED."userId"',
-        );
-      } else {
-        queryBuilder.orUpdate(keys, ['userId']);
-      }
-
-      return await queryBuilder
-        .returning('*')
-        .execute()
-        .then((res) => res?.generatedMaps[0] as FullProfile);
-    } catch (err) {
-      throw this.handleError(err);
-    }
   }
 }

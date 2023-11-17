@@ -1,4 +1,4 @@
-export enum SocialNetwork {
+export enum PlatformName {
   APPLE = 'apple',
   FACEBOOK = 'facebook',
   GITHUB = 'github',

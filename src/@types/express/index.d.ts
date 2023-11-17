@@ -3,6 +3,7 @@ type UserPayload = {
   firstName?: string;
   isEmailConfirmed?: boolean;
   lastName?: string;
+  role: string;
   userId: number;
 };
 

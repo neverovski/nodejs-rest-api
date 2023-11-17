@@ -1,4 +1,4 @@
-import { LoggerCtx, SocialNetwork } from '@common/enums';
+import { LoggerCtx, PlatformName } from '@common/enums';
 import { PlatformPayload } from '@common/types';
 import { RequestUtil, UrlUtil } from '@common/utils';
 import { IPlatformConfig, PlatformConfig } from '@config';
@@ -20,7 +20,7 @@ export class FacebookService
     this.platformConfig = PlatformConfig;
   }
 
-  async getPlatformPayload(token: string): Promise<PlatformPayload> {
+  async getPayload(token: string): Promise<PlatformPayload> {
     try {
       const url = UrlUtil.createUrl(this.platformConfig.facebook.url, {
         fields: this.platformConfig.facebook.fields,
@@ -31,7 +31,7 @@ export class FacebookService
 
       return {
         ssid: data.id,
-        name: SocialNetwork.FACEBOOK,
+        name: PlatformName.FACEBOOK,
         url: `${FACEBOOK_LINK}/${data.id}`,
         ...(data?.email && {
           email: data.email.toLowerCase(),

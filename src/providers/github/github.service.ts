@@ -1,4 +1,4 @@
-import { LoggerCtx, SocialNetwork } from '@common/enums';
+import { LoggerCtx, PlatformName } from '@common/enums';
 import { PlatformPayload } from '@common/types';
 import { RequestUtil } from '@common/utils';
 import { IPlatformConfig, PlatformConfig } from '@config';
@@ -19,7 +19,7 @@ export class GitHubService
     this.platformConfig = PlatformConfig;
   }
 
-  async getPlatformPayload(token: string): Promise<PlatformPayload> {
+  async getPayload(token: string): Promise<PlatformPayload> {
     try {
       const config = this.getConfig(token);
 
@@ -30,7 +30,7 @@ export class GitHubService
 
       return {
         ssid: data.id,
-        name: SocialNetwork.GITHUB,
+        name: PlatformName.GITHUB,
         url: data.html_url || '',
         ...(data?.email && {
           email: data.email.toLowerCase(),

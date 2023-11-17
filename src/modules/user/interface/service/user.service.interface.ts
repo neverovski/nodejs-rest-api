@@ -5,7 +5,7 @@ import {
   UserCtx,
   UserPasswordChange,
   UserQuery,
-} from '../../user.type';
+} from '../../types/user.type';
 
 export interface IUserService {
   count(query: UserQuery, ctx?: UserCtx): Promise<number>;

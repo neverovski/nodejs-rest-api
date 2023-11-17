@@ -7,8 +7,6 @@ import {
   IUserService,
   IUserValidatorService,
 } from '../interface';
-import { USER_RELATION } from '../user.constant';
-import { UserInject } from '../user.enum';
 import {
   CreateUser,
   UpdateUser,
@@ -16,7 +14,9 @@ import {
   UserOption,
   UserPasswordChange,
   UserQuery,
-} from '../user.type';
+} from '../types';
+import { USER_RELATION } from '../user.constant';
+import { UserInject } from '../user.enum';
 
 export class UserService extends ServiceCore implements IUserService {
   constructor(

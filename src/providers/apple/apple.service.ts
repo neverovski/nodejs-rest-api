@@ -1,7 +1,7 @@
 import { JwksClient } from 'jwks-rsa';
 import { inject } from 'tsyringe';
 
-import { LoggerCtx, SocialNetwork } from '@common/enums';
+import { LoggerCtx, PlatformName } from '@common/enums';
 import { PlatformPayload } from '@common/types';
 import { IPlatformConfig, PlatformConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
@@ -26,13 +26,13 @@ export class AppleService extends ProviderServiceCore implements IAppleService {
     this.client = new JwksClient({ jwksUri: this.platformConfig.apple.url });
   }
 
-  async getPlatformPayload(token: string): Promise<PlatformPayload> {
+  async getPayload(token: string): Promise<PlatformPayload> {
     try {
       const data = await this.verify(token);
 
       return {
         ssid: data.sub,
-        name: SocialNetwork.APPLE,
+        name: PlatformName.APPLE,
         ...(data?.email && {
           email: data.email.toLowerCase(),
         }),

@@ -1,57 +1,55 @@
-import { inject, injectable } from 'tsyringe';
+import { inject } from 'tsyringe';
 
-import { Exception, HttpCode, i18n } from '@libs';
+import { PlatformName } from '@common/enums';
+import { NotFoundException } from '@common/exceptions';
+import { i18n } from '@i18n';
 import { AppleInject, IAppleService } from '@providers/apple';
 import { FacebookInject, IFacebookService } from '@providers/facebook';
 import { GitHubInject, IGitHubService } from '@providers/github';
 import { GoogleInject, IGoogleService } from '@providers/google';
-import { SocialNetwork } from '@utils';
 
 import { IPlatformRepository, IPlatformService } from './interface';
-import { PlatformInject, PlatformRequest } from './platform.type';
+import { PlatformInject } from './platform.enum';
+import { CreatePlatform } from './platform.type';
 
-@injectable()
-export default class PlatformService implements IPlatformService {
+export class PlatformService implements IPlatformService {
   constructor(
-    @inject(FacebookInject.FACEBOOK_SERVICE)
+    @inject(AppleInject.SERVICE) private readonly appleService: IAppleService,
+    @inject(FacebookInject.SERVICE)
     private readonly facebookService: IFacebookService,
-    @inject(PlatformInject.PLATFORM_REPOSITORY)
-    private readonly repository: IPlatformRepository,
-    @inject(AppleInject.APPLE_SERVICE)
-    private readonly appleService: IAppleService,
-    @inject(GoogleInject.GOOGLE_SERVICE)
-    private readonly googleService: IGoogleService,
-    @inject(GitHubInject.GITHUB_SERVICE)
+    @inject(GitHubInject.SERVICE)
     private readonly gitHubService: IGitHubService,
+    @inject(GoogleInject.SERVICE)
+    private readonly googleService: IGoogleService,
+    @inject(PlatformInject.REPOSITORY)
+    private readonly repository: IPlatformRepository,
   ) {}
 
-  async create(body: PlatformRequest) {
-    const profile = await this.getProfile(body);
+  async create(data: CreatePlatform) {
+    const payload = await this.getPayload(data);
     const platform = await this.repository.findOne({
-      where: { name: profile.name, ssid: profile.ssid },
+      where: { name: payload.name, ssid: payload.ssid },
     });
 
-    if (platform?.userId) {
-      return { userId: platform.userId };
+    if (platform?.user) {
+      return platform.user;
     }
 
-    return this.repository.create(profile);
+    return this.repository.createByPayload(payload);
   }
 
-  private getProfile({ platform, token }: PlatformRequest) {
+  private getPayload({ platform, token }: CreatePlatform) {
     switch (platform) {
-      case SocialNetwork.FACEBOOK:
-        return this.facebookService.getProfile(token);
-      case SocialNetwork.APPLE:
-        return this.appleService.getProfile(token);
-      case SocialNetwork.GOOGLE:
-        return this.googleService.getProfile(token);
-      case SocialNetwork.GITHUB:
-        return this.gitHubService.getProfile(token);
+      case PlatformName.FACEBOOK:
+        return this.facebookService.getPayload(token);
+      case PlatformName.APPLE:
+        return this.appleService.getPayload(token);
+      case PlatformName.GOOGLE:
+        return this.googleService.getPayload(token);
+      case PlatformName.GITHUB:
+        return this.gitHubService.getPayload(token);
       default:
-        throw Exception.getError(HttpCode.NOT_FOUND, {
-          message: i18n()['notFound.platform'],
-        });
+        throw new NotFoundException(i18n()['notFound.platform']);
     }
   }
 }

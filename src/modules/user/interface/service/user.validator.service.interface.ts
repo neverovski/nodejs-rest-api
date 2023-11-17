@@ -1,4 +1,4 @@
-import { UserPasswordChange, UserQuery } from '../../user.type';
+import { UserPasswordChange, UserQuery } from '../../types/user.type';
 
 export interface IUserValidatorService {
   checkCredentials(user?: UserQuery | null, password?: string): Promise<void>;

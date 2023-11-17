@@ -4,7 +4,7 @@ import { DB_TABLE_PROFILE } from '@common/constants';
 import { BaseEntity } from '@common/entities';
 
 import { IProfile } from '../interface';
-import { FullUser } from '../user.type';
+import { FullUser } from '../types';
 
 import { UserEntity } from './user.entity';
 

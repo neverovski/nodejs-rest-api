@@ -7,7 +7,7 @@ import { UQ_USER_EMAIL } from 'src/database/constraints';
 import { StringTransformer } from 'src/database/transformer';
 
 import { IUser } from '../interface';
-import { Profile } from '../user.type';
+import { Profile } from '../types';
 
 import { ProfileEntity } from './profile.entity';
 
@@ -30,11 +30,12 @@ export class UserEntity extends BaseCreatedByEntity<IUser> implements IUser {
   profile?: Profile;
 
   @Column('enum', { default: Role.USER })
-  role = Role.USER;
+  role? = Role.USER;
 
   getPayload(): UserPayload {
     return {
       userId: this.id,
+      role: this.role!,
       ...(this.email && { email: this.email }),
       isEmailConfirmed: this.isEmailConfirmed || false,
       ...(this.profile?.firstName && { firstName: this.profile.firstName }),

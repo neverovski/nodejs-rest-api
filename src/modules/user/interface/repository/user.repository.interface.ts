@@ -6,7 +6,7 @@ import {
   UpdateUser,
   UserOption,
   UserQuery,
-} from '../user.type';
+} from '../../types';
 
 export interface IUserRepository {
   countByQuery(options: UserOption): Promise<number>;

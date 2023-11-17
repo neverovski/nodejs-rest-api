@@ -1,6 +1,6 @@
 import { TokenPayload } from 'google-auth-library';
 
-import { LoggerCtx, SocialNetwork } from '@common/enums';
+import { LoggerCtx, PlatformName } from '@common/enums';
 import { PlatformPayload } from '@common/types';
 import { RequestUtil, UrlUtil } from '@common/utils';
 import { IPlatformConfig, PlatformConfig } from '@config';
@@ -21,7 +21,7 @@ export class GoogleService
     this.platformConfig = PlatformConfig;
   }
 
-  async getPlatformPayload(token: string): Promise<PlatformPayload> {
+  async getPayload(token: string): Promise<PlatformPayload> {
     const tokenPayload = await this.getTokenPayload(token);
 
     if (!tokenPayload) {
@@ -30,7 +30,7 @@ export class GoogleService
 
     return {
       ssid: tokenPayload.sub,
-      name: SocialNetwork.GOOGLE,
+      name: PlatformName.GOOGLE,
       ...(tokenPayload?.email && {
         email: tokenPayload.email.toLowerCase(),
       }),
