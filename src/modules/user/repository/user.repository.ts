@@ -1,7 +1,9 @@
+import { inject } from 'tsyringe';
 import { EntityManager } from 'typeorm';
 
 import { RepositoryCtx } from '@common/types';
 import { RepositoryCore } from '@core';
+import { DatabaseInject, IDatabaseService } from '@database';
 
 import { ProfileEntity } from '../entity/profile.entity';
 import { UserEntity } from '../entity/user.entity';
@@ -20,8 +22,10 @@ export class UserRepository
   extends RepositoryCore<UserEntity>
   implements IUserRepository
 {
-  constructor() {
-    super(UserEntity);
+  constructor(
+    @inject(DatabaseInject.SERVICE) databaseService: IDatabaseService,
+  ) {
+    super(databaseService.dataSource, UserEntity);
   }
 
   create(
@@ -81,7 +85,7 @@ export class UserRepository
     ctx?: UserRepositoryCtx,
   ): Promise<FullProfile> {
     try {
-      const manager: EntityManager = ctx?.manager || this.orm.manager;
+      const manager: EntityManager = ctx?.manager || this.repository.manager;
       const keys = Object.keys(entity);
 
       const queryBuilder = manager

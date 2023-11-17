@@ -2,6 +2,7 @@ import { inject } from 'tsyringe';
 
 import { PlatformPayload } from '@common/types';
 import { RepositoryCore } from '@core';
+import { DatabaseInject, IDatabaseService } from '@database';
 import { FullUser, IUserRepository, UserInject } from '@modules/user';
 
 import { PlatformEntity } from '../entity/platform.entity';
@@ -11,10 +12,12 @@ export class PlatformRepository
   implements IPlatformRepository
 {
   constructor(
+    @inject(DatabaseInject.SERVICE)
+    databaseService: IDatabaseService,
     @inject(UserInject.REPOSITORY)
     private readonly userRepository: IUserRepository,
   ) {
-    super(PlatformEntity);
+    super(databaseService.dataSource, PlatformEntity);
   }
 
   async createPlatformAndUser({
@@ -24,7 +27,7 @@ export class PlatformRepository
     ...platform
   }: PlatformPayload): Promise<FullUser> {
     try {
-      return await this.orm.manager.transaction(async (manager) => {
+      return await this.repository.manager.transaction(async (manager) => {
         const user =
           (await this.userRepository.findOne(
             { where: { email } },

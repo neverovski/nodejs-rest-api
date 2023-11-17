@@ -4,7 +4,7 @@ import { GitHubInject } from './github.enum';
 import { GitHubService } from './github.service';
 import { IGitHubService } from './interface';
 
-export class GitHubDependencies {
+export class GitHubDi {
   static init() {
     this.registerService();
   }

@@ -7,9 +7,9 @@ import { HttpException } from './http.exception';
 export class InternalServerErrorException extends HttpException {
   constructor(message?: ExceptionMessage) {
     super({
+      message: message || i18n()['exception.serverError'],
       messageCode: MessageCode.INTERNAL_SERVER_ERROR,
       statusCode: HttpStatus.InternalServerError,
-      message: message || i18n()['exception.serverError'],
     });
   }
 }

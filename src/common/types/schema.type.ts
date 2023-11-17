@@ -27,6 +27,12 @@ export type JsonSchemaProp = {
   [key: string]: JsonSchema;
 };
 
+export type JsonSchemaRequest = {
+  body: JsonSchema | null;
+  params: JsonSchema | null;
+  query: JsonSchema | null;
+};
+
 export type SchemaOption = {
   isOptional?: boolean;
   skipRepeatSymbols?: string[];

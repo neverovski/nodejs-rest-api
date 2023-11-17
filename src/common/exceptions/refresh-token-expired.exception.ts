@@ -6,9 +6,9 @@ import { HttpException } from './http.exception';
 export class RefreshTokenExpiredException extends HttpException {
   constructor() {
     super({
+      message: i18n()['exception.refreshTokenExpired'],
       messageCode: MessageCode.REFRESH_TOKEN_EXPIRED,
       statusCode: HttpStatus.Unauthorized,
-      message: i18n()['exception.refreshTokenExpired'],
     });
   }
 }

@@ -1,20 +1,21 @@
 import { CACHE_TIME } from '@common/constants';
-import { DbClient } from '@common/types';
+import { ConfigSSL, DatabaseClient } from '@common/types';
+import { StringUtil } from '@common/utils';
 import { ConfigCore } from '@core';
 
-import { IDbConfig } from './interface';
+import { IDatabaseConfig } from './interface';
 
-class DbConfig extends ConfigCore implements IDbConfig {
+class DatabaseConfig extends ConfigCore implements IDatabaseConfig {
   cacheEnabled!: boolean;
   cacheTime!: number;
   charset!: string;
-  client!: DbClient;
+  client!: DatabaseClient;
   databaseName!: string;
   host!: string;
   logEnabled!: boolean;
   password!: string;
   port!: number;
-  sslCertBase64!: string;
+  ssl!: ConfigSSL;
   sslEnabled!: boolean;
   user!: string;
 
@@ -65,15 +66,15 @@ class DbConfig extends ConfigCore implements IDbConfig {
       this.schema.number().allow(null, '').default(5432),
     );
 
-    this.sslCertBase64 = this.set(
-      'DB_SSL_CERT_BASE64',
-      this.schema.string().allow(null, ''),
-    );
-
-    this.sslEnabled = this.set(
-      'DB_SSL_ENABLED',
-      this.schema.boolean().allow(null, '').default(false),
-    );
+    this.ssl = {
+      ca: StringUtil.decodeBase64ToString(
+        this.set('DB_SSL_CA_BASE64', this.schema.string().allow(null, '')),
+      ),
+      enabled: this.set(
+        'DB_SSL_ENABLED',
+        this.schema.boolean().allow(null, '').default(false),
+      ),
+    };
 
     this.user = this.set(
       'DB_USER',
@@ -82,4 +83,4 @@ class DbConfig extends ConfigCore implements IDbConfig {
   }
 }
 
-export default new DbConfig();
+export default new DatabaseConfig();

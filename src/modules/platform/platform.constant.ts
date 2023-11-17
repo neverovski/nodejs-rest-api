@@ -1,1 +1,5 @@
-export const PLATFORM_RELATION = { user: true };
+import { RelationParam } from '@common/types';
+
+import { FullPlatform } from './platform.type';
+
+export const PLATFORM_RELATION: RelationParam<FullPlatform> = { user: true };

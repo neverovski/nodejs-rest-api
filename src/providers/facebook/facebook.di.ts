@@ -4,7 +4,7 @@ import { FacebookInject } from './facebook.enum';
 import { FacebookService } from './facebook.service';
 import { IFacebookService } from './interface';
 
-export class FacebookDependencies {
+export class FacebookDi {
   static init() {
     this.registerService();
   }

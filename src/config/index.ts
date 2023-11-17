@@ -1,7 +1,7 @@
 export * from './interface';
 
 export { default as AppConfig } from './app.config';
-export { default as DbConfig } from './db.config';
+export { default as DatabaseConfig } from './database.config';
 export { default as EmailConfig } from './email.config';
 export { default as JwtConfig } from './jwt.config';
 export { default as LoggerConfig } from './logger.config';

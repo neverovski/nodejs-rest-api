@@ -1,7 +1,7 @@
-import { JsonSchema } from '@common/types';
+import { JsonSchemaRequest } from '@common/types';
 
 export interface IUserSchema {
-  changePassword(): JsonSchema;
-  create(): JsonSchema;
-  update(): JsonSchema;
+  changePassword(): JsonSchemaRequest;
+  create(): JsonSchemaRequest;
+  update(): JsonSchemaRequest;
 }

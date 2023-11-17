@@ -1,11 +1,14 @@
+import { Role } from '@common/enums';
 import { IBase } from '@common/interfaces';
 
 import { Profile } from '../user.type';
 
 export interface IUser extends IBase {
-  email?: string | null;
+  email?: string;
   isEmailConfirmed?: boolean;
-  password?: string | null;
-  payload: UserPayload;
+  password?: string;
   profile?: Profile;
+  role?: Role;
+
+  getPayload(): UserPayload;
 }

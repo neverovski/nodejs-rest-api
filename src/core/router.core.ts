@@ -1,11 +1,11 @@
-import { Router } from 'express';
+import { Router as ExpressRouter } from 'express';
 
 export abstract class RouterCore {
-  protected readonly router: Router;
+  protected readonly router: ExpressRouter;
 
-  constructor(router: Router) {
+  constructor(router: ExpressRouter) {
     this.router = router;
   }
 
-  abstract init(): Router;
+  abstract init(): ExpressRouter;
 }

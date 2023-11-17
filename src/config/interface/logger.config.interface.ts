@@ -1,9 +1,9 @@
 import { LogClient } from '@common/enums';
+import { ConfigSSL } from '@common/types';
 
 export interface ILoggerConfig {
   apiKey?: string;
   client: LogClient;
-  enabled: boolean;
-  sslCertBase64?: string;
+  ssl?: ConfigSSL;
   url?: string;
 }

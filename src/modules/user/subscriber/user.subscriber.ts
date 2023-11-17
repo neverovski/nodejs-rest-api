@@ -13,7 +13,7 @@ import { UserEntity } from '../entity/user.entity';
 export class UserSubscriber implements EntitySubscriberInterface<UserEntity> {
   async beforeInsert({ entity }: InsertEvent<UserEntity>) {
     if (entity?.password) {
-      entity.password = await HashUtil.hashPassword(entity.password);
+      entity.password = (await HashUtil.hashPassword(entity.password)) || '';
     }
 
     if (entity?.email) {

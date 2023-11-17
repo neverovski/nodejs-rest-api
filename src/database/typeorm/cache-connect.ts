@@ -1,6 +1,6 @@
 import { BaseDataSourceOptions } from 'typeorm/data-source/BaseDataSourceOptions';
 
-import { DbConfig, RedisConfig } from '@config';
+import { DatabaseConfig, RedisConfig } from '@config';
 
 export const redisConnect = (): BaseDataSourceOptions['cache'] => ({
   type: 'ioredis',
@@ -15,7 +15,7 @@ export const redisConnect = (): BaseDataSourceOptions['cache'] => ({
     }),
   },
   alwaysEnabled: true,
-  duration: DbConfig.cacheTime,
+  duration: DatabaseConfig.cacheTime,
   ignoreErrors: true,
 });
 
@@ -45,6 +45,6 @@ export const redisClusterConnect = (): BaseDataSourceOptions['cache'] => ({
     },
   },
   alwaysEnabled: true,
-  duration: DbConfig.cacheTime,
+  duration: DatabaseConfig.cacheTime,
   ignoreErrors: true,
 });

@@ -1,9 +1,9 @@
 import { DatabaseError } from 'pg';
 import {
+  DataSource,
   DeepPartial,
   EntityManager,
   EntityTarget,
-  FindOneOptions,
   ObjectLiteral,
   QueryFailedError,
   Repository,
@@ -14,22 +14,26 @@ import {
   NotFoundException,
 } from '@common/exceptions';
 import { FindOption, RepositoryCtx } from '@common/types';
-import { DbConnection } from '@db';
-import { DbErrorUtil } from '@db/utils';
+import {
+  DEFAULT_ALIAS,
+  ENTITY_NOT_FOUND,
+  ENTITY_NOT_FOUND_ERROR,
+} from '@database/constants';
+import { DatabaseErrorUtil } from '@database/utils';
 
 export class RepositoryCore<T extends ObjectLiteral = any> {
   protected readonly alias: string;
-  protected orm: Repository<T>;
+  protected readonly repository: Repository<T>;
 
-  constructor(entity: EntityTarget<T>, alias?: string) {
-    this.orm = DbConnection.dataSource.getRepository(entity);
+  constructor(dataSource: DataSource, entity: EntityTarget<T>) {
+    this.repository = dataSource.getRepository(entity);
 
-    this.alias = alias || 'entity';
+    this.alias = DEFAULT_ALIAS;
   }
 
   async countByQuery(options: FindOption<T>): Promise<number> {
     try {
-      return await this.orm.count(options);
+      return await this.repository.count(options);
     } catch (err) {
       throw this.handleError(err);
     }
@@ -37,13 +41,13 @@ export class RepositoryCore<T extends ObjectLiteral = any> {
 
   async create(entity: DeepPartial<T>): Promise<T> {
     try {
-      return await this.orm
+      return await this.repository
         .createQueryBuilder()
         .insert()
         .values(entity)
         .returning('*')
         .execute()
-        .then((res) => res?.generatedMaps[0] as T);
+        .then((res) => res?.generatedMaps?.[0] as T);
     } catch (err) {
       throw this.handleError(err);
     }
@@ -51,7 +55,7 @@ export class RepositoryCore<T extends ObjectLiteral = any> {
 
   async delete(query: DeepPartial<T>): Promise<void> {
     try {
-      await this.orm.delete(query);
+      await this.repository.delete(query);
     } catch (err) {
       throw this.handleError(err);
     }
@@ -59,23 +63,23 @@ export class RepositoryCore<T extends ObjectLiteral = any> {
 
   async findByQuery(options: FindOption<T>): Promise<T[]> {
     try {
-      return await this.orm.find(options);
+      return await this.repository.find(options);
     } catch (err) {
       throw this.handleError(err);
     }
   }
 
-  async findOne(options: FindOneOptions<T>): Promise<T | null> {
+  async findOne(options: FindOption<T>): Promise<T | null> {
     try {
-      return await this.orm.findOne(options);
+      return await this.repository.findOne(options);
     } catch (err) {
       throw this.handleError(err);
     }
   }
 
-  async findOneOrFail(options: FindOneOptions<T>): Promise<T> {
+  async findOneOrFail(options: FindOption<T>): Promise<T> {
     try {
-      return await this.orm.findOneOrFail(options);
+      return await this.repository.findOneOrFail(options);
     } catch (err) {
       throw this.handleError(err);
     }
@@ -83,7 +87,7 @@ export class RepositoryCore<T extends ObjectLiteral = any> {
 
   async update(query: DeepPartial<T>, entity: DeepPartial<T>): Promise<void> {
     try {
-      await this.orm.update(query, entity);
+      await this.repository.update(query, entity);
     } catch (err) {
       throw this.handleError(err);
     }
@@ -91,14 +95,14 @@ export class RepositoryCore<T extends ObjectLiteral = any> {
 
   protected handleError(err: unknown) {
     if (
-      (err as Error)?.name === 'EntityNotFound' ||
-      (err as Error)?.name === 'EntityNotFoundError'
+      (err as Error)?.name === ENTITY_NOT_FOUND ||
+      (err as Error)?.name === ENTITY_NOT_FOUND_ERROR
     ) {
       return new NotFoundException();
     }
 
     if (err instanceof QueryFailedError) {
-      return DbErrorUtil.handler(err.driverError as DatabaseError);
+      return DatabaseErrorUtil.handler(err.driverError as DatabaseError);
     }
 
     return new InternalServerErrorException();
@@ -116,7 +120,7 @@ export class RepositoryCore<T extends ObjectLiteral = any> {
       }
     }
 
-    return this.orm.manager.transaction(async (manager) => {
+    return this.repository.manager.transaction(async (manager) => {
       try {
         return await cb(manager);
       } catch (err) {

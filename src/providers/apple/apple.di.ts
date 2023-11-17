@@ -4,7 +4,7 @@ import { AppleInject } from './apple.enum';
 import { AppleService } from './apple.service';
 import { IAppleService } from './interface';
 
-export class AppleDependencies {
+export class AppleDi {
   static init() {
     this.registerService();
   }

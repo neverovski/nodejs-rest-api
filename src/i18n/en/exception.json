@@ -9,7 +9,6 @@
   "exception.forbidden": "Accessing the resource you were trying to reach is forbidden",
   "exception.invalidCredentials": "Invalid credentials",
   "exception.notFound": "The resource you were trying to reach is not found",
-  "exception.ok": "Ok",
   "exception.refreshTokenExpired": "Refresh token expired",
   "exception.refreshTokenVerify": "Refresh token verify error",
   "exception.serverError": "Application failed to process the request",

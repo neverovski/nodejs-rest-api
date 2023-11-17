@@ -1,19 +1,16 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-import { DB_TABLE_PLATFORM, DB_TABLE_USER } from '@common/constants';
-import { SocialNetwork } from '@common/enums';
+import { DB_TABLE_REFRESH_TOKEN, DB_TABLE_USER } from '@common/constants';
 
-import { UQ_PLATFORM } from '../constraints';
-
-export class Platform1636488492237 implements MigrationInterface {
+export class CreateRefreshToken1629959489269 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(DB_TABLE_PLATFORM);
+    await queryRunner.dropTable(DB_TABLE_REFRESH_TOKEN);
   }
 
   async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: DB_TABLE_PLATFORM,
+        name: DB_TABLE_REFRESH_TOKEN,
         columns: [
           {
             name: 'id',
@@ -27,18 +24,37 @@ export class Platform1636488492237 implements MigrationInterface {
             type: 'int',
           },
           {
-            name: 'name',
-            type: 'enum',
-            enum: Object.values(SocialNetwork),
-          },
-          {
-            name: 'ssid',
+            name: 'jti',
             type: 'varchar',
           },
           {
-            name: 'url',
+            name: 'isRevoked',
+            type: 'bool',
+            default: false,
+          },
+          {
+            name: 'ip',
             type: 'varchar',
             isNullable: true,
+          },
+          {
+            name: 'os',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'browser',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'userAgent',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'expiredAt',
+            type: 'timestamptz',
           },
 
           {
@@ -52,7 +68,6 @@ export class Platform1636488492237 implements MigrationInterface {
             default: 'now()',
           },
         ],
-        uniques: [UQ_PLATFORM],
         foreignKeys: [
           {
             columnNames: ['userId'],
@@ -62,12 +77,12 @@ export class Platform1636488492237 implements MigrationInterface {
           },
         ],
         indices: [
-          { columnNames: ['ssid'] },
-          { columnNames: ['name'] },
+          {
+            columnNames: ['jti'],
+          },
           { columnNames: ['userId'] },
         ],
       }),
-      true,
     );
   }
 }

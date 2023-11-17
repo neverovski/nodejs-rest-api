@@ -9,7 +9,7 @@ import { i18n } from '@i18n';
 
 import { PostgresErrorCode, UQ_USER_EMAIL } from '../constraints';
 
-export class DbErrorUtil {
+export class DatabaseErrorUtil {
   private static readonly REG_FIND = /\(.*\)=/;
   private static readonly REG_REPLACE = /[()="']/g;
 

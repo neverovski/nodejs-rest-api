@@ -11,10 +11,10 @@ import { USER_RELATION } from '../user.constant';
 import { UserInject } from '../user.enum';
 import {
   CreateUser,
-  PasswordChangeRequest,
   UpdateUser,
   UserCtx,
   UserOption,
+  UserPasswordChange,
   UserQuery,
 } from '../user.type';
 
@@ -22,7 +22,7 @@ export class UserService extends ServiceCore implements IUserService {
   constructor(
     @inject(UserInject.REPOSITORY)
     private readonly repository: IUserRepository,
-    @inject(UserInject.VALIDATOR_SERVICE)
+    @inject(UserInject.SERVICE_VALIDATOR)
     private readonly validatorService: IUserValidatorService,
   ) {
     super();
@@ -76,7 +76,7 @@ export class UserService extends ServiceCore implements IUserService {
     return this.getOneWithException({ id });
   }
 
-  async updatePassword(query: UserQuery, data: PasswordChangeRequest) {
+  async updatePassword(query: UserQuery, data: UserPasswordChange) {
     const { oldPassword, newPassword } = data;
 
     this.validatorService.checkNewPassword(data);

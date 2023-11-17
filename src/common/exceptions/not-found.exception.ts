@@ -7,9 +7,9 @@ import { HttpException } from './http.exception';
 export class NotFoundException extends HttpException {
   constructor(message?: ExceptionMessage) {
     super({
+      message: message || i18n()['exception.notFound'],
       messageCode: MessageCode.NOT_FOUND,
       statusCode: HttpStatus.NotFound,
-      message: message || i18n()['exception.notFound'],
     });
   }
 }

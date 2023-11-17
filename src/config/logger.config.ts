@@ -1,4 +1,6 @@
 import { LogClient } from '@common/enums';
+import { ConfigSSL } from '@common/types';
+import { StringUtil } from '@common/utils';
 import { ConfigCore } from '@core';
 
 import { ILoggerConfig } from './interface';
@@ -7,7 +9,7 @@ class LoggerConfig extends ConfigCore implements ILoggerConfig {
   apiKey?: string | undefined;
   client!: LogClient;
   enabled!: boolean;
-  sslCertBase64?: string | undefined;
+  ssl!: ConfigSSL;
   url?: string | undefined;
 
   init() {
@@ -35,10 +37,11 @@ class LoggerConfig extends ConfigCore implements ILoggerConfig {
       this.schema.string().allow(null, ''),
     );
 
-    this.sslCertBase64 = this.set<string>(
-      'LOG_SSL_CERT_BASE64',
-      this.schema.string().allow(null, ''),
-    );
+    this.ssl = {
+      ca: StringUtil.decodeBase64ToString(
+        this.set('LOG_SSL_CA_BASE64', this.schema.string().allow(null, '')),
+      ),
+    };
   }
 }
 

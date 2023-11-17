@@ -1,10 +1,10 @@
 import { container } from 'tsyringe';
-import { Logger as TypeOrmLogger } from 'typeorm';
+import { Logger as OrmLogger } from 'typeorm';
 
 import { LoggerCtx } from '@common/enums';
 import { ILoggerService, LoggerInject } from '@providers/logger';
 
-export class DbLogger implements TypeOrmLogger {
+export class DatabaseLogger implements OrmLogger {
   protected readonly logger: ILoggerService;
   private readonly loggerCtx: LoggerCtx;
 

@@ -9,22 +9,7 @@ import {
 } from './interface';
 import { EmailConsumerJob, EmailProducerJob } from './job';
 
-container.registerInstance<IEmailService>(
-  EmailInject.SERVICE,
-  new EmailService(),
-);
-
-container.registerInstance<IEmailConsumerJob>(
-  EmailInject.CONSUMER,
-  container.resolve(EmailConsumerJob),
-);
-
-container.registerInstance<IEmailProducerJob>(
-  EmailInject.PRODUCER,
-  new EmailProducerJob(),
-);
-
-export class EmailDependencies {
+export class EmailDi {
   static init() {
     this.registerService();
     this.registerProducer();

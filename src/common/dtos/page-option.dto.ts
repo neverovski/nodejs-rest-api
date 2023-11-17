@@ -1,6 +1,6 @@
 import { LIMIT_ITEM } from '@common/constants';
 
-export class PageOptionDto implements PaginationCtx {
+export class PageOptionDto implements PagePayload {
   readonly limit: number = LIMIT_ITEM;
   readonly page: number = 1;
 

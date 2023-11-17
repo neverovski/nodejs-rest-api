@@ -4,7 +4,7 @@ import { ITokenService } from './interface';
 import { TokenInject } from './token.enum';
 import { TokenService } from './token.service';
 
-export class TokenDependencies {
+export class TokenDi {
   static init() {
     this.registerService();
   }

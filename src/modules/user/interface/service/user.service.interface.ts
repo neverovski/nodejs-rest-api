@@ -1,11 +1,11 @@
 import {
   CreateUser,
   FullUser,
-  PasswordChangeRequest,
   UpdateUser,
   UserCtx,
+  UserPasswordChange,
   UserQuery,
-} from '../user.type';
+} from '../../user.type';
 
 export interface IUserService {
   count(query: UserQuery, ctx?: UserCtx): Promise<number>;
@@ -15,5 +15,5 @@ export interface IUserService {
   getOne(query: UserQuery, ctx?: UserCtx): Promise<FullUser | null>;
   getOneWithException(query: UserQuery, ctx?: UserCtx): Promise<FullUser>;
   update(query: UserQuery, data: UpdateUser, ctx?: UserCtx): Promise<FullUser>;
-  updatePassword(query: UserQuery, data: PasswordChangeRequest): Promise<void>;
+  updatePassword(query: UserQuery, data: UserPasswordChange): Promise<void>;
 }

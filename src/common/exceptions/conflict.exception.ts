@@ -7,9 +7,9 @@ import { HttpException } from './http.exception';
 export class ConflictException extends HttpException {
   constructor(message?: ExceptionMessage) {
     super({
+      message: message || i18n()['exception.conflict'],
       messageCode: MessageCode.FORBIDDEN,
       statusCode: HttpStatus.Forbidden,
-      message: message || i18n()['exception.conflict'],
     });
   }
 }

@@ -6,9 +6,9 @@ import { HttpException } from './http.exception';
 export class TokenMalformedException extends HttpException {
   constructor() {
     super({
+      message: i18n()['exception.tokenMalformed'],
       messageCode: MessageCode.TOKEN_MALFORMED,
       statusCode: HttpStatus.Unauthorized,
-      message: i18n()['exception.tokenMalformed'],
     });
   }
 }

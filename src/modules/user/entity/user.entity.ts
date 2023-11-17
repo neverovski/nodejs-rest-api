@@ -2,8 +2,9 @@ import { Column, Entity, OneToOne, Unique } from 'typeorm';
 
 import { DB_TABLE_USER } from '@common/constants';
 import { BaseCreatedByEntity } from '@common/entities';
-import { UQ_USER_EMAIL } from '@db/constraints';
-import { StringTransformer } from '@db/transformer';
+import { Role } from '@common/enums';
+import { UQ_USER_EMAIL } from 'src/database/constraints';
+import { StringTransformer } from 'src/database/transformer';
 
 import { IUser } from '../interface';
 import { Profile } from '../user.type';
@@ -17,18 +18,21 @@ export class UserEntity extends BaseCreatedByEntity<IUser> implements IUser {
     nullable: true,
     transformer: new StringTransformer({ isLowerCase: true }),
   })
-  email?: string | null;
+  email?: string;
 
   @Column('bool', { default: false })
   isEmailConfirmed?: boolean;
 
   @Column('varchar', { nullable: true })
-  password?: string | null;
+  password?: string;
 
   @OneToOne(() => ProfileEntity, (profile) => profile.user)
   profile?: Profile;
 
-  get payload(): UserPayload {
+  @Column('enum', { default: Role.USER })
+  role = Role.USER;
+
+  getPayload(): UserPayload {
     return {
       userId: this.id,
       ...(this.email && { email: this.email }),

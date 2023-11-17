@@ -1,6 +1,7 @@
 import { container } from 'tsyringe';
 
 import {
+  IUserController,
   IUserRepository,
   IUserSchema,
   IUserService,
@@ -8,15 +9,21 @@ import {
 } from './interface';
 import { UserRepository } from './repository';
 import { UserService, UserValidatorService } from './service';
+import { UserController } from './user.controller';
 import { UserInject } from './user.enum';
 import { UserSchema } from './user.schema';
 
-export class UserDependencies {
+export class UserDi {
   static init() {
     this.registerRepository();
     this.registerService();
     this.registerSchema();
     this.registerValidatorService();
+    this.registerController();
+  }
+
+  private static registerController() {
+    container.register<IUserController>(UserInject.CONTROLLER, UserController);
   }
 
   private static registerRepository() {
@@ -24,7 +31,7 @@ export class UserDependencies {
   }
 
   private static registerSchema() {
-    container.register<IUserSchema>(UserInject.SCHEMA, UserSchema);
+    container.registerSingleton<IUserSchema>(UserInject.SCHEMA, UserSchema);
   }
 
   private static registerService() {

@@ -1,18 +1,16 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-import { DB_TABLE_USER } from '@common/constants';
+import { DB_TABLE_PROFILE, DB_TABLE_USER } from '@common/constants';
 
-import { UQ_USER_EMAIL } from '../constraints';
-
-export class User1629959478561 implements MigrationInterface {
+export class CreateProfile1629959478687 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(DB_TABLE_USER);
+    await queryRunner.dropTable(DB_TABLE_PROFILE);
   }
 
   async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: DB_TABLE_USER,
+        name: DB_TABLE_PROFILE,
         columns: [
           {
             name: 'id',
@@ -22,19 +20,17 @@ export class User1629959478561 implements MigrationInterface {
           },
 
           {
-            name: 'email',
-            type: 'varchar',
-            isNullable: true,
+            name: 'userId',
+            type: 'int',
+            isUnique: true,
           },
           {
-            name: 'password',
+            name: 'firstName',
             type: 'varchar',
-            isNullable: true,
           },
           {
-            name: 'isConfirmedEmail',
-            type: 'bool',
-            default: false,
+            name: 'lastName',
+            type: 'varchar',
           },
 
           {
@@ -48,7 +44,14 @@ export class User1629959478561 implements MigrationInterface {
             default: 'now()',
           },
         ],
-        uniques: [UQ_USER_EMAIL],
+        foreignKeys: [
+          {
+            columnNames: ['userId'],
+            referencedColumnNames: ['id'],
+            referencedTableName: DB_TABLE_USER,
+            onDelete: 'CASCADE',
+          },
+        ],
       }),
     );
   }

@@ -1,7 +1,7 @@
 type UserPayload = {
   email?: string;
   firstName?: string;
-  isEmailConfirmed: boolean;
+  isEmailConfirmed?: boolean;
   lastName?: string;
   userId: number;
 };

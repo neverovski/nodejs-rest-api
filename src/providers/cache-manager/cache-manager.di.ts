@@ -4,7 +4,7 @@ import { CacheManagerInject } from './cache-manager.enum';
 import { CacheManagerService } from './cache-manager.service';
 import { ICacheManagerService } from './interface';
 
-export class CacheManagerDependencies {
+export class CacheManagerDi {
   static init() {
     this.registerService();
   }

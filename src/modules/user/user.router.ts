@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router as ExpressRouter } from 'express';
 import { container } from 'tsyringe';
 
 import { RouterCore } from '@core';
@@ -8,52 +8,50 @@ import {
   ValidateMiddleware,
 } from '@middleware';
 
-import UserController from './user.controller';
-import {
-  ChangePasswordSchema,
-  CreateUserSchema,
-  UpdateUserSchema,
-} from './user.schema';
+import { IUserController, IUserSchema } from './interface';
+import { UserInject, UserRouterLink } from './user.enum';
 
-export default class UserRouter extends RouterCore {
-  private readonly controller: UserController;
+export class UserRouter extends RouterCore {
+  private readonly controller: IUserController;
+  private readonly userSchema: IUserSchema;
 
   constructor() {
-    super(Router());
+    super(ExpressRouter());
 
-    this.controller = container.resolve(UserController);
+    this.controller = container.resolve<IUserController>(UserInject.CONTROLLER);
+    this.userSchema = container.resolve<IUserSchema>(UserInject.SCHEMA);
   }
 
-  init(): Router {
+  init(): ExpressRouter {
     this.router.post(
-      '/',
-      ValidateMiddleware.handler(CreateUserSchema),
+      UserRouterLink.USER,
+      ValidateMiddleware.handler(this.userSchema.create()),
       AsyncMiddleware(this.controller.create.bind(this.controller)),
     );
 
     this.router.get(
-      '/current',
+      UserRouterLink.USER_CURRENT,
       AuthMiddleware.handler(),
       AsyncMiddleware(this.controller.getCurrentUser.bind(this.controller)),
     );
 
     this.router.put(
-      '/current',
+      UserRouterLink.USER_CURRENT,
       AuthMiddleware.handler(),
-      ValidateMiddleware.handler(UpdateUserSchema),
+      ValidateMiddleware.handler(this.userSchema.update()),
       AsyncMiddleware(this.controller.updateCurrentUser.bind(this.controller)),
     );
 
     this.router.delete(
-      '/current',
+      UserRouterLink.USER_CURRENT,
       AuthMiddleware.handler(),
       AsyncMiddleware(this.controller.deleteCurrentUser.bind(this.controller)),
     );
 
     this.router.put(
-      '/current/change-password',
+      UserRouterLink.USER_CURRENT_PASSWORD,
       AuthMiddleware.handler(),
-      ValidateMiddleware.handler(ChangePasswordSchema),
+      ValidateMiddleware.handler(this.userSchema.changePassword()),
       AsyncMiddleware(
         this.controller.changePasswordCurrentUser.bind(this.controller),
       ),

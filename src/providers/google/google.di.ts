@@ -4,7 +4,7 @@ import { GoogleInject } from './google.enum';
 import { GoogleService } from './google.service';
 import { IGoogleService } from './interface';
 
-export class GoogleDependencies {
+export class GoogleDi {
   static init() {
     this.registerService();
   }

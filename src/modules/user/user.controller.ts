@@ -1,13 +1,20 @@
-import { Exception, HttpCode, HttpStatus, i18n } from '@libs';
-import { Request, Response } from 'express';
+import type { Response as ExpressResponse } from 'express';
 import { inject } from 'tsyringe';
 
+import { HttpStatus } from '@common/enums';
 import { ControllerCore } from '@core';
+import { i18n } from '@i18n';
 
 import { UserDto } from './dto';
-import { IUserService } from './interface';
+import { IUserController, IUserService } from './interface';
 import { UserInject } from './user.enum';
-import { PasswordChangeRequest, User } from './user.type';
+import {
+  CreateUserRequest,
+  DeleteUserRequest,
+  UpdateUserRequest,
+  UserPasswordChangeRequest,
+  UserRequest,
+} from './user.type';
 
 /**
  * @openapi
@@ -15,14 +22,14 @@ import { PasswordChangeRequest, User } from './user.type';
  *   name: User
  *   description: user
  */
-export class UserController extends ControllerCore {
+export class UserController extends ControllerCore implements IUserController {
   constructor(@inject(UserInject.SERVICE) private userService: IUserService) {
     super();
   }
 
   /**
    * @openapi
-   * /api/users/current/change-password:
+   * /api/v1/users/current/change-password:
    *   put:
    *      tags: [User]
    *      summary: Change password for a current user
@@ -43,23 +50,19 @@ export class UserController extends ControllerCore {
    *        - BearerAuth: []
    */
   async changePasswordCurrentUser(
-    req: Request<any, any, PasswordChangeRequest>,
-    res: Response,
+    req: UserPasswordChangeRequest,
+    res: ExpressResponse,
   ) {
     const { userId: id } = req.user;
 
     await this.userService.updatePassword({ id }, req.body);
 
-    this.response(res, {
-      data: Exception.getOk(HttpCode.OK, {
-        message: i18n()['message.passwordReset.successfully'],
-      }),
-    });
+    res.json(this.getOk(i18n()['message.passwordReset.successfully']));
   }
 
   /**
    * @openapi
-   * /api/users:
+   * /api/v1/users:
    *   post:
    *      tags: [User]
    *      summary: Create a user
@@ -74,20 +77,18 @@ export class UserController extends ControllerCore {
    *        500:
    *          $ref: '#/components/responses/HttpInternalServerError'
    */
-  async create(req: Request<any, any, User>, res: Response) {
+  async create(req: CreateUserRequest, res: ExpressResponse) {
     await this.userService.create(req.body);
 
-    this.response(res, {
-      data: Exception.getOk(HttpCode.OK, {
-        message: i18n()['message.user.created'],
-      }),
-      status: HttpStatus.Created,
+    res.status(HttpStatus.Created).json({
+      ...this.getOk(i18n()['message.passwordReset.successfully']),
+      statusCode: HttpStatus.Created,
     });
   }
 
   /**
    * @openapi
-   * /api/users/current:
+   * /api/v1/users/current:
    *   delete:
    *      tags: [User]
    *      summary: Delete a current user
@@ -103,21 +104,19 @@ export class UserController extends ControllerCore {
    *        - CookieAuth: []
    *        - BearerAuth: []
    */
-  async deleteCurrentUser(
-    req: Request<any, any, Partial<User>>,
-    res: Response,
-  ) {
+  async deleteCurrentUser(req: DeleteUserRequest, res: ExpressResponse) {
     const { userId } = req.user;
 
     await this.userService.delete({ id: userId });
 
-    this.deleteCookie(res, req.cookies);
-    this.response(res);
+    this.storeTokenInCookie(res, {}, { maxAge: 0 });
+
+    res.status(HttpStatus.NoContent);
   }
 
   /**
    * @openapi
-   * /api/users/current:
+   * /api/v1/users/current:
    *   get:
    *      tags: [User]
    *      summary: Return a current user
@@ -133,17 +132,17 @@ export class UserController extends ControllerCore {
    *        - CookieAuth: []
    *        - BearerAuth: []
    */
-  async getCurrentUser(req: Request, res: Response) {
+  async getCurrentUser(req: UserRequest, res: ExpressResponse) {
     const { userId } = req.user;
 
     const data = await this.userService.getOne({ id: userId });
 
-    this.response(res, { data, dto: UserDTO });
+    res.json(this.mappingDataToDto(data, { cls: UserDto }));
   }
 
   /**
    * @openapi
-   * /api/users/current:
+   * /api/v1/users/current:
    *   put:
    *      tags: [User]
    *      summary: Update a current user
@@ -163,18 +162,11 @@ export class UserController extends ControllerCore {
    *        - CookieAuth: []
    *        - BearerAuth: []
    */
-  async updateCurrentUser(
-    req: Request<any, any, Partial<User>>,
-    res: Response,
-  ) {
+  async updateCurrentUser(req: UpdateUserRequest, res: ExpressResponse) {
     const { userId } = req.user;
 
-    await this.userService.update({ id: userId }, req.body);
+    const data = await this.userService.update({ id: userId }, req.body);
 
-    this.response(res, {
-      data: Exception.getOk(HttpCode.OK, {
-        message: i18n()['message.user.update'],
-      }),
-    });
+    res.json(this.mappingDataToDto(data, { cls: UserDto }));
   }
 }

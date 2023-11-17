@@ -4,7 +4,7 @@ import { ILoggerService } from './interface';
 import { LoggerInject } from './logger.enum';
 import { LoggerService } from './logger.service';
 
-export class LoggerDependencies {
+export class LoggerDi {
   static init() {
     this.registerService();
   }

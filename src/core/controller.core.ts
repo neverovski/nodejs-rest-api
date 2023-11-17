@@ -6,17 +6,20 @@ import {
   COOKIE_REFRESH_TOKEN,
 } from '@common/constants';
 import { PageDto, PageMetaDto } from '@common/dtos';
-import { MappingParams } from '@common/types';
+import { HttpStatus, MessageCode } from '@common/enums';
+import { Exception, MappingParams } from '@common/types';
 import { DateUtil, MappingUtil } from '@common/utils';
+import { AppConfig, JwtConfig } from '@config';
+import { i18n } from '@i18n';
 
 export class ControllerCore {
-  // protected responseHttpOk() {
-  //   return {
-  //     code: CodeException.OK,
-  //     message: i18n()['message.ok'],
-  //     status: HttpStatus.OK,
-  //   };
-  // }
+  protected getOk(message?: string): Exception {
+    return {
+      message: message || i18n()['message.ok'],
+      messageCode: MessageCode.OK,
+      statusCode: HttpStatus.OK,
+    };
+  }
 
   protected mappingDataToDto<T extends Record<string, any>, V>(
     dataIn: V | V[],
@@ -47,12 +50,13 @@ export class ControllerCore {
   protected storeTokenInCookie<T extends TokePayload>(
     res: Response,
     authToken: Partial<T>,
-    options: CookieParam,
+    options: Partial<CookieParam>,
   ) {
-    const maxAge = this.getCookieMaxAge(options);
+    const params = this.getCookieParam(options);
+    const maxAge = this.getCookieMaxAge(params);
 
     res.cookie(COOKIE_ACCESS_TOKEN, authToken?.accessToken, {
-      domain: options?.domain || '',
+      domain: params?.domain || '',
       secure: true,
       sameSite: 'lax',
       path: '/',
@@ -60,7 +64,7 @@ export class ControllerCore {
     });
 
     res.cookie(COOKIE_REFRESH_TOKEN, authToken?.refreshToken, {
-      domain: options?.domain || '',
+      domain: params?.domain || '',
       secure: true,
       sameSite: 'lax',
       httpOnly: true,
@@ -69,13 +73,21 @@ export class ControllerCore {
     });
   }
 
-  private getCookieMaxAge(options: CookieParam) {
-    const maxAge = DateUtil.toMs(options?.expiresIn);
+  private getCookieMaxAge(options: Partial<CookieParam>) {
+    const maxAge = DateUtil.toMs(options?.expiresIn || '');
 
     if (options?.maxAge || options?.rememberMe) {
       return { maxAge: options.maxAge ?? maxAge };
     }
 
     return {};
+  }
+
+  private getCookieParam(options: Partial<CookieParam>): Partial<CookieParam> {
+    return {
+      expiresIn: JwtConfig.refreshToken.expiresIn,
+      domain: AppConfig.domain,
+      ...options,
+    };
   }
 }

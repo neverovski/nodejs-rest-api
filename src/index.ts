@@ -3,11 +3,12 @@ import 'reflect-metadata';
 import '@providers/index.di';
 import '@modules/index.di';
 
-import { AppConfig } from '@config';
-import db from '@db/index';
 import { Logger } from '@libs';
-import Middleware, { ErrorMiddleware } from '@middleware';
 import { EventEmitter } from '@utils';
+
+import { AppConfig } from '@config';
+import Middleware, { ErrorMiddleware } from '@middleware';
+import db from 'src/database';
 
 import Server from './server';
 

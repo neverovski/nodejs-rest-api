@@ -1,16 +1,15 @@
-import { DbClient } from '@common/types';
+import { ConfigSSL, DatabaseClient } from '@common/types';
 
-export interface IDbConfig {
+export interface IDatabaseConfig {
   cacheEnabled: boolean;
   cacheTime: number;
   charset: string;
-  client: DbClient;
+  client: DatabaseClient;
   databaseName: string;
   host: string;
   logEnabled: boolean;
   password: string;
   port: number;
-  sslCertBase64?: string;
-  sslEnabled: boolean;
+  ssl?: ConfigSSL;
   user: string;
 }

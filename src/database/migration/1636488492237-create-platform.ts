@@ -1,16 +1,19 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-import { DB_TABLE_PROFILE, DB_TABLE_USER } from '@common/constants';
+import { DB_TABLE_PLATFORM, DB_TABLE_USER } from '@common/constants';
+import { SocialNetwork } from '@common/enums';
 
-export class Profile1629959478687 implements MigrationInterface {
+import { UQ_PLATFORM } from '../constraints';
+
+export class CreatePlatform1636488492237 implements MigrationInterface {
   async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(DB_TABLE_PROFILE);
+    await queryRunner.dropTable(DB_TABLE_PLATFORM);
   }
 
   async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: DB_TABLE_PROFILE,
+        name: DB_TABLE_PLATFORM,
         columns: [
           {
             name: 'id',
@@ -22,15 +25,20 @@ export class Profile1629959478687 implements MigrationInterface {
           {
             name: 'userId',
             type: 'int',
-            isUnique: true,
           },
           {
-            name: 'firstName',
+            name: 'name',
+            type: 'enum',
+            enum: Object.values(SocialNetwork),
+          },
+          {
+            name: 'ssid',
             type: 'varchar',
           },
           {
-            name: 'lastName',
+            name: 'url',
             type: 'varchar',
+            isNullable: true,
           },
 
           {
@@ -44,6 +52,7 @@ export class Profile1629959478687 implements MigrationInterface {
             default: 'now()',
           },
         ],
+        uniques: [UQ_PLATFORM],
         foreignKeys: [
           {
             columnNames: ['userId'],
@@ -52,7 +61,13 @@ export class Profile1629959478687 implements MigrationInterface {
             onDelete: 'CASCADE',
           },
         ],
+        indices: [
+          { columnNames: ['ssid'] },
+          { columnNames: ['name'] },
+          { columnNames: ['userId'] },
+        ],
       }),
+      true,
     );
   }
 }

@@ -11,9 +11,7 @@ import {
 } from 'typeorm';
 
 export type SelectParam<T = ObjectLiteral> = FindOptionsSelect<T>;
-
 export type RelationParam<T = ObjectLiteral> = FindOptionsRelations<T>;
-
 export type WhereParam<T = ObjectLiteral> =
   | FindOptionsWhere<T>[]
   | FindOptionsWhere<T>;
@@ -23,7 +21,7 @@ export type FindOption<T = ObjectLiteral> = Omit<
   'skip' | 'take'
 >;
 
-export type DbClient = 'mysql' | 'mariadb' | 'postgres';
+export type DatabaseClient = 'mysql' | 'mariadb' | 'postgres';
 
 export type CheckOptions = Required<
   Pick<TableCheckOptions, 'name' | 'expression'>

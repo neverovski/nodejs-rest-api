@@ -7,6 +7,30 @@ export class StringUtil {
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
+  static convertJsonToString<T>(data: T): string {
+    try {
+      return JSON.stringify(data);
+    } catch {
+      return '';
+    }
+  }
+
+  static convertStringToJson<T>(data: string): T {
+    return JSON.parse(data) as T;
+  }
+
+  static convertStringToNumber(val?: any): number {
+    return StringUtil.isNumber(val) ? Number(val) : 0;
+  }
+
+  static decodeBase64ToString(str: string): string {
+    if (str) {
+      return Buffer.from(str, 'base64').toString('ascii');
+    }
+
+    return '';
+  }
+
   static escape(str: string) {
     return str
       .replace(/</g, '&lt;')
@@ -36,29 +60,5 @@ export class StringUtil {
     });
 
     return str;
-  }
-
-  static transformBase64ToSSL(str: string): string {
-    if (str) {
-      return Buffer.from(str, 'base64').toString('utf8');
-    }
-
-    return '';
-  }
-
-  static transformJsonToString<T>(data: T): string {
-    try {
-      return JSON.stringify(data);
-    } catch {
-      return '';
-    }
-  }
-
-  static transformStringToJson<T>(data: string): T {
-    return JSON.parse(data) as T;
-  }
-
-  static transformStringToNumber(val?: any): number {
-    return StringUtil.isNumber(val) ? Number(val) : 0;
   }
 }

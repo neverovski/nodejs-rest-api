@@ -1,5 +1,5 @@
 import { MAX_NAME_LENGTH } from '@common/constants';
-import { JsonSchema, JsonSchemaProp } from '@common/types';
+import { JsonSchemaProp, JsonSchemaRequest } from '@common/types';
 import { SchemaCore } from '@core/schema';
 
 import { IUserSchema } from './interface';
@@ -12,51 +12,63 @@ export class UserSchema extends SchemaCore implements IUserSchema {
     };
   }
 
-  changePassword(): JsonSchema {
+  changePassword(): JsonSchemaRequest {
     return {
-      $id: this.getIdKey('changePassword'),
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        ...this.getPassword('newPassword'),
-        ...this.getPassword('oldPassword'),
+      body: {
+        $id: this.getIdKey('changePassword'),
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          ...this.getPassword('newPassword'),
+          ...this.getPassword('oldPassword'),
+        },
       },
+      params: null,
+      query: null,
     };
   }
 
-  create(): JsonSchema {
+  create(): JsonSchemaRequest {
     return {
-      $id: this.getIdKey('create'),
-      type: 'object',
-      additionalProperties: false,
-      required: ['password', 'email', 'profile'],
-      properties: {
-        ...this.getEmail(),
-        ...this.getPassword(),
-        profile: {
-          type: 'object',
-          additionalProperties: false,
-          required: ['firstName', 'lastName'],
-          properties: this.profile,
+      body: {
+        $id: this.getIdKey('create'),
+        type: 'object',
+        additionalProperties: false,
+        required: ['password', 'email', 'profile'],
+        properties: {
+          ...this.getEmail(),
+          ...this.getPassword(),
+          profile: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['firstName', 'lastName'],
+            properties: this.profile,
+          },
         },
       },
+      params: null,
+      query: null,
     };
   }
 
-  update(): JsonSchema {
+  update(): JsonSchemaRequest {
     return {
-      $id: this.getIdKey('update'),
-      type: 'object',
-      additionalProperties: false,
-      required: ['profile'],
-      properties: {
-        profile: {
-          type: 'object',
-          additionalProperties: false,
-          minProperties: 1,
-          properties: this.profile,
+      body: {
+        $id: this.getIdKey('update'),
+        type: 'object',
+        additionalProperties: false,
+        required: ['profile'],
+        properties: {
+          profile: {
+            type: 'object',
+            additionalProperties: false,
+            minProperties: 1,
+            properties: this.profile,
+          },
         },
       },
+      params: null,
+      query: null,
     };
   }
 }

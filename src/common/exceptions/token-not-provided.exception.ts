@@ -6,9 +6,9 @@ import { HttpException } from './http.exception';
 export class TokenNotProvidedException extends HttpException {
   constructor() {
     super({
+      message: i18n()['exception.tokenNotProvided'],
       messageCode: MessageCode.TOKEN_NOT_PROVIDED,
       statusCode: HttpStatus.Unauthorized,
-      message: i18n()['exception.tokenNotProvided'],
     });
   }
 }

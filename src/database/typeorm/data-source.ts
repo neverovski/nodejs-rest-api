@@ -3,19 +3,18 @@ import { resolve } from 'path';
 import { DataSource } from 'typeorm';
 
 import { ENV_CLI, ENV_SEED } from '@common/constants';
-import { StringUtil } from '@common/utils';
-import { AppConfig, DbConfig, RedisConfig } from '@config';
+import { AppConfig, DatabaseConfig, RedisConfig } from '@config';
 
 import { redisClusterConnect, redisConnect } from './cache-connect';
-import { DbLogger } from './logger';
+import { DatabaseLogger } from './logger';
 
 export const AppDataSource = new DataSource({
-  type: DbConfig.client,
-  host: DbConfig.host,
-  port: DbConfig.port,
-  username: DbConfig.user,
-  password: DbConfig.password,
-  database: DbConfig.databaseName,
+  type: DatabaseConfig.client,
+  host: DatabaseConfig.host,
+  port: DatabaseConfig.port,
+  username: DatabaseConfig.user,
+  password: DatabaseConfig.password,
+  database: DatabaseConfig.databaseName,
   entities: [resolve('src/modules/**/*.entity{.ts,.js}')],
   migrations:
     AppConfig.env === ENV_SEED
@@ -23,20 +22,16 @@ export const AppDataSource = new DataSource({
       : [resolve('src/db/migration/*{.ts,.js}')],
   subscribers: [resolve('src/modules/**/*.subscriber{.ts,.js}')],
   synchronize: false,
-  logging: DbConfig.logEnabled,
+  logging: DatabaseConfig.logEnabled,
   ...(!(AppConfig.env === ENV_CLI || AppConfig.env === ENV_SEED) && {
-    logger: new DbLogger(),
+    logger: new DatabaseLogger(),
   }),
-  ...(DbConfig.cacheEnabled && {
+  ...(DatabaseConfig.cacheEnabled && {
     cache: RedisConfig.clusterModeEnabled
       ? redisClusterConnect()
       : redisConnect(),
   }),
-  ...(DbConfig.sslEnabled && {
-    ssl: {
-      ...(DbConfig.sslCertBase64 && {
-        ca: StringUtil.transformBase64ToSSL(DbConfig.sslCertBase64),
-      }),
-    },
+  ...(DatabaseConfig?.ssl?.enabled && {
+    ssl: { ...(DatabaseConfig?.ssl?.ca && { ca: DatabaseConfig.ssl.ca }) },
   }),
 });

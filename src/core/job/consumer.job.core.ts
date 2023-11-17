@@ -23,6 +23,7 @@ export class ConsumerCoreJob {
     this.jobHandlers.set(name, handler);
   }
 
+  //TODO: add logger
   private async processJob(job: Job) {
     const jobName = job.name;
     const jobHandler = this.jobHandlers.get(jobName);

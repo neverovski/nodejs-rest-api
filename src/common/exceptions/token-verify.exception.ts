@@ -6,9 +6,9 @@ import { HttpException } from './http.exception';
 export class TokenVerifyException extends HttpException {
   constructor() {
     super({
+      message: i18n()['exception.tokenVerify'],
       messageCode: MessageCode.TOKEN_VERIFY,
       statusCode: HttpStatus.Unauthorized,
-      message: i18n()['exception.tokenVerify'],
     });
   }
 }

@@ -31,3 +31,8 @@ export type GoogleConfigType = {
 export type GitHubConfigType = {
   url: string;
 };
+
+export type ConfigSSL = {
+  ca?: string;
+  enabled?: boolean;
+};
