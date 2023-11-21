@@ -1,11 +1,11 @@
-import { TemplateType } from '@libs';
+import { TemplatePath } from '@common/enums';
 
-export enum NotificationInject {
-  NOTIFICATION_SERVICE = 'NotificationService',
-}
+export type NotificationMethod = {
+  email?: string | null;
+  phone?: string | null;
+};
 
-export type Notification = {
+export type NotificationParams = {
   data?: Record<string, any>;
-  email?: string;
-  template: TemplateType;
+  template: TemplatePath;
 };

@@ -1,5 +1,5 @@
-import { Notification } from '../notification.type';
+import { NotificationMethod, NotificationParams } from '../notification.type';
 
 export interface INotificationService {
-  addToQueue(params: Notification): void;
+  send(data: NotificationMethod, params: NotificationParams): void;
 }
