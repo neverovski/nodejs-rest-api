@@ -1,7 +1,7 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { COOKIE_ACCESS_TOKEN } from '@common/constants';
+import { COOKIE_ACCESS_TOKEN, ROLE_ANONYMOUS } from '@common/constants';
 import { TokenType } from '@common/enums';
 import { TokenNotProvidedException } from '@common/exceptions';
 import { JwtConfig } from '@config';
@@ -26,13 +26,13 @@ class AuthMiddleware extends MiddlewareCore {
 
       if (token) {
         try {
-          const { userId, email } =
-            await this.tokenService.verifyJwt<JwtPayload>(
+          const { userId, email, role } =
+            await this.tokenService.verifyJwt<AccessTokenPayload>(
               token,
               JwtConfig.accessToken.secret,
             );
 
-          req.user = Object.freeze({ userId, email });
+          req.user = Object.freeze({ userId, email, role });
 
           return next();
         } catch (err) {
@@ -60,7 +60,7 @@ class AuthMiddleware extends MiddlewareCore {
   }
 
   private getUserForAnonymousRole(): UserPayload {
-    return { userId: 0 };
+    return { userId: 0, role: ROLE_ANONYMOUS };
   }
 }
 

@@ -10,7 +10,7 @@ export type Cors = {
   origin: string[];
 };
 
-export type JwtType = {
+export type JwtTokenType = {
   expiresIn: string;
   secret: string;
 };

@@ -1,21 +1,22 @@
 import { MAX_NAME_LENGTH } from '@common/constants';
-import { JsonSchemaProp, JsonSchemaRequest } from '@common/types';
+import { JsonSchemaOptions, JsonSchemaProperty } from '@common/types';
 import { SchemaCore } from '@core/schema';
 
 import { IUserSchema } from './interface';
 
 export class UserSchema extends SchemaCore implements IUserSchema {
-  private get profile(): JsonSchemaProp {
+  private get profile(): JsonSchemaProperty {
     return {
       ...this.getString('firstName', { maxLength: MAX_NAME_LENGTH }),
       ...this.getString('lastName', { maxLength: MAX_NAME_LENGTH }),
     };
   }
 
-  changePassword(): JsonSchemaRequest {
+  changePassword(): JsonSchemaOptions {
     return {
       body: {
         $id: this.getIdKey('changePassword'),
+        $schema: 'http://json-schema.org/draft-07/schema#',
         type: 'object',
         additionalProperties: false,
         properties: {
@@ -23,15 +24,14 @@ export class UserSchema extends SchemaCore implements IUserSchema {
           ...this.getPassword('oldPassword'),
         },
       },
-      params: null,
-      query: null,
     };
   }
 
-  create(): JsonSchemaRequest {
+  create(): JsonSchemaOptions {
     return {
       body: {
         $id: this.getIdKey('create'),
+        $schema: 'http://json-schema.org/draft-07/schema#',
         type: 'object',
         additionalProperties: false,
         required: ['password', 'email', 'profile'],
@@ -46,15 +46,14 @@ export class UserSchema extends SchemaCore implements IUserSchema {
           },
         },
       },
-      params: null,
-      query: null,
     };
   }
 
-  update(): JsonSchemaRequest {
+  update(): JsonSchemaOptions {
     return {
       body: {
         $id: this.getIdKey('update'),
+        $schema: 'http://json-schema.org/draft-07/schema#',
         type: 'object',
         additionalProperties: false,
         required: ['profile'],
@@ -67,8 +66,6 @@ export class UserSchema extends SchemaCore implements IUserSchema {
           },
         },
       },
-      params: null,
-      query: null,
     };
   }
 }

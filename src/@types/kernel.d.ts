@@ -1,5 +1,8 @@
 type Id = number;
 type Email = string;
+type Password = string;
+
+type Token = string;
 
 type IdObject = { id: Id };
 
@@ -16,8 +19,8 @@ type CookieParam = {
 };
 
 type TokePayload = {
-  accessToken?: string;
-  refreshToken?: string;
+  accessToken?: Token;
+  refreshToken?: Token;
 };
 
 type PagePayload = {

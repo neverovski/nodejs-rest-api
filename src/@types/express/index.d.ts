@@ -11,7 +11,9 @@ type JwtPayload = {
   jti: string;
   sub: number;
   typ: string;
-} & UserPayload;
+};
+
+type AccessTokenPayload = JwtPayload & UserPayload;
 
 type UserSession = {
   browser?: string;

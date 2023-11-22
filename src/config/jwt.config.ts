@@ -1,12 +1,12 @@
-import { JwtType } from '@common/types';
+import { JwtTokenType } from '@common/types';
 import { ConfigCore } from '@core';
 
 import { IJwtConfig } from './interface';
 
 class JwtConfig extends ConfigCore implements IJwtConfig {
-  accessToken!: JwtType;
-  refreshToken!: JwtType;
-  token!: JwtType;
+  accessToken!: JwtTokenType;
+  refreshToken!: JwtTokenType;
+  token!: JwtTokenType;
 
   init() {
     this.accessToken = {

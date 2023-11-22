@@ -1,7 +1,7 @@
-import { JwtType } from '@common/types';
+import { JwtTokenType } from '@common/types';
 
 export interface IJwtConfig {
-  accessToken: JwtType;
-  refreshToken: JwtType;
-  token: JwtType;
+  accessToken: JwtTokenType;
+  refreshToken: JwtTokenType;
+  token: JwtTokenType;
 }

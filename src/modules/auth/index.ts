@@ -1,3 +1,4 @@
 export * from './interface';
-export { default as AuthRouter } from './auth.router';
+
+export * from './auth.enum';
 export * from './auth.type';

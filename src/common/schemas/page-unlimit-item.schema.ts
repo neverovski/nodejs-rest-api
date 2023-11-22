@@ -4,9 +4,9 @@ import {
   MIN_LIMIT_ITEM,
   UNLIMIT_ITEM,
 } from '@common/constants';
-import { JsonSchemaProp } from '@common/types';
+import { JsonSchemaProperty } from '@common/types';
 
-export const PAGE_UNLIMIT_ITEM_SCHEMA: JsonSchemaProp = {
+export const PAGE_UNLIMIT_ITEM_SCHEMA: JsonSchemaProperty = {
   limit: {
     type: 'integer',
     minimum: MIN_LIMIT_ITEM,

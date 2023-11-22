@@ -4,7 +4,7 @@ import {
   MIN_PASSWORD_LENGTH,
 } from '@common/constants';
 import { PAGE_SCHEMA, PAGE_UNLIMIT_ITEM_SCHEMA } from '@common/schemas';
-import { JsonSchema, JsonSchemaProp, SchemaOption } from '@common/types';
+import { JsonSchema, JsonSchemaCtx, JsonSchemaProperty } from '@common/types';
 import { StringUtil } from '@common/utils';
 import { i18n } from '@i18n';
 
@@ -31,7 +31,7 @@ export class SchemaCore implements ISchema {
     };
   }
 
-  protected getBoolean(key: string): JsonSchemaProp {
+  protected getBoolean(key: string): JsonSchemaProperty {
     return {
       [key]: {
         type: 'boolean',
@@ -42,7 +42,7 @@ export class SchemaCore implements ISchema {
     };
   }
 
-  protected getDate(key: string): JsonSchemaProp {
+  protected getDate(key: string): JsonSchemaProperty {
     return {
       [key]: {
         type: ['string', 'null'],
@@ -51,7 +51,7 @@ export class SchemaCore implements ISchema {
     };
   }
 
-  protected getDateTime(key: string): JsonSchemaProp {
+  protected getDateTime(key: string): JsonSchemaProperty {
     return {
       [key]: {
         type: ['string', 'null'],
@@ -60,7 +60,7 @@ export class SchemaCore implements ISchema {
     };
   }
 
-  protected getEmail(): JsonSchemaProp {
+  protected getEmail(): JsonSchemaProperty {
     return {
       email: {
         type: 'string',
@@ -76,7 +76,7 @@ export class SchemaCore implements ISchema {
     };
   }
 
-  protected getEnum(key: string, value: object): JsonSchemaProp {
+  protected getEnum(key: string, value: object): JsonSchemaProperty {
     return {
       [key]: {
         type: 'string',
@@ -89,7 +89,7 @@ export class SchemaCore implements ISchema {
     return `${this.constructor.name}/${schemaName}`;
   }
 
-  protected getInteger(key: string, opt?: SchemaOption): JsonSchemaProp {
+  protected getInteger(key: string, opt?: JsonSchemaCtx): JsonSchemaProperty {
     const minimum = opt?.minimum ?? 1;
     const maximum = opt?.maximum ?? BIG_INT;
 
@@ -114,7 +114,7 @@ export class SchemaCore implements ISchema {
     };
   }
 
-  protected getObjectById(key: string): JsonSchemaProp {
+  protected getObjectById(key: string): JsonSchemaProperty {
     return {
       [key]: {
         type: ['object', 'null'],
@@ -125,7 +125,7 @@ export class SchemaCore implements ISchema {
     };
   }
 
-  protected getPassword(key = 'password'): JsonSchemaProp {
+  protected getPassword(key = 'password'): JsonSchemaProperty {
     return {
       [key]: {
         type: 'string',
@@ -139,7 +139,7 @@ export class SchemaCore implements ISchema {
     };
   }
 
-  protected getString(key: string, opt?: SchemaOption): JsonSchemaProp {
+  protected getString(key: string, opt?: JsonSchemaCtx): JsonSchemaProperty {
     const { isOptional, ...param } = opt || { isOptional: false };
     const minLength = isOptional ? 0 : opt?.minLength ?? 1;
     const maxLength = opt?.maxLength;

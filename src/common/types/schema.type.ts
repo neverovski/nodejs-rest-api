@@ -2,6 +2,10 @@ import { JSONSchema7 } from 'json-schema';
 
 import { AjvSanitizeKey } from '../enums/ajv.enum';
 
+export type JsonSchemaProperty = {
+  [key: string]: JsonSchema;
+};
+
 export type JsonSchema = JSONSchema7 & {
   consumes?: string[];
   errorMessage?: {
@@ -23,17 +27,7 @@ export type JsonSchema = JSONSchema7 & {
   uniqueItemProperties?: string[];
 };
 
-export type JsonSchemaProp = {
-  [key: string]: JsonSchema;
-};
-
-export type JsonSchemaRequest = {
-  body: JsonSchema | null;
-  params: JsonSchema | null;
-  query: JsonSchema | null;
-};
-
-export type SchemaOption = {
+export type JsonSchemaCtx = {
   isOptional?: boolean;
   skipRepeatSymbols?: string[];
 } & Pick<
@@ -46,3 +40,9 @@ export type SchemaOption = {
   | 'transform'
   | 'errorMessage'
 >;
+
+export type JsonSchemaOptions = {
+  body?: JsonSchema | null;
+  params?: JsonSchema | null;
+  query?: JsonSchema | null;
+};

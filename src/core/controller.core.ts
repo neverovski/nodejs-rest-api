@@ -1,4 +1,4 @@
-import type { Response } from 'express';
+import type { Response as ExpressResponse } from 'express';
 
 import {
   AUTH_REFRESH_LINK,
@@ -48,9 +48,9 @@ export class ControllerCore {
   }
 
   protected storeTokenInCookie<T extends TokePayload>(
-    res: Response,
+    res: ExpressResponse,
     authToken: Partial<T>,
-    options: Partial<CookieParam>,
+    options?: Partial<CookieParam>,
   ) {
     const params = this.getCookieParam(options);
     const maxAge = this.getCookieMaxAge(params);
@@ -83,7 +83,7 @@ export class ControllerCore {
     return {};
   }
 
-  private getCookieParam(options: Partial<CookieParam>): Partial<CookieParam> {
+  private getCookieParam(options?: Partial<CookieParam>): Partial<CookieParam> {
     return {
       expiresIn: JwtConfig.refreshToken.expiresIn,
       domain: AppConfig.domain,

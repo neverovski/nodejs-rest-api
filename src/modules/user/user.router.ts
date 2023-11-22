@@ -13,19 +13,19 @@ import { UserInject, UserRouterLink } from './user.enum';
 
 export class UserRouter extends RouterCore {
   private readonly controller: IUserController;
-  private readonly userSchema: IUserSchema;
+  private readonly schema: IUserSchema;
 
   constructor() {
     super(ExpressRouter());
 
     this.controller = container.resolve<IUserController>(UserInject.CONTROLLER);
-    this.userSchema = container.resolve<IUserSchema>(UserInject.SCHEMA);
+    this.schema = container.resolve<IUserSchema>(UserInject.SCHEMA);
   }
 
   init(): ExpressRouter {
     this.router.post(
       UserRouterLink.USER,
-      ValidateMiddleware.handler(this.userSchema.create()),
+      ValidateMiddleware.handler(this.schema.create()),
       AsyncMiddleware(this.controller.create.bind(this.controller)),
     );
 
@@ -38,7 +38,7 @@ export class UserRouter extends RouterCore {
     this.router.put(
       UserRouterLink.USER_CURRENT,
       AuthMiddleware.handler(),
-      ValidateMiddleware.handler(this.userSchema.update()),
+      ValidateMiddleware.handler(this.schema.update()),
       AsyncMiddleware(this.controller.updateCurrentUser.bind(this.controller)),
     );
 
@@ -51,7 +51,7 @@ export class UserRouter extends RouterCore {
     this.router.put(
       UserRouterLink.USER_CURRENT_PASSWORD,
       AuthMiddleware.handler(),
-      ValidateMiddleware.handler(this.userSchema.changePassword()),
+      ValidateMiddleware.handler(this.schema.changePassword()),
       AsyncMiddleware(
         this.controller.changePasswordCurrentUser.bind(this.controller),
       ),

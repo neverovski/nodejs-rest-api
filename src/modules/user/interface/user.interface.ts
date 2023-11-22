@@ -4,9 +4,9 @@ import { IBase } from '@common/interfaces';
 import { Profile } from '../types';
 
 export interface IUser extends IBase {
-  email?: string;
+  email?: Email;
   isEmailConfirmed?: boolean;
-  password?: string;
+  password?: Password;
   profile?: Profile;
   role?: Role;
 

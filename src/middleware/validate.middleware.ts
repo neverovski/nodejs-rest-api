@@ -7,7 +7,7 @@ import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { REG_PHONE } from '@common/constants';
 import { AjvFormatKey } from '@common/enums';
 import { UnprocessableEntityException } from '@common/exceptions';
-import { ExceptionMessage, JsonSchema, JsonSchemaRequest } from '@common/types';
+import { ExceptionMessage, JsonSchema, JsonSchemaOptions } from '@common/types';
 import { AjvUtil, StringUtil } from '@common/utils';
 import { MiddlewareCore } from '@core';
 
@@ -26,7 +26,7 @@ class ValidateMiddleware extends MiddlewareCore {
     this.registerKeyword();
   }
 
-  handler(schemas: JsonSchemaRequest): RequestHandler {
+  handler(schemas: JsonSchemaOptions): RequestHandler {
     return async (
       req: Request<Record<string, unknown>, any, Record<string, unknown>>,
       res: Response,

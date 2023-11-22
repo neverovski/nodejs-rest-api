@@ -1,20 +1,40 @@
-import type { Application, NextFunction, Request, Response } from 'express';
+import type {
+  Application as ExpressApp,
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+  NextFunction,
+} from 'express';
 
-import { Exception, HttpCode, i18n } from '@libs';
-import { AuthRouter } from '@modules/auth';
-import { UserRouter } from '@modules/user';
+import { NotFoundException } from '@common/exceptions';
+import { i18n } from '@i18n';
+import { AuthRouter } from '@modules/auth/auth.router';
+import { UserRouter } from '@modules/user/user.router';
 
-export default (app: Application): void => {
-  app.use('/api/auth', new AuthRouter().init());
-  app.use('/api/users', new UserRouter().init());
+export class AppRouter {
+  private readonly app: ExpressApp;
 
-  app.use((req: Request, _res: Response, next: NextFunction) =>
-    !req.route
-      ? next(
-          Exception.getError(HttpCode.NOT_FOUND, {
-            message: i18n()['notFound.router'],
-          }),
-        )
-      : next(),
-  );
-};
+  constructor(app: ExpressApp) {
+    this.app = app;
+
+    this.init();
+  }
+
+  protected init(): void {
+    this.app.use('/api/auth', new AuthRouter().init());
+    this.app.use('/api/users', new UserRouter().init());
+
+    this.notFound();
+  }
+
+  private notFound() {
+    this.app.use(
+      (req: ExpressRequest, _res: ExpressResponse, next: NextFunction) => {
+        if (!req.route) {
+          return next(new NotFoundException(i18n()['notFound.router']));
+        }
+
+        return next();
+      },
+    );
+  }
+}
