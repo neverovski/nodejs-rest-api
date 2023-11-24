@@ -1,36 +1,63 @@
-# Install dependencies only when needed
-FROM node:18.14-alpine3.16 AS deps
+# Step 1 - Install dependencies
+FROM node:20-alpine3.17 AS deps
 LABEL author="Dmitry Neverovski <dmitryneverovski@gmail.com>"
 
-ARG NPM_CONFIG_TOKEN
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package*.json ./
+COPY --chown=node:node package*.json ./
 
-RUN npm install
+RUN npm ci
 
-# Rebuild the source code only when needed
-FROM node:18.14-alpine3.16 AS builder
+USER node
+
+# Step 2 - Build the source code
+FROM node:20-alpine3.17 AS build
 LABEL author="Dmitry Neverovski <dmitryneverovski@gmail.com>"
-ARG APP_ENV
-ENV APP_ENV=${APP_ENV:-development}
+
+ARG NODE_ENV
+ENV NODE_ENV=${NODE_ENV:-development}
 
 WORKDIR /app
-COPY . .
-COPY --from=deps /app/node_modules ./node_modules
-RUN APP_ENV=${APP_ENV} npm run build
 
-# Production image, copy all the files and run next
-FROM node:18.14-alpine3.16 AS runner
+COPY --chown=node:node package*.json ./
+COPY --chown=node:node --from=deps /app/node_modules ./node_modules
+COPY --chown=node:node . .
+
+RUN NODE_ENV=${NODE_ENV} npm run build
+
+USER node
+
+# Step 3 - Instal dependencies without devDependencies
+FROM node:20-alpine3.17 AS modules
 LABEL author="Dmitry Neverovski <dmitryneverovski@gmail.com>"
+
+ARG NODE_ENV
+ENV NODE_ENV=${NODE_ENV:-development}
+
+WORKDIR /app
+
+COPY --chown=node:node package*.json ./
+
+RUN npm ci --omit=dev --ignore-scripts
+
+USER node
+
+# Step - 5 Production image, copy all the files and run next
+FROM node:20-alpine3.17 AS runner
+LABEL author="Dmitry Neverovski <dmitryneverovski@gmail.com>"
+
 ARG APP_PORT
 ENV APP_PORT=${APP_PORT:-5656}
 
 WORKDIR /app
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+USER node
+
+COPY --chown=node:node package*.json ./
+COPY --chown=node:node --from=modules /app/node_modules ./node_modules
+COPY --chown=node:node --from=build /app/dist ./dist
+COPY --chown=node:node swagger ./swagger
+COPY --chown=node:node templates ./templates
 
 EXPOSE ${APP_PORT}
-CMD npm run start:prod
+
+CMD [ "node", "dist/main.js" ]

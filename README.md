@@ -10,10 +10,10 @@ Development environment requirements:
 
 ## Project initialization
 
-### 1. [LOCAL] stage use DevContainer or docker-compose command
+### 1. [LOCAL] stage use docker-compose command
 ```shell
   cp .env.dev .env
-  docker compose -f ./.devcontainer/docker-compose.yml --env-file .env up -d --build
+  docker compose up -d --build
 ```
 
 ### 2. Migration

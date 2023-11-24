@@ -4,44 +4,52 @@ services:
   auth-server:
     image: auth-server
     container_name: auth-server
-    working_dir: /app
-    env_file: ../.env
-    build:
-      context: ..
-      dockerfile: .devcontainer/Dockerfile
-      args:
-        APP_ENV: ${APP_ENV}
-        APP_PORT: ${APP_PORT}
-    volumes:
-      - ..:/app
     networks:
       - auth-network
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        NODE_ENV: ${NODE_ENV}
+        APP_PORT: ${APP_PORT}
+    env_file: ./.env
     ports:
       - ${APP_PORT}:${APP_PORT}
+    restart: unless-stopped
 
   auth-redis:
     image: redis:7
     container_name: auth-redis
     networks:
       - auth-network
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - auth-redis-data:/data
     ports:
-      - "6969:6379"
+      - ${REDIS_PORT}:6379
     restart: unless-stopped
 
   auth-db:
-    image: postgres:14
+    image: postgres:15
     container_name: auth-db
+    networks:
+      - auth-network
     volumes:
-      - ../data/postgresql/server:/var/lib/postgresql/data
+      - auth-db-data:/var/lib/postgresql/data
     environment:
+      TZ: 'UTC'
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    networks:
-      - auth-network
     ports:
-      - "54323:5432"
+      - ${DB_PORT}:5432
     restart: unless-stopped
+
+volumes:
+  auth-redis-data:
+    driver: local
+  auth-db-data:
+    driver: local
 
 networks:
   auth-network:
