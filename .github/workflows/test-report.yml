@@ -1,0 +1,28 @@
+name: 'Test Report'
+
+on:
+  workflow_run:
+    workflows: ['CI']                     # runs after CI workflow
+    types:
+      - completed
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18, 20]
+
+    steps:
+    - uses: dorny/test-reporter@v1
+      with:
+        name: "Test results (Node.js: ${{ matrix.node-version }})"  # Name of the check run which will be created
+        artifact: test-result-${{ matrix.node-version }}                                  # artifact name
+        path: '*.xml'                                                                     # Path to test results (inside artifact .zip)
+        reporter: jest-junit
