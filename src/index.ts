@@ -1,40 +1,50 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import 'reflect-metadata';
+
 import '@providers/index.di';
 import '@modules/index.di';
 
-import { Logger } from '@libs';
-import { EventEmitter } from '@utils';
+import { container } from 'tsyringe';
 
 import { AppConfig } from '@config';
+import { DatabaseDi, DatabaseInject, IDatabaseService } from '@database';
 import Middleware, { ErrorMiddleware } from '@middleware';
-import db from 'src/database';
 
-import Server from './server';
+import { AppServer } from './server';
 
-const app = new Server({
+DatabaseDi.init();
+
+const app = new AppServer({
   port: Number(AppConfig.port),
-  initMiddleware: Middleware,
+  middlewares: Middleware,
   errorMiddleware: ErrorMiddleware,
 });
 
-db.connect()
+const database = container.resolve<IDatabaseService>(DatabaseInject.SERVICE);
+
+database
+  .connect()
   .then(() => {
-    Logger.debug({ message: 'Database initialized...' });
+    console.info({ message: 'Database initialized...' });
+
     app
       .init()
       .then(() => {
-        EventEmitter.emit('start');
-        Logger.info({ message: 'Server start initialization..' });
+        // EventEmitter.emit('start');
+
+        console.info({ message: 'Server start initialization..' });
       })
       .catch((error) => {
-        EventEmitter.emit('close');
-        Logger.error({ message: 'Server fails to initialize...', error });
+        // EventEmitter.emit('close');
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        console.error({ message: 'Server fails to initialize...', error });
         process.exit(1);
       });
   })
   .catch((error) => {
-    EventEmitter.emit('close');
-    Logger.error({ message: 'Database fails to initialize...', error });
+    // EventEmitter.emit('close');
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    console.error({ message: 'Database fails to initialize...', error });
     process.exit(1);
   });

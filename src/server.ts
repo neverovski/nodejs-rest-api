@@ -37,7 +37,7 @@ export class AppServer {
     this.handleRouter();
     this.handleMiddlewareError();
 
-    await this.runHttp();
+    await this.runHttpServer();
   }
 
   private handleMiddleware(): void {
@@ -68,7 +68,7 @@ export class AppServer {
     new AppRouter(this.express);
   }
 
-  private async runHttp(): Promise<void> {
+  private async runHttpServer(): Promise<void> {
     return new Promise((resolve) => {
       process.on('unhandledRejection', (reason) => {
         this.logger.error({ message: 'unhandledRejection', error: reason });
