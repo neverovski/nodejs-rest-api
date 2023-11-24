@@ -1,0 +1,32 @@
+{
+  "testEnvironment": "node",
+  "transform": {
+    "^.+\\.ts$": "ts-jest"
+  },
+  "bail": 1,
+  "moduleFileExtensions": ["ts", "json", "js", "mjs", "node"],
+  "modulePathIgnorePatterns": [
+    "<rootDir>/dist",
+    "<rootDir>/templates",
+    "<rootDir>/http",
+    "<rootDir>/docs"
+  ],
+  "testTimeout": 30000,
+  "testMatch": ["<rootDir>/tests/**/*.test.ts"],
+  "coverageDirectory": "coverage",
+  "moduleNameMapper": {
+    "@common/(.*)": "<rootDir>/src/common/$1",
+    "@config": "<rootDir>/src/config",
+    "@core": "<rootDir>/src/core",
+    "@core/(.*)": "<rootDir>/src/core/$1",
+    "@database": "<rootDir>/src/database",
+    "@database/(.*)": "<rootDir>/src/database/$1",
+    "@i18n": "<rootDir>/src/i18n",
+    "@middleware": "<rootDir>/src/middleware",
+    "@modules/(.*)": "<rootDir>/src/modules/$1",
+    "@providers/(.*)": "<rootDir>/src/providers/$1"
+  },
+  "globals": {
+    "fetch": "global.fetch"
+  }
+}

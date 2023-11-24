@@ -3,7 +3,7 @@ export class RequestUtil {
     return this.buildJsonQuery<T>(url, config);
   }
 
-  static async post<T, V>(
+  static async post<T, V = any>(
     url: string,
     data: V,
     config?: RequestInit,
