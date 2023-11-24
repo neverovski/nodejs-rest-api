@@ -126,4 +126,4 @@ Happy to get your feedback, but also you are feel free to raise a pull request.
 
 ## License
 
-This library is released under the MIT License.
+This project is licensed under the MIT. See the LICENSE.md file for details.

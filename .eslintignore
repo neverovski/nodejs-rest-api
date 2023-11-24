@@ -1,1 +1,46 @@
+# js files
+**/*.js
+
+# compiled output
+build
+**/build
+
+dist
+**/dist
+
+# dependencies
 node_modules
+**/node_modules
+
+package-lock.json
+**/package-lock.json
+
+# tests
+coverage
+**/coverage
+
+# git, vs config
+.git
+**/.git
+
+.github
+**/.github
+
+.husky
+**/.husky
+
+.vscode
+**/.vscode
+
+.devcontainer
+**/.devcontainer
+
+# docs
+CHANGELOG.md
+README.md
+
+docs
+**/docs
+
+reports
+**/reports

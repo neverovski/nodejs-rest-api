@@ -10,7 +10,7 @@ export class AjvUtil {
       keyword: AjvKeywordKey.SANITIZE,
       type: 'string',
       modifying: true,
-      compile: AjvUtil.compileSanitize,
+      compile: void AjvUtil.compileSanitize,
       errors: false,
     };
   }

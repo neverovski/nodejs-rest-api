@@ -17,6 +17,7 @@ export class EmailConsumerJob
   ) {
     super(EMAIL_QUEUE_NAME);
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     this.registerJobHandler(EmailJobName.SEND_MESSAGE, this.sendEmailJob);
   }
 

@@ -66,11 +66,9 @@ export class AuthService extends ServiceCore implements IAuthService {
   }
 
   protected async getTokens(user: FullUser): Promise<AuthToken> {
-    const { id, getPayload } = user;
-
     const [accessToken, refreshToken] = await Promise.all([
-      this.authTokenService.getAccessToken(id, getPayload()),
-      this.authTokenService.getRefreshToken(id),
+      this.authTokenService.getAccessToken(user.id, user.getPayload()),
+      this.authTokenService.getRefreshToken(user.id),
     ]);
 
     return {
