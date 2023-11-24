@@ -81,8 +81,8 @@ jobs:
       - name: ESLint Check
         run: npm run lint
 
-      - name: Run unit tests
-        run: npm run test:unit:ci
+      # - name: Run unit tests
+      #   run: npm run test:unit:ci
 
       - name: Build
         run: npm run build

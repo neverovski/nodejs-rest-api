@@ -16,7 +16,7 @@ assignees: ''
 **Any relevant logs, error output, etc?**
 
 **Environment:**
- - Node.js: [e.g. 18]
+ - Node.js: [e.g. 18 | 20]
 
 **Any other comments?**
 
