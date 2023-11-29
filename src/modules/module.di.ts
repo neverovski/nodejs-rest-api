@@ -4,10 +4,16 @@ import { PlatformDi } from './platform/platform.di';
 import { RefreshTokenDi } from './refresh-token/refresh-token.di';
 import { UserDi } from './user/user.di';
 
-NotificationDi.init();
+class ModuleDi {
+  register() {
+    new NotificationDi().register();
 
-UserDi.init();
-RefreshTokenDi.init();
-PlatformDi.init();
+    new UserDi().register();
+    new RefreshTokenDi().register();
+    new PlatformDi().register();
 
-AuthDi.init();
+    new AuthDi().register();
+  }
+}
+
+new ModuleDi().register();

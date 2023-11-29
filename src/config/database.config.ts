@@ -1,3 +1,5 @@
+import { singleton as Singleton } from 'tsyringe';
+
 import { CACHE_TIME } from '@common/constants';
 import { ConfigSSL, DatabaseClient } from '@common/types';
 import { StringUtil } from '@common/utils';
@@ -5,7 +7,8 @@ import { ConfigCore } from '@core';
 
 import { IDatabaseConfig } from './interface';
 
-class DatabaseConfig extends ConfigCore implements IDatabaseConfig {
+@Singleton()
+export class DatabaseConfig extends ConfigCore implements IDatabaseConfig {
   cacheEnabled!: boolean;
   cacheTime!: number;
   charset!: string;
@@ -19,7 +22,13 @@ class DatabaseConfig extends ConfigCore implements IDatabaseConfig {
   sslEnabled!: boolean;
   user!: string;
 
-  init() {
+  constructor() {
+    super();
+
+    this.init();
+  }
+
+  protected init() {
     this.cacheEnabled = this.set(
       'DB_CACHE_ENABLED',
       this.schema.boolean().allow(null, '').default(false),
@@ -82,5 +91,3 @@ class DatabaseConfig extends ConfigCore implements IDatabaseConfig {
     );
   }
 }
-
-export default new DatabaseConfig();

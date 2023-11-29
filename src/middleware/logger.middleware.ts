@@ -1,22 +1,25 @@
-import type { Request, RequestHandler } from 'express';
+import type { Request as ExpressRequest, RequestHandler } from 'express';
 import pino from 'pino-http';
-import { container } from 'tsyringe';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
 import { ENV_DEVELOPMENT } from '@common/constants';
-import { LogLevel, LoggerCtx } from '@common/enums';
-import { AppConfig } from '@config';
+import { ConfigKey, LogLevel, LoggerCtx } from '@common/enums';
+import { IAppConfig } from '@config';
 import { MiddlewareCore } from '@core';
 import { ILoggerService, LoggerInject } from '@providers/logger';
 
-class LoggerMiddleware extends MiddlewareCore {
-  protected readonly logger: ILoggerService;
+@Singleton()
+export class LoggerMiddleware extends MiddlewareCore {
   private readonly loggerCtx: LoggerCtx;
 
-  constructor() {
+  constructor(
+    @Inject(ConfigKey.APP) private readonly appConfig: IAppConfig,
+    @Inject(LoggerInject.SERVICE)
+    private readonly loggerService: ILoggerService,
+  ) {
     super();
 
     this.loggerCtx = LoggerCtx.HTTP;
-    this.logger = container.resolve<ILoggerService>(LoggerInject.SERVICE);
   }
 
   handler(): RequestHandler {
@@ -53,7 +56,7 @@ class LoggerMiddleware extends MiddlewareCore {
         return LogLevel.INFO;
       },
       serializers: {
-        req: (req: Request) => {
+        req: (req: ExpressRequest) => {
           return {
             id: req.id,
             method: req.method,
@@ -61,7 +64,7 @@ class LoggerMiddleware extends MiddlewareCore {
             query: req.query,
             params: req.params,
             session: req?.userSession,
-            ...(AppConfig.env === ENV_DEVELOPMENT && {
+            ...(this.appConfig.env === ENV_DEVELOPMENT && {
               headers: req?.headers || null,
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
               body: req?.raw?.body || null,
@@ -71,14 +74,14 @@ class LoggerMiddleware extends MiddlewareCore {
         res: (res) => ({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           statusCode: res?.statusCode || null,
-          ...(AppConfig.env === ENV_DEVELOPMENT && {
+          ...(this.appConfig.env === ENV_DEVELOPMENT && {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             headers: res?.headers || null,
           }),
         }),
       },
       customProps: () => ({ context: this.loggerCtx }),
-      logger: this.logger.pino,
+      logger: this.loggerService.pino,
     });
   }
 
@@ -96,5 +99,3 @@ class LoggerMiddleware extends MiddlewareCore {
   //   return `Response with status code ${statusCode}`;
   // }
 }
-
-export default new LoggerMiddleware();

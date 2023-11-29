@@ -17,12 +17,13 @@
   "moduleNameMapper": {
     "@common/(.*)": "<rootDir>/src/common/$1",
     "@config": "<rootDir>/src/config",
+    "@config/(.*)": "<rootDir>/src/config/$1",
     "@core": "<rootDir>/src/core",
     "@core/(.*)": "<rootDir>/src/core/$1",
     "@database": "<rootDir>/src/database",
     "@database/(.*)": "<rootDir>/src/database/$1",
     "@i18n": "<rootDir>/src/i18n",
-    "@middleware": "<rootDir>/src/middleware",
+    "@middleware/(.*)": "<rootDir>/src/middleware/$1",
     "@modules/(.*)": "<rootDir>/src/modules/$1",
     "@providers/(.*)": "<rootDir>/src/providers/$1"
   },

@@ -1,22 +1,24 @@
-import { LoggerCtx, PlatformName } from '@common/enums';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
+
+import { ConfigKey, LoggerCtx, PlatformName } from '@common/enums';
 import { PlatformPayload } from '@common/types';
 import { RequestUtil } from '@common/utils';
-import { IPlatformConfig, PlatformConfig } from '@config';
+import { IPlatformConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
 
 import { GitHubResponse } from './github.type';
 import { IGitHubService } from './interface';
 
+@Singleton()
 export class GitHubService
   extends ProviderServiceCore
   implements IGitHubService
 {
-  private readonly platformConfig: IPlatformConfig;
-
-  constructor() {
+  constructor(
+    @Inject(ConfigKey.PLATFORM)
+    private readonly platformConfig: IPlatformConfig,
+  ) {
     super(LoggerCtx.GITHUB);
-
-    this.platformConfig = PlatformConfig;
   }
 
   async getPayload(token: string): Promise<PlatformPayload> {

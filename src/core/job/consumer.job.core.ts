@@ -2,17 +2,18 @@ import type { Job, Queue } from 'bull';
 
 import { JobHandler } from '@common/types';
 import { QueueUtil } from '@common/utils';
+import { IRedisConfig } from '@config';
 
 export class ConsumerCoreJob {
   private concurrency: number;
   private jobHandlers: Map<string, JobHandler>;
   private queue: Queue;
 
-  constructor(name: string, concurrency = 1) {
+  constructor(name: string, redisConfig: IRedisConfig, concurrency = 1) {
     this.concurrency = concurrency;
     this.jobHandlers = new Map();
 
-    this.queue = QueueUtil.connect(name);
+    this.queue = QueueUtil.connect(name, redisConfig);
   }
 
   startProcessJob() {

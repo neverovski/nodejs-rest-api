@@ -1,3 +1,5 @@
+import { singleton as Singleton } from 'tsyringe';
+
 import {
   ENV_CLI,
   ENV_DEVELOPMENT,
@@ -10,7 +12,8 @@ import { ConfigCore } from '@core';
 
 import { IAppConfig } from './interface';
 
-class AppConfig extends ConfigCore implements IAppConfig {
+@Singleton()
+export class AppConfig extends ConfigCore implements IAppConfig {
   cors!: Cors;
   domain!: string;
   env!:
@@ -24,7 +27,13 @@ class AppConfig extends ConfigCore implements IAppConfig {
   name!: string;
   port!: number;
 
-  init() {
+  constructor() {
+    super();
+
+    this.init();
+  }
+
+  protected init() {
     this.domain = this.set(
       'APP_DOMAIN',
       this.schema.string().allow(null, '').default('localhost'),
@@ -66,5 +75,3 @@ class AppConfig extends ConfigCore implements IAppConfig {
     };
   }
 }
-
-export default new AppConfig();

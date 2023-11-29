@@ -1,8 +1,6 @@
 import type { Options } from 'nodemailer/lib/mailer';
 
-import { TemplatePath } from '@common/enums';
+import { TemplateOption } from '@common/types';
 
-export type EmailMessage = Options & {
-  data?: Record<string, any>;
-  templatePath?: TemplatePath;
-};
+export type EmailMessage = Options &
+  Pick<TemplateOption, 'data' | 'templatePath'>;

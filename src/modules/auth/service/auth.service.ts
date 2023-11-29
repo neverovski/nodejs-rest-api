@@ -1,4 +1,4 @@
-import { inject } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
 import { TokenType } from '@common/enums';
 import { ServiceCore } from '@core/service';
@@ -24,15 +24,16 @@ import {
 } from '../auth.type';
 import { IAuthService, IAuthTokenService } from '../interface';
 
+@Injectable()
 export class AuthService extends ServiceCore implements IAuthService {
   constructor(
-    @inject(AuthInject.TOKEN_SERVICE)
+    @Inject(AuthInject.TOKEN_SERVICE)
     private authTokenService: IAuthTokenService,
-    @inject(PlatformInject.SERVICE) private platformService: IPlatformService,
-    @inject(RefreshTokenInject.SERVICE)
+    @Inject(PlatformInject.SERVICE) private platformService: IPlatformService,
+    @Inject(RefreshTokenInject.SERVICE)
     private refreshTokenService: IRefreshTokenService,
-    @inject(UserInject.SERVICE) private userService: IUserService,
-    @inject(UserInject.SERVICE_VALIDATOR)
+    @Inject(UserInject.SERVICE) private userService: IUserService,
+    @Inject(UserInject.VALIDATOR_SERVICE)
     private userValidatorService: IUserValidatorService,
   ) {
     super();

@@ -1,4 +1,4 @@
-import { inject } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
 import { PlatformName } from '@common/enums';
 import { NotFoundException } from '@common/exceptions';
@@ -12,16 +12,17 @@ import { IPlatformRepository, IPlatformService } from './interface';
 import { PlatformInject } from './platform.enum';
 import { CreatePlatform } from './platform.type';
 
+@Injectable()
 export class PlatformService implements IPlatformService {
   constructor(
-    @inject(AppleInject.SERVICE) private readonly appleService: IAppleService,
-    @inject(FacebookInject.SERVICE)
+    @Inject(AppleInject.SERVICE) private readonly appleService: IAppleService,
+    @Inject(FacebookInject.SERVICE)
     private readonly facebookService: IFacebookService,
-    @inject(GitHubInject.SERVICE)
+    @Inject(GitHubInject.SERVICE)
     private readonly gitHubService: IGitHubService,
-    @inject(GoogleInject.SERVICE)
+    @Inject(GoogleInject.SERVICE)
     private readonly googleService: IGoogleService,
-    @inject(PlatformInject.REPOSITORY)
+    @Inject(PlatformInject.REPOSITORY)
     private readonly repository: IPlatformRepository,
   ) {}
 

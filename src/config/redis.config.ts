@@ -1,8 +1,11 @@
+import { singleton as Singleton } from 'tsyringe';
+
 import { ConfigCore } from '@core';
 
 import { IRedisConfig } from './interface';
 
-class RedisConfig extends ConfigCore implements IRedisConfig {
+@Singleton()
+export class RedisConfig extends ConfigCore implements IRedisConfig {
   clusterModeEnabled!: boolean;
   host!: string;
   password!: string;
@@ -11,7 +14,13 @@ class RedisConfig extends ConfigCore implements IRedisConfig {
   tls!: boolean;
   username!: string;
 
-  init() {
+  constructor() {
+    super();
+
+    this.init();
+  }
+
+  protected init() {
     this.clusterModeEnabled = this.set(
       'REDIS_CLUSTER_MODE_ENABLED',
       this.schema.boolean().allow(null, '').default(false),
@@ -48,5 +57,3 @@ class RedisConfig extends ConfigCore implements IRedisConfig {
     );
   }
 }
-
-export default new RedisConfig();

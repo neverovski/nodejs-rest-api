@@ -1,62 +1,57 @@
-import { Router as ExpressRouter } from 'express';
-import { container } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
+import { MiddlewareKey } from '@common/enums';
+import { IMiddleware } from '@common/interfaces';
 import { RouterCore } from '@core';
-import {
-  AsyncMiddleware,
-  AuthMiddleware,
-  ValidateMiddleware,
-} from '@middleware';
 
 import { IUserController, IUserSchema } from './interface';
 import { UserInject, UserRouterLink } from './user.enum';
 
+@Injectable()
 export class UserRouter extends RouterCore {
-  private readonly controller: IUserController;
-  private readonly schema: IUserSchema;
+  constructor(
+    @Inject(MiddlewareKey.AUTH) private readonly authMiddleware: IMiddleware,
+    @Inject(MiddlewareKey.VALIDATE)
+    private readonly validateMiddleware: IMiddleware,
+    @Inject(UserInject.CONTROLLER) private readonly controller: IUserController,
+    @Inject(UserInject.SCHEMA) private readonly schema: IUserSchema,
+  ) {
+    super();
 
-  constructor() {
-    super(ExpressRouter());
-
-    this.controller = container.resolve<IUserController>(UserInject.CONTROLLER);
-    this.schema = container.resolve<IUserSchema>(UserInject.SCHEMA);
+    this.init();
   }
 
-  init(): ExpressRouter {
+  protected init() {
     this.router.post(
       UserRouterLink.USER,
-      ValidateMiddleware.handler(this.schema.create()),
-      AsyncMiddleware(this.controller.create.bind(this.controller)),
+      this.validateMiddleware.handler(this.schema.create()),
+      this.controller.create.bind(this.controller),
     );
 
     this.router.get(
       UserRouterLink.USER_CURRENT,
-      AuthMiddleware.handler(),
-      AsyncMiddleware(this.controller.getCurrentUser.bind(this.controller)),
+      this.authMiddleware.handler(),
+      this.controller.getCurrentUser.bind(this.controller),
     );
 
     this.router.put(
       UserRouterLink.USER_CURRENT,
-      AuthMiddleware.handler(),
-      ValidateMiddleware.handler(this.schema.update()),
-      AsyncMiddleware(this.controller.updateCurrentUser.bind(this.controller)),
+      this.authMiddleware.handler(),
+      this.validateMiddleware.handler(this.schema.update()),
+      this.controller.updateCurrentUser.bind(this.controller),
     );
 
     this.router.delete(
       UserRouterLink.USER_CURRENT,
-      AuthMiddleware.handler(),
-      AsyncMiddleware(this.controller.deleteCurrentUser.bind(this.controller)),
+      this.authMiddleware.handler(),
+      this.controller.deleteCurrentUser.bind(this.controller),
     );
 
     this.router.put(
       UserRouterLink.USER_CURRENT_PASSWORD,
-      AuthMiddleware.handler(),
-      ValidateMiddleware.handler(this.schema.changePassword()),
-      AsyncMiddleware(
-        this.controller.changePasswordCurrentUser.bind(this.controller),
-      ),
+      this.authMiddleware.handler(),
+      this.validateMiddleware.handler(this.schema.changePassword()),
+      this.controller.changePasswordCurrentUser.bind(this.controller),
     );
-
-    return this.router;
   }
 }

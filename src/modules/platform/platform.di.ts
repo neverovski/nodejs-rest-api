@@ -1,4 +1,4 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
 import { IPlatformRepository, IPlatformService } from './interface';
 import { PlatformInject } from './platform.enum';
@@ -6,22 +6,22 @@ import { PlatformService } from './platform.service';
 import { PlatformRepository } from './repository';
 
 export class PlatformDi {
-  static init() {
+  register() {
     this.registerRepository();
     this.registerService();
   }
 
-  private static registerRepository() {
-    container.registerInstance<IPlatformRepository>(
+  private registerRepository() {
+    Container.registerSingleton<IPlatformRepository>(
       PlatformInject.REPOSITORY,
-      container.resolve(PlatformRepository),
+      PlatformRepository,
     );
   }
 
-  private static registerService() {
-    container.registerInstance<IPlatformService>(
+  private registerService() {
+    Container.register<IPlatformService>(
       PlatformInject.SERVICE,
-      container.resolve(PlatformService),
+      PlatformService,
     );
   }
 }

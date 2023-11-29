@@ -28,11 +28,11 @@ export type UserRepositoryCtx = RepositoryCtx & {
 };
 
 export type UserRequest = ExpressRequest;
-export type CreateUserRequest = ExpressRequest<any, any, CreateUser>;
-export type UpdateUserRequest = ExpressRequest<any, any, UpdateUser>;
-export type DeleteUserRequest = ExpressRequest<any, any, UserQuery>;
+export type CreateUserRequest = ExpressRequest<unknown, unknown, CreateUser>;
+export type UpdateUserRequest = ExpressRequest<unknown, unknown, UpdateUser>;
+export type DeleteUserRequest = ExpressRequest<unknown, unknown, UserQuery>;
 export type UserPasswordChangeRequest = ExpressRequest<
-  any,
-  any,
+  unknown,
+  unknown,
   UserPasswordChange
 >;

@@ -1,18 +1,18 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
 import { ITokenService } from './interface';
 import { TokenInject } from './token.enum';
 import { TokenService } from './token.service';
 
 export class TokenDi {
-  static init() {
+  register() {
     this.registerService();
   }
 
-  private static registerService() {
-    container.registerInstance<ITokenService>(
+  private registerService() {
+    Container.registerSingleton<ITokenService>(
       TokenInject.SERVICE,
-      new TokenService(),
+      TokenService,
     );
   }
 }

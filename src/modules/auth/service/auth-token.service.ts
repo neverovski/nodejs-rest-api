@@ -1,9 +1,9 @@
-import { inject } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
-import { TokenType } from '@common/enums';
+import { ConfigKey, TokenType } from '@common/enums';
 import { RefreshTokenExpiredException } from '@common/exceptions';
 import { DateUtil, HashUtil } from '@common/utils';
-import { JwtConfig } from '@config';
+import { IJwtConfig } from '@config';
 import { ServiceCore } from '@core/service';
 import {
   IRefreshTokenService,
@@ -12,35 +12,37 @@ import {
 import { ITokenService, TokenInject } from '@providers/token';
 
 //TODO: transfer refreshToken to redis
+@Injectable()
 export class AuthTokenService extends ServiceCore {
   constructor(
-    @inject(RefreshTokenInject.SERVICE)
+    @Inject(ConfigKey.JWT) private jwtConfig: IJwtConfig,
+    @Inject(RefreshTokenInject.SERVICE)
     private refreshTokenService: IRefreshTokenService,
-    @inject(TokenInject.SERVICE) private tokenService: ITokenService,
+    @Inject(TokenInject.SERVICE) private tokenService: ITokenService,
   ) {
     super();
   }
 
   getAccessToken(userId: Id, payload: UserPayload): Promise<string> {
     const jti = HashUtil.generateUuid();
-    const expiresIn = DateUtil.toMs(JwtConfig.accessToken.expiresIn);
+    const expiresIn = DateUtil.toMs(this.jwtConfig.accessToken.expiresIn);
 
     return this.tokenService.signJwt(
       { ...payload, jti, sub: String(userId), typ: TokenType.BEARER },
-      JwtConfig.accessToken.secret,
+      this.jwtConfig.accessToken.secret,
       { expiresIn },
     );
   }
 
   async getRefreshToken(userId: Id): Promise<string> {
     const jti = HashUtil.generateUuid();
-    const expiresIn = DateUtil.toMs(JwtConfig.refreshToken.expiresIn);
+    const expiresIn = DateUtil.toMs(this.jwtConfig.refreshToken.expiresIn);
     const expiredAt = DateUtil.addMillisecondToDate(new Date(), expiresIn);
 
     const [refreshToken] = await Promise.all([
       this.tokenService.signJwt(
         { sub: String(userId), jti, typ: TokenType.BEARER },
-        JwtConfig.refreshToken.secret,
+        this.jwtConfig.refreshToken.secret,
         { expiresIn },
       ),
       this.refreshTokenService.create({ userId, jti, expiredAt }),
@@ -64,7 +66,7 @@ export class AuthTokenService extends ServiceCore {
   private decodeRefreshToken(token: string): Promise<JwtPayload> {
     return this.tokenService.verifyJwt<JwtPayload>(
       token,
-      JwtConfig.refreshToken.secret,
+      this.jwtConfig.refreshToken.secret,
     );
   }
 }

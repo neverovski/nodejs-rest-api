@@ -1,27 +1,39 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
-import { IRefreshTokenRepository, IRefreshTokenService } from './interface';
+import {
+  IRefreshTokenRepository,
+  IRefreshTokenService,
+  IRefreshTokenValidatorService,
+} from './interface';
 import { RefreshTokenInject } from './refresh-token.enum';
 import { RefreshTokenRepository } from './repository';
-import { RefreshTokenService } from './service/refresh-token.service';
+import { RefreshTokenService, RefreshTokenValidatorService } from './service';
 
 export class RefreshTokenDi {
-  static init() {
+  register() {
     this.registerRepository();
+    this.registerValidatorService();
     this.registerService();
   }
 
-  private static registerRepository() {
-    container.register<IRefreshTokenRepository>(
+  private registerRepository() {
+    Container.registerSingleton<IRefreshTokenRepository>(
       RefreshTokenInject.REPOSITORY,
       RefreshTokenRepository,
     );
   }
 
-  private static registerService() {
-    container.register<IRefreshTokenService>(
+  private registerService() {
+    Container.register<IRefreshTokenService>(
       RefreshTokenInject.SERVICE,
       RefreshTokenService,
+    );
+  }
+
+  private registerValidatorService() {
+    Container.register<IRefreshTokenValidatorService>(
+      RefreshTokenInject.VALIDATOR_SERVICE,
+      RefreshTokenValidatorService,
     );
   }
 }

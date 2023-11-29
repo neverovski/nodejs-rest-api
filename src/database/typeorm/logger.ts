@@ -1,16 +1,13 @@
-import { container } from 'tsyringe';
 import { Logger as OrmLogger } from 'typeorm';
 
 import { LoggerCtx } from '@common/enums';
-import { ILoggerService, LoggerInject } from '@providers/logger';
+import { ILoggerService } from '@providers/logger';
 
 export class DatabaseLogger implements OrmLogger {
-  protected readonly logger: ILoggerService;
   private readonly loggerCtx: LoggerCtx;
 
-  constructor() {
+  constructor(protected readonly loggerService: ILoggerService) {
     this.loggerCtx = LoggerCtx.SQL;
-    this.logger = container.resolve<ILoggerService>(LoggerInject.SERVICE);
   }
 
   log(level: 'log' | 'info' | 'warn', message: string) {
@@ -18,24 +15,32 @@ export class DatabaseLogger implements OrmLogger {
 
     if (level === 'log') {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return this.logger.log(name, { message, context: this.loggerCtx });
+      return this.loggerService.log(name, { message, context: this.loggerCtx });
     }
+
     if (level === 'info') {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return this.logger.debug(name, { message, context: this.loggerCtx });
+      return this.loggerService.debug(name, {
+        message,
+        context: this.loggerCtx,
+      });
     }
+
     if (level === 'warn') {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return this.logger.warn(name, { message, context: this.loggerCtx });
+      return this.loggerService.warn(name, {
+        message,
+        context: this.loggerCtx,
+      });
     }
   }
 
   logMigration(query: string) {
-    this.logger.log('DB migration', { query, context: this.loggerCtx });
+    this.loggerService.log('DB migration', { query, context: this.loggerCtx });
   }
 
   logQuery(query: string, parameters?: unknown[]) {
-    this.logger.log('DB query', {
+    this.loggerService.log('DB query', {
       query,
       parameters,
       context: this.loggerCtx,
@@ -43,7 +48,7 @@ export class DatabaseLogger implements OrmLogger {
   }
 
   logQueryError(err: string, query: string, parameters?: unknown[]) {
-    this.logger.error('DB query error', {
+    this.loggerService.error('DB query error', {
       err,
       query,
       parameters,
@@ -52,7 +57,7 @@ export class DatabaseLogger implements OrmLogger {
   }
 
   logQuerySlow(time: number, query: string, parameters?: unknown[]) {
-    this.logger.warn(`DB slow query took ${time} ms`, {
+    this.loggerService.warn(`DB slow query took ${time} ms`, {
       query,
       parameters,
       context: this.loggerCtx,
@@ -60,6 +65,6 @@ export class DatabaseLogger implements OrmLogger {
   }
 
   logSchemaBuild(query: string) {
-    this.logger.log('DB schema', { query, context: this.loggerCtx });
+    this.loggerService.log('DB schema', { query, context: this.loggerCtx });
   }
 }

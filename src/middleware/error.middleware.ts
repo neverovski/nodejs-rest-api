@@ -1,9 +1,10 @@
 import type {
   ErrorRequestHandler,
+  Request as ExpressRequest,
+  Response as ExpressResponse,
   NextFunction,
-  Request,
-  Response,
 } from 'express';
+import { singleton as Singleton } from 'tsyringe';
 
 import { HttpStatus } from '@common/enums';
 import {
@@ -12,12 +13,13 @@ import {
 } from '@common/exceptions';
 import { MiddlewareCore } from '@core';
 
-class ErrorMiddleware extends MiddlewareCore {
+@Singleton()
+export class ErrorMiddleware extends MiddlewareCore {
   handler(): ErrorRequestHandler {
     return (
       err: HttpException,
-      _req: Request,
-      res: Response,
+      _req: ExpressRequest,
+      res: ExpressResponse,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       _next: NextFunction,
     ) => {
@@ -33,5 +35,3 @@ class ErrorMiddleware extends MiddlewareCore {
     };
   }
 }
-
-export default new ErrorMiddleware();

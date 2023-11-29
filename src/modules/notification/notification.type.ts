@@ -1,11 +1,8 @@
-import { TemplatePath } from '@common/enums';
+import { TemplateOption } from '@common/types';
 
 export type NotificationMethod = {
   email?: string | null;
   phone?: string | null;
 };
 
-export type NotificationParams = {
-  data?: Record<string, any>;
-  template: TemplatePath;
-};
+export type NotificationParams = Pick<TemplateOption, 'data' | 'templatePath'>;

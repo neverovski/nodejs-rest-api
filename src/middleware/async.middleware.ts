@@ -1,5 +1,21 @@
-import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import type {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+  NextFunction,
+} from 'express';
+import { singleton as Singleton } from 'tsyringe';
 
-export default (handler: RequestHandler<any, any, any, any>) =>
-  (req: Request, res: Response, next: NextFunction) =>
-    Promise.resolve(handler(req, res, next)).catch(next);
+import { MiddlewareCore } from '@core';
+
+@Singleton()
+export class AsyncMiddleware extends MiddlewareCore {
+  handler() {
+    const fn = (
+      req: ExpressRequest,
+      res: ExpressResponse,
+      next: NextFunction,
+    ) => Promise.resolve(fn(req, res, next)).catch(next);
+
+    return fn;
+  }
+}

@@ -1,4 +1,4 @@
-import { inject } from 'tsyringe';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 import { EntityManager } from 'typeorm';
 
 import { RepositoryCore } from '@core';
@@ -8,12 +8,13 @@ import { ProfileEntity } from '../entity/profile.entity';
 import { IProfileRepository } from '../interface';
 import { CreateProfile, FullProfile, UserRepositoryCtx } from '../types';
 
+@Singleton()
 export class ProfileRepository
   extends RepositoryCore<ProfileEntity>
   implements IProfileRepository
 {
   constructor(
-    @inject(DatabaseInject.SERVICE) databaseService: IDatabaseService,
+    @Inject(DatabaseInject.SERVICE) databaseService: IDatabaseService,
   ) {
     super(databaseService.dataSource, ProfileEntity);
   }

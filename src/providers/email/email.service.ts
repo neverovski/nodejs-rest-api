@@ -1,22 +1,24 @@
 import { createTransport } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
-import { LoggerCtx } from '@common/enums';
+import { ConfigKey, LoggerCtx } from '@common/enums';
 import { TemplateUtil } from '@common/utils';
-import { EmailConfig, IEmailConfig } from '@config';
+import { IEmailConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
 
 import { EmailMessage } from './email.type';
 import { IEmailService } from './interface';
 
+@Singleton()
 export class EmailService extends ProviderServiceCore implements IEmailService {
   private readonly client: Mail;
-  private readonly emailConfig: IEmailConfig;
 
-  constructor() {
+  constructor(
+    @Inject(ConfigKey.EMAIL) private readonly emailConfig: IEmailConfig,
+  ) {
     super(LoggerCtx.EMAIL);
 
-    this.emailConfig = EmailConfig;
     this.client = createTransport({
       service: this.emailConfig.driver,
       auth: {

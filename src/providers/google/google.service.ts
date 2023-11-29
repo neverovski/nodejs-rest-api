@@ -1,24 +1,25 @@
 import { TokenPayload } from 'google-auth-library';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
-import { LoggerCtx, PlatformName } from '@common/enums';
+import { ConfigKey, LoggerCtx, PlatformName } from '@common/enums';
 import { PlatformPayload } from '@common/types';
 import { RequestUtil, UrlUtil } from '@common/utils';
-import { IPlatformConfig, PlatformConfig } from '@config';
+import { IPlatformConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
 import { i18n } from '@i18n';
 
 import { IGoogleService } from './interface';
 
+@Singleton()
 export class GoogleService
   extends ProviderServiceCore
   implements IGoogleService
 {
-  private readonly platformConfig: IPlatformConfig;
-
-  constructor() {
+  constructor(
+    @Inject(ConfigKey.PLATFORM)
+    private readonly platformConfig: IPlatformConfig,
+  ) {
     super(LoggerCtx.GOOGLE);
-
-    this.platformConfig = PlatformConfig;
   }
 
   async getPayload(token: string): Promise<PlatformPayload> {

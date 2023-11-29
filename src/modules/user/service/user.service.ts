@@ -1,4 +1,4 @@
-import { inject } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
 import { ServiceCore } from '@core/service';
 
@@ -18,11 +18,12 @@ import {
 import { USER_RELATION } from '../user.constant';
 import { UserInject } from '../user.enum';
 
+@Injectable()
 export class UserService extends ServiceCore implements IUserService {
   constructor(
-    @inject(UserInject.REPOSITORY)
+    @Inject(UserInject.REPOSITORY)
     private readonly repository: IUserRepository,
-    @inject(UserInject.SERVICE_VALIDATOR)
+    @Inject(UserInject.VALIDATOR_SERVICE)
     private readonly validatorService: IUserValidatorService,
   ) {
     super();

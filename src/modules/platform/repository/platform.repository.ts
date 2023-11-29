@@ -1,4 +1,4 @@
-import { inject } from 'tsyringe';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
 import { PlatformPayload, RepositoryCtx } from '@common/types';
 import { RepositoryCore } from '@core';
@@ -13,14 +13,15 @@ import {
 import { PlatformEntity } from '../entity/platform.entity';
 import { IPlatformRepository } from '../interface';
 
+@Singleton()
 export class PlatformRepository
   extends RepositoryCore<PlatformEntity>
   implements IPlatformRepository
 {
   constructor(
-    @inject(DatabaseInject.SERVICE)
+    @Inject(DatabaseInject.SERVICE)
     databaseService: IDatabaseService,
-    @inject(UserInject.REPOSITORY)
+    @Inject(UserInject.REPOSITORY)
     private readonly userRepository: IUserRepository,
   ) {
     super(databaseService.dataSource, PlatformEntity);

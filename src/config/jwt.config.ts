@@ -1,14 +1,23 @@
+import { singleton as Singleton } from 'tsyringe';
+
 import { JwtTokenType } from '@common/types';
 import { ConfigCore } from '@core';
 
 import { IJwtConfig } from './interface';
 
-class JwtConfig extends ConfigCore implements IJwtConfig {
+@Singleton()
+export class JwtConfig extends ConfigCore implements IJwtConfig {
   accessToken!: JwtTokenType;
   refreshToken!: JwtTokenType;
   token!: JwtTokenType;
 
-  init() {
+  constructor() {
+    super();
+
+    this.init();
+  }
+
+  protected init() {
     this.accessToken = {
       secret: this.set(
         'JWT_SECRET_ACCESS_TOKEN',
@@ -40,5 +49,3 @@ class JwtConfig extends ConfigCore implements IJwtConfig {
     };
   }
 }
-
-export default new JwtConfig();

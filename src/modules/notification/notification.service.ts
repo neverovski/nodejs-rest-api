@@ -1,4 +1,4 @@
-import { inject } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
 import { ServiceCore } from '@core/service';
 import { EmailInject, IEmailProducerJob } from '@providers/email';
@@ -6,12 +6,13 @@ import { EmailInject, IEmailProducerJob } from '@providers/email';
 import { INotificationService } from './interface';
 import { NotificationMethod, NotificationParams } from './notification.type';
 
+@Injectable()
 export class NotificationService
   extends ServiceCore
   implements INotificationService
 {
   constructor(
-    @inject(EmailInject.PRODUCER)
+    @Inject(EmailInject.PRODUCER)
     private readonly emailProducerJob: IEmailProducerJob,
   ) {
     super();

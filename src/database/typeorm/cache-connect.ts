@@ -1,37 +1,43 @@
-import { BaseDataSourceOptions } from 'typeorm/data-source/BaseDataSourceOptions';
+import type { BaseDataSourceOptions } from 'typeorm/data-source/BaseDataSourceOptions';
 
-import { DatabaseConfig, RedisConfig } from '@config';
+import { IRedisConfig } from '@config';
 
-export const redisConnect = (): BaseDataSourceOptions['cache'] => ({
+export const redisConnect = (
+  redisConfig: IRedisConfig,
+  cacheTime?: number,
+): BaseDataSourceOptions['cache'] => ({
   type: 'ioredis',
   options: {
-    host: RedisConfig.host,
-    port: RedisConfig.port,
-    ...(RedisConfig.username && { username: RedisConfig.username }),
-    ...(RedisConfig.password && { password: RedisConfig.password }),
-    ...(RedisConfig.tls && {
+    host: redisConfig.host,
+    port: redisConfig.port,
+    ...(redisConfig.username && { username: redisConfig.username }),
+    ...(redisConfig.password && { password: redisConfig.password }),
+    ...(redisConfig.tls && {
       tls: {},
       connectTimeout: 30000,
     }),
   },
   alwaysEnabled: true,
-  duration: DatabaseConfig.cacheTime,
+  duration: cacheTime,
   ignoreErrors: true,
 });
 
-export const redisClusterConnect = (): BaseDataSourceOptions['cache'] => ({
+export const redisClusterConnect = (
+  redisConfig: IRedisConfig,
+  cacheTime?: number,
+): BaseDataSourceOptions['cache'] => ({
   type: 'ioredis/cluster',
   options: {
     startupNodes: [
       {
-        host: RedisConfig.host,
-        port: RedisConfig.port,
-        ...(RedisConfig.username && { username: RedisConfig.username }),
-        ...(RedisConfig.password && { password: RedisConfig.password }),
+        host: redisConfig.host,
+        port: redisConfig.port,
+        ...(redisConfig.username && { username: redisConfig.username }),
+        ...(redisConfig.password && { password: redisConfig.password }),
       },
     ],
     options: {
-      ...(RedisConfig.tls && {
+      ...(redisConfig.tls && {
         tls: {},
         connectTimeout: 30000,
       }),
@@ -45,6 +51,6 @@ export const redisClusterConnect = (): BaseDataSourceOptions['cache'] => ({
     },
   },
   alwaysEnabled: true,
-  duration: DatabaseConfig.cacheTime,
+  duration: cacheTime,
   ignoreErrors: true,
 });

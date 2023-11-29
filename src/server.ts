@@ -5,88 +5,91 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application as ExpressApp } from 'express';
 import helmet from 'helmet';
-import { container } from 'tsyringe';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
+import { ConfigKey, MiddlewareKey } from '@common/enums';
 import { IMiddleware } from '@common/interfaces';
-import { AppServerInit } from '@common/types';
+import { IAppConfig } from '@config';
 import { ILoggerService, LoggerInject } from '@providers/logger';
 
-import { AppRouter } from './router';
+import { Router } from './router';
 
-export class AppServer {
-  private readonly errorMiddleware: IMiddleware;
+@Singleton()
+export class Server {
   private express!: ExpressApp;
   private http!: HttpServer;
-  private readonly logger: ILoggerService;
-  private readonly middlewares: IMiddleware[];
   private readonly port: number;
 
-  constructor({ port, middlewares, errorMiddleware }: AppServerInit) {
-    this.port = port;
-    this.middlewares = middlewares;
-    this.errorMiddleware = errorMiddleware;
-
-    this.logger = container.resolve<ILoggerService>(LoggerInject.SERVICE);
+  constructor(
+    @Inject(ConfigKey.APP) private readonly appConfig: IAppConfig,
+    @Inject(LoggerInject.SERVICE)
+    private readonly loggerService: ILoggerService,
+    @Inject(MiddlewareKey.ASYNC) private readonly asyncMiddleware: IMiddleware,
+    @Inject(MiddlewareKey.ERROR) private readonly errorMiddleware: IMiddleware,
+    @Inject(MiddlewareKey.INIT) private readonly initMiddleware: IMiddleware,
+    @Inject(MiddlewareKey.LOGGER)
+    private readonly loggerMiddleware: IMiddleware,
+    @Inject(Router) private readonly router: Router,
+  ) {
+    this.port = Number(this.appConfig.port);
   }
 
-  async init(): Promise<void> {
+  async run(): Promise<void> {
     this.express = express();
     this.http = createServer(this.express);
 
-    this.handleMiddleware();
+    this.handleMiddlewareBefore();
     this.handleRouter();
-    this.handleMiddlewareError();
+    this.handleMiddlewareAfter();
 
-    await this.runHttpServer();
+    await this.listenHttpServer();
   }
 
-  private handleMiddleware(): void {
+  private handleMiddlewareAfter(): void {
+    this.express.use(this.asyncMiddleware.handler());
+    this.express.use(this.errorMiddleware.handler());
+  }
+
+  private handleMiddlewareBefore(): void {
     this.express.use(helmet());
     this.express.use(cors());
     this.express.use(json());
     this.express.use(urlencoded({ extended: false }));
     this.express.use(cookieParser());
 
-    for (const m of this.middlewares) {
-      try {
-        this.express.use(m.handler());
-      } catch (err) {
-        throw err;
-      }
-    }
-  }
-
-  private handleMiddlewareError(): void {
-    try {
-      this.express.use(this.errorMiddleware.handler());
-    } catch (err) {
-      throw new Error('Default error middleware failed.');
-    }
+    this.express.use(this.initMiddleware.handler());
+    this.express.use(this.loggerMiddleware.handler());
   }
 
   private handleRouter(): void {
-    new AppRouter(this.express);
+    this.express.use(this.router.getRouter());
   }
 
-  private async runHttpServer(): Promise<void> {
+  private async listenHttpServer(): Promise<void> {
     return new Promise((resolve) => {
       process.on('unhandledRejection', (reason) => {
-        this.logger.error({ message: 'unhandledRejection', error: reason });
+        this.loggerService.error({
+          message: 'unhandledRejection',
+          error: reason,
+        });
       });
 
       process.on('rejectionHandled', (promise) => {
-        this.logger.warn({ message: 'rejectionHandled', error: promise });
+        this.loggerService.warn({
+          message: 'rejectionHandled',
+          error: promise,
+        });
       });
 
       process.on('multipleResolves', (type, promise, reason) => {
-        this.logger.error({
+        this.loggerService.error({
           message: 'multipleResolves',
           error: { type, promise, reason },
         });
       });
 
       process.on('uncaughtException', (error) => {
-        this.logger.error({ message: 'uncaughtException', error });
+        this.loggerService.error({ message: 'uncaughtException', error });
         process.exit(1);
       });
 

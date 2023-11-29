@@ -1,4 +1,4 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
 import { EmailInject } from './email.enum';
 import { EmailService } from './email.service';
@@ -10,30 +10,30 @@ import {
 import { EmailConsumerJob, EmailProducerJob } from './job';
 
 export class EmailDi {
-  static init() {
+  register() {
     this.registerService();
     this.registerProducer();
     this.registerConsumer();
   }
 
-  private static registerConsumer() {
-    container.registerInstance<IEmailConsumerJob>(
+  private registerConsumer() {
+    Container.registerSingleton<IEmailConsumerJob>(
       EmailInject.CONSUMER,
-      container.resolve(EmailConsumerJob),
+      EmailConsumerJob,
     );
   }
 
-  private static registerProducer() {
-    container.registerInstance<IEmailProducerJob>(
+  private registerProducer() {
+    Container.registerSingleton<IEmailProducerJob>(
       EmailInject.PRODUCER,
-      new EmailProducerJob(),
+      EmailProducerJob,
     );
   }
 
-  private static registerService() {
-    container.registerInstance<IEmailService>(
+  private registerService() {
+    Container.registerSingleton<IEmailService>(
       EmailInject.SERVICE,
-      new EmailService(),
+      EmailService,
     );
   }
 }

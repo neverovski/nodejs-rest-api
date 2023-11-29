@@ -1,10 +1,10 @@
 export enum UserInject {
   CONTROLLER = 'UserController',
+  PROFILE_REPOSITORY = 'UserProfileRepository',
   REPOSITORY = 'UserRepository',
-  REPOSITORY_PROFILE = 'UserProfileRepository',
   SCHEMA = 'UserSchema',
   SERVICE = 'UserService',
-  SERVICE_VALIDATOR = 'UserValidatorService',
+  VALIDATOR_SERVICE = 'UserValidatorService',
 }
 
 export enum UserRouterLink {

@@ -1,4 +1,4 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
 import { LoggerCtx } from '@common/enums';
 import { ILoggerService, LoggerInject } from '@providers/logger';
@@ -9,7 +9,7 @@ export class ServiceCore {
 
   constructor(loggerCtx?: LoggerCtx) {
     this.loggerCtx = loggerCtx || LoggerCtx.SERVICE;
-    this.logger = container.resolve<ILoggerService>(LoggerInject.SERVICE);
+    this.logger = Container.resolve<ILoggerService>(LoggerInject.SERVICE);
 
     this.init();
   }

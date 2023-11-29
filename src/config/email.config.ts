@@ -1,8 +1,11 @@
+import { singleton as Singleton } from 'tsyringe';
+
 import { ConfigCore } from '@core';
 
 import { IEmailConfig } from './interface';
 
-class EmailConfig extends ConfigCore implements IEmailConfig {
+@Singleton()
+export class EmailConfig extends ConfigCore implements IEmailConfig {
   driver!: string;
   encryption!: string;
   host!: string;
@@ -11,7 +14,13 @@ class EmailConfig extends ConfigCore implements IEmailConfig {
   port!: number;
   username!: string;
 
-  init() {
+  constructor() {
+    super();
+
+    this.init();
+  }
+
+  protected init() {
     this.driver = this.set('MAIL_DRIVER', this.schema.string().required());
     this.encryption = this.set(
       'MAIL_ENCRYPTION',
@@ -24,5 +33,3 @@ class EmailConfig extends ConfigCore implements IEmailConfig {
     this.username = this.set('MAIL_USERNAME', this.schema.string().required());
   }
 }
-
-export default new EmailConfig();

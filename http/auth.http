@@ -3,13 +3,10 @@ POST {{host}}/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "{{email}}",
-  "password": "{{password}}"
+  "email": "test@test.com",
+  "password": "12345678"
 }
-> {%
-    client.global.set("accessToken", response.body.data.accessToken);
-    client.global.set("refreshToken", response.body.data.refreshToken);
-  %}
+
 
 ### LOGS OUT CURRENT LOGGED-IN USER SESSION
 POST {{host}}/api/auth/logout

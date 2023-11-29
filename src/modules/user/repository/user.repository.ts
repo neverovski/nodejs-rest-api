@@ -1,4 +1,4 @@
-import { inject } from 'tsyringe';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
 import { RepositoryCtx } from '@common/types';
 import { RepositoryCore } from '@core';
@@ -15,13 +15,14 @@ import {
 } from '../types';
 import { UserInject } from '../user.enum';
 
+@Singleton()
 export class UserRepository
   extends RepositoryCore<UserEntity>
   implements IUserRepository
 {
   constructor(
-    @inject(DatabaseInject.SERVICE) databaseService: IDatabaseService,
-    @inject(UserInject.REPOSITORY_PROFILE)
+    @Inject(DatabaseInject.SERVICE) databaseService: IDatabaseService,
+    @Inject(UserInject.PROFILE_REPOSITORY)
     private readonly profileRepository: IProfileRepository,
   ) {
     super(databaseService.dataSource, UserEntity);

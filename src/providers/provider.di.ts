@@ -7,13 +7,19 @@ import { GoogleDi } from './google/google.di';
 import { LoggerDi } from './logger/logger.di';
 import { TokenDi } from './token/token.di';
 
-LoggerDi.init();
-TokenDi.init();
-CacheManagerDi.init();
+class ProviderDi {
+  register() {
+    new LoggerDi().register();
+    new TokenDi().register();
+    new CacheManagerDi().register();
 
-AppleDi.init();
-FacebookDi.init();
-GitHubDi.init();
-GoogleDi.init();
+    new AppleDi().register();
+    new FacebookDi().register();
+    new GitHubDi().register();
+    new GoogleDi().register();
 
-EmailDi.init();
+    new EmailDi().register();
+  }
+}
+
+new ProviderDi().register();

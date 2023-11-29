@@ -1,23 +1,25 @@
-import { LoggerCtx, PlatformName } from '@common/enums';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
+
+import { ConfigKey, LoggerCtx, PlatformName } from '@common/enums';
 import { PlatformPayload } from '@common/types';
 import { RequestUtil, UrlUtil } from '@common/utils';
-import { IPlatformConfig, PlatformConfig } from '@config';
+import { IPlatformConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
 
 import { FACEBOOK_LINK } from './facebook.constant';
 import { FacebookResponse } from './facebook.type';
 import { IFacebookService } from './interface';
 
+@Singleton()
 export class FacebookService
   extends ProviderServiceCore
   implements IFacebookService
 {
-  private readonly platformConfig: IPlatformConfig;
-
-  constructor() {
+  constructor(
+    @Inject(ConfigKey.PLATFORM)
+    private readonly platformConfig: IPlatformConfig,
+  ) {
     super(LoggerCtx.FACEBOOK);
-
-    this.platformConfig = PlatformConfig;
   }
 
   async getPayload(token: string): Promise<PlatformPayload> {

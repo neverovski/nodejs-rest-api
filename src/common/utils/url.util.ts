@@ -3,7 +3,7 @@ import { CommonUtil } from './common.util';
 export class UrlUtil {
   static createUrl(
     urlInput: string,
-    searchParams?: Record<string, any>,
+    searchParams?: Record<string, unknown>,
   ): string {
     try {
       const url = new URL(urlInput);

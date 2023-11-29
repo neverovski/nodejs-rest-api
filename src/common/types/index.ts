@@ -1,4 +1,3 @@
-export * from './app-server.type';
 export * from './config.type';
 export * from './context.type';
 export * from './exception.type';

@@ -14,10 +14,6 @@ config({
 });
 
 export abstract class ConfigCore {
-  constructor() {
-    this.init();
-  }
-
   get schema() {
     return JoiUtil.schema;
   }
@@ -29,5 +25,5 @@ export abstract class ConfigCore {
     });
   }
 
-  abstract init(): void;
+  protected abstract init(): void;
 }

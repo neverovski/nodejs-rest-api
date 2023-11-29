@@ -1,4 +1,4 @@
-import { inject } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
 import {
   IRefreshTokenRepository,
@@ -9,11 +9,12 @@ import { RefreshTokenInject } from '../refresh-token.enum';
 import { FullRefreshToken, RefreshToken } from '../refresh-token.type';
 
 //TODO: transfer to radis
+@Injectable()
 export class RefreshTokenService implements IRefreshTokenService {
   constructor(
-    @inject(RefreshTokenInject.REPOSITORY)
+    @Inject(RefreshTokenInject.REPOSITORY)
     private readonly repository: IRefreshTokenRepository,
-    @inject(RefreshTokenInject.SERVICE_VALIDATOR)
+    @Inject(RefreshTokenInject.VALIDATOR_SERVICE)
     private readonly validator: IRefreshTokenValidatorService,
   ) {}
 

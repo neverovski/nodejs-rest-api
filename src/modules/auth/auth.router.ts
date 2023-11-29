@@ -1,54 +1,54 @@
-import { Router as ExpressRouter } from 'express';
-import { container } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
+import { MiddlewareKey } from '@common/enums';
+import { IMiddleware } from '@common/interfaces';
 import { RouterCore } from '@core';
-import {
-  AsyncMiddleware,
-  AuthMiddleware,
-  UserSessionMiddleware,
-  ValidateMiddleware,
-} from '@middleware';
 
 import { AuthInject, AuthRouterLink } from './auth.enum';
 import { IAuthController, IAuthSchema } from './interface';
 
+@Injectable()
 export class AuthRouter extends RouterCore {
-  private readonly controller: IAuthController;
-  private readonly schema: IAuthSchema;
+  constructor(
+    @Inject(AuthInject.CONTROLLER) private readonly controller: IAuthController,
+    @Inject(AuthInject.SCHEMA) private readonly schema: IAuthSchema,
+    @Inject(MiddlewareKey.AUTH) private readonly authMiddleware: IMiddleware,
+    @Inject(MiddlewareKey.USER_SESSION)
+    private readonly userSessionMiddleware: IMiddleware,
+    @Inject(MiddlewareKey.VALIDATE)
+    private readonly validateMiddleware: IMiddleware,
+  ) {
+    super();
 
-  constructor() {
-    super(ExpressRouter());
-
-    this.controller = container.resolve<IAuthController>(AuthInject.CONTROLLER);
-    this.schema = container.resolve<IAuthSchema>(AuthInject.SCHEMA);
+    this.init();
   }
 
-  init(): ExpressRouter {
+  protected init() {
     this.router.post(
       AuthRouterLink.LOGIN,
-      UserSessionMiddleware.handler(),
-      ValidateMiddleware.handler(this.schema.login()),
-      AsyncMiddleware(this.controller.login.bind(this.controller)),
+      this.userSessionMiddleware.handler(),
+      this.validateMiddleware.handler(this.schema.login()),
+      this.controller.login.bind(this.controller),
     );
 
     this.router.post(
       AuthRouterLink.REFRESH_TOKEN,
-      UserSessionMiddleware.handler(),
-      ValidateMiddleware.handler(this.schema.refreshToken()),
-      AsyncMiddleware(this.controller.refreshToken.bind(this.controller)),
+      this.userSessionMiddleware.handler(),
+      this.validateMiddleware.handler(this.schema.refreshToken()),
+      this.controller.refreshToken.bind(this.controller),
     );
 
     this.router.post(
       AuthRouterLink.LOGOUT,
-      AuthMiddleware.handler(),
-      AsyncMiddleware(this.controller.logout.bind(this.controller)),
+      this.authMiddleware.handler(),
+      this.controller.logout.bind(this.controller),
     );
 
     this.router.post(
       AuthRouterLink.PLATFORM,
-      UserSessionMiddleware.handler(),
-      ValidateMiddleware.handler(this.schema.platform()),
-      AsyncMiddleware(this.controller.platform.bind(this.controller)),
+      this.userSessionMiddleware.handler(),
+      this.validateMiddleware.handler(this.schema.platform()),
+      this.controller.platform.bind(this.controller),
     );
 
     // this.router.post(
@@ -56,13 +56,10 @@ export class AuthRouter extends RouterCore {
     //   ValidateMiddleware.handler(ForgotPasswordSchema),
     //   AsyncMiddleware(this.controller.forgotPassword.bind(this.controller)),
     // );
-
     // this.router.post(
     //   '/password/reset',
     //   ValidateMiddleware.handler(ResetPasswordSchema),
     //   AsyncMiddleware(this.controller.resetPassword.bind(this.controller)),
     // );
-
-    return this.router;
   }
 }

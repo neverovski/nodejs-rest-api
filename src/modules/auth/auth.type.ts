@@ -21,12 +21,16 @@ export type AuthToken = {
 
 export type AuthCtx = Context;
 
-export type AuthLoginRequest = ExpressRequest<any, any, AuthLogin>;
+export type AuthLoginRequest = ExpressRequest<unknown, unknown, AuthLogin>;
 export type AuthLogoutRequest = ExpressRequest;
-export type AuthPlatformRequest = ExpressRequest<any, any, AuthPlatform>;
+export type AuthPlatformRequest = ExpressRequest<
+  unknown,
+  unknown,
+  AuthPlatform
+>;
 export type AuthRefreshTokenRequest = ExpressRequest<
-  any,
-  any,
+  unknown,
+  unknown,
   AuthRefreshToken
 >;
 

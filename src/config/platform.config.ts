@@ -1,3 +1,5 @@
+import { singleton as Singleton } from 'tsyringe';
+
 import {
   AppleConfigType,
   FacebookConfigType,
@@ -8,13 +10,20 @@ import { ConfigCore } from '@core';
 
 import { IPlatformConfig } from './interface';
 
-class PlatformConfig extends ConfigCore implements IPlatformConfig {
+@Singleton()
+export class PlatformConfig extends ConfigCore implements IPlatformConfig {
   apple!: AppleConfigType;
   facebook!: FacebookConfigType;
   github!: GitHubConfigType;
   google!: GoogleConfigType;
 
-  init() {
+  constructor() {
+    super();
+
+    this.init();
+  }
+
+  protected init() {
     this.apple = {
       url: this.set<string>('APPLE_URL', this.schema.string().required()),
     };
@@ -36,5 +45,3 @@ class PlatformConfig extends ConfigCore implements IPlatformConfig {
     };
   }
 }
-
-export default new PlatformConfig();

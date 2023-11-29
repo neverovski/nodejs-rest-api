@@ -29,7 +29,7 @@ export class UserEntity extends BaseCreatedByEntity<IUser> implements IUser {
   @OneToOne(() => ProfileEntity, (profile) => profile.user)
   profile?: Profile;
 
-  @Column('enum', { default: Role.USER })
+  @Column('enum', { enum: Role, default: Role.USER })
   role? = Role.USER;
 
   getPayload(): UserPayload {

@@ -1,11 +1,18 @@
-import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import type {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+  NextFunction,
+  RequestHandler,
+} from 'express';
+import { singleton as Singleton } from 'tsyringe';
 
 import { IpUtil, UrlUtil, UserAgetUtil } from '@common/utils';
 import { MiddlewareCore } from '@core';
 
-class UserSessionMiddleware extends MiddlewareCore {
+@Singleton()
+export class UserSessionMiddleware extends MiddlewareCore {
   handler(): RequestHandler {
-    return (req: Request, _res: Response, next: NextFunction) => {
+    return (req: ExpressRequest, _res: ExpressResponse, next: NextFunction) => {
       const userAgent = req.headers?.['user-agent'] || '';
 
       const ip = IpUtil.getIp(req);
@@ -19,5 +26,3 @@ class UserSessionMiddleware extends MiddlewareCore {
     };
   }
 }
-
-export default new UserSessionMiddleware();

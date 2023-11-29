@@ -1,18 +1,20 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
 import { DatabaseInject } from './database.enum';
 import { DatabaseService } from './database.service';
 import { IDatabaseService } from './interface';
 
-export class DatabaseDi {
-  static init() {
+class DatabaseDi {
+  register() {
     this.registerService();
   }
 
-  private static registerService() {
-    container.registerInstance<IDatabaseService>(
+  private registerService() {
+    Container.registerSingleton<IDatabaseService>(
       DatabaseInject.SERVICE,
-      new DatabaseService(),
+      DatabaseService,
     );
   }
 }
+
+new DatabaseDi().register();

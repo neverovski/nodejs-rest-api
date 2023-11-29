@@ -1,7 +1,8 @@
 import type { Response as ExpressResponse } from 'express';
-import { inject } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
-import { HttpStatus } from '@common/enums';
+import { ConfigKey, HttpStatus } from '@common/enums';
+import { IAppConfig, IJwtConfig } from '@config';
 import { ControllerCore } from '@core';
 
 import { AuthInject } from './auth.enum';
@@ -21,8 +22,13 @@ import { IAuthController, IAuthService } from './interface';
  *   name: Auth
  *   description: auth
  */
+@Injectable()
 export class AuthController extends ControllerCore implements IAuthController {
-  constructor(@inject(AuthInject.SERVICE) private service: IAuthService) {
+  constructor(
+    @Inject(AuthInject.SERVICE) private readonly service: IAuthService,
+    @Inject(ConfigKey.APP) protected readonly appConfig: IAppConfig,
+    @Inject(ConfigKey.JWT) protected readonly jwtConfig: IJwtConfig,
+  ) {
     super();
   }
 

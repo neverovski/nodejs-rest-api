@@ -1,4 +1,4 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
 import {
   IProfileRepository,
@@ -16,7 +16,7 @@ import { UserInject } from './user.enum';
 import { UserSchema } from './user.schema';
 
 export class UserDi {
-  static init() {
+  register() {
     this.registerRepositoryProfile();
     this.registerRepository();
     this.registerService();
@@ -25,32 +25,38 @@ export class UserDi {
     this.registerController();
   }
 
-  private static registerController() {
-    container.register<IUserController>(UserInject.CONTROLLER, UserController);
+  private registerController() {
+    Container.registerSingleton<IUserController>(
+      UserInject.CONTROLLER,
+      UserController,
+    );
   }
 
-  private static registerRepository() {
-    container.register<IUserRepository>(UserInject.REPOSITORY, UserRepository);
+  private registerRepository() {
+    Container.registerSingleton<IUserRepository>(
+      UserInject.REPOSITORY,
+      UserRepository,
+    );
   }
 
-  private static registerRepositoryProfile() {
-    container.register<IProfileRepository>(
-      UserInject.REPOSITORY_PROFILE,
+  private registerRepositoryProfile() {
+    Container.registerSingleton<IProfileRepository>(
+      UserInject.PROFILE_REPOSITORY,
       ProfileRepository,
     );
   }
 
-  private static registerSchema() {
-    container.registerSingleton<IUserSchema>(UserInject.SCHEMA, UserSchema);
+  private registerSchema() {
+    Container.registerSingleton<IUserSchema>(UserInject.SCHEMA, UserSchema);
   }
 
-  private static registerService() {
-    container.register<IUserService>(UserInject.SERVICE, UserService);
+  private registerService() {
+    Container.register<IUserService>(UserInject.SERVICE, UserService);
   }
 
-  private static registerValidatorService() {
-    container.register<IUserValidatorService>(
-      UserInject.SERVICE,
+  private registerValidatorService() {
+    Container.register<IUserValidatorService>(
+      UserInject.VALIDATOR_SERVICE,
       UserValidatorService,
     );
   }

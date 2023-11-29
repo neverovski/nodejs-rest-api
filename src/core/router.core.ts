@@ -3,9 +3,13 @@ import { Router as ExpressRouter } from 'express';
 export abstract class RouterCore {
   protected readonly router: ExpressRouter;
 
-  constructor(router: ExpressRouter) {
-    this.router = router;
+  constructor() {
+    this.router = ExpressRouter({ strict: true, caseSensitive: true });
   }
 
-  abstract init(): ExpressRouter;
+  getRouter(): ExpressRouter {
+    return this.router;
+  }
+
+  protected abstract init(): void;
 }

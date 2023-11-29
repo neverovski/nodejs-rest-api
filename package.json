@@ -2,10 +2,10 @@
   "name": "nodejs-auth-sql",
   "version": "0.1.8",
   "description": "Node.js for Token Based Authentication (access and refresh) with PostgreSQL database.",
-  "main": "src/main.ts",
+  "index": "src/index.ts",
   "scripts": {
-    "start:dev": "tsc-watch --onSuccess \"ts-node ./src/main.ts\" | pino-pretty",
-    "start:prod": "node dist/main.js | pino-pretty",
+    "start:dev": "tsc-watch --onSuccess \"ts-node ./src/index.ts\" | pino-pretty",
+    "start:prod": "node dist/index.js | pino-pretty",
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "test:e2e": "NODE_ENV=test jest --testPathPattern=\"tests/e2e/.*test*.\" --maxWorkers=50%",
     "test:integration": "NODE_ENV=test jest --testPathPattern=\"tests/integration/.*test*.\" --maxWorkers=50%",

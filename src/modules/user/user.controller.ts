@@ -1,7 +1,8 @@
 import type { Response as ExpressResponse } from 'express';
-import { inject } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
-import { HttpStatus } from '@common/enums';
+import { ConfigKey, HttpStatus } from '@common/enums';
+import { IAppConfig, IJwtConfig } from '@config';
 import { ControllerCore } from '@core';
 import { i18n } from '@i18n';
 
@@ -22,8 +23,13 @@ import { UserInject } from './user.enum';
  *   name: User
  *   description: user
  */
+@Injectable()
 export class UserController extends ControllerCore implements IUserController {
-  constructor(@inject(UserInject.SERVICE) private userService: IUserService) {
+  constructor(
+    @Inject(ConfigKey.APP) protected readonly appConfig: IAppConfig,
+    @Inject(ConfigKey.JWT) protected readonly jwtConfig: IJwtConfig,
+    @Inject(UserInject.SERVICE) private readonly userService: IUserService,
+  ) {
     super();
   }
 

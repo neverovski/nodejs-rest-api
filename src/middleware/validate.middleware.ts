@@ -2,7 +2,13 @@ import Ajv from 'ajv';
 import addErrors from 'ajv-errors';
 import addFormats from 'ajv-formats';
 import addKeywords from 'ajv-keywords';
-import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import type {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+  NextFunction,
+  RequestHandler,
+} from 'express';
+import { singleton as Singleton } from 'tsyringe';
 
 import { REG_PHONE } from '@common/constants';
 import { AjvFormatKey } from '@common/enums';
@@ -11,7 +17,8 @@ import { ExceptionMessage, JsonSchema, JsonSchemaOptions } from '@common/types';
 import { AjvUtil, StringUtil } from '@common/utils';
 import { MiddlewareCore } from '@core';
 
-class ValidateMiddleware extends MiddlewareCore {
+@Singleton()
+export class ValidateMiddleware extends MiddlewareCore {
   private ajv: Ajv;
 
   constructor() {
@@ -28,8 +35,12 @@ class ValidateMiddleware extends MiddlewareCore {
 
   handler(schemas: JsonSchemaOptions): RequestHandler {
     return async (
-      req: Request<Record<string, unknown>, any, Record<string, unknown>>,
-      res: Response,
+      req: ExpressRequest<
+        Record<string, unknown>,
+        unknown,
+        Record<string, unknown>
+      >,
+      res: ExpressResponse,
       next: NextFunction,
     ) => {
       try {
@@ -96,5 +107,3 @@ class ValidateMiddleware extends MiddlewareCore {
     });
   }
 }
-
-export default new ValidateMiddleware();

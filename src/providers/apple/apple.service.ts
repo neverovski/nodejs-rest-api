@@ -1,9 +1,9 @@
 import { JwksClient } from 'jwks-rsa';
-import { inject } from 'tsyringe';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
-import { LoggerCtx, PlatformName } from '@common/enums';
+import { ConfigKey, LoggerCtx, PlatformName } from '@common/enums';
 import { PlatformPayload } from '@common/types';
-import { IPlatformConfig, PlatformConfig } from '@config';
+import { IPlatformConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
 import { i18n } from '@i18n';
 
@@ -12,17 +12,17 @@ import { ITokenService, TokenInject } from '../token';
 import { AppleKey, AppleTokenPayload } from './apple.type';
 import { IAppleService } from './interface';
 
+@Singleton()
 export class AppleService extends ProviderServiceCore implements IAppleService {
   private readonly client: JwksClient;
-  private readonly platformConfig: IPlatformConfig;
 
   constructor(
-    @inject(TokenInject.SERVICE)
-    private readonly tokenService: ITokenService,
+    @Inject(ConfigKey.PLATFORM)
+    private readonly platformConfig: IPlatformConfig,
+    @Inject(TokenInject.SERVICE) private readonly tokenService: ITokenService,
   ) {
     super(LoggerCtx.APPLE);
 
-    this.platformConfig = PlatformConfig;
     this.client = new JwksClient({ jwksUri: this.platformConfig.apple.url });
   }
 

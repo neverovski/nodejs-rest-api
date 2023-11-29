@@ -9,10 +9,13 @@ import { PageDto, PageMetaDto } from '@common/dtos';
 import { HttpStatus, MessageCode } from '@common/enums';
 import { Exception, MappingParams } from '@common/types';
 import { DateUtil, MappingUtil } from '@common/utils';
-import { AppConfig, JwtConfig } from '@config';
+import { IAppConfig, IJwtConfig } from '@config';
 import { i18n } from '@i18n';
 
 export class ControllerCore {
+  protected readonly appConfig!: IAppConfig;
+  protected readonly jwtConfig!: IJwtConfig;
+
   protected getOk(message?: string): Exception {
     return {
       message: message || i18n()['message.ok'],
@@ -85,8 +88,8 @@ export class ControllerCore {
 
   private getCookieParam(options?: Partial<CookieParam>): Partial<CookieParam> {
     return {
-      expiresIn: JwtConfig.refreshToken.expiresIn,
-      domain: AppConfig.domain,
+      expiresIn: this.jwtConfig.refreshToken.expiresIn,
+      domain: this.appConfig.domain,
       ...options,
     };
   }

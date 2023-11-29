@@ -1,28 +1,30 @@
 import Bull, { QueueOptions } from 'bull';
 
 import { DEFAULT_JOB_OPTIONS, DEFAULT_LIMITER } from '@common/constants';
-import { RedisConfig } from '@config';
+import { IRedisConfig } from '@config';
 
 export class QueueUtil {
-  private static get redisOptions(): QueueOptions['redis'] {
+  static connect<T>(name: string, redisConfig: IRedisConfig) {
+    return new Bull<T>(name, {
+      redis: this.getRedisOptions(redisConfig),
+      prefix: redisConfig.queuePrefix,
+      limiter: DEFAULT_LIMITER,
+      defaultJobOptions: DEFAULT_JOB_OPTIONS,
+    });
+  }
+
+  private static getRedisOptions(
+    redisConfig: IRedisConfig,
+  ): QueueOptions['redis'] {
     return {
-      host: RedisConfig.host,
-      port: RedisConfig.port,
-      ...(RedisConfig.username && { username: RedisConfig.username }),
-      ...(RedisConfig.username && { password: RedisConfig.password }),
-      ...(RedisConfig.tls && {
+      host: redisConfig.host,
+      port: redisConfig.port,
+      ...(redisConfig.username && { username: redisConfig.username }),
+      ...(redisConfig.username && { password: redisConfig.password }),
+      ...(redisConfig.tls && {
         tls: {},
         connectTimeout: 30000,
       }),
     };
-  }
-
-  static connect<T>(name: string) {
-    return new Bull<T>(name, {
-      redis: this.redisOptions,
-      prefix: RedisConfig.queuePrefix,
-      limiter: DEFAULT_LIMITER,
-      defaultJobOptions: DEFAULT_JOB_OPTIONS,
-    });
   }
 }

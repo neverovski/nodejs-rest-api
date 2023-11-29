@@ -1,18 +1,18 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
 import { ILoggerService } from './interface';
 import { LoggerInject } from './logger.enum';
 import { LoggerService } from './logger.service';
 
 export class LoggerDi {
-  static init() {
+  register() {
     this.registerService();
   }
 
-  private static registerService() {
-    container.registerInstance<ILoggerService>(
+  private registerService() {
+    Container.registerSingleton<ILoggerService>(
       LoggerInject.SERVICE,
-      new LoggerService(),
+      LoggerService,
     );
   }
 }

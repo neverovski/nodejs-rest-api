@@ -8,10 +8,11 @@ import {
   pino,
 } from 'pino';
 import pinoElasticsearch from 'pino-elasticsearch';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
 import { ENV_DEVELOPMENT, ENV_TEST } from '@common/constants';
-import { LogClient, LogLevel } from '@common/enums';
-import { AppConfig, IAppConfig, ILoggerConfig, LoggerConfig } from '@config';
+import { ConfigKey, LogClient, LogLevel } from '@common/enums';
+import { IAppConfig, ILoggerConfig } from '@config';
 
 import { ILoggerService } from './interface';
 import {
@@ -20,15 +21,16 @@ import {
   SETTING_PINO,
 } from './logger.constant';
 
+@Singleton()
 export class LoggerService implements ILoggerService {
-  private readonly appConfig: IAppConfig;
   private readonly logger: pino.Logger;
-  private readonly loggerConfig: ILoggerConfig;
 
-  constructor() {
-    this.appConfig = AppConfig;
-    this.loggerConfig = LoggerConfig;
-
+  constructor(
+    @Inject(ConfigKey.APP)
+    private readonly appConfig: IAppConfig,
+    @Inject(ConfigKey.LOGGER)
+    private readonly loggerConfig: ILoggerConfig,
+  ) {
     this.logger = this.init();
   }
 
@@ -63,32 +65,32 @@ export class LoggerService implements ILoggerService {
     return { transport, stream, format };
   }
 
-  debug(message: any, ...optionalParams: any[]) {
-    if (AppConfig.env === ENV_DEVELOPMENT) {
+  debug(message: unknown, ...optionalParams: unknown[]) {
+    if (this.appConfig.env === ENV_DEVELOPMENT) {
       this.call(LogLevel.DEBUG, message, optionalParams);
     }
   }
 
-  error(message: any, ...optionalParams: any[]) {
-    if (AppConfig.env !== ENV_TEST) {
+  error(message: unknown, ...optionalParams: unknown[]) {
+    if (this.appConfig.env !== ENV_TEST) {
       this.call(LogLevel.ERROR, message, optionalParams);
     }
   }
 
-  log(message: any, ...optionalParams: any[]) {
-    if (AppConfig.env === ENV_DEVELOPMENT) {
+  log(message: unknown, ...optionalParams: unknown[]) {
+    if (this.appConfig.env === ENV_DEVELOPMENT) {
       this.call(LogLevel.INFO, message, optionalParams);
     }
   }
 
-  verbose?(message: any, ...optionalParams: any[]) {
-    if (AppConfig.env !== ENV_TEST) {
+  verbose?(message: unknown, ...optionalParams: unknown[]) {
+    if (this.appConfig.env !== ENV_TEST) {
       this.call(LogLevel.TRACE, message, optionalParams);
     }
   }
 
-  warn(message: any, ...optionalParams: any[]) {
-    if (AppConfig.env !== ENV_TEST) {
+  warn(message: unknown, ...optionalParams: unknown[]) {
+    if (this.appConfig.env !== ENV_TEST) {
       this.call(LogLevel.WARN, message, optionalParams);
     }
   }
