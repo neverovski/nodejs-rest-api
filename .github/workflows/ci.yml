@@ -81,15 +81,15 @@ jobs:
       - name: ESLint Check
         run: npm run lint
 
-      # - name: Run unit tests
-      #   run: npm run test:unit:ci
+      - name: Run unit tests
+        run: npm run test:unit:ci
 
       - name: Build
         run: npm run build
 
-      # - name: Upload test results
-      #   uses: actions/upload-artifact@v3  # upload test results
-      #   if: success() || failure()        # run this step even if previous step failed
-      #   with:
-      #     name: test-result-${{ matrix.node-version }}
-      #     path: reports/jest-*.xml
+      - name: Upload test results
+        uses: actions/upload-artifact@v3  # upload test results
+        if: success() || failure()        # run this step even if previous step failed
+        with:
+          name: test-result-${{ matrix.node-version }}
+          path: reports/jest-*.xml
