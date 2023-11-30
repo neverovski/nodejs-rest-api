@@ -7,42 +7,48 @@ export class StringUtil {
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
-  static convertJsonToString<T>(data: T): string {
+  static convertJsonToString<T>(data?: T): string {
     try {
-      return JSON.stringify(data);
+      return JSON.stringify(data) ?? '';
     } catch {
       return '';
     }
   }
 
-  static convertStringToJson<T>(data: string): T {
-    return JSON.parse(data) as T;
-  }
-
-  static convertStringToNumber(val?: any): number {
-    return StringUtil.isNumber(val) ? Number(val) : 0;
-  }
-
-  static decodeBase64ToString(str: string): string {
-    if (str) {
-      return Buffer.from(str, 'base64').toString('ascii');
+  static convertStringToJson<T>(data?: string): T {
+    if (!data) {
+      return {} as T;
     }
 
-    return '';
+    try {
+      return (JSON.parse(data) ?? {}) as T;
+    } catch {
+      return {} as T;
+    }
   }
 
-  static escape(str: string) {
+  static decodeBase64ToString(str?: string | null): string {
+    if (typeof str !== 'string' || !str) {
+      return '';
+    }
+
+    if (Buffer.from(str, 'base64').toString('base64') !== str) {
+      return '';
+    }
+
+    return Buffer.from(str, 'base64').toString('ascii');
+  }
+
+  static escape(str?: string | null) {
+    if (typeof str !== 'string' || !str) {
+      return '';
+    }
+
     return str
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/\//g, '&#47;')
       .replace(/\\/g, '&#92;');
-  }
-
-  static isNumber(val?: any) {
-    const num = val !== '' ? Number(val ?? undefined) : undefined;
-
-    return num === 0 || !!num;
   }
 
   static replace(
