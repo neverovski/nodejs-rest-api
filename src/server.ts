@@ -24,7 +24,6 @@ export class Server {
     @Inject(ConfigKey.APP) private readonly appConfig: IAppConfig,
     @Inject(LoggerInject.SERVICE)
     private readonly loggerService: ILoggerService,
-    @Inject(MiddlewareKey.ASYNC) private readonly asyncMiddleware: IMiddleware,
     @Inject(MiddlewareKey.ERROR) private readonly errorMiddleware: IMiddleware,
     @Inject(MiddlewareKey.INIT) private readonly initMiddleware: IMiddleware,
     @Inject(MiddlewareKey.LOGGER)
@@ -46,7 +45,6 @@ export class Server {
   }
 
   private handleMiddlewareAfter(): void {
-    this.express.use(this.asyncMiddleware.handler());
     this.express.use(this.errorMiddleware.handler());
   }
 

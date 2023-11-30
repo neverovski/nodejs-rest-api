@@ -12,6 +12,7 @@ export class AuthRouter extends RouterCore {
   constructor(
     @Inject(AuthInject.CONTROLLER) private readonly controller: IAuthController,
     @Inject(AuthInject.SCHEMA) private readonly schema: IAuthSchema,
+    @Inject(MiddlewareKey.ASYNC) private readonly asyncMiddleware: IMiddleware,
     @Inject(MiddlewareKey.AUTH) private readonly authMiddleware: IMiddleware,
     @Inject(MiddlewareKey.USER_SESSION)
     private readonly userSessionMiddleware: IMiddleware,
@@ -28,27 +29,33 @@ export class AuthRouter extends RouterCore {
       AuthRouterLink.LOGIN,
       this.userSessionMiddleware.handler(),
       this.validateMiddleware.handler(this.schema.login()),
-      this.controller.login.bind(this.controller),
+      this.asyncMiddleware.handler(this.controller.login.bind(this.controller)),
     );
 
     this.router.post(
       AuthRouterLink.REFRESH_TOKEN,
       this.userSessionMiddleware.handler(),
       this.validateMiddleware.handler(this.schema.refreshToken()),
-      this.controller.refreshToken.bind(this.controller),
+      this.asyncMiddleware.handler(
+        this.controller.refreshToken.bind(this.controller),
+      ),
     );
 
     this.router.post(
       AuthRouterLink.LOGOUT,
       this.authMiddleware.handler(),
-      this.controller.logout.bind(this.controller),
+      this.asyncMiddleware.handler(
+        this.controller.logout.bind(this.controller),
+      ),
     );
 
     this.router.post(
       AuthRouterLink.PLATFORM,
       this.userSessionMiddleware.handler(),
       this.validateMiddleware.handler(this.schema.platform()),
-      this.controller.platform.bind(this.controller),
+      this.asyncMiddleware.handler(
+        this.controller.platform.bind(this.controller),
+      ),
     );
 
     // this.router.post(

@@ -10,6 +10,7 @@ import { UserInject, UserRouterLink } from './user.enum';
 @Injectable()
 export class UserRouter extends RouterCore {
   constructor(
+    @Inject(MiddlewareKey.ASYNC) private readonly asyncMiddleware: IMiddleware,
     @Inject(MiddlewareKey.AUTH) private readonly authMiddleware: IMiddleware,
     @Inject(MiddlewareKey.VALIDATE)
     private readonly validateMiddleware: IMiddleware,
@@ -25,33 +26,43 @@ export class UserRouter extends RouterCore {
     this.router.post(
       UserRouterLink.USER,
       this.validateMiddleware.handler(this.schema.create()),
-      this.controller.create.bind(this.controller),
+      this.asyncMiddleware.handler(
+        this.controller.create.bind(this.controller),
+      ),
     );
 
     this.router.get(
       UserRouterLink.USER_CURRENT,
       this.authMiddleware.handler(),
-      this.controller.getCurrentUser.bind(this.controller),
+      this.asyncMiddleware.handler(
+        this.controller.getCurrentUser.bind(this.controller),
+      ),
     );
 
     this.router.put(
       UserRouterLink.USER_CURRENT,
       this.authMiddleware.handler(),
       this.validateMiddleware.handler(this.schema.update()),
-      this.controller.updateCurrentUser.bind(this.controller),
+      this.asyncMiddleware.handler(
+        this.controller.updateCurrentUser.bind(this.controller),
+      ),
     );
 
     this.router.delete(
       UserRouterLink.USER_CURRENT,
       this.authMiddleware.handler(),
-      this.controller.deleteCurrentUser.bind(this.controller),
+      this.asyncMiddleware.handler(
+        this.controller.deleteCurrentUser.bind(this.controller),
+      ),
     );
 
     this.router.put(
       UserRouterLink.USER_CURRENT_PASSWORD,
       this.authMiddleware.handler(),
       this.validateMiddleware.handler(this.schema.changePassword()),
-      this.controller.changePasswordCurrentUser.bind(this.controller),
+      this.asyncMiddleware.handler(
+        this.controller.changePasswordCurrentUser.bind(this.controller),
+      ),
     );
   }
 }

@@ -9,13 +9,14 @@ import { MiddlewareCore } from '@core';
 
 @Singleton()
 export class AsyncMiddleware extends MiddlewareCore {
-  handler() {
-    const fn = (
+  handler(
+    call: (
       req: ExpressRequest,
       res: ExpressResponse,
       next: NextFunction,
-    ) => Promise.resolve(fn(req, res, next)).catch(next);
-
-    return fn;
+    ) => Promise<void>,
+  ) {
+    return (req: ExpressRequest, res: ExpressResponse, next: NextFunction) =>
+      Promise.resolve(call(req, res, next)).catch(next);
   }
 }
