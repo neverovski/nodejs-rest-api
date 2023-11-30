@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 import {
   HASH_ENCODING,
@@ -12,11 +12,11 @@ export class HashUtil {
     return crypto.createHash('md5').update(str).digest('hex');
   }
 
-  static generateRandomNumber(len: number) {
+  static generateRandomNumber(len: number): number {
     const min = Math.pow(10, len - 1);
     const max = Math.pow(10, len) - 1;
 
-    return Math.floor(Math.random() * (max - min) + min);
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   static generateUuid() {

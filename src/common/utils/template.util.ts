@@ -1,5 +1,5 @@
-import fs from 'fs/promises';
-import { resolve } from 'path';
+import fs from 'node:fs/promises';
+import { resolve } from 'node:path';
 
 import { marked } from 'marked';
 import { decorator as MemDecorator } from 'mem';
