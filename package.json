@@ -70,7 +70,7 @@
     "express-pino-logger": "^7.0.0",
     "express-prom-bundle": "^6.6.0",
     "fast-jwt": "^3.3.2",
-    "google-auth-library": "^9.2.0",
+    "google-auth-library": "^9.4.0",
     "helmet": "^7.1.0",
     "joi": "^17.11.0",
     "json-schema": "^0.4.0",
