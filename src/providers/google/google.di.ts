@@ -1,10 +1,18 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
-import GoogleService from './google.service';
-import { GoogleInject } from './google.type';
+import { GoogleInject } from './google.enum';
+import { GoogleService } from './google.service';
 import { IGoogleService } from './interface';
 
-container.registerInstance<IGoogleService>(
-  GoogleInject.GOOGLE_SERVICE,
-  new GoogleService(),
-);
+export class GoogleDi {
+  register() {
+    this.registerService();
+  }
+
+  private registerService() {
+    Container.registerSingleton<IGoogleService>(
+      GoogleInject.SERVICE,
+      GoogleService,
+    );
+  }
+}

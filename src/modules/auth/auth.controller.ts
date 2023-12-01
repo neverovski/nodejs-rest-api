@@ -1,19 +1,20 @@
-import { Request, Response } from 'express';
-import { inject, injectable } from 'tsyringe';
+import type { Response as ExpressResponse } from 'express';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
+import { ConfigKey, HttpStatus } from '@common/enums';
+import { IAppConfig, IJwtConfig } from '@config';
 import { ControllerCore } from '@core';
-import { Exception, HttpCode, i18n } from '@libs';
-import { PlatformRequest } from '@modules/platform';
-import { TokenDTO } from '@modules/token';
 
+import { AuthInject } from './auth.enum';
 import {
-  AuthInject,
-  ForgotPasswordRequest,
-  LoginRequest,
-  RefreshTokenRequest,
-  ResetPasswordRequest,
+  AuthLoginRequest,
+  AuthLogoutRequest,
+  AuthPlatformRequest,
+  AuthRefreshToken,
+  AuthRefreshTokenRequest,
 } from './auth.type';
-import { IAuthService } from './interface';
+import { AuthTokenDto } from './dto';
+import { IAuthController, IAuthService } from './interface';
 
 /**
  * @openapi
@@ -21,43 +22,47 @@ import { IAuthService } from './interface';
  *   name: Auth
  *   description: auth
  */
-@injectable()
-export default class AuthController extends ControllerCore {
-  constructor(@inject(AuthInject.AUTH_SERVICE) private service: IAuthService) {
+@Injectable()
+export class AuthController extends ControllerCore implements IAuthController {
+  constructor(
+    @Inject(AuthInject.SERVICE) private readonly service: IAuthService,
+    @Inject(ConfigKey.APP) protected readonly appConfig: IAppConfig,
+    @Inject(ConfigKey.JWT) protected readonly jwtConfig: IJwtConfig,
+  ) {
     super();
   }
 
-  /**
-   * @openapi
-   * /api/auth/forgot-password:
-   *   post:
-   *      tags: [Auth]
-   *      summary: Forgot password
-   *      description: ''
-   *      requestBody:
-   *        $ref: '#/components/requestBodies/ForgotPasswordRequest'
-   *      responses:
-   *        200:
-   *          $ref: '#/components/responses/HttpOk'
-   *        404:
-   *          $ref: '#/components/responses/HttpNotFound'
-   *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
-   *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
-   */
-  async forgotPassword(
-    req: Request<any, any, ForgotPasswordRequest>,
-    res: Response,
-  ) {
-    await this.service.forgotPassword(req.body);
+  // /**
+  //  * @openapi
+  //  * /api/auth/password/email:
+  //  *   post:
+  //  *      tags: [Auth]
+  //  *      summary: Forgot password
+  //  *      description: ''
+  //  *      requestBody:
+  //  *        $ref: '#/components/requestBodies/ForgotPasswordRequest'
+  //  *      responses:
+  //  *        200:
+  //  *          $ref: '#/components/responses/HttpOk'
+  //  *        404:
+  //  *          $ref: '#/components/responses/HttpNotFound'
+  //  *        422:
+  //  *          $ref: '#/components/responses/HttpUnprocessableEntity'
+  //  *        500:
+  //  *          $ref: '#/components/responses/HttpInternalServerError'
+  //  */
+  // async forgotPassword(
+  //   req: Request<any, any, ForgotPasswordRequest>,
+  //   res: Response,
+  // ) {
+  //   await this.service.forgotPassword(req.body);
 
-    this.response(res, {
-      data: Exception.getOk(HttpCode.OK, {
-        message: i18n()['message.passwordReset.sentToEmail'],
-      }),
-    });
-  }
+  //   this.response(res, {
+  //     data: Exception.getOk(HttpCode.OK, {
+  //       message: i18n()['message.passwordReset.sentToEmail'],
+  //     }),
+  //   });
+  // }
 
   /**
    * @openapi
@@ -78,14 +83,12 @@ export default class AuthController extends ControllerCore {
    *        500:
    *          $ref: '#/components/responses/HttpInternalServerError'
    */
-  async login(
-    { body, userAgent }: Request<any, any, LoginRequest>,
-    res: Response,
-  ) {
-    const data = await this.service.login(body, userAgent);
+  async login({ body, userSession }: AuthLoginRequest, res: ExpressResponse) {
+    const data = await this.service.login(body, { userSession });
 
-    this.setCookie(res, data);
-    this.response(res, { data, dto: TokenDTO });
+    this.storeTokenInCookie(res, data);
+
+    res.json(this.mappingDataToDto(data, { cls: AuthTokenDto }));
   }
 
   /**
@@ -106,13 +109,14 @@ export default class AuthController extends ControllerCore {
    *        - CookieAuth: []
    *        - BearerAuth: []
    */
-  async logout(req: Request, res: Response) {
-    const { userId } = req.user;
+  async logout({ user }: AuthLogoutRequest, res: ExpressResponse) {
+    const { userId } = user;
 
     await this.service.logout({ userId });
 
-    this.deleteCookie(res, req.cookies);
-    this.response(res);
+    this.storeTokenInCookie(res, {}, { maxAge: 0 });
+
+    res.status(HttpStatus.NoContent);
   }
 
   /**
@@ -133,13 +137,14 @@ export default class AuthController extends ControllerCore {
    *          $ref: '#/components/responses/HttpInternalServerError'
    */
   async platform(
-    { body, userAgent }: Request<any, any, PlatformRequest>,
-    res: Response,
+    { body, userSession }: AuthPlatformRequest,
+    res: ExpressResponse,
   ) {
-    const data = await this.service.platform(body, userAgent);
+    const data = await this.service.platform(body, { userSession });
 
-    this.setCookie(res, data);
-    this.response(res, { data, dto: TokenDTO });
+    this.storeTokenInCookie(res, data);
+
+    res.json(this.mappingDataToDto(data, { cls: AuthTokenDto }));
   }
 
   /**
@@ -162,45 +167,49 @@ export default class AuthController extends ControllerCore {
    *          $ref: '#/components/responses/HttpInternalServerError'
    */
   async refreshToken(
-    { body, userAgent, ...req }: Request<any, any, RefreshTokenRequest>,
-    res: Response,
+    { body, userSession, ...req }: AuthRefreshTokenRequest,
+    res: ExpressResponse,
   ) {
     const refreshToken =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      (req?.cookies?.refreshToken as string) || body.refreshToken || '';
-    const data = await this.service.refreshToken({ refreshToken }, userAgent);
+      body.refreshToken || (req.cookies as AuthRefreshToken).refreshToken;
 
-    this.setCookie(res, data);
-    this.response(res, { data, dto: TokenDTO });
+    const data = await this.service.refreshToken(
+      { refreshToken },
+      { userSession },
+    );
+
+    this.storeTokenInCookie(res, data);
+
+    res.json(this.mappingDataToDto(data, { cls: AuthTokenDto }));
   }
 
-  /**
-   * @openapi
-   * /api/auth/reset-password:
-   *   post:
-   *      tags: [Auth]
-   *      summary: Reset password
-   *      description: ''
-   *      requestBody:
-   *        $ref: '#/components/requestBodies/ResetPasswordRequest'
-   *      responses:
-   *        200:
-   *          $ref: '#/components/responses/HttpOk'
-   *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
-   *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
-   */
-  async resetPassword(
-    req: Request<any, any, ResetPasswordRequest>,
-    res: Response,
-  ) {
-    await this.service.resetPassword(req.body);
+  // /**
+  //  * @openapi
+  //  * /api/auth/password/reset:
+  //  *   post:
+  //  *      tags: [Auth]
+  //  *      summary: Reset password
+  //  *      description: ''
+  //  *      requestBody:
+  //  *        $ref: '#/components/requestBodies/ResetPasswordRequest'
+  //  *      responses:
+  //  *        200:
+  //  *          $ref: '#/components/responses/HttpOk'
+  //  *        422:
+  //  *          $ref: '#/components/responses/HttpUnprocessableEntity'
+  //  *        500:
+  //  *          $ref: '#/components/responses/HttpInternalServerError'
+  //  */
+  // async resetPassword(
+  //   req: Request<any, any, ResetPasswordRequest>,
+  //   res: Response,
+  // ) {
+  //   await this.service.resetPassword(req.body);
 
-    this.response(res, {
-      data: Exception.getOk(HttpCode.OK, {
-        message: i18n()['message.passwordReset.successfully'],
-      }),
-    });
-  }
+  //   this.response(res, {
+  //     data: Exception.getOk(HttpCode.OK, {
+  //       message: i18n()['message.passwordReset.successfully'],
+  //     }),
+  //   });
+  // }
 }

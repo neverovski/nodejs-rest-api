@@ -1,33 +1,96 @@
-import { Response } from 'express';
+import type { Response as ExpressResponse } from 'express';
 
-import { Exception, HttpCode, HttpStatus } from '@libs';
-import { CookieUtil, MappingUtil, TransformDTO } from '@utils';
+import {
+  AUTH_REFRESH_LINK,
+  COOKIE_ACCESS_TOKEN,
+  COOKIE_REFRESH_TOKEN,
+} from '@common/constants';
+import { PageDto, PageMetaDto } from '@common/dtos';
+import { HttpStatus, MessageCode } from '@common/enums';
+import { Exception, MappingParams } from '@common/types';
+import { DateUtil, MappingUtil } from '@common/utils';
+import { IAppConfig, IJwtConfig } from '@config';
+import { i18n } from '@i18n';
 
-export default class ControllerCore {
-  protected deleteCookie<T extends object>(res: Response, cookies: T) {
-    CookieUtil.deleteMany(res, cookies);
+export class ControllerCore {
+  protected readonly appConfig!: IAppConfig;
+  protected readonly jwtConfig!: IJwtConfig;
+
+  protected getOk(message?: string): Exception {
+    return {
+      message: message || i18n()['message.ok'],
+      messageCode: MessageCode.OK,
+      statusCode: HttpStatus.OK,
+    };
   }
 
-  protected response<T, DTO>(
-    res: Response,
-    ctx?: TransformDTO<T, DTO> & { status?: HttpStatus },
+  protected mappingDataToDto<T extends Record<string, any>, V>(
+    dataIn: V | V[],
+    { cls, options, pageOption, itemCount }: Omit<MappingParams<T, V>, 'data'>,
   ) {
-    const { data, options, dto } = ctx || {};
+    let dataOut: V | V[] | T | T[] = dataIn;
 
-    if (!data && ctx?.status === HttpStatus.OK) {
-      throw Exception.getError(HttpCode.NOT_FOUND);
+    if (cls) {
+      dataOut = MappingUtil.objToDto({
+        cls,
+        data: dataIn,
+        options,
+      });
     }
 
-    const status = !ctx ? HttpStatus.NoContent : ctx?.status || HttpStatus.OK;
+    if (pageOption) {
+      const meta = new PageMetaDto({
+        pageOption,
+        itemCount: itemCount ?? 0,
+      });
 
-    res.status(status).json({
-      ...(data && {
-        data: dto ? MappingUtil.toDTO({ dto, data, options }) : data,
-      }),
+      return new PageDto(dataOut as T[], meta);
+    }
+
+    return dataOut;
+  }
+
+  protected storeTokenInCookie<T extends TokePayload>(
+    res: ExpressResponse,
+    authToken: Partial<T>,
+    options?: Partial<CookieParam>,
+  ) {
+    const params = this.getCookieParam(options);
+    const maxAge = this.getCookieMaxAge(params);
+
+    res.cookie(COOKIE_ACCESS_TOKEN, authToken?.accessToken, {
+      domain: params?.domain || '',
+      secure: true,
+      sameSite: 'lax',
+      path: '/',
+      ...maxAge,
+    });
+
+    res.cookie(COOKIE_REFRESH_TOKEN, authToken?.refreshToken, {
+      domain: params?.domain || '',
+      secure: true,
+      sameSite: 'lax',
+      httpOnly: true,
+      path: AUTH_REFRESH_LINK,
+      ...maxAge,
     });
   }
 
-  protected setCookie<T>(res: Response, data: T) {
-    CookieUtil.setMany(res, data, { httpOnly: true });
+  private getCookieMaxAge(options: Partial<CookieParam>) {
+    const maxAge = DateUtil.toMs(options?.expiresIn || '');
+
+    if (options?.maxAge || options?.rememberMe) {
+      return { maxAge: options.maxAge ?? maxAge };
+    }
+
+    return {};
+  }
+
+  private getCookieParam(options?: Partial<CookieParam>): Partial<CookieParam> {
+    return {
+      expiresIn: this.jwtConfig.refreshToken.expiresIn,
+      domain: this.appConfig.domain,
+      ...options,
+    };
   }
 }

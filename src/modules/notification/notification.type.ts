@@ -1,11 +1,8 @@
-import { TemplateType } from '@libs';
+import { TemplateOption } from '@common/types';
 
-export enum NotificationInject {
-  NOTIFICATION_SERVICE = 'NotificationService',
-}
-
-export type Notification = {
-  data?: Record<string, any>;
-  email?: string;
-  template: TemplateType;
+export type NotificationMethod = {
+  email?: string | null;
+  phone?: string | null;
 };
+
+export type NotificationParams = Pick<TemplateOption, 'data' | 'templatePath'>;

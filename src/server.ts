@@ -1,97 +1,93 @@
-import { Server as HTTPServer, createServer } from 'http';
+import { Server as HttpServer, createServer } from 'http';
 
 import { json, urlencoded } from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express, { Application, Request, Response } from 'express';
+import express, { Application as ExpressApp } from 'express';
 import helmet from 'helmet';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
-import { MiddlewareCore } from '@core';
-import { Logger } from '@libs';
+import { ConfigKey, MiddlewareKey } from '@common/enums';
+import { IMiddleware } from '@common/interfaces';
+import { IAppConfig } from '@config';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 
-import Router from './router';
+import { Router } from './router';
 
-type ServerType = {
-  errorMiddleware: MiddlewareCore;
-  initMiddleware: MiddlewareCore[];
-  port: number;
-};
-
-export default class Server {
-  private app!: Application;
-  private readonly errorMiddleware: MiddlewareCore;
-  private http!: HTTPServer;
-  private readonly initMiddleware: MiddlewareCore[];
+@Singleton()
+export class Server {
+  private express!: ExpressApp;
+  private http!: HttpServer;
   private readonly port: number;
 
-  constructor({ port, initMiddleware, errorMiddleware }: ServerType) {
-    this.port = port;
-    this.initMiddleware = initMiddleware;
-    this.errorMiddleware = errorMiddleware;
+  constructor(
+    @Inject(ConfigKey.APP) private readonly appConfig: IAppConfig,
+    @Inject(LoggerInject.SERVICE)
+    private readonly loggerService: ILoggerService,
+    @Inject(MiddlewareKey.ERROR) private readonly errorMiddleware: IMiddleware,
+    @Inject(MiddlewareKey.INIT) private readonly initMiddleware: IMiddleware,
+    @Inject(MiddlewareKey.LOGGER)
+    private readonly loggerMiddleware: IMiddleware,
+    @Inject(Router) private readonly router: Router,
+  ) {
+    this.port = Number(this.appConfig.port);
   }
 
-  async init(): Promise<void> {
-    this.app = express();
-    this.http = createServer(this.app);
+  async run(): Promise<void> {
+    this.express = express();
+    this.http = createServer(this.express);
 
-    this.handleMiddleware();
-    this.handleRoute();
-    this.handleError();
+    this.handleMiddlewareBefore();
+    this.handleRouter();
+    this.handleMiddlewareAfter();
 
-    await this.run();
+    await this.listenHttpServer();
   }
 
-  private handleError(): void {
-    try {
-      this.app.use(this.errorMiddleware.handler());
-    } catch (err) {
-      throw new Error('Default error middleware failed.');
-    }
+  private handleMiddlewareAfter(): void {
+    this.express.use(this.errorMiddleware.handler());
   }
 
-  private handleMiddleware(): void {
-    this.app.use(helmet());
-    this.app.use(cors());
-    this.app.use(json());
-    this.app.use(urlencoded({ extended: false }));
-    this.app.use(cookieParser());
+  private handleMiddlewareBefore(): void {
+    this.express.use(helmet());
+    this.express.use(cors());
+    this.express.use(json());
+    this.express.use(urlencoded({ extended: false }));
+    this.express.use(cookieParser());
 
-    for (const m of this.initMiddleware) {
-      try {
-        this.app.use(m.handler());
-      } catch (err) {
-        throw err;
-      }
-    }
+    this.express.use(this.initMiddleware.handler());
+    this.express.use(this.loggerMiddleware.handler());
   }
 
-  private handleRoute(): void {
-    this.app.get('/', (_req: Request, res: Response) =>
-      res.json({ message: 'base path' }),
-    );
-
-    Router(this.app);
+  private handleRouter(): void {
+    this.express.use(this.router.getRouter());
   }
 
-  private async run(): Promise<void> {
+  private async listenHttpServer(): Promise<void> {
     return new Promise((resolve) => {
       process.on('unhandledRejection', (reason) => {
-        Logger.error({ message: 'unhandledRejection', error: reason });
+        this.loggerService.error({
+          message: 'unhandledRejection',
+          error: reason,
+        });
       });
 
       process.on('rejectionHandled', (promise) => {
-        Logger.warn({ message: 'rejectionHandled', error: promise });
+        this.loggerService.warn({
+          message: 'rejectionHandled',
+          error: promise,
+        });
       });
 
       process.on('multipleResolves', (type, promise, reason) => {
-        Logger.error({
+        this.loggerService.error({
           message: 'multipleResolves',
           error: { type, promise, reason },
         });
       });
 
       process.on('uncaughtException', (error) => {
-        Logger.fatal({ message: 'uncaughtException', error });
+        this.loggerService.error({ message: 'uncaughtException', error });
         process.exit(1);
       });
 

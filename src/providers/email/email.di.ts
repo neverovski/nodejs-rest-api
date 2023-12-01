@@ -1,16 +1,39 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
-import EmailQueue from './email.queue';
-import EmailService from './email.service';
-import { EmailInject } from './email.type';
-import { IEmailQueue, IEmailService } from './interface';
+import { EmailInject } from './email.enum';
+import { EmailService } from './email.service';
+import {
+  IEmailConsumerJob,
+  IEmailProducerJob,
+  IEmailService,
+} from './interface';
+import { EmailConsumerJob, EmailProducerJob } from './job';
 
-container.registerInstance<IEmailService>(
-  EmailInject.EMAIL_SERVICE,
-  new EmailService(),
-);
+export class EmailDi {
+  register() {
+    this.registerService();
+    this.registerProducer();
+    this.registerConsumer();
+  }
 
-container.registerInstance<IEmailQueue>(
-  EmailInject.EMAIL_QUEUE,
-  new EmailQueue(),
-);
+  private registerConsumer() {
+    Container.registerSingleton<IEmailConsumerJob>(
+      EmailInject.CONSUMER,
+      EmailConsumerJob,
+    );
+  }
+
+  private registerProducer() {
+    Container.registerSingleton<IEmailProducerJob>(
+      EmailInject.PRODUCER,
+      EmailProducerJob,
+    );
+  }
+
+  private registerService() {
+    Container.registerSingleton<IEmailService>(
+      EmailInject.SERVICE,
+      EmailService,
+    );
+  }
+}

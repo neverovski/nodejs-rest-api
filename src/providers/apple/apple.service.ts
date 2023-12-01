@@ -1,39 +1,44 @@
 import { JwksClient } from 'jwks-rsa';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
-import { PlatformConfig } from '@config';
-import { ServiceCore } from '@core';
-import { Crypto, Exception, HttpCode } from '@libs';
-import { PlatformPayload, SocialNetwork } from '@utils';
+import { ConfigKey, LoggerCtx, PlatformName } from '@common/enums';
+import { PlatformPayload } from '@common/types';
+import { IPlatformConfig } from '@config';
+import { ProviderServiceCore } from '@core/service';
+import { i18n } from '@i18n';
+
+import { ITokenService, TokenInject } from '../token';
 
 import { AppleKey, AppleTokenPayload } from './apple.type';
 import { IAppleService } from './interface';
 
-export default class AppleService extends ServiceCore implements IAppleService {
+@Singleton()
+export class AppleService extends ProviderServiceCore implements IAppleService {
   private readonly client: JwksClient;
 
-  constructor() {
-    super();
+  constructor(
+    @Inject(ConfigKey.PLATFORM)
+    private readonly platformConfig: IPlatformConfig,
+    @Inject(TokenInject.SERVICE) private readonly tokenService: ITokenService,
+  ) {
+    super(LoggerCtx.APPLE);
 
-    this.client = new JwksClient({ jwksUri: PlatformConfig.apple.url });
-
-    this.init();
+    this.client = new JwksClient({ jwksUri: this.platformConfig.apple.url });
   }
 
-  async getProfile(token: string): Promise<PlatformPayload> {
+  async getPayload(token: string): Promise<PlatformPayload> {
     try {
       const data = await this.verify(token);
 
       return {
         ssid: data.sub,
-        name: SocialNetwork.APPLE,
+        name: PlatformName.APPLE,
         ...(data?.email && {
           email: data.email.toLowerCase(),
         }),
       };
     } catch (err) {
-      this.handleError(err);
-
-      throw Exception.getError(HttpCode.EXTERNAL);
+      throw this.handleError(err);
     }
   }
 
@@ -41,9 +46,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
     try {
       return (await this.client.getKeys()) as AppleKey[];
     } catch (err) {
-      this.handleError(err);
-
-      throw Exception.getError(HttpCode.EXTERNAL);
+      throw this.handleError(err);
     }
   }
 
@@ -53,9 +56,7 @@ export default class AppleService extends ServiceCore implements IAppleService {
 
       return signingKey.getPublicKey();
     } catch (err) {
-      this.handleError(err);
-
-      throw Exception.getError(HttpCode.EXTERNAL);
+      throw this.handleError(err);
     }
   }
 
@@ -65,21 +66,21 @@ export default class AppleService extends ServiceCore implements IAppleService {
       const publicKey = keys.map((key) => this.getPublicKey(key.kid));
       const publicKeys = await Promise.all(publicKey);
       const verifiedTokenPromises = publicKeys.map((key) =>
-        Crypto.verifyJwt<AppleTokenPayload>(token, key).catch(() => null),
+        this.tokenService
+          .verifyJwt<AppleTokenPayload>(token, key)
+          .catch(() => null),
       );
 
       const decodedTokens = await Promise.all(verifiedTokenPromises);
       const data = decodedTokens.filter((elem) => elem).pop();
 
       if (!data) {
-        throw Exception.getError(HttpCode.EXTERNAL);
+        throw this.handleError({ message: i18n()['notFound.default'] });
       }
 
       return data;
     } catch (err) {
-      this.handleError(err);
-
-      throw Exception.getError(HttpCode.EXTERNAL);
+      throw this.handleError(err);
     }
   }
 }

@@ -1,5 +1,7 @@
-import { PlatformRequest } from '../platform.type';
+import type { FullUser } from '@modules/user';
+
+import { CreatePlatform } from '../platform.type';
 
 export interface IPlatformService {
-  create(body: PlatformRequest): Promise<{ userId: number }>;
+  create(data: CreatePlatform): Promise<FullUser>;
 }

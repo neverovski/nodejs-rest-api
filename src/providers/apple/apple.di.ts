@@ -1,10 +1,18 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
-import AppleService from './apple.service';
-import { AppleInject } from './apple.type';
+import { AppleInject } from './apple.enum';
+import { AppleService } from './apple.service';
 import { IAppleService } from './interface';
 
-container.registerInstance<IAppleService>(
-  AppleInject.APPLE_SERVICE,
-  new AppleService(),
-);
+export class AppleDi {
+  register() {
+    this.registerService();
+  }
+
+  private registerService() {
+    Container.registerSingleton<IAppleService>(
+      AppleInject.SERVICE,
+      AppleService,
+    );
+  }
+}

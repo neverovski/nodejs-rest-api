@@ -1,0 +1,27 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    reviewers:
+      - neverovski
+    labels:
+      - "github action"
+      - "dependencies"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    versioning-strategy: increase
+    labels:
+      - "npm"
+      - "dependencies"
+    reviewers:
+      - neverovski
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: '*'
+        update-types: ["version-update:semver-major"]

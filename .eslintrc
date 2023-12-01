@@ -5,30 +5,33 @@
     }
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["prettier", "import", "typescript-sort-keys"],
+  "plugins": [
+    "import",
+    "prettier",
+    "@typescript-eslint",
+    "typescript-sort-keys"
+  ],
   "extends": [
     "airbnb-typescript/base",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:prettier/recommended",
-    "prettier"
+    "plugin:prettier/recommended"
   ],
   "parserOptions": {
-    "ecmaVersion": 2022,
+    "ecmaVersion": 2023,
     "project": "./tsconfig.json",
     "tsconfigRootDir": "./"
   },
   "root": true,
   "env": {
     "node": true,
-    "es6": true,
-    "mocha": true
+    "es6": true
   },
   "rules": {
-    "no-return-await": "off",
+    "no-return-await": "error",
     "no-var": "error",
     "no-debugger": "error",
-    "no-console": "off",
+    "no-console": "warn",
     "no-restricted-syntax": ["off", "ForOfStatement"],
     "lines-between-class-members": "off",
     "class-methods-use-this": "off",
@@ -66,9 +69,14 @@
     ],
     "prettier/prettier": "error",
     "@typescript-eslint/return-await": ["error", "in-try-catch"],
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/unbound-method": "off",
-    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/unbound-method": "error",
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      { "checksVoidReturn": false }
+    ],
+    "@typescript-eslint/no-unsafe-member-access": "error",
+    "@typescript-eslint/no-unsafe-call": "error",
     "@typescript-eslint/member-ordering": [
       "error",
       {
@@ -136,13 +144,7 @@
       "always",
       { "exceptAfterSingleLine": true }
     ],
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "ts": "never"
-      }
-    ],
+    "import/extensions": ["error", "ignorePackages", { "ts": "never" }],
     "typescript-sort-keys/interface": "off",
     "typescript-sort-keys/string-enum": "error"
   }

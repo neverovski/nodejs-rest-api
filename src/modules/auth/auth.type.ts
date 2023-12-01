@@ -1,13 +1,39 @@
-import { FullUser } from '@modules/user';
+import type { Request as ExpressRequest } from 'express';
 
-export enum AuthInject {
-  AUTH_SERVICE = 'AuthService',
-}
+import { PlatformName, TokenType } from '@common/enums';
+import { Context } from '@common/types';
 
-export type LoginRequest = Required<Pick<FullUser, 'email' | 'password'>>;
-export type RefreshTokenRequest = { refreshToken: string };
-export type LogoutRequest = { userId: FullUser['id'] };
-export type ForgotPasswordRequest = Required<Pick<FullUser, 'email'>>;
-export type ResetPasswordRequest = Required<Pick<FullUser, 'password'>> & {
-  token: string;
+export type AuthLogin = { email: Email; password: Password };
+export type AuthLogout = { userId: Id };
+export type AuthPlatform = { platform: PlatformName; token: string };
+export type AuthRefreshToken = { refreshToken: Token };
+
+export type AuthForgotPasswordByEmail = { email: Email };
+export type AuthResetPassword = { newPassword: Password; token: Token };
+
+export type AuthVerifyEmail = { token: Token };
+
+export type AuthToken = {
+  accessToken: Token;
+  refreshToken: Token;
+  type: TokenType;
 };
+
+export type AuthCtx = Context;
+
+export type AuthLoginRequest = ExpressRequest<unknown, unknown, AuthLogin>;
+export type AuthLogoutRequest = ExpressRequest;
+export type AuthPlatformRequest = ExpressRequest<
+  unknown,
+  unknown,
+  AuthPlatform
+>;
+export type AuthRefreshTokenRequest = ExpressRequest<
+  unknown,
+  unknown,
+  AuthRefreshToken
+>;
+
+//email/verify - GET send link to email
+//email/verify/{token} - GET
+//email/resend - GET

@@ -1,39 +1,43 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import 'reflect-metadata';
-import '@providers/index.di';
-import '@modules/index.di';
 
-import { AppConfig } from '@config';
-import db from '@db/index';
-import { Logger } from '@libs';
-import Middleware, { ErrorMiddleware } from '@middleware';
-import { EventEmitter } from '@utils';
+import {
+  container as Container,
+  inject as Inject,
+  singleton as Singleton,
+} from 'tsyringe';
 
-import Server from './server';
+import '@config/config.di';
+import '@providers/provider.di';
+import '@middleware/middleware.di';
+import '@database/database.di';
+import '@modules/module.di';
 
-const app = new Server({
-  port: Number(AppConfig.port),
-  initMiddleware: Middleware,
-  errorMiddleware: ErrorMiddleware,
-});
+import { DatabaseInject, IDatabaseService } from '@database';
 
-db.connect()
-  .then(() => {
-    Logger.debug({ message: 'Database initialized...' });
-    app
-      .init()
-      .then(() => {
-        EventEmitter.emit('start');
-        Logger.info({ message: 'Server start initialization..' });
-      })
-      .catch((error) => {
-        EventEmitter.emit('close');
-        Logger.error({ message: 'Server fails to initialize...', error });
-        process.exit(1);
-      });
-  })
-  .catch((error) => {
-    EventEmitter.emit('close');
-    Logger.error({ message: 'Database fails to initialize...', error });
-    process.exit(1);
-  });
+import { Server } from './server';
+
+@Singleton()
+class Bootstrap {
+  constructor(
+    @Inject(Server) private readonly server: Server,
+    @Inject(DatabaseInject.SERVICE) private readonly database: IDatabaseService,
+  ) {}
+
+  async run() {
+    try {
+      await this.database.connect();
+      await this.server.run();
+
+      // EventEmitter.emit('start');
+      console.info({ message: 'Вatabase and server started...' });
+    } catch (err) {
+      // EventEmitter.emit('close');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      console.error({ message: 'Database or server not running', err });
+
+      process.exit(1);
+    }
+  }
+}
+
+void Container.resolve(Bootstrap).run();

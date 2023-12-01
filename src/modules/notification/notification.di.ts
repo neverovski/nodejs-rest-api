@@ -1,10 +1,18 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
 import { INotificationService } from './interface';
-import NotificationService from './notification.service';
-import { NotificationInject } from './notification.type';
+import { NotificationInject } from './notification.enum';
+import { NotificationService } from './notification.service';
 
-container.registerInstance<INotificationService>(
-  NotificationInject.NOTIFICATION_SERVICE,
-  new NotificationService(),
-);
+export class NotificationDi {
+  register() {
+    this.registerService();
+  }
+
+  private registerService() {
+    Container.register<INotificationService>(
+      NotificationInject.SERVICE,
+      NotificationService,
+    );
+  }
+}

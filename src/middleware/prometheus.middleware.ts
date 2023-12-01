@@ -1,23 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import promBundle from 'express-prom-bundle';
 import { Registry } from 'prom-client';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
-import { AppConfig } from '@config';
+import { ConfigKey } from '@common/enums';
+import { IAppConfig } from '@config';
 import { MiddlewareCore } from '@core';
 
-class PrometheusMiddleware extends MiddlewareCore {
+@Singleton()
+export class PrometheusMiddleware extends MiddlewareCore {
   private readonly httpDurationMetricName: string;
   private readonly prefix: string;
   private readonly register: Registry;
 
-  constructor() {
+  constructor(@Inject(ConfigKey.APP) private readonly appConfig: IAppConfig) {
     super();
 
     this.register = new Registry();
-    this.prefix = `${AppConfig.name.toLowerCase()}_`;
+    this.prefix = `${this.appConfig.name.toLowerCase()}_`;
     this.httpDurationMetricName = this.prefix + 'http_request_duration_seconds';
   }
 
@@ -30,7 +30,6 @@ class PrometheusMiddleware extends MiddlewareCore {
       promClient: {
         collectDefaultMetrics: {
           prefix: this.prefix,
-          timeout: 5000,
           register: this.register,
         },
       },
@@ -38,5 +37,3 @@ class PrometheusMiddleware extends MiddlewareCore {
     });
   }
 }
-
-export default new PrometheusMiddleware();

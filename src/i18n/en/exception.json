@@ -1,0 +1,20 @@
+{
+  "exception.badRequest": "Bad Request",
+  "exception.conflict": "conflict",
+  "exception.dbError": "DB error",
+  "exception.deleteError": "Deletion is not possible",
+  "exception.emailAlreadyTaken": "This email already taken, try use another",
+  "exception.emptyBody": "Empty body is not allowed. Please fill the body",
+  "exception.external": "External service error",
+  "exception.forbidden": "Accessing the resource you were trying to reach is forbidden",
+  "exception.invalidCredentials": "Invalid credentials",
+  "exception.notFound": "The resource you were trying to reach is not found",
+  "exception.refreshTokenExpired": "Refresh token expired",
+  "exception.refreshTokenVerify": "Refresh token verify error",
+  "exception.serverError": "Application failed to process the request",
+  "exception.tokenExpired": "Token expired",
+  "exception.tokenMalformed": "Trying get data from token. Something wrong",
+  "exception.tokenNotProvided": "Token not provided",
+  "exception.tokenVerify": "Token verify error",
+  "exception.unprocessableEntity": "Validation Failed"
+}

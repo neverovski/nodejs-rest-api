@@ -1,38 +1,34 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, Unique } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, Unique } from 'typeorm';
 
-import { EntityCore } from '@core';
-import { FullUser } from '@modules/user';
-import {
-  DB_TABLE_PLATFORM,
-  DB_TABLE_USER,
-  DB_UQ_PLATFORM_SSID,
-  SocialNetwork,
-} from '@utils';
+import { BaseEntity } from '@common/entities';
+import { PlatformName } from '@common/enums';
+import { DB_TABLE_PLATFORM } from '@database/constants';
+import { UQ_PLATFORM } from '@database/constraints';
+import { StringTransformer } from '@database/transformer/string.transformer';
+import type { FullUser } from '@modules/user';
+import { UserEntity } from '@modules/user/entity/user.entity';
 
 import { IPlatform } from '../interface';
 
 @Entity({ name: DB_TABLE_PLATFORM })
-@Unique(DB_UQ_PLATFORM_SSID, ['ssid', 'name'])
-export default class PlatformEntity
-  extends EntityCore<IPlatform>
-  implements IPlatform
-{
-  @Index()
-  @Column('enum', { enum: SocialNetwork })
-  name!: SocialNetwork;
+@Unique(UQ_PLATFORM.name, UQ_PLATFORM.columnNames)
+export class PlatformEntity extends BaseEntity<IPlatform> implements IPlatform {
+  @Column('enum', { enum: PlatformName })
+  name!: PlatformName;
 
-  @Index()
   @Column('varchar')
   ssid!: string;
 
-  @Column('varchar', { nullable: true })
-  url?: string;
+  @Column('varchar', {
+    nullable: true,
+    transformer: new StringTransformer(),
+  })
+  url?: string | null;
 
-  @ManyToOne(DB_TABLE_USER, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user?: FullUser;
 
-  @Index()
   @Column('int')
   userId!: number;
 }

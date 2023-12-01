@@ -1,6 +1,5 @@
 ### RETURN A CURRENT USER
 GET {{host}}/api/users/current
-Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 ### UPDATE A CURRENT USER

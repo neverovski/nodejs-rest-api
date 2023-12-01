@@ -7,8 +7,65 @@
   "rest-client.defaultHeaders": {
     "Content-Type": "application/json"
   },
+  "rest-client.rememberCookiesForSubsequentRequests": false,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "eslint.workingDirectories": ["/src", "/tests"],
+  "npm.exclude": ["**/dist"],
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  },
+  "typescript.tsdk": "<workspace>\\node_modules\\typescript\\lib",
+  "todohighlight.isEnable": true,
+  "todohighlight.isCaseSensitive": true,
+  "todohighlight.keywords": [
+    "OPTIMIZE:",
+    "HACK:",
+    "DEBUG:",
+    {
+      "text": "BUG:",
+      "color": "#ecf0f1",
+      "backgroundColor": "firebrick",
+      "isWholeLine": false,
+      "regex": {
+        "pattern": "(?<=^|\"|\\s)BUG[:]?(?!\\w)"
+      }
+    },
+    {
+      "text": "NOTE:",
+      "color": "#ecf0f1",
+      "backgroundColor": "#0BB710",
+      "isWholeLine": false,
+      "regex": {
+        "pattern": "(?<=^|\"|\\s)NOTE[:]?(?!\\w)"
+      }
+    }
+  ],
+  "todohighlight.defaultStyle": {
+    "color": "#2196D2",
+    "backgroundColor": "none",
+    "cursor": "pointer"
+  },
+  "todohighlight.exclude": [
+    "**/.devcontainer/**",
+    "**/.git/**",
+    "**/.github/**",
+    "**/.vscode/**",
+    "**/.husky/**",
+    "**/coverage/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/docs/**",
+    "**/http/**",
+    "**/node_modules/**",
+    "**/templates/**"
+  ],
+  "typescript.tsserver.maxTsServerMemory": 4072
 }

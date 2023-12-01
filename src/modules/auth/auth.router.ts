@@ -1,74 +1,72 @@
-import { Router } from 'express';
-import { container } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
+import { MiddlewareKey } from '@common/enums';
+import { IMiddleware } from '@common/interfaces';
 import { RouterCore } from '@core';
-import {
-  AsyncMiddleware,
-  AuthMiddleware,
-  UserAgentMiddleware,
-  ValidateMiddleware,
-} from '@middleware';
 
-import AuthController from './auth.controller';
-import {
-  ForgotPasswordSchema,
-  LoginSchema,
-  LogoutSchema,
-  PlatformSchema,
-  RefreshTokenSchema,
-  ResetPasswordSchema,
-} from './auth.schema';
+import { AuthInject, AuthRouterLink } from './auth.enum';
+import { IAuthController, IAuthSchema } from './interface';
 
-export default class AuthRouter extends RouterCore {
-  private readonly controller: AuthController;
+@Injectable()
+export class AuthRouter extends RouterCore {
+  constructor(
+    @Inject(AuthInject.CONTROLLER) private readonly controller: IAuthController,
+    @Inject(AuthInject.SCHEMA) private readonly schema: IAuthSchema,
+    @Inject(MiddlewareKey.ASYNC) private readonly asyncMiddleware: IMiddleware,
+    @Inject(MiddlewareKey.AUTH) private readonly authMiddleware: IMiddleware,
+    @Inject(MiddlewareKey.USER_SESSION)
+    private readonly userSessionMiddleware: IMiddleware,
+    @Inject(MiddlewareKey.VALIDATE)
+    private readonly validateMiddleware: IMiddleware,
+  ) {
+    super();
 
-  constructor() {
-    super(Router());
-
-    this.controller = container.resolve(AuthController);
+    this.init();
   }
 
-  init(): Router {
+  protected init() {
     this.router.post(
-      '/login',
-      UserAgentMiddleware.handler(),
-      ValidateMiddleware.handler(LoginSchema),
-      AsyncMiddleware(this.controller.login.bind(this.controller)),
+      AuthRouterLink.LOGIN,
+      this.userSessionMiddleware.handler(),
+      this.validateMiddleware.handler(this.schema.login()),
+      this.asyncMiddleware.handler(this.controller.login.bind(this.controller)),
     );
 
     this.router.post(
-      '/refresh-token',
-      UserAgentMiddleware.handler(),
-      ValidateMiddleware.handler(RefreshTokenSchema),
-      AsyncMiddleware(this.controller.refreshToken.bind(this.controller)),
+      AuthRouterLink.REFRESH_TOKEN,
+      this.userSessionMiddleware.handler(),
+      this.validateMiddleware.handler(this.schema.refreshToken()),
+      this.asyncMiddleware.handler(
+        this.controller.refreshToken.bind(this.controller),
+      ),
     );
 
     this.router.post(
-      '/logout',
-      AuthMiddleware.handler(),
-      ValidateMiddleware.handler(LogoutSchema),
-      AsyncMiddleware(this.controller.logout.bind(this.controller)),
+      AuthRouterLink.LOGOUT,
+      this.authMiddleware.handler(),
+      this.asyncMiddleware.handler(
+        this.controller.logout.bind(this.controller),
+      ),
     );
 
     this.router.post(
-      '/platform',
-      UserAgentMiddleware.handler(),
-      ValidateMiddleware.handler(PlatformSchema),
-      AsyncMiddleware(this.controller.platform.bind(this.controller)),
+      AuthRouterLink.PLATFORM,
+      this.userSessionMiddleware.handler(),
+      this.validateMiddleware.handler(this.schema.platform()),
+      this.asyncMiddleware.handler(
+        this.controller.platform.bind(this.controller),
+      ),
     );
 
-    this.router.post(
-      '/forgot-password',
-      ValidateMiddleware.handler(ForgotPasswordSchema),
-      AsyncMiddleware(this.controller.forgotPassword.bind(this.controller)),
-    );
-
-    this.router.post(
-      '/reset-password',
-      ValidateMiddleware.handler(ResetPasswordSchema),
-      AsyncMiddleware(this.controller.resetPassword.bind(this.controller)),
-    );
-
-    return this.router;
+    // this.router.post(
+    //   '/password/email',
+    //   ValidateMiddleware.handler(ForgotPasswordSchema),
+    //   AsyncMiddleware(this.controller.forgotPassword.bind(this.controller)),
+    // );
+    // this.router.post(
+    //   '/password/reset',
+    //   ValidateMiddleware.handler(ResetPasswordSchema),
+    //   AsyncMiddleware(this.controller.resetPassword.bind(this.controller)),
+    // );
   }
 }

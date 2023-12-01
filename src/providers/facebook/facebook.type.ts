@@ -5,7 +5,3 @@ export type FacebookResponse = {
   id: string;
   last_name?: string;
 };
-
-export enum FacebookInject {
-  FACEBOOK_SERVICE = 'FacebookService',
-}

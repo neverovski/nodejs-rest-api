@@ -1,37 +1,38 @@
 import { createTransport } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
-import { EmailConfig } from '@config';
-import { ServiceCore } from '@core';
-import { Exception, HttpCode, Template } from '@libs';
+import { ConfigKey, LoggerCtx } from '@common/enums';
+import { TemplateUtil } from '@common/utils';
+import { IEmailConfig } from '@config';
+import { ProviderServiceCore } from '@core/service';
 
 import { EmailMessage } from './email.type';
 import { IEmailService } from './interface';
 
-export default class EmailService extends ServiceCore implements IEmailService {
-  private transporter: Mail;
+@Singleton()
+export class EmailService extends ProviderServiceCore implements IEmailService {
+  private readonly client: Mail;
 
-  constructor() {
-    super();
+  constructor(
+    @Inject(ConfigKey.EMAIL) private readonly emailConfig: IEmailConfig,
+  ) {
+    super(LoggerCtx.EMAIL);
 
-    this.transporter = createTransport({
-      host: EmailConfig.host,
-      port: EmailConfig.port,
-      secure: EmailConfig.port === 465, // upgrade later with START TLS
+    this.client = createTransport({
+      service: this.emailConfig.driver,
       auth: {
-        user: EmailConfig.username,
-        pass: EmailConfig.password,
+        user: this.emailConfig.username,
+        pass: this.emailConfig.password,
       },
     });
-
-    this.init();
   }
 
   async sendEmail(options: EmailMessage): Promise<void> {
     try {
-      if (options.template) {
-        const { subject, html, markdown } = await Template.getMessage({
-          template: options.template,
+      if (options.templatePath) {
+        const { subject, html, markdown } = await TemplateUtil.getMessage({
+          templatePath: options.templatePath,
           data: options.data,
           isLayout: true,
           isHTML: true,
@@ -42,20 +43,18 @@ export default class EmailService extends ServiceCore implements IEmailService {
         options.text = markdown;
 
         options.alternatives = [
-          {
-            contentType: 'text/x-web-markdown',
-            content: markdown,
-          },
+          { contentType: 'text/x-web-markdown', content: markdown },
         ];
       }
 
-      await this.transporter.sendMail({
+      await this.client.sendMail({
         ...options,
-        from: options.from ?? `"${EmailConfig.name}" <${EmailConfig.username}>`,
+        from:
+          options.from ??
+          `"${this.emailConfig.name}" <${this.emailConfig.username}>`,
       });
     } catch (err) {
-      this.handleError(err);
-      throw Exception.getError(HttpCode.EXTERNAL);
+      throw this.handleError(err);
     }
   }
 }

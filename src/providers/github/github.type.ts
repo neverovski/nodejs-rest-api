@@ -5,7 +5,3 @@ export type GitHubResponse = {
   id: string;
   name?: string;
 };
-
-export enum GitHubInject {
-  GITHUB_SERVICE = 'GitHubService',
-}

@@ -1,0 +1,9 @@
+import { JsonSchemaOptions } from '@common/types';
+
+export interface IAuthSchema {
+  forgotPasswordByEmail(): JsonSchemaOptions;
+  login(): JsonSchemaOptions;
+  platform(): JsonSchemaOptions;
+  refreshToken(): JsonSchemaOptions;
+  resetPassword(): JsonSchemaOptions;
+}

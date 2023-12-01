@@ -1,10 +1,14 @@
-import { IProfile } from './profile.interface';
+import { Role } from '@common/enums';
+import { IBase } from '@common/interfaces';
 
-export interface IUser {
-  email?: string;
-  isActive: boolean;
-  isConfirmedEmail: boolean;
-  password?: string;
-  profile?: IProfile;
-  resetPasswordCode?: string;
+import { Profile } from '../types';
+
+export interface IUser extends IBase {
+  email?: Email;
+  isEmailConfirmed?: boolean;
+  password?: Password;
+  profile?: Profile;
+  role?: Role;
+
+  getPayload(): UserPayload;
 }

@@ -1,4 +1,3 @@
-import { compareSync, hash } from 'bcrypt';
 import {
   EntitySubscriberInterface,
   EventSubscriber,
@@ -6,44 +5,29 @@ import {
   UpdateEvent,
 } from 'typeorm';
 
-import { SALT_PASSWORD_ROUNDS } from '@utils';
+import { HashUtil } from '@common/utils';
 
-import { UserEntity } from '../entity';
+import { UserEntity } from '../entity/user.entity';
 
 @EventSubscriber()
 export class UserSubscriber implements EntitySubscriberInterface<UserEntity> {
-  beforeInsert({ entity }: InsertEvent<UserEntity>): Promise<void> {
-    return this.hashPassword(entity);
+  async beforeInsert({ entity }: InsertEvent<UserEntity>) {
+    if (entity?.password) {
+      entity.password = (await HashUtil.hashPassword(entity.password)) || '';
+    }
+
+    if (entity?.email) {
+      entity.email = entity.email.toLowerCase();
+    }
   }
 
-  //FIXME: refactoring
-  async beforeUpdate({
-    entity,
-    databaseEntity,
-  }: UpdateEvent<UserEntity>): Promise<void> {
-    if (entity?.password && databaseEntity?.password) {
-      if (
-        entity?.password !== databaseEntity?.password &&
-        !compareSync(entity.password as string, databaseEntity.password)
-      ) {
-        await this.hashPassword(entity as UserEntity);
-        entity.confirmTokenPassword = '';
-      } else {
-        entity.password = databaseEntity.password;
-      }
-    } else if (entity?.password) {
-      await this.hashPassword(entity as UserEntity);
-      entity.confirmTokenPassword = '';
+  async beforeUpdate({ entity }: UpdateEvent<UserEntity>): Promise<void> {
+    if (entity?.password) {
+      entity.password = await HashUtil.hashPassword(entity.password as string);
     }
   }
 
   listenTo() {
     return UserEntity;
-  }
-
-  private async hashPassword(entity: UserEntity): Promise<void> {
-    if (entity?.password) {
-      entity.password = await hash(entity.password, SALT_PASSWORD_ROUNDS);
-    }
   }
 }

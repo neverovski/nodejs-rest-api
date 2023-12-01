@@ -1,60 +1,71 @@
-import { IJsonSchema, JSONSchemaCustom, Schema } from '@libs';
-import { MAX_NAME_LENGTH } from '@utils';
+import { MAX_NAME_LENGTH } from '@common/constants';
+import { JsonSchemaOptions, JsonSchemaProperty } from '@common/types';
+import { SchemaCore } from '@core/schema';
 
-const PROFILE_PROPERTY = {
-  profile: {
-    type: 'object',
-    additionalProperties: false,
-    minProperties: 1,
-    properties: {
-      ...Schema.getString('firstName', { maxLength: MAX_NAME_LENGTH }),
-      ...Schema.getString('lastName', { maxLength: MAX_NAME_LENGTH }),
-    },
-  },
-} as { [key: string]: JSONSchemaCustom };
+import { IUserSchema } from './interface';
 
-export const CreateUserSchema: IJsonSchema = {
-  params: { type: 'object', maxProperties: 0 },
-  query: { type: 'object', maxProperties: 0 },
-  body: {
-    $schema: 'http://json-schema.org/draft-07/schema#',
-    type: 'object',
-    additionalProperties: false,
-    required: ['email', 'profile', 'password'],
-    properties: {
-      ...Schema.getEmail(),
-      ...Schema.getPassword(),
-      ...PROFILE_PROPERTY,
-    },
-  },
-};
+export class UserSchema extends SchemaCore implements IUserSchema {
+  private get profile(): JsonSchemaProperty {
+    return {
+      ...this.getString('firstName', { maxLength: MAX_NAME_LENGTH }),
+      ...this.getString('lastName', { maxLength: MAX_NAME_LENGTH }),
+    };
+  }
 
-export const UpdateUserSchema: IJsonSchema = {
-  params: { type: 'object', maxProperties: 0 },
-  query: { type: 'object', maxProperties: 0 },
-  body: {
-    $schema: 'http://json-schema.org/draft-07/schema#',
-    type: 'object',
-    additionalProperties: false,
-    required: ['profile'],
-    properties: {
-      ...Schema.getEmail(),
-      ...PROFILE_PROPERTY,
-    },
-  },
-};
+  changePassword(): JsonSchemaOptions {
+    return {
+      body: {
+        $id: this.getIdKey('changePassword'),
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          ...this.getPassword('newPassword'),
+          ...this.getPassword('oldPassword'),
+        },
+      },
+    };
+  }
 
-export const ChangePasswordSchema: IJsonSchema = {
-  params: { type: 'object', maxProperties: 0 },
-  query: { type: 'object', maxProperties: 0 },
-  body: {
-    $schema: 'http://json-schema.org/draft-07/schema#',
-    type: 'object',
-    additionalProperties: false,
-    required: ['oldPassword', 'newPassword'],
-    properties: {
-      ...Schema.getPassword('oldPassword'),
-      ...Schema.getPassword('newPassword'),
-    },
-  },
-};
+  create(): JsonSchemaOptions {
+    return {
+      body: {
+        $id: this.getIdKey('create'),
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        type: 'object',
+        additionalProperties: false,
+        required: ['password', 'email', 'profile'],
+        properties: {
+          ...this.getEmail(),
+          ...this.getPassword(),
+          profile: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['firstName', 'lastName'],
+            properties: this.profile,
+          },
+        },
+      },
+    };
+  }
+
+  update(): JsonSchemaOptions {
+    return {
+      body: {
+        $id: this.getIdKey('update'),
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        type: 'object',
+        additionalProperties: false,
+        required: ['profile'],
+        properties: {
+          profile: {
+            type: 'object',
+            additionalProperties: false,
+            minProperties: 1,
+            properties: this.profile,
+          },
+        },
+      },
+    };
+  }
+}

@@ -1,49 +1,51 @@
-import { ConfigInstance } from './instance';
+import { singleton as Singleton } from 'tsyringe';
 
-class JwtConfig extends ConfigInstance {
-  readonly expiresInAccessToken: string;
-  readonly expiresInRefreshToken: string;
-  readonly expiresInToken: string;
-  readonly secretAccessToken: string;
-  readonly secretRefreshToken: string;
-  readonly secretToken: string;
+import { JwtTokenType } from '@common/types';
+import { ConfigCore } from '@core';
+
+import { IJwtConfig } from './interface';
+
+@Singleton()
+export class JwtConfig extends ConfigCore implements IJwtConfig {
+  accessToken!: JwtTokenType;
+  refreshToken!: JwtTokenType;
+  token!: JwtTokenType;
 
   constructor() {
     super();
 
-    this.expiresInAccessToken = this.set<string>(
-      'JWT_EXPIRES_IN_ACCESS_TOKEN',
-      this.joi.string().allow(null, ''),
-      '15m',
-    );
+    this.init();
+  }
 
-    this.expiresInRefreshToken = this.set<string>(
-      'JWT_EXPIRES_IN_REFRESH_TOKEN',
-      this.joi.string().allow(null, ''),
-      '30d',
-    );
+  protected init() {
+    this.accessToken = {
+      secret: this.set(
+        'JWT_SECRET_ACCESS_TOKEN',
+        this.schema.string().required(),
+      ),
+      expiresIn: this.set(
+        'JWT_EXPIRES_IN_ACCESS_TOKEN',
+        this.schema.string().allow(null, '').default('15m'),
+      ),
+    };
 
-    this.expiresInToken = this.set<string>(
-      'JWT_EXPIRES_IN_TOKEN',
-      this.joi.string().allow(null, ''),
-      '1d',
-    );
+    this.refreshToken = {
+      secret: this.set(
+        'JWT_SECRET_REFRESH_TOKEN',
+        this.schema.string().required(),
+      ),
+      expiresIn: this.set(
+        'JWT_EXPIRES_IN_REFRESH_TOKEN',
+        this.schema.string().allow(null, '').default('30d'),
+      ),
+    };
 
-    this.secretAccessToken = this.set<string>(
-      'JWT_SECRET_ACCESS_TOKEN',
-      this.joi.string().required(),
-    );
-
-    this.secretRefreshToken = this.set<string>(
-      'JWT_SECRET_REFRESH_TOKEN',
-      this.joi.string().required(),
-    );
-
-    this.secretToken = this.set<string>(
-      'JWT_SECRET_TOKEN',
-      this.joi.string().required(),
-    );
+    this.token = {
+      secret: this.set('JWT_SECRET_TOKEN', this.schema.string().required()),
+      expiresIn: this.set(
+        'JWT_EXPIRES_IN_TOKEN',
+        this.schema.string().allow(null, '').default('1d'),
+      ),
+    };
   }
 }
-
-export default new JwtConfig();

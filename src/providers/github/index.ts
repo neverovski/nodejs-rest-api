@@ -1,2 +1,3 @@
 export * from './interface';
-export * from './github.type';
+
+export * from './github.enum';

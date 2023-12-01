@@ -2,9 +2,11 @@
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](http://prettier.io) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
-## Description
+This project, titled "Basic Authentication for Nodejs", is a comprehensive authentication solution built with Node.js. It includes features such as user authentication, token refresh, user logout, password reset, and user management (creation, update, deletion).
 
-A sample NodeJs application, demonstrating how to use JWT Authentication, with access tokens and refresh tokens.
+Additionally, it supports authentication through various platforms including Facebook, Apple, Google, and Github. Twitter and LinkedIn are planned for future integration.
+
+The project also includes a Swagger documentation.
 
 ## Installation
 
@@ -14,51 +16,25 @@ Development environment requirements:
 
 ## Project initialization
 
-### 1. Installation
-
-```bash
-$ cp .env.dev .env
-$ docker compose up -d --build
-$ npm install
+### 1. [LOCAL] stage use docker-compose command
+```shell
+  cp .env.dev .env
+  docker compose up -d --build
 ```
 
-### 2. Running the migration
-
-```bash
-$ npm run migrate:run
+### 2. Migration
+```shell
+  npm run migrate:create --name=<NAME>
+  npm run migrate:run
 ```
 
-### 3. Running the app
-
-```bash
-# development mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-### 4. Running the test
-
-```bash
-# unit tests
-$ npm run test
-
-# integration tests
-$ npm run test:integration
-
-# e2e tests
-$ npm run test:e2e
-```
-
-## Roadmap
+## Next steps
   - Auth
     - [X] Authenticate user
     - [X] Refresh token
     - [X] Logout a user
     - [X] Forgot password
     - [X] Reset password
-    - [ ] Add Redis cache
   - User
     - [X] Create a new user
     - [X] Update user
@@ -68,6 +44,7 @@ $ npm run test:e2e
     - [X] Facebook
     - [X] Apple
     - [X] Google
+    - [ ] Twitter
     - [ ] Linkedin
     - [X] Github
   - Test
@@ -80,57 +57,64 @@ $ npm run test:e2e
 
 ### 1. Enable Git hooks
 
-```bash
-$ npx husky install
-$ npx husky add .husky/commit-msg 'npm run commit-msg'
-$ npx husky add .husky/pre-commit 'npm run pre-commit'
+```
+  npx husky install
+  npx husky add .husky/commit-msg 'npm run commit-msg'
+  npx husky add .husky/pre-commit 'npm run pre-commit'
 ```
 
 ### 2. Why is my git pre-commit hook not executable by default?
 
 - Because files are not executable by default; they must be set to be executable.
 
-```bash
-$ chmod ug+x .husky/*
-$ chmod ug+x .git/hooks/*
+```
+  chmod ug+x .husky/*
+  chmod ug+x .git/hooks/*
 ```
 
 ### 3. Git commit
 
-```bash
-$ npm run commit
+```shell
+  npm run commit
 ```
 
 ### 4. Project release
 
-```bash
-$ npm run release:patch // Patch release 0.1.0 -> 0.1.1
-$ npm run release:minor // Minor release 0.1.1 -> 0.2.0
-$ npm run release:major // Major release 0.2.0 -> 1.0.0
+```shell
+  npm run release:patch // Patch release 0.1.0 -> 0.1.1
+  npm run release:minor // Minor release 0.1.1 -> 0.2.0
+  npm run release:major // Major release 0.2.0 -> 1.0.0
 ```
 
 ### 5. Project Structure
 
-| Name                   | Description                                              |
-|------------------------|----------------------------------------------------------|
-| **src/**               | Source files                                             |
-| **src/config/**        | Application configuration                                |
-| **src/core/**          |                                                          |
-| **src/db/**            | DB connect, migration, seed and etc.                     |
-| **src/decorators/**    |                                                          |
-| **src/helpers/**       |                                                          |
-| **src/libs/**          | Library source code like a logger, schema, i18n and etc. |
-| **src/middleware/**    | Contains all the middleware that we need                 |
-| **src/modules/**       |                                                          |
-| **src/providers/**     |                                                          |
-| **src/templates/**     |                                                          |
-| **src/utility-types/** |                                                          |
-| **src/utils/**         | Common functions that would be used repetitively         |
-| **build/**             | Compiled source files will be placed here                |
-| **tests/**             | Test cases will be placed here                           |
-| **tests/e2e/**         |                                                          |
-| **tests/unit/**        | Unit Test cases will be placed here                      |
-| **tests/integration/** | API routes (Integration) Test cases will be placed here  |
+| Name                       | Description                                             |
+|----------------------------|---------------------------------------------------------|
+| **src/**                   | Source files                                            |
+| **src/common/**            | Modules shared across different parts of the project    |
+| **src/common/constants/**  | Constant values used across the application             |
+| **src/common/decorators/** | Decorators to enhance classes or class members          |
+| **src/common/dtos/**       | Data Transfer Objects (DTOs) for data encapsulation     |
+| **src/common/entities/**   | Classes defining the structure of database data         |
+| **src/common/enums/**      | Enumeration types used across the application           |
+| **src/common/exceptions/** | Exception classes for error handling                    |
+| **src/common/interfaces/** | Interface definitions used throughout the application   |
+| **src/common/schemas/**    | Schema definitions for data validation                  |
+| **src/common/types/**      | Custom type definitions used in the application         |
+| **src/common/utils/**      | Utility functions used across the application           |
+| **src/config/**            | Configuration files                                     |
+| **src/core/**              | Core application files                                  |
+| **src/database/**          | Database connection, migration, seed, constraints, etc. |
+| **src/i18n/**              | Internationalization files                              |
+| **src/middleware/**        | Middleware for the application                          |
+| **src/modules/**           | Application modules                                     |
+| **src/providers/**         | Providers for the application                           |
+| **templates/**             | Templates for the application                           |
+| **build/**                 | Compiled source files                                   |
+| **tests/**                 | Test cases                                              |
+| **tests/e2e/**             | End-to-end test cases                                   |
+| **tests/unit/**            | Unit test cases                                         |
+| **tests/integration/**     | Integration test cases for API routes                   |
 
 ### 6. PullRequest
 
@@ -155,4 +139,4 @@ Happy to get your feedback, but also you are feel free to raise a pull request.
 
 ## License
 
-This library is released under the MIT License.
+This project is licensed under the MIT. See the LICENSE.md file for details.

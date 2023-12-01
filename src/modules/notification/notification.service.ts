@@ -1,31 +1,28 @@
-import { container } from 'tsyringe';
+import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
-import { ServiceCore } from '@core';
-import { EmailInject, IEmailQueue } from '@providers/email';
+import { ServiceCore } from '@core/service';
+import { EmailInject, IEmailProducerJob } from '@providers/email';
 
 import { INotificationService } from './interface';
-import { Notification } from './notification.type';
+import { NotificationMethod, NotificationParams } from './notification.type';
 
-export default class NotificationService
+@Injectable()
+export class NotificationService
   extends ServiceCore
   implements INotificationService
 {
-  constructor() {
+  constructor(
+    @Inject(EmailInject.PRODUCER)
+    private readonly emailProducerJob: IEmailProducerJob,
+  ) {
     super();
-
-    this.init();
   }
 
-  private get emailQueue() {
-    return container.resolve<IEmailQueue>(EmailInject.EMAIL_QUEUE);
-  }
-
-  addToQueue({ email, data, template }: Notification): void {
+  send({ email }: NotificationMethod, params: NotificationParams): void {
     if (email) {
-      void this.emailQueue.sendEmail({
+      void this.emailProducerJob.sendEmail({
         to: email,
-        template,
-        data,
+        ...params,
       });
     }
   }

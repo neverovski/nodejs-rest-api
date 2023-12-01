@@ -1,7 +1,43 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
-import AuthService from './auth.service';
-import { AuthInject } from './auth.type';
-import { IAuthService } from './interface';
+import { AuthController } from './auth.controller';
+import { AuthInject } from './auth.enum';
+import { AuthSchema } from './auth.schema';
+import {
+  IAuthController,
+  IAuthSchema,
+  IAuthService,
+  IAuthTokenService,
+} from './interface';
+import { AuthService, AuthTokenService } from './service';
 
-container.register<IAuthService>(AuthInject.AUTH_SERVICE, AuthService);
+export class AuthDi {
+  register() {
+    this.registerTokenService();
+    this.registerService();
+    this.registerSchema();
+    this.registerController();
+  }
+
+  private registerController() {
+    Container.registerSingleton<IAuthController>(
+      AuthInject.CONTROLLER,
+      AuthController,
+    );
+  }
+
+  private registerSchema() {
+    Container.registerSingleton<IAuthSchema>(AuthInject.SCHEMA, AuthSchema);
+  }
+
+  private registerService() {
+    Container.register<IAuthService>(AuthInject.SERVICE, AuthService);
+  }
+
+  private registerTokenService() {
+    Container.register<IAuthTokenService>(
+      AuthInject.TOKEN_SERVICE,
+      AuthTokenService,
+    );
+  }
+}

@@ -1,7 +1,7 @@
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class ProfileDTO {
+export class ProfileDto {
   @Expose()
   firstName!: string;
 

@@ -1,2 +1,3 @@
 export * from './interface';
-export * from './google.type';
+
+export * from './google.enum';

@@ -90,9 +90,12 @@ typings/
 
 .idea
 .idea/httpRequests
+
 .DS_Store
 data
 build
 storage/
 .clinic
 tmp
+dist
+reports

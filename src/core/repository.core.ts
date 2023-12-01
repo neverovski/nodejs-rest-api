@@ -1,123 +1,131 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { DatabaseError } from 'pg';
 import {
+  DataSource,
   DeepPartial,
+  EntityManager,
   EntityTarget,
-  FindManyOptions,
-  FindOneOptions,
   ObjectLiteral,
   QueryFailedError,
   Repository,
 } from 'typeorm';
 
-import DB from '@db/index';
-import { Exception, HttpCode, i18n } from '@libs';
-import { DB_UQ_USER_EMAIL, PostgresErrorCode } from '@utils';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@common/exceptions';
+import { FindOption, RepositoryCtx } from '@common/types';
+import {
+  DEFAULT_ALIAS,
+  ENTITY_NOT_FOUND,
+  ENTITY_NOT_FOUND_ERROR,
+} from '@database/constants';
+import { DatabaseErrorUtil } from '@database/utils';
 
-export default class RepositoryCore<Entity extends Id & ObjectLiteral> {
+export class RepositoryCore<T extends ObjectLiteral = any> {
   protected readonly alias: string;
-  protected orm: Repository<Entity>;
-  private readonly notFound: string;
+  protected readonly repository: Repository<T>;
 
-  constructor(entity: EntityTarget<Entity>, alias?: string) {
-    this.orm = DB.dataSource.getRepository(entity);
-    this.alias = alias || 'entity';
-    this.notFound = (i18n()[`notFound.${this.alias}`] ||
-      i18n()['notFound.default']) as string;
+  constructor(dataSource: DataSource, entity: EntityTarget<T>) {
+    this.repository = dataSource.getRepository(entity);
+
+    this.alias = DEFAULT_ALIAS;
   }
 
-  async create<T extends ObjectLiteral>(body: Entity): Promise<T> {
+  async countByQuery(options: FindOption<T>): Promise<number> {
     try {
-      const entity = this.orm.create(body);
-
-      await this.orm.save(entity);
-
-      return entity as unknown as T;
+      return await this.repository.count(options);
     } catch (err) {
       throw this.handleError(err);
     }
   }
 
-  async delete(query: Partial<Entity>): Promise<void> {
+  async create(entity: DeepPartial<T>): Promise<T> {
     try {
-      await this.orm.delete(query);
+      return await this.repository
+        .createQueryBuilder()
+        .insert()
+        .values(entity)
+        .returning('*')
+        .execute()
+        .then((res) => res?.generatedMaps?.[0] as T);
     } catch (err) {
       throw this.handleError(err);
     }
   }
 
-  async findOne<T extends FindOneOptions<Entity>>(
-    options: T,
-  ): Promise<Entity | null> {
+  async delete(query: DeepPartial<T>): Promise<void> {
     try {
-      return await this.orm.findOne(options);
+      await this.repository.delete(query);
     } catch (err) {
       throw this.handleError(err);
     }
   }
 
-  async findOneOrFail<T extends FindManyOptions<Entity>>(
-    options: T,
-  ): Promise<Entity> {
+  async findByQuery(options: FindOption<T>): Promise<T[]> {
     try {
-      return await this.orm.findOneOrFail(options);
+      return await this.repository.find(options);
     } catch (err) {
       throw this.handleError(err);
     }
   }
 
-  async save(
-    entity: Entity,
-    partialEntity: DeepPartial<Entity>,
-  ): Promise<void> {
+  async findOne(options: FindOption<T>): Promise<T | null> {
     try {
-      this.orm.merge(entity, partialEntity);
-      await this.orm.save(entity);
+      return await this.repository.findOne(options);
     } catch (err) {
       throw this.handleError(err);
     }
   }
 
-  async update(
-    query: DeepPartial<Entity>,
-    partialEntity: DeepPartial<Entity>,
-  ): Promise<void> {
+  async findOneOrFail(options: FindOption<T>): Promise<T> {
     try {
-      await this.orm.update(query, partialEntity);
+      return await this.repository.findOneOrFail(options);
     } catch (err) {
       throw this.handleError(err);
     }
   }
 
-  protected handleError(error: unknown) {
-    // Logger.error({
-    //   message: this.constructor.name,
-    //   error,
-    //   type: LoggerType.DB,
-    // });
+  async update(query: DeepPartial<T>, entity: DeepPartial<T>): Promise<void> {
+    try {
+      await this.repository.update(query, entity);
+    } catch (err) {
+      throw this.handleError(err);
+    }
+  }
 
+  protected handleError(err: unknown) {
     if (
-      (error as Error)?.name === 'EntityNotFound' ||
-      (error as Error)?.name === 'EntityNotFoundError'
+      (err as Error)?.name === ENTITY_NOT_FOUND ||
+      (err as Error)?.name === ENTITY_NOT_FOUND_ERROR
     ) {
-      return Exception.getError(HttpCode.NOT_FOUND, {
-        message: this.notFound,
-      });
+      return new NotFoundException();
     }
 
-    if (error instanceof QueryFailedError) {
-      const err = error.driverError as DatabaseError;
+    if (err instanceof QueryFailedError) {
+      return DatabaseErrorUtil.handler(err.driverError as DatabaseError);
+    }
 
-      if (err.code === PostgresErrorCode.UniqueViolation) {
-        switch (err.constraint) {
-          case DB_UQ_USER_EMAIL:
-            return Exception.getError(HttpCode.EMAIL_ALREADY_TAKEN);
-          default:
-            return error;
-        }
+    return new InternalServerErrorException();
+  }
+
+  protected async transactionManager<R>(
+    cb: (manager: EntityManager) => Promise<R>,
+    ctx?: Partial<RepositoryCtx>,
+  ) {
+    if (ctx?.manager) {
+      try {
+        return await cb(ctx?.manager);
+      } catch (err) {
+        throw this.handleError(err);
       }
     }
 
-    return error;
+    return this.repository.manager.transaction(async (manager) => {
+      try {
+        return await cb(manager);
+      } catch (err) {
+        throw this.handleError(err);
+      }
+    });
   }
 }

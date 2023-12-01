@@ -1,10 +1,18 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
-import GitHubService from './github.service';
-import { GitHubInject } from './github.type';
+import { GitHubInject } from './github.enum';
+import { GitHubService } from './github.service';
 import { IGitHubService } from './interface';
 
-container.registerInstance<IGitHubService>(
-  GitHubInject.GITHUB_SERVICE,
-  new GitHubService(),
-);
+export class GitHubDi {
+  register() {
+    this.registerService();
+  }
+
+  private registerService() {
+    Container.registerSingleton<IGitHubService>(
+      GitHubInject.SERVICE,
+      GitHubService,
+    );
+  }
+}

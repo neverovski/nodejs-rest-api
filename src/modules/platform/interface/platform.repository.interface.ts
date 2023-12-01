@@ -1,8 +1,9 @@
-import { PlatformPayload } from '@utils';
+import { PlatformPayload } from '@common/types';
+import type { FullUser } from '@modules/user';
 
 import { FullPlatform, PlatformOption } from '../platform.type';
 
 export interface IPlatformRepository {
-  create(body: PlatformPayload): Promise<{ userId: number }>;
+  createByPayload(data: PlatformPayload): Promise<FullUser>;
   findOne(options: PlatformOption): Promise<FullPlatform | null>;
 }

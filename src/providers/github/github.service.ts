@@ -1,39 +1,38 @@
-import { PlatformConfig } from '@config';
-import { ServiceCore } from '@core';
-import { Exception, HttpCode } from '@libs';
-import { PlatformPayload, RequestUtil, SocialNetwork } from '@utils';
+import { inject as Inject, singleton as Singleton } from 'tsyringe';
+
+import { ConfigKey, LoggerCtx, PlatformName } from '@common/enums';
+import { PlatformPayload } from '@common/types';
+import { RequestUtil } from '@common/utils';
+import { IPlatformConfig } from '@config';
+import { ProviderServiceCore } from '@core/service';
 
 import { GitHubResponse } from './github.type';
 import { IGitHubService } from './interface';
 
-export default class GitHubService
-  extends ServiceCore
+@Singleton()
+export class GitHubService
+  extends ProviderServiceCore
   implements IGitHubService
 {
-  private readonly url: string;
-
-  constructor() {
-    super();
-
-    this.url = PlatformConfig.github.url;
-
-    this.init();
+  constructor(
+    @Inject(ConfigKey.PLATFORM)
+    private readonly platformConfig: IPlatformConfig,
+  ) {
+    super(LoggerCtx.GITHUB);
   }
 
-  async getProfile(token: string): Promise<PlatformPayload> {
+  async getPayload(token: string): Promise<PlatformPayload> {
     try {
-      const config = {
-        headers: {
-          Accept: 'application/vnd.github+json',
-          Authorization: `token ${token}`,
-        },
-      };
+      const config = this.getConfig(token);
 
-      const { data } = await RequestUtil.get<GitHubResponse>(this.url, config);
+      const data = await RequestUtil.get<GitHubResponse>(
+        this.platformConfig.github.url,
+        config,
+      );
 
       return {
         ssid: data.id,
-        name: SocialNetwork.GITHUB,
+        name: PlatformName.GITHUB,
         url: data.html_url || '',
         ...(data?.email && {
           email: data.email.toLowerCase(),
@@ -45,9 +44,16 @@ export default class GitHubService
         }),
       };
     } catch (err) {
-      this.handleError(err);
-
-      throw Exception.getError(HttpCode.EXTERNAL);
+      throw this.handleError(err);
     }
+  }
+
+  private getConfig(token: string) {
+    return {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `token ${token}`,
+      },
+    };
   }
 }

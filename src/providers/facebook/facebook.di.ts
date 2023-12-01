@@ -1,10 +1,18 @@
-import { container } from 'tsyringe';
+import { container as Container } from 'tsyringe';
 
-import FacebookService from './facebook.service';
-import { FacebookInject } from './facebook.type';
+import { FacebookInject } from './facebook.enum';
+import { FacebookService } from './facebook.service';
 import { IFacebookService } from './interface';
 
-container.registerInstance<IFacebookService>(
-  FacebookInject.FACEBOOK_SERVICE,
-  new FacebookService(),
-);
+export class FacebookDi {
+  register() {
+    this.registerService();
+  }
+
+  private registerService() {
+    Container.registerSingleton<IFacebookService>(
+      FacebookInject.SERVICE,
+      FacebookService,
+    );
+  }
+}

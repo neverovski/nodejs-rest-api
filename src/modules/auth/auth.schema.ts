@@ -1,80 +1,82 @@
-import { IJsonSchema, Schema } from '@libs';
-import { SocialNetwork } from '@utils';
+import { PlatformName } from '@common/enums';
+import { JsonSchemaOptions } from '@common/types';
+import { SchemaCore } from '@core/schema';
 
-export const ForgotPasswordSchema: IJsonSchema = {
-  params: { type: 'object', maxProperties: 0 },
-  query: { type: 'object', maxProperties: 0 },
-  body: {
-    $schema: 'http://json-schema.org/draft-07/schema#',
-    type: 'object',
-    additionalProperties: false,
-    required: ['email'],
-    properties: {
-      ...Schema.getEmail(),
-    },
-  },
-};
+import { IAuthSchema } from './interface';
 
-export const LoginSchema: IJsonSchema = {
-  params: { type: 'object', maxProperties: 0 },
-  query: { type: 'object', maxProperties: 0 },
-  body: {
-    $schema: 'http://json-schema.org/draft-07/schema#',
-    type: 'object',
-    additionalProperties: false,
-    required: ['email', 'password'],
-    properties: {
-      ...Schema.getEmail(),
-      ...Schema.getPassword(),
-    },
-  },
-};
+export class AuthSchema extends SchemaCore implements IAuthSchema {
+  forgotPasswordByEmail(): JsonSchemaOptions {
+    return {
+      body: {
+        $id: this.getIdKey('forgotPasswordByEmail'),
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        type: 'object',
+        additionalProperties: false,
+        required: ['email'],
+        properties: this.getEmail(),
+      },
+    };
+  }
 
-export const RefreshTokenSchema: IJsonSchema = {
-  params: { type: 'object', maxProperties: 0 },
-  query: { type: 'object', maxProperties: 0 },
-  body: {
-    $schema: 'http://json-schema.org/draft-07/schema#',
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-      ...Schema.getString('refreshToken'),
-    },
-  },
-};
+  login(): JsonSchemaOptions {
+    return {
+      body: {
+        $id: this.getIdKey('login'),
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        type: 'object',
+        additionalProperties: false,
+        required: ['email', 'password'],
+        properties: {
+          ...this.getEmail(),
+          ...this.getPassword(),
+        },
+      },
+    };
+  }
 
-export const LogoutSchema: IJsonSchema = {
-  params: { type: 'object', maxProperties: 0 },
-  query: { type: 'object', maxProperties: 0 },
-  body: { type: 'object', maxProperties: 0 },
-};
+  platform(): JsonSchemaOptions {
+    return {
+      body: {
+        $id: this.getIdKey('platform'),
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        type: 'object',
+        additionalProperties: false,
+        required: ['token', 'platform'],
+        properties: {
+          ...this.getEnum('platform', PlatformName),
+          ...this.getString('token'),
+        },
+      },
+    };
+  }
 
-export const PlatformSchema: IJsonSchema = {
-  params: { type: 'object', maxProperties: 0 },
-  query: { type: 'object', maxProperties: 0 },
-  body: {
-    $schema: 'http://json-schema.org/draft-07/schema#',
-    type: 'object',
-    additionalProperties: false,
-    required: ['token', 'platform'],
-    properties: {
-      ...Schema.getEnum('platform', SocialNetwork),
-      ...Schema.getString('token'),
-    },
-  },
-};
+  refreshToken(): JsonSchemaOptions {
+    return {
+      body: {
+        $id: this.getIdKey('refreshToken'),
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          ...this.getString('refreshToken'),
+        },
+      },
+    };
+  }
 
-export const ResetPasswordSchema: IJsonSchema = {
-  params: { type: 'object', maxProperties: 0 },
-  query: { type: 'object', maxProperties: 0 },
-  body: {
-    $schema: 'http://json-schema.org/draft-07/schema#',
-    type: 'object',
-    additionalProperties: false,
-    required: ['token', 'password'],
-    properties: {
-      ...Schema.getString('token'),
-      ...Schema.getPassword(),
-    },
-  },
-};
+  resetPassword(): JsonSchemaOptions {
+    return {
+      body: {
+        $id: this.getIdKey('resetPassword'),
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        type: 'object',
+        additionalProperties: false,
+        required: ['token', 'newPassword'],
+        properties: {
+          ...this.getPassword('token'),
+          ...this.getPassword('newPassword'),
+        },
+      },
+    };
+  }
+}

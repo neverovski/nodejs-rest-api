@@ -1,25 +1,39 @@
-type JwtPayload = {
+type UserPayload = {
   email?: string;
-  jti: string;
+  firstName?: string;
+  isEmailConfirmed?: boolean;
+  lastName?: string;
   role: string;
-  sub: number;
-  typ: string;
   userId: number;
 };
 
-type UserPayload = Pick<JwtPayload, 'email' | 'role' | 'userId'>;
+type JwtPayload = {
+  jti: string;
+  sub: number;
+  typ: string;
+};
 
-type UserAgentCtx = {
+type AccessTokenPayload = JwtPayload & UserPayload;
+
+type UserSession = {
   browser?: string;
+  domain?: string;
+  engine?: string;
   ip?: string | null;
   os?: string;
   userAgent?: string;
 };
 
+type PayloadContext = {
+  user: UserPayload;
+  userSession?: UserSession;
+};
+
 declare namespace Express {
   export interface Request {
     params: any;
+    raw: any;
     user: UserPayload;
-    userAgent?: UserAgentCtx;
+    userSession?: UserSession;
   }
 }
