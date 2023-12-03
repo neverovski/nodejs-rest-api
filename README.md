@@ -17,13 +17,13 @@ Development environment requirements:
 ## Project initialization
 
 ### 1. [LOCAL] stage use docker-compose command
-```shell
+```sh
   cp .env.dev .env
   docker compose up -d --build
 ```
 
 ### 2. Migration
-```shell
+```sh
   npm run migrate:create --name=<NAME>
   npm run migrate:run
 ```
@@ -57,7 +57,7 @@ Development environment requirements:
 
 ### 1. Enable Git hooks
 
-```
+```sh
   npx husky install
   npx husky add .husky/commit-msg 'npm run commit-msg'
   npx husky add .husky/pre-commit 'npm run pre-commit'
@@ -67,20 +67,20 @@ Development environment requirements:
 
 - Because files are not executable by default; they must be set to be executable.
 
-```
+```sh
   chmod ug+x .husky/*
   chmod ug+x .git/hooks/*
 ```
 
 ### 3. Git commit
 
-```shell
+```sh
   npm run commit
 ```
 
 ### 4. Project release
 
-```shell
+```sh
   npm run release:patch // Patch release 0.1.0 -> 0.1.1
   npm run release:minor // Minor release 0.1.1 -> 0.2.0
   npm run release:major // Major release 0.2.0 -> 1.0.0
@@ -116,13 +116,7 @@ Development environment requirements:
 | **tests/unit/**            | Unit test cases                                         |
 | **tests/integration/**     | Integration test cases for API routes                   |
 
-### 6. PullRequest
-
-- [ ] This PR implements new feature, fix bug, or some other changes
-- [ ] If PR is not ready to review mark it as Draft
-- [ ] All commits in this PR should be by [conventional-commits](https://www.conventionalcommits.org/en/v1.0.0/)
-
-### 7. [Production Best Practices: Security](https://expressjs.com/en/advanced/best-practice-security.html)
+### 6. [Production Best Practices: Security](https://expressjs.com/en/advanced/best-practice-security.html)
 
 - Don’t use deprecated or vulnerable versions of Express
 - Use TLS

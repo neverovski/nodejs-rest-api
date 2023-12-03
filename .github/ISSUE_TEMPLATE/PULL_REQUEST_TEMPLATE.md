@@ -19,6 +19,7 @@ _Put an `x` in the boxes that apply. You can also fill these out after creating 
 - [ ] I have read the CONTRIBUTING.md
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] I have added necessary documentation (if appropriate)
+- [ ] All commits in this PR should be by [conventional-commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 ## Further comments
 
