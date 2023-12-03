@@ -33,7 +33,7 @@
     "typeorm:seed": "NODE_ENV=seed typeorm-ts-node-commonjs",
     "prebuild": "rimraf dist",
     "commit-msg": "commitlint -e",
-    "pre-commit": "npm run lint:staged",
+    "pre-commit": "npm run lint:staged & npm run test:unit",
     "prepare": "husky install",
     "swagger": "swagger-jsdoc -o ./swagger/dist/openapi.json -d ./swagger/swagger.js ./swagger/swagger.yaml ./src/modules/*/*.controller.ts ./src/modules/*/*.yaml"
   },
