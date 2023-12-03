@@ -1,7 +1,7 @@
 ---
 name: Feature request ✨
 about: Suggest an idea for this project
-title: '[FEATURE REQUEST] - <title>'
+title: "[FEATURE REQUEST] - <title>"
 labels: question
 assignees: neverovski
 
