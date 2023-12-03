@@ -13,21 +13,22 @@ jest.mock('mustache');
 jest.mock('marked');
 
 describe('TemplateUtil', () => {
+  const templatePath = 'test' as TemplatePath;
+  const fullPath = resolve(FOLDER_TEMPLATE_NAME, `${templatePath}.md`);
+  const template = '# Test\nThis is a test template {{ key }}.';
+
+  const subject = 'Test';
+
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   it('should get message - markdown and html (with layout)', async () => {
-    const templatePath = 'test' as TemplatePath;
-    const fullPath = resolve(FOLDER_TEMPLATE_NAME, `${templatePath}.md`);
-
     const data = { key: 'value' };
-    const template = '# Test\nThis is a test template {{ key }}.';
 
     const options = { templatePath, data, isHTML: true, isLayout: true };
     const markdownRaw = '# Test\nThis is a test template value.';
     const markdown = 'This is a test template value.';
-    const subject = 'Test';
     const html = '<h1>Test</h1><p>This is a test template value.</p>';
 
     (fs.readFile as jest.Mock).mockResolvedValue(template);
@@ -48,15 +49,11 @@ describe('TemplateUtil', () => {
   });
 
   it('should get message - markdown and html (without layout)', async () => {
-    const templatePath = 'test' as TemplatePath;
-
     const data = { key: 'value' };
-    const template = '# Test\nThis is a test template {{ key }}.';
 
     const options = { templatePath, data, isHTML: true };
     const markdownRaw = '# Test\nThis is a test template value.';
     const markdown = 'This is a test template value.';
-    const subject = 'Test';
     const html = '<h1>Test</h1><p>This is a test template value.</p>';
 
     (fs.readFile as jest.Mock).mockResolvedValue(template);
@@ -73,15 +70,11 @@ describe('TemplateUtil', () => {
   });
 
   it('should get message - markdown', async () => {
-    const templatePath = 'test' as TemplatePath;
-
     const data = { key: 'value' };
-    const template = '# Test\nThis is a test template {{ key }}.';
 
     const options = { templatePath, data };
     const markdownRaw = '# Test\nThis is a test template value.';
     const markdown = 'This is a test template value.';
-    const subject = 'Test';
 
     (fs.readFile as jest.Mock).mockResolvedValue(template);
     (Mustache.render as jest.Mock).mockReturnValueOnce(markdownRaw);
