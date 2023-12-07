@@ -25,7 +25,9 @@ export class AuthTokenService extends ServiceCore {
 
   getAccessToken(userId: Id, payload: UserPayload): Promise<string> {
     const jti = HashUtil.generateUuid();
-    const expiresIn = DateUtil.toMs(this.jwtConfig.accessToken.expiresIn);
+    const expiresIn = DateUtil.parseStringToMs(
+      this.jwtConfig.accessToken.expiresIn,
+    );
 
     return this.tokenService.signJwt(
       { ...payload, jti, sub: String(userId), typ: TokenType.BEARER },
@@ -36,7 +38,9 @@ export class AuthTokenService extends ServiceCore {
 
   async getRefreshToken(userId: Id): Promise<string> {
     const jti = HashUtil.generateUuid();
-    const expiresIn = DateUtil.toMs(this.jwtConfig.refreshToken.expiresIn);
+    const expiresIn = DateUtil.parseStringToMs(
+      this.jwtConfig.refreshToken.expiresIn,
+    );
     const expiredAt = DateUtil.addMillisecondToDate(new Date(), expiresIn);
 
     const [refreshToken] = await Promise.all([

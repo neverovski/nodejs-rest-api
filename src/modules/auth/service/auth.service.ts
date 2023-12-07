@@ -91,7 +91,7 @@ export class AuthService extends ServiceCore implements IAuthService {
   //     },
   //     JwtConfig.secretToken,
   //     {
-  //       expiresIn: DateUtil.toMs(JwtConfig.expiresInToken),
+  //       expiresIn: DateUtil.parseStringToMs(JwtConfig.expiresInToken),
   //     },
   //   );
 

@@ -29,7 +29,9 @@ export class TokenService implements ITokenService {
     const sign = createSigner({ ...options, key: async () => secret });
 
     try {
-      return await sign({ ...payload, iat: DateUtil.toUnix() });
+      const dateNow = new Date();
+
+      return await sign({ ...payload, iat: DateUtil.toUnix(dateNow) });
     } catch {
       throw new TokenVerifyException();
     }

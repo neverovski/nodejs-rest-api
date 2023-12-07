@@ -3,7 +3,6 @@ import {
   addMonths as fnsAddMonths,
   endOfDay as fnsEndOfDay,
   format as fnsFormat,
-  formatISO as fnsFormatISO,
   getUnixTime as fnsGetUnixTime,
   isAfter as fnsIsAfter,
   isBefore as fnsIsBefore,
@@ -13,98 +12,125 @@ import {
   parseISO as fnsParseISO,
   startOfDay as fnsStartOfDay,
 } from 'date-fns';
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import ms from 'ms';
 
-import { DEFAULT_FORMAT_DATE } from '@common/constants';
+import { DEFAULT_FORMAT_DATE, TIMEZONE_UTC } from '@common/constants';
 
+//TODO: should be work only with UTC time
 export class DateUtil {
-  static addMillisecondToDate(date?: DateCtx, amount?: number): Date {
-    return fnsAddMilliseconds(DateUtil.transformDateToISO(date), amount || 0);
+  static addMillisecondToDate(date: FlexibleDate, amount?: number): Date {
+    const dateISO = this.parseISO(date);
+
+    return fnsAddMilliseconds(dateISO, amount || 0);
   }
 
-  static addMonths(date?: DateCtx, amount?: number): Date {
-    return fnsAddMonths(DateUtil.transformDateToISO(date), amount || 0);
+  static addMonths(date: FlexibleDate, amount?: number): Date {
+    const dateISO = this.parseISO(date);
+
+    return fnsAddMonths(dateISO, amount || 0);
   }
 
-  static endOfDay(date?: DateCtx | null) {
-    date = DateUtil.transformDateToISO(date || new Date());
+  static endOfDay(date: FlexibleDate) {
+    const dateISO = this.parseISO(date);
 
-    return fnsEndOfDay(date);
-  }
-
-  static formatISO(date?: DateCtx) {
-    date = (DateUtil.isValid(date) ? date : new Date()) as DateCtx;
-
-    return fnsFormatISO(DateUtil.parseISO(date));
+    return fnsEndOfDay(dateISO);
   }
 
   static isBetweenDay(
-    from: DateCtx,
-    to?: DateCtx | null,
-    date?: DateCtx | null,
+    dateFrom: FlexibleDate,
+    dateTo: FlexibleDate,
+    date: FlexibleDate,
   ) {
-    from = DateUtil.startOfDay(from);
-    to = DateUtil.endOfDay(to);
-    date = DateUtil.transformDateToISO(date || new Date());
+    const dateStartUtc = this.timeZoneToUTC(this.startOfDay(dateFrom));
+    const dateEndUtc = this.timeZoneToUTC(this.endOfDay(dateTo));
+    const dateISOUtc = this.parseISO(date);
 
     return (
-      (fnsIsEqual(from, date) || fnsIsBefore(from, date)) &&
-      (fnsIsEqual(to, date) || fnsIsAfter(to, date))
+      (fnsIsEqual(dateStartUtc, dateISOUtc) ||
+        fnsIsBefore(dateStartUtc, dateISOUtc)) &&
+      (fnsIsEqual(dateEndUtc, dateISOUtc) || fnsIsAfter(dateEndUtc, dateISOUtc))
     );
   }
 
-  static isSameDay(dateLeft?: DateCtx, dateRight?: DateCtx): boolean {
-    if (DateUtil.isValid(dateLeft) && DateUtil.isValid(dateRight)) {
-      return fnsIsSameDay(
-        DateUtil.parseISO(dateLeft as DateCtx),
-        DateUtil.parseISO(dateRight as DateCtx),
-      );
+  static isSameDay(dateLeft: FlexibleDate, dateRight: FlexibleDate): boolean {
+    if (!this.isValid(dateLeft) || !this.isValid(dateRight)) {
+      return false;
     }
 
-    return false;
+    return fnsIsSameDay(this.parseISO(dateLeft), this.parseISO(dateRight));
   }
 
-  static isSameOrBeforeDay(from?: DateCtx | null, to?: DateCtx | null) {
-    from = DateUtil.startOfDay(from || new Date());
-    to = DateUtil.startOfDay(to || new Date());
+  static isSameOrBeforeDay(dateFrom: FlexibleDate, dateTo: FlexibleDate) {
+    const dateStartFrom = this.startOfDay(dateFrom);
+    const dateStartTo = this.startOfDay(dateTo);
 
-    return fnsIsEqual(from, to) || fnsIsBefore(from, to);
+    return (
+      fnsIsEqual(dateStartFrom, dateStartTo) ||
+      fnsIsBefore(dateStartFrom, dateStartTo)
+    );
   }
 
-  static isValid(date?: DateCtx) {
-    return fnsIsValid(typeof date === 'string' ? Date.parse(date) : date);
-  }
+  static parseISO(date: FlexibleDate) {
+    if (!date || !this.isValid(date)) {
+      throw new Error('Invalid Date');
+    }
 
-  static parseISO(date: DateCtx) {
     return typeof date === 'string' ? fnsParseISO(date) : date;
   }
 
-  static startOfDay(date?: DateCtx | null) {
-    date = DateUtil.transformDateToISO(date || new Date());
+  static parseStringToMs(str: string): number {
+    if (!str) {
+      return 0;
+    }
 
-    return fnsStartOfDay(date);
+    return ms(str) || 0;
   }
 
-  static toDate(date: DateCtx) {
-    return DateUtil.transformDateToISO(date);
+  static startOfDay(date: FlexibleDate) {
+    const dateISO = this.parseISO(date);
+
+    return fnsStartOfDay(dateISO);
   }
 
-  // FIXME: https://github.com/date-fns/date-fns/issues/2151
-  static toFormat(date?: DateCtx, format = DEFAULT_FORMAT_DATE) {
-    return fnsFormat(DateUtil.transformDateToISO(date), format);
+  static timeZoneToUTC(date: FlexibleDate, tz = TIMEZONE_UTC) {
+    try {
+      const dateUtc = zonedTimeToUtc(date, tz);
+
+      if (!this.isValid(dateUtc)) {
+        throw new Error();
+      }
+
+      return dateUtc;
+    } catch {
+      throw new Error('Invalid Date');
+    }
   }
 
-  static toMs(input: string): number {
-    return ms(input);
+  static toFormat(date: FlexibleDate, format = DEFAULT_FORMAT_DATE) {
+    const dateISO = this.parseISO(date);
+
+    return fnsFormat(dateISO, format);
   }
 
-  static toUnix(date?: DateCtx): number {
-    return fnsGetUnixTime(DateUtil.transformDateToISO(date));
+  static toFormatUTC(localDate: FlexibleDate, format = DEFAULT_FORMAT_DATE) {
+    const dateISO = this.parseISO(localDate);
+    const date = utcToZonedTime(dateISO, TIMEZONE_UTC);
+
+    return fnsFormat(date, format);
   }
 
-  static transformDateToISO(date?: DateCtx) {
-    date = (DateUtil.isValid(date) ? date : new Date()) as DateCtx;
+  static toUnix(date: FlexibleDate): number {
+    const dateISO = this.parseISO(date);
 
-    return DateUtil.parseISO(date);
+    return fnsGetUnixTime(dateISO);
+  }
+
+  private static isValid(date?: FlexibleDate) {
+    try {
+      return fnsIsValid(typeof date === 'string' ? Date.parse(date) : date);
+    } catch {
+      throw new Error('Invalid Date');
+    }
   }
 }
