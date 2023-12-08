@@ -6,6 +6,7 @@ import { PlatformPayload } from '@common/types';
 import { IPlatformConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
 import { i18n } from '@i18n';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 
 import { ITokenService, TokenInject } from '../token';
 
@@ -19,11 +20,16 @@ export class AppleService extends ProviderServiceCore implements IAppleService {
   constructor(
     @Inject(ConfigKey.PLATFORM)
     private readonly platformConfig: IPlatformConfig,
+    @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
     @Inject(TokenInject.SERVICE) private readonly tokenService: ITokenService,
   ) {
-    super(LoggerCtx.APPLE);
+    super();
 
     this.client = new JwksClient({ jwksUri: this.platformConfig.apple.url });
+  }
+
+  protected get loggerCtx(): LoggerCtx {
+    return LoggerCtx.APPLE;
   }
 
   async getPayload(token: string): Promise<PlatformPayload> {

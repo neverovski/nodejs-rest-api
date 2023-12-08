@@ -6,6 +6,7 @@ import { ConfigKey, LoggerCtx } from '@common/enums';
 import { TemplateUtil } from '@common/utils';
 import { IEmailConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 
 import { EmailMessage } from './email.type';
 import { IEmailService } from './interface';
@@ -16,8 +17,9 @@ export class EmailService extends ProviderServiceCore implements IEmailService {
 
   constructor(
     @Inject(ConfigKey.EMAIL) private readonly emailConfig: IEmailConfig,
+    @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
   ) {
-    super(LoggerCtx.EMAIL);
+    super();
 
     this.client = createTransport({
       service: this.emailConfig.driver,
@@ -26,6 +28,10 @@ export class EmailService extends ProviderServiceCore implements IEmailService {
         pass: this.emailConfig.password,
       },
     });
+  }
+
+  protected get loggerCtx(): LoggerCtx {
+    return LoggerCtx.EMAIL;
   }
 
   async sendEmail(options: EmailMessage): Promise<void> {

@@ -2,6 +2,7 @@ import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
 import { ServiceCore } from '@core/service';
 import { EmailInject, IEmailProducerJob } from '@providers/email';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 
 import { INotificationService } from './interface';
 import { NotificationMethod, NotificationParams } from './notification.type';
@@ -14,6 +15,7 @@ export class NotificationService
   constructor(
     @Inject(EmailInject.PRODUCER)
     private readonly emailProducerJob: IEmailProducerJob,
+    @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
   ) {
     super();
   }

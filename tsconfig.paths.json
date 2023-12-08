@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
     "paths": {
+      "__mocks__/*": ["./tests/__mocks__/*"],
       "@common/*": ["./src/common/*"],
       "@config": ["./src/config"],
       "@config/*": ["./src/config/*"],
       "@core": ["./src/core"],
+      "@core/service": ["./src/core/service"],
       "@core/*": ["./src/core/*"],
       "@database": ["./src/database"],
       "@database/*": ["./src/database/*"],

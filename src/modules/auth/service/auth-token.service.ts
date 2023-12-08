@@ -9,6 +9,7 @@ import {
   IRefreshTokenService,
   RefreshTokenInject,
 } from '@modules/refresh-token';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 import { ITokenService, TokenInject } from '@providers/token';
 
 //TODO: transfer refreshToken to redis
@@ -16,6 +17,7 @@ import { ITokenService, TokenInject } from '@providers/token';
 export class AuthTokenService extends ServiceCore {
   constructor(
     @Inject(ConfigKey.JWT) private jwtConfig: IJwtConfig,
+    @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
     @Inject(RefreshTokenInject.SERVICE)
     private refreshTokenService: IRefreshTokenService,
     @Inject(TokenInject.SERVICE) private tokenService: ITokenService,

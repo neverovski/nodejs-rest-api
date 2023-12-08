@@ -5,6 +5,7 @@ import { PlatformPayload } from '@common/types';
 import { RequestUtil, UrlUtil } from '@common/utils';
 import { IPlatformConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 
 import { FACEBOOK_LINK } from './facebook.constant';
 import { FacebookResponse } from './facebook.type';
@@ -18,8 +19,13 @@ export class FacebookService
   constructor(
     @Inject(ConfigKey.PLATFORM)
     private readonly platformConfig: IPlatformConfig,
+    @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
   ) {
-    super(LoggerCtx.FACEBOOK);
+    super();
+  }
+
+  protected get loggerCtx(): LoggerCtx {
+    return LoggerCtx.FACEBOOK;
   }
 
   async getPayload(token: string): Promise<PlatformPayload> {

@@ -13,6 +13,7 @@ import {
   IUserValidatorService,
   UserInject,
 } from '@modules/user';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 
 import { AuthInject } from '../auth.enum';
 import {
@@ -29,6 +30,7 @@ export class AuthService extends ServiceCore implements IAuthService {
   constructor(
     @Inject(AuthInject.TOKEN_SERVICE)
     private authTokenService: IAuthTokenService,
+    @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
     @Inject(PlatformInject.SERVICE) private platformService: IPlatformService,
     @Inject(RefreshTokenInject.SERVICE)
     private refreshTokenService: IRefreshTokenService,
