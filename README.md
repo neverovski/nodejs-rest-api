@@ -28,31 +28,6 @@ Development environment requirements:
   npm run migrate:run
 ```
 
-## Next steps
-  - Auth
-    - [X] Authenticate user
-    - [X] Refresh token
-    - [X] Logout a user
-    - [X] Forgot password
-    - [X] Reset password
-  - User
-    - [X] Create a new user
-    - [X] Update user
-    - [X] Reset password
-    - [X] Delete user
-  - Platform
-    - [X] Facebook
-    - [X] Apple
-    - [X] Google
-    - [ ] Twitter
-    - [ ] Linkedin
-    - [X] Github
-  - Test
-    - [ ] Unit
-    - [ ] E2E
-    - [ ] Integration
-  - [X] Swagger
-
 ## Notes
 
 ### 1. Enable Git hooks
