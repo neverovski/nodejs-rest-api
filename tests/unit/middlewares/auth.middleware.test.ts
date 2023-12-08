@@ -8,9 +8,9 @@ import {
   TokenNotProvidedException,
   TokenVerifyException,
 } from '@common/exceptions';
-import { IJwtConfig } from '@config';
 import { AuthMiddleware } from '@middleware/auth.middleware';
-import { ITokenService } from '@providers/token';
+import { jwtConfigMock } from '__mocks__/jwt.config.mock';
+import { tokenServiceMock } from '__mocks__/token.service.mock';
 
 describe('AuthMiddleware', () => {
   let middleware: AuthMiddleware;
@@ -18,28 +18,9 @@ describe('AuthMiddleware', () => {
   let mockResponse: Partial<Response>;
 
   const nextFunction: NextFunction = jest.fn();
-  const mockJwtConfig: IJwtConfig = {
-    accessToken: {
-      secret: 'access_secret',
-      expiresIn: '30m',
-    },
-    refreshToken: {
-      secret: 'refresh_secret',
-      expiresIn: '1d',
-    },
-    token: {
-      secret: 'token',
-      expiresIn: '1h',
-    },
-  };
-  const mockTokenService: ITokenService = {
-    decodeJwt: jest.fn(),
-    signJwt: jest.fn(),
-    verifyJwt: jest.fn(),
-  };
 
   beforeEach(() => {
-    middleware = new AuthMiddleware(mockJwtConfig, mockTokenService);
+    middleware = new AuthMiddleware(jwtConfigMock, tokenServiceMock);
     mockRequest = {
       headers: {},
       cookies: {},
@@ -75,7 +56,7 @@ describe('AuthMiddleware', () => {
       authorization: `Bearer ${token}`,
     };
 
-    (mockTokenService.verifyJwt as jest.Mock).mockResolvedValue(payload);
+    (tokenServiceMock.verifyJwt as jest.Mock).mockResolvedValue(payload);
 
     await Promise.resolve(
       middleware.handler()(
@@ -116,7 +97,7 @@ describe('AuthMiddleware', () => {
       authorization: `Bearer ${token}`,
     };
 
-    (mockTokenService.verifyJwt as jest.Mock).mockRejectedValue(
+    (tokenServiceMock.verifyJwt as jest.Mock).mockRejectedValue(
       new TokenVerifyException(),
     );
 
@@ -139,7 +120,7 @@ describe('AuthMiddleware', () => {
       authorization: `Bearer ${token}`,
     };
 
-    (mockTokenService.verifyJwt as jest.Mock).mockRejectedValue(
+    (tokenServiceMock.verifyJwt as jest.Mock).mockRejectedValue(
       new TokenExpiredException(),
     );
 
