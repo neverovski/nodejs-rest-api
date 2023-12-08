@@ -7,8 +7,8 @@ export class CacheManagerService
   extends ProviderServiceCore
   implements ICacheManagerService
 {
-  constructor() {
-    super(LoggerCtx.CACHE);
+  protected get loggerCtx(): LoggerCtx {
+    return LoggerCtx.CACHE;
   }
 
   async clearByPattern(key: string) {

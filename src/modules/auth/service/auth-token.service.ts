@@ -9,6 +9,7 @@ import {
   IRefreshTokenService,
   RefreshTokenInject,
 } from '@modules/refresh-token';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 import { ITokenService, TokenInject } from '@providers/token';
 
 //TODO: transfer refreshToken to redis
@@ -16,6 +17,7 @@ import { ITokenService, TokenInject } from '@providers/token';
 export class AuthTokenService extends ServiceCore {
   constructor(
     @Inject(ConfigKey.JWT) private jwtConfig: IJwtConfig,
+    @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
     @Inject(RefreshTokenInject.SERVICE)
     private refreshTokenService: IRefreshTokenService,
     @Inject(TokenInject.SERVICE) private tokenService: ITokenService,
@@ -25,7 +27,9 @@ export class AuthTokenService extends ServiceCore {
 
   getAccessToken(userId: Id, payload: UserPayload): Promise<string> {
     const jti = HashUtil.generateUuid();
-    const expiresIn = DateUtil.toMs(this.jwtConfig.accessToken.expiresIn);
+    const expiresIn = DateUtil.parseStringToMs(
+      this.jwtConfig.accessToken.expiresIn,
+    );
 
     return this.tokenService.signJwt(
       { ...payload, jti, sub: String(userId), typ: TokenType.BEARER },
@@ -36,7 +40,9 @@ export class AuthTokenService extends ServiceCore {
 
   async getRefreshToken(userId: Id): Promise<string> {
     const jti = HashUtil.generateUuid();
-    const expiresIn = DateUtil.toMs(this.jwtConfig.refreshToken.expiresIn);
+    const expiresIn = DateUtil.parseStringToMs(
+      this.jwtConfig.refreshToken.expiresIn,
+    );
     const expiredAt = DateUtil.addMillisecondToDate(new Date(), expiresIn);
 
     const [refreshToken] = await Promise.all([

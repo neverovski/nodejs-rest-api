@@ -77,7 +77,7 @@ export class ControllerCore {
   }
 
   private getCookieMaxAge(options: Partial<CookieParam>) {
-    const maxAge = DateUtil.toMs(options?.expiresIn || '');
+    const maxAge = DateUtil.parseStringToMs(options?.expiresIn || '');
 
     if (options?.maxAge || options?.rememberMe) {
       return { maxAge: options.maxAge ?? maxAge };

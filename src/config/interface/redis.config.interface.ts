@@ -1,5 +1,5 @@
 export interface IRedisConfig {
-  clusterModeEnabled: boolean;
+  clusterModeEnabled?: boolean;
   host: string;
   password?: string;
   port: number;

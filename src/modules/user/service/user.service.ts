@@ -1,6 +1,7 @@
 import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
 import { ServiceCore } from '@core/service';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 
 import {
   IUserRepository,
@@ -21,6 +22,7 @@ import { UserInject } from '../user.enum';
 @Injectable()
 export class UserService extends ServiceCore implements IUserService {
   constructor(
+    @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
     @Inject(UserInject.REPOSITORY)
     private readonly repository: IUserRepository,
     @Inject(UserInject.VALIDATOR_SERVICE)

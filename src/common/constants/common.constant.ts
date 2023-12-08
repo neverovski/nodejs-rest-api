@@ -17,3 +17,5 @@ export const HASH_ENCODING = 'hex';
 export const BIG_INT = Number.MAX_SAFE_INTEGER;
 
 export const AUTH_REFRESH_LINK = '/api/v1/auth/refresh';
+
+export const TIMEZONE_UTC = 'UTC';

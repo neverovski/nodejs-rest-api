@@ -29,7 +29,7 @@ type PagePayload = {
   page: number;
 };
 
-type DateCtx = string | number | Date;
+type FlexibleDate = string | number | Date;
 
 type DeepPartial<T> = T extends object
   ? {

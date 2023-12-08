@@ -1,27 +1,34 @@
-import { container as Container } from 'tsyringe';
-
 import { LoggerCtx } from '@common/enums';
 import { InternalServerErrorException } from '@common/exceptions';
-import { ILoggerService, LoggerInject } from '@providers/logger';
+import type { ILoggerService } from '@providers/logger';
 
 export class ProviderServiceCore {
-  protected readonly logger: ILoggerService;
-  private readonly loggerCtx: LoggerCtx;
+  protected readonly logger?: ILoggerService;
 
-  constructor(loggerCtx?: LoggerCtx) {
-    this.loggerCtx = loggerCtx || LoggerCtx.SERVICE;
-    this.logger = Container.resolve<ILoggerService>(LoggerInject.SERVICE);
-
+  constructor() {
     this.init();
   }
 
+  protected get loggerCtx(): LoggerCtx {
+    return LoggerCtx.SERVICE;
+  }
+
   protected handleError(err: unknown) {
-    this.logger.error(this.constructor.name, { err, context: this.loggerCtx });
+    if (this.logger) {
+      this.logger.error(this.constructor.name, {
+        err,
+        context: this.loggerCtx,
+      });
+    }
 
     return new InternalServerErrorException();
   }
 
   protected init() {
+    if (!this.logger) {
+      return;
+    }
+
     this.logger.debug(`${this.constructor.name} initialized...`, {
       context: this.loggerCtx,
     });

@@ -2,11 +2,9 @@ import fetchMock from 'jest-fetch-mock';
 
 import { RequestUtil } from '@common/utils/request.util';
 
-import { setupFetch } from '../test.helper';
-
 describe('RequestUtil', () => {
   beforeAll(() => {
-    setupFetch();
+    fetchMock.enableMocks();
   });
 
   beforeEach(() => {

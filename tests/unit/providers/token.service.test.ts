@@ -5,7 +5,7 @@ import { TokenService } from '@providers/token/token.service';
 
 describe('TokenService', () => {
   const secret = 'SECRET';
-  const expiresIn = DateUtil.toMs('1d');
+  const expiresIn = DateUtil.parseStringToMs('1d');
   let tokenService: TokenService;
 
   beforeAll(() => {

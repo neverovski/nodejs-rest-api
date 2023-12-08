@@ -5,6 +5,7 @@ import { PlatformPayload } from '@common/types';
 import { RequestUtil } from '@common/utils';
 import { IPlatformConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 
 import { GitHubResponse } from './github.type';
 import { IGitHubService } from './interface';
@@ -17,8 +18,13 @@ export class GitHubService
   constructor(
     @Inject(ConfigKey.PLATFORM)
     private readonly platformConfig: IPlatformConfig,
+    @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
   ) {
-    super(LoggerCtx.GITHUB);
+    super();
+  }
+
+  protected get loggerCtx(): LoggerCtx {
+    return LoggerCtx.GITHUB;
   }
 
   async getPayload(token: string): Promise<PlatformPayload> {

@@ -5,6 +5,10 @@ import { IRedisConfig } from '@config';
 
 export class QueueUtil {
   static connect<T>(name: string, redisConfig: IRedisConfig) {
+    if (!name) throw new Error('name is required');
+    if (!redisConfig.host) throw new Error('redisConfig.host is required');
+    if (!redisConfig.port) throw new Error('redisConfig.port is required');
+
     return new Bull<T>(name, {
       redis: this.getRedisOptions(redisConfig),
       prefix: redisConfig.queuePrefix,
@@ -20,7 +24,7 @@ export class QueueUtil {
       host: redisConfig.host,
       port: redisConfig.port,
       ...(redisConfig.username && { username: redisConfig.username }),
-      ...(redisConfig.username && { password: redisConfig.password }),
+      ...(redisConfig.password && { password: redisConfig.password }),
       ...(redisConfig.tls && {
         tls: {},
         connectTimeout: 30000,

@@ -7,6 +7,7 @@ import { RequestUtil, UrlUtil } from '@common/utils';
 import { IPlatformConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
 import { i18n } from '@i18n';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 
 import { IGoogleService } from './interface';
 
@@ -18,8 +19,13 @@ export class GoogleService
   constructor(
     @Inject(ConfigKey.PLATFORM)
     private readonly platformConfig: IPlatformConfig,
+    @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
   ) {
-    super(LoggerCtx.GOOGLE);
+    super();
+  }
+
+  protected get loggerCtx(): LoggerCtx {
+    return LoggerCtx.GOOGLE;
   }
 
   async getPayload(token: string): Promise<PlatformPayload> {
