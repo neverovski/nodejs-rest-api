@@ -58,10 +58,11 @@ describe('AppleService', () => {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       jest.spyOn(appleService as any, 'verify').mockRejectedValue(error);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      jest.spyOn(appleService as any, 'handleError').mockImplementation(() => {
-        throw error;
-      });
+      jest
+        .spyOn(appleService as never, 'handleError')
+        .mockImplementation(() => {
+          throw error;
+        });
 
       await expect(appleService.getPayload(token)).rejects.toThrow(error);
     });
