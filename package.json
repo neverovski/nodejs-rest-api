@@ -129,7 +129,7 @@
     "standard-version": "^9.5.0",
     "swagger-jsdoc": "^6.2.8",
     "ts-jest": "^29.1.1",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
     "tsc-watch": "^6.0.4",
     "tsconfig-paths": "^4.2.0",
