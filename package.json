@@ -85,7 +85,7 @@
     "pino-elasticsearch": "^7.0.0",
     "pino-http": "^8.5.1",
     "pino-pretty": "^10.2.3",
-    "prom-client": "^15.0.0",
+    "prom-client": "^15.1.0",
     "tsyringe": "^4.8.0",
     "typeorm": "^0.3.17",
     "ua-parser-js": "^1.0.37"
