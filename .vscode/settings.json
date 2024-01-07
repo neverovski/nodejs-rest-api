@@ -1,7 +1,8 @@
 {
   "rest-client.environmentVariables": {
     "local": {
-      "host": "http://127.0.0.1:5858"
+      "host": "http://127.0.0.1:5858",
+      "apiUrl": "http://127.0.0.1:5858/api",
     }
   },
   "rest-client.defaultHeaders": {

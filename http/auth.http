@@ -1,66 +1,63 @@
-### LOGS USER INTO THE SYSTEM BY EMAIL AND PASSWORD
-POST {{host}}/api/auth/login
-Content-Type: application/json
+### LOGIN [USER]
+# @name loginUser
+POST {{apiUrl}}/v1/auth/login
 
 {
-  "email": "test@test.com1",
-  "password": "12345678"
+  "email": "{{$dotenv REST_USER_LOGIN}}",
+  "password": "{{$dotenv REST_USER_PASSWORD}}"
 }
 
+### LOGOUT [USER]
+POST {{apiUrl}}/v1/auth/logout
+Authorization: Bearer {{loginUser.response.body.data.payload.accessToken}}
 
-### LOGS OUT CURRENT LOGGED-IN USER SESSION
-POST {{host}}/api/auth/logout
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
+### LOGOUT [USER]
+POST {{apiUrl}}/v1/auth/logout
+Cookie: accessToken={{loginUser.response.body.data.payload.accessToken}}
 
-### FORGOT PASSWORD
-POST {{host}}/api/auth/forgot-password
-Content-Type: application/json
-
-{
-  "email": "{{email}}"
-}
-
-### RESET PASSWORD
-POST {{host}}/api/auth/reset-password
-Content-Type: application/json
+### REFRESH-TOKEN [USER]
+POST {{apiUrl}}/v1/auth/refresh-token
 
 {
-  "token": "{{passwordToken}}",
-  "password": "{{newPassword}}"
-}
-
-### REFRESH TOKEN
-POST {{host}}/api/auth/refresh-token
-Content-Type: application/json
-
-{
-  "refreshToken": "{{refreshToken}}"
-}
-
-### LOGS USER INTO THE SYSTEM THROUGH A FACEBOOK
-POST {{host}}/api/auth/platform
-Content-Type: application/json
-
-{
-  "token": "{{facebookToken}}",
-  "platform": "facebook"
+  "refreshToken": "{{loginUser.response.body.data.payload.refreshToken}}"
 }
 
 ### LOGS USER INTO THE SYSTEM THROUGH A APPLE
-POST {{host}}/api/auth/platform
-Content-Type: application/json
+POST {{apiUrl}}/v1/auth/platform
 
 {
-  "token": "{{appleToken}}",
+  "token": "{{$dotenv REST_APPLE_TOKEN}}",
   "platform": "apple"
 }
 
-### LOGS USER INTO THE SYSTEM THROUGH A GITHUB
-POST {{host}}/api/auth/platform
-Content-Type: application/json
+### LOGS USER INTO THE SYSTEM THROUGH A FACEBOOK
+POST {{apiUrl}}/v1/auth/platform
 
 {
-  "token": "{{githubToken}}",
+  "token": "{{$dotenv REST_FACEBOOK_TOKEN}}",
+  "platform": "facebook"
+}
+
+
+### LOGS USER INTO THE SYSTEM THROUGH A GOOGLE
+POST {{apiUrl}}/v1/auth/platform
+
+{
+  "token": "{{$dotenv REST_GOOGLE_TOKEN}}",
   "platform": "github"
+}
+
+### LOGS USER INTO THE SYSTEM THROUGH A GITHUB
+POST {{apiUrl}}/v1/auth/platform
+
+{
+  "token": "{{$dotenv REST_GITHUB_TOKEN}}",
+  "platform": "github"
+}
+
+### FORGOT PASSWORD BY EMAIL
+POST {{apiUrl}}/v1/auth/password/email
+
+{
+  "email": "{{$dotenv REST_USER_LOGIN}}",
 }
