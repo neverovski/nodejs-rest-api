@@ -1,6 +1,8 @@
-import { OtpType } from '@common/enums';
 import type { FullUser } from '@modules/user';
 
+import { OtpCodeQuery } from '../../otp.type';
+
 export interface IOtpValidatorService {
-  checkResendCode(type: OtpType, user: FullUser): Promise<void>;
+  checkCode(query: OtpCodeQuery, user: FullUser): Promise<void>;
+  checkResendCode(query: OtpCodeQuery, user: FullUser): Promise<void>;
 }

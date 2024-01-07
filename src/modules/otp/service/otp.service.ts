@@ -15,7 +15,13 @@ import {
   IOtpValidatorService,
 } from '../interface';
 import { OtpInject } from '../otp.enum';
-import { FullOtpCode, SendCode } from '../otp.type';
+import {
+  FullOtpCode,
+  OtpCodeQuery,
+  SendCode,
+  UpdateOtpCode,
+  VerifyCode,
+} from '../otp.type';
 import { OtpUtil } from '../otp.util';
 
 @Injectable()
@@ -32,7 +38,20 @@ export class OtpService extends ServiceCore implements IOtpService {
     super();
   }
 
-  create(type: OtpType, user: FullUser): Promise<FullOtpCode> {
+  async createAndSendCode({ type, user }: SendCode): Promise<void> {
+    await this.validatorService.checkResendCode({ type }, user);
+    const otp = await this.create(type, user);
+
+    this.sendOtpNotification(otp, user);
+  }
+
+  async verifyCode({ user, type, code }: VerifyCode): Promise<void> {
+    await this.validatorService.checkCode({ type, code }, user);
+
+    await this.update({ type, code, userId: user.id }, { isVerified: true });
+  }
+
+  protected create(type: OtpType, user: FullUser): Promise<FullOtpCode> {
     const code = OtpUtil.generateCode(type);
     const expiredAt = OtpUtil.getExpiredAt(type);
 
@@ -44,35 +63,12 @@ export class OtpService extends ServiceCore implements IOtpService {
     });
   }
 
-  async createAndSendCode({ type, user }: SendCode): Promise<void> {
-    await this.validatorService.checkResendCode(type, user);
-    const otp = await this.create(type, user);
-
-    this.sendOtpNotification(otp, user);
+  protected async update(
+    query: OtpCodeQuery,
+    data: UpdateOtpCode,
+  ): Promise<void> {
+    await this.repository.update(query, data);
   }
-
-  // async verifyCode(user: FullUser, code: string): Promise<void> {
-  //   try {
-  //     const otp = await this.repository.findOneOrFail({
-  //       where: {
-  //         code,
-  //         userId: user.id,
-  //         expiredAt: { min: new Date(), type: 'date-time' },
-  //         isVerified: false,
-  //       },
-  //     });
-
-  //     await this.repository.update({ id: otp.id }, { isVerified: true });
-  //   } catch (err) {
-  //     this.handleError(err);
-  //     throw new BadRequestException([
-  //       {
-  //         key: 'code',
-  //         value: i18n()['validate.code'],
-  //       },
-  //     ]);
-  //   }
-  // }
 
   private sendOtpNotification(otp: FullOtpCode, user: FullUser): void {
     const config = OtpUtil.getNotificationConfig(otp, user);

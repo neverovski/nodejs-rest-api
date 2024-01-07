@@ -1,7 +1,6 @@
 import { inject as Inject, injectable as Injectable } from 'tsyringe';
 import { LessThanOrEqual } from 'typeorm';
 
-import { OtpType } from '@common/enums';
 import { DateUtil } from '@common/utils';
 import { ValidatorServiceCore } from '@core/service';
 import type { FullUser } from '@modules/user';
@@ -9,6 +8,7 @@ import type { FullUser } from '@modules/user';
 import { IOtpCodeRepository, IOtpValidatorService } from '../interface';
 import { DELAY_FOR_RESEND } from '../otp.constant';
 import { OtpInject } from '../otp.enum';
+import { OtpCodeQuery } from '../otp.type';
 
 @Injectable()
 export class OtpValidatorService
@@ -22,12 +22,27 @@ export class OtpValidatorService
     super();
   }
 
-  async checkResendCode(type: OtpType, user: FullUser) {
+  async checkCode(query: OtpCodeQuery, user: FullUser) {
+    const otp = await this.repository.findOne({
+      where: {
+        ...query,
+        userId: user.id,
+        expiredAt: LessThanOrEqual(new Date()),
+        isVerified: false,
+      },
+    });
+
+    if (!otp) {
+      this.throwException('code', 'validate.code');
+    }
+  }
+
+  async checkResendCode(query: OtpCodeQuery, user: FullUser) {
     const createdAt = this.calculateResendTime();
 
     const otp = await this.repository.findOne({
       where: {
-        type,
+        ...query,
         userId: user.id,
         createdAt: LessThanOrEqual(createdAt),
       },
