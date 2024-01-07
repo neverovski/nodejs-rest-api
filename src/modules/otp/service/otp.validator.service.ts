@@ -1,6 +1,7 @@
 import { inject as Inject, injectable as Injectable } from 'tsyringe';
-import { LessThanOrEqual } from 'typeorm';
+import { MoreThanOrEqual } from 'typeorm';
 
+import { SortBy } from '@common/enums';
 import { DateUtil } from '@common/utils';
 import { ValidatorServiceCore } from '@core/service';
 import type { FullUser } from '@modules/user';
@@ -27,7 +28,7 @@ export class OtpValidatorService
       where: {
         ...query,
         userId: user.id,
-        expiredAt: LessThanOrEqual(new Date()),
+        expiredAt: MoreThanOrEqual(new Date()),
         isVerified: false,
       },
     });
@@ -44,8 +45,9 @@ export class OtpValidatorService
       where: {
         ...query,
         userId: user.id,
-        createdAt: LessThanOrEqual(createdAt),
+        createdAt: MoreThanOrEqual(createdAt),
       },
+      order: { createdAt: SortBy.DESC },
     });
 
     if (otp) {
@@ -58,7 +60,7 @@ export class OtpValidatorService
   private calculateResendTime(): Date {
     return DateUtil.addMillisecondToDate(
       new Date(),
-      DateUtil.parseStringToMs(DELAY_FOR_RESEND),
+      -DateUtil.parseStringToMs(DELAY_FOR_RESEND),
     );
   }
 }

@@ -67,6 +67,6 @@ POST {{apiUrl}}/auth/password/reset/email
 
 {
   "email": "{{$dotenv REST_USER_LOGIN}}",
-  "token": "f5792b25-e9ce-44e4-a34d-a9382257b086",
+  "token": "b70e0419-9839-4a6e-a799-8580e929e5a9",
   "password": "{{$dotenv REST_USER_PASSWORD}}"
 }
