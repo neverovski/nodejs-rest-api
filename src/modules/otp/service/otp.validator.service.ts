@@ -2,9 +2,8 @@ import { inject as Inject, injectable as Injectable } from 'tsyringe';
 import { LessThanOrEqual } from 'typeorm';
 
 import { OtpType } from '@common/enums';
-import { UnprocessableEntityException } from '@common/exceptions';
 import { DateUtil } from '@common/utils';
-import { i18n } from '@i18n';
+import { ValidatorServiceCore } from '@core/service';
 import type { FullUser } from '@modules/user';
 
 import { IOtpCodeRepository, IOtpValidatorService } from '../interface';
@@ -12,11 +11,16 @@ import { DELAY_FOR_RESEND } from '../otp.constant';
 import { OtpInject } from '../otp.enum';
 
 @Injectable()
-export class OtpValidatorService implements IOtpValidatorService {
+export class OtpValidatorService
+  extends ValidatorServiceCore
+  implements IOtpValidatorService
+{
   constructor(
     @Inject(OtpInject.CODE_REPOSITORY)
     private readonly repository: IOtpCodeRepository,
-  ) {}
+  ) {
+    super();
+  }
 
   async checkResendCode(type: OtpType, user: FullUser) {
     const createdAt = this.calculateResendTime();
@@ -30,9 +34,7 @@ export class OtpValidatorService implements IOtpValidatorService {
     });
 
     if (otp) {
-      throw new UnprocessableEntityException([
-        { key: 'code', value: i18n()['validate.otp.delay'] },
-      ]);
+      this.throwException('code', 'validate.otp.resend');
     }
   }
 
