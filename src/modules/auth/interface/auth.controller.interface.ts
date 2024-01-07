@@ -1,6 +1,7 @@
 import type { Response as ExpressResponse } from 'express';
 
 import {
+  AuthForgotPasswordByEmailRequest,
   AuthLoginRequest,
   AuthLogoutRequest,
   AuthPlatformRequest,
@@ -8,6 +9,10 @@ import {
 } from '../auth.type';
 
 export interface IAuthController {
+  forgotPasswordByEmail(
+    req: AuthForgotPasswordByEmailRequest,
+    res: ExpressResponse,
+  ): Promise<void>;
   login(req: AuthLoginRequest, res: ExpressResponse): Promise<void>;
   logout(req: AuthLogoutRequest, res: ExpressResponse): Promise<void>;
   platform(req: AuthPlatformRequest, res: ExpressResponse): Promise<void>;
