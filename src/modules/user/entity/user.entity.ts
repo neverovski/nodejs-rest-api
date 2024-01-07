@@ -1,7 +1,7 @@
 import { Column, Entity, OneToOne, Unique } from 'typeorm';
 
 import { DB_TABLE_USER } from '@common/constants';
-import { BaseCreatedByEntity } from '@common/entities';
+import { BaseEntity } from '@common/entities';
 import { Role } from '@common/enums';
 import { UQ_USER_EMAIL } from 'src/database/constraints';
 import { StringTransformer } from 'src/database/transformer';
@@ -13,7 +13,7 @@ import { ProfileEntity } from './profile.entity';
 
 @Entity({ name: DB_TABLE_USER })
 @Unique(UQ_USER_EMAIL.name, UQ_USER_EMAIL.columnNames)
-export class UserEntity extends BaseCreatedByEntity<IUser> implements IUser {
+export class UserEntity extends BaseEntity<IUser> implements IUser {
   @Column('varchar', {
     nullable: true,
     transformer: new StringTransformer({ isLowerCase: true }),
