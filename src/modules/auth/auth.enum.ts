@@ -9,7 +9,7 @@ export enum AuthRouterLink {
   LOGIN = '/login',
   LOGOUT = '/logout',
   PASSWORD_EMAIL = '/password/email',
-  PASSWORD_RESET = '/password/reset',
+  PASSWORD_RESET_EMAIL = '/password/reset/email',
   PLATFORM = '/platform',
   REFRESH_TOKEN = '/refresh-token',
 }

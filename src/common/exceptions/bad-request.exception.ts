@@ -9,7 +9,7 @@ export class BadRequestException extends HttpException {
     super({
       message: message || i18n()['exception.badRequest'],
       messageCode: MessageCode.BAD_REQUEST,
-      statusCode: HttpStatus.BadRequest,
+      statusCode: HttpStatus.BAD_REQUEST,
     });
   }
 }

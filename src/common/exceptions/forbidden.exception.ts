@@ -9,7 +9,7 @@ export class ForbiddenException extends HttpException {
     super({
       message: message || i18n()['exception.forbidden'],
       messageCode: MessageCode.FORBIDDEN,
-      statusCode: HttpStatus.Forbidden,
+      statusCode: HttpStatus.FORBIDDEN,
     });
   }
 }

@@ -8,7 +8,7 @@ export class TokenNotProvidedException extends HttpException {
     super({
       message: i18n()['exception.tokenNotProvided'],
       messageCode: MessageCode.TOKEN_NOT_PROVIDED,
-      statusCode: HttpStatus.Unauthorized,
+      statusCode: HttpStatus.UNAUTHORIZED,
     });
   }
 }

@@ -64,17 +64,18 @@ export class AuthSchema extends SchemaCore implements IAuthSchema {
     };
   }
 
-  resetPassword(): JsonSchemaOptions {
+  resetPasswordByEmail(): JsonSchemaOptions {
     return {
       body: {
-        $id: this.getIdKey('resetPassword'),
+        $id: this.getIdKey('resetPasswordByEmail'),
         $schema: 'http://json-schema.org/draft-07/schema#',
         type: 'object',
         additionalProperties: false,
-        required: ['token', 'newPassword'],
+        required: ['token', 'password', 'email'],
         properties: {
-          ...this.getPassword('token'),
-          ...this.getPassword('newPassword'),
+          ...this.getEmail(),
+          ...this.getString('token'),
+          ...this.getPassword('password'),
         },
       },
     };

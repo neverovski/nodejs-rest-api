@@ -1,11 +1,22 @@
-### RETURN A CURRENT USER
-GET {{host}}/api/users/current
-Content-Type: application/json
+### RETURN A CURRENT USER [USER]
+GET {{apiUrl}}/users/current
+Authorization: Bearer {{dotenv REST_USER_ACCESS_TOKEN}}
 
-### UPDATE A CURRENT USER
-PUT {{host}}/api/users/current
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
+### CREATE A USER [USER]
+POST {{apiUrl}}/users
+
+{
+  "email": "{{$dotenv REST_USER_LOGIN}}",
+  "password": "{{$dotenv REST_USER_PASSWORD}}",
+  "profile": {
+    "firstName": "D.",
+    "lastName": "N."
+  }
+}
+
+### UPDATE A CURRENT USER [USER]
+PUT {{apiUrl}}/users/current
+Authorization: Bearer {{dotenv REST_USER_ACCESS_TOKEN}}
 
 {
   "profile": {
@@ -14,30 +25,15 @@ Content-Type: application/json
   }
 }
 
-### CREATE A USER
-POST {{host}}/api/users
-Content-Type: application/json
+### CHANGE PASSWORD FOR A CURRENT USER [USER]
+POST {{apiUrl}}/users/current/change-password
+Authorization: Bearer {{dotenv REST_USER_ACCESS_TOKEN}}
 
 {
-  "email": "{{email}}",
-  "password": "{{password}}",
-  "profile": {
-    "firstName": "D.",
-    "lastName": "N."
-  }
+  "oldPassword": "{{$dotenv REST_USER_PASSWORD}}",
+  "newPassword": "87654321"
 }
 
-### CHANGE PASSWORD FOR A CURRENT USER
-POST {{host}}/api/users/current/change-password
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
-
-{
-  "oldPassword": "{{password}}",
-  "newPassword": "{{newPassword}}"
-}
-
-### DELETE A CURRENT USER
-DELETE {{host}}/api/users/current
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
+### DELETE A CURRENT USER [USER]
+DELETE {{apiUrl}}/users/current
+Authorization: Bearer {{dotenv REST_USER_ACCESS_TOKEN}}

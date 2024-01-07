@@ -4,14 +4,17 @@ import { inject as Inject, injectable as Injectable } from 'tsyringe';
 import { ConfigKey, HttpStatus } from '@common/enums';
 import { IAppConfig, IJwtConfig } from '@config';
 import { ControllerCore } from '@core';
+import { i18n } from '@i18n';
 
 import { AuthInject } from './auth.enum';
 import {
+  AuthForgotPasswordByEmailRequest,
   AuthLoginRequest,
   AuthLogoutRequest,
   AuthPlatformRequest,
   AuthRefreshToken,
   AuthRefreshTokenRequest,
+  AuthResetPasswordByEmailRequest,
 } from './auth.type';
 import { AuthTokenDto } from './dto';
 import { IAuthController, IAuthService } from './interface';
@@ -32,37 +35,36 @@ export class AuthController extends ControllerCore implements IAuthController {
     super();
   }
 
-  // /**
-  //  * @openapi
-  //  * /api/auth/password/email:
-  //  *   post:
-  //  *      tags: [Auth]
-  //  *      summary: Forgot password
-  //  *      description: ''
-  //  *      requestBody:
-  //  *        $ref: '#/components/requestBodies/ForgotPasswordRequest'
-  //  *      responses:
-  //  *        200:
-  //  *          $ref: '#/components/responses/HttpOk'
-  //  *        404:
-  //  *          $ref: '#/components/responses/HttpNotFound'
-  //  *        422:
-  //  *          $ref: '#/components/responses/HttpUnprocessableEntity'
-  //  *        500:
-  //  *          $ref: '#/components/responses/HttpInternalServerError'
-  //  */
-  // async forgotPassword(
-  //   req: Request<any, any, ForgotPasswordRequest>,
-  //   res: Response,
-  // ) {
-  //   await this.service.forgotPassword(req.body);
+  /**
+   * @openapi
+   * /api/auth/password/email:
+   *   post:
+   *      tags: [Auth]
+   *      summary: Forgot password
+   *      description: ''
+   *      requestBody:
+   *        $ref: '#/components/requestBodies/ForgotPasswordRequest'
+   *      responses:
+   *        200:
+   *          $ref: '#/components/responses/HttpOk'
+   *        404:
+   *          $ref: '#/components/responses/HttpNotFound'
+   *        422:
+   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *        500:
+   *          $ref: '#/components/responses/HttpInternalServerError'
+   */
+  async forgotPasswordByEmail(
+    req: AuthForgotPasswordByEmailRequest,
+    res: ExpressResponse,
+  ) {
+    await this.service.forgotPasswordByEmail(req.body);
+    const message = this.getMessage(
+      i18n()['message.passwordReset.sentToEmail'],
+    );
 
-  //   this.response(res, {
-  //     data: Exception.getOk(HttpCode.OK, {
-  //       message: i18n()['message.passwordReset.sentToEmail'],
-  //     }),
-  //   });
-  // }
+    return this.sendJson(res, message);
+  }
 
   /**
    * @openapi
@@ -84,11 +86,13 @@ export class AuthController extends ControllerCore implements IAuthController {
    *          $ref: '#/components/responses/HttpInternalServerError'
    */
   async login({ body, userSession }: AuthLoginRequest, res: ExpressResponse) {
-    const data = await this.service.login(body, { userSession });
+    const dataRaw = await this.service.login(body, { userSession });
 
-    this.storeTokenInCookie(res, data);
+    this.storeTokenInCookie(res, dataRaw);
 
-    res.json(this.mappingDataToDto(data, { cls: AuthTokenDto }));
+    const data = this.mappingDataToDto(dataRaw, { cls: AuthTokenDto });
+
+    return this.sendJson(res, data);
   }
 
   /**
@@ -116,7 +120,7 @@ export class AuthController extends ControllerCore implements IAuthController {
 
     this.storeTokenInCookie(res, {}, { maxAge: 0 });
 
-    res.status(HttpStatus.NoContent);
+    return this.sendJson(res, null, { status: HttpStatus.NO_CONTENT });
   }
 
   /**
@@ -140,11 +144,12 @@ export class AuthController extends ControllerCore implements IAuthController {
     { body, userSession }: AuthPlatformRequest,
     res: ExpressResponse,
   ) {
-    const data = await this.service.platform(body, { userSession });
+    const dataRaw = await this.service.platform(body, { userSession });
+    const data = this.mappingDataToDto(dataRaw, { cls: AuthTokenDto });
 
-    this.storeTokenInCookie(res, data);
+    this.storeTokenInCookie(res, dataRaw);
 
-    res.json(this.mappingDataToDto(data, { cls: AuthTokenDto }));
+    return this.sendJson(res, data);
   }
 
   /**
@@ -173,43 +178,43 @@ export class AuthController extends ControllerCore implements IAuthController {
     const refreshToken =
       body.refreshToken || (req.cookies as AuthRefreshToken).refreshToken;
 
-    const data = await this.service.refreshToken(
+    const dataRaw = await this.service.refreshToken(
       { refreshToken },
       { userSession },
     );
+    const data = this.mappingDataToDto(dataRaw, { cls: AuthTokenDto });
 
-    this.storeTokenInCookie(res, data);
+    this.storeTokenInCookie(res, dataRaw);
 
-    res.json(this.mappingDataToDto(data, { cls: AuthTokenDto }));
+    return this.sendJson(res, data);
   }
 
-  // /**
-  //  * @openapi
-  //  * /api/auth/password/reset:
-  //  *   post:
-  //  *      tags: [Auth]
-  //  *      summary: Reset password
-  //  *      description: ''
-  //  *      requestBody:
-  //  *        $ref: '#/components/requestBodies/ResetPasswordRequest'
-  //  *      responses:
-  //  *        200:
-  //  *          $ref: '#/components/responses/HttpOk'
-  //  *        422:
-  //  *          $ref: '#/components/responses/HttpUnprocessableEntity'
-  //  *        500:
-  //  *          $ref: '#/components/responses/HttpInternalServerError'
-  //  */
-  // async resetPassword(
-  //   req: Request<any, any, ResetPasswordRequest>,
-  //   res: Response,
-  // ) {
-  //   await this.service.resetPassword(req.body);
+  /**
+   * @openapi
+   * /api/auth/password/reset/email:
+   *   post:
+   *      tags: [Auth]
+   *      summary: Reset password
+   *      description: ''
+   *      requestBody:
+   *        $ref: '#/components/requestBodies/ResetPasswordRequest'
+   *      responses:
+   *        200:
+   *          $ref: '#/components/responses/HttpOk'
+   *        422:
+   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *        500:
+   *          $ref: '#/components/responses/HttpInternalServerError'
+   */
+  async resetPasswordByEmail(
+    req: AuthResetPasswordByEmailRequest,
+    res: ExpressResponse,
+  ) {
+    await this.service.resetPasswordByEmail(req.body);
+    const message = this.getMessage(
+      i18n()['message.passwordReset.successfully'],
+    );
 
-  //   this.response(res, {
-  //     data: Exception.getOk(HttpCode.OK, {
-  //       message: i18n()['message.passwordReset.successfully'],
-  //     }),
-  //   });
-  // }
+    return this.sendJson(res, message);
+  }
 }

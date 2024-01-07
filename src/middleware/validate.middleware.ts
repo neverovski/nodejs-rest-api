@@ -11,7 +11,7 @@ import type {
 import { singleton as Singleton } from 'tsyringe';
 
 import { REG_PHONE } from '@common/constants';
-import { AjvFormatKey } from '@common/enums';
+import { AjvFormatKey, HttpStatus } from '@common/enums';
 import { UnprocessableEntityException } from '@common/exceptions';
 import { ExceptionMessage, JsonSchema, JsonSchemaOptions } from '@common/types';
 import { AjvUtil, StringUtil } from '@common/utils';
@@ -44,25 +44,36 @@ export class ValidateMiddleware extends MiddlewareCore {
       next: NextFunction,
     ) => {
       try {
-        if (schemas.params) {
-          await this.validate(schemas.params, req.params);
-        }
-
-        if (schemas.query) {
-          await this.validate(schemas.query, req.query);
-        }
-
-        if (schemas.body) {
-          await this.validate(schemas.body, req.body);
-        }
+        await this.validateRequest(schemas, req);
 
         next();
       } catch (err: unknown) {
-        res
-          .status(422)
-          .json(new UnprocessableEntityException(err as ExceptionMessage));
+        res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
+          data: new UnprocessableEntityException(err as ExceptionMessage),
+        });
       }
     };
+  }
+
+  protected async validateRequest(
+    schemas: JsonSchemaOptions,
+    req: ExpressRequest<
+      Record<string, unknown>,
+      unknown,
+      Record<string, unknown>
+    >,
+  ) {
+    if (schemas.params) {
+      await this.validate(schemas.params, req.params);
+    }
+
+    if (schemas.query) {
+      await this.validate(schemas.query, req.query);
+    }
+
+    if (schemas.body) {
+      await this.validate(schemas.body, req.body);
+    }
   }
 
   private registerFormat() {
@@ -88,11 +99,17 @@ export class ValidateMiddleware extends MiddlewareCore {
           const name =
             (err.params.missingProperty as string) ||
             (err.params.additionalProperty as string) ||
-            err.instancePath.slice(1);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+            (err.params.errors?.at(0)?.params?.missingProperty as string) ||
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+            (err.params.errors?.at(0)?.params?.additionalProperty as string) ||
+            '';
 
-          if (name || (len === 1 && err.keyword === 'errorMessage')) {
+          const fullName = `${err.instancePath}${name && `/${name}`}`.slice(1);
+
+          if (fullName || (len === 1 && err.keyword === 'errorMessage')) {
             errors.push({
-              key: name || 'data',
+              key: fullName || 'data',
               value: StringUtil.capitalizeOnlyFirstChar(err.message || ''),
             });
           }

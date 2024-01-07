@@ -8,7 +8,7 @@ describe('ForbiddenException', () => {
     const exception = new ForbiddenException();
 
     expect(exception.messageCode).toEqual(MessageCode.FORBIDDEN);
-    expect(exception.statusCode).toEqual(HttpStatus.Forbidden);
+    expect(exception.statusCode).toEqual(HttpStatus.FORBIDDEN);
     expect(exception.message).toEqual(i18n()['exception.forbidden']);
   });
 
@@ -17,7 +17,7 @@ describe('ForbiddenException', () => {
     const exception = new ForbiddenException(message);
 
     expect(exception.messageCode).toEqual(MessageCode.FORBIDDEN);
-    expect(exception.statusCode).toEqual(HttpStatus.Forbidden);
+    expect(exception.statusCode).toEqual(HttpStatus.FORBIDDEN);
     expect(exception.message).toEqual(message);
   });
 
@@ -26,7 +26,7 @@ describe('ForbiddenException', () => {
     const exception = new ForbiddenException(message);
 
     expect(exception.messageCode).toEqual(MessageCode.FORBIDDEN);
-    expect(exception.statusCode).toEqual(HttpStatus.Forbidden);
+    expect(exception.statusCode).toEqual(HttpStatus.FORBIDDEN);
     expect(exception.message).toEqual(message);
   });
 });

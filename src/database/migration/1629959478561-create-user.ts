@@ -1,6 +1,7 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 import { DB_TABLE_USER } from '@common/constants';
+import { Role } from '@common/enums';
 
 import { UQ_USER_EMAIL } from '../constraints';
 
@@ -27,14 +28,20 @@ export class CreateUser1629959478561 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: 'isEmailConfirmed',
+            type: 'bool',
+            default: false,
+          },
+          {
             name: 'password',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'isConfirmedEmail',
-            type: 'bool',
-            default: false,
+            name: 'role',
+            type: 'enum',
+            enum: Object.values(Role),
+            default: `'${Role.USER}'`,
           },
 
           {

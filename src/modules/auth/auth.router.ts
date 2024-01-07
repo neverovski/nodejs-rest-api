@@ -58,15 +58,20 @@ export class AuthRouter extends RouterCore {
       ),
     );
 
-    // this.router.post(
-    //   '/password/email',
-    //   ValidateMiddleware.handler(ForgotPasswordSchema),
-    //   AsyncMiddleware(this.controller.forgotPassword.bind(this.controller)),
-    // );
-    // this.router.post(
-    //   '/password/reset',
-    //   ValidateMiddleware.handler(ResetPasswordSchema),
-    //   AsyncMiddleware(this.controller.resetPassword.bind(this.controller)),
-    // );
+    this.router.post(
+      AuthRouterLink.PASSWORD_EMAIL,
+      this.validateMiddleware.handler(this.schema.forgotPasswordByEmail()),
+      this.asyncMiddleware.handler(
+        this.controller.forgotPasswordByEmail.bind(this.controller),
+      ),
+    );
+
+    this.router.post(
+      AuthRouterLink.PASSWORD_RESET_EMAIL,
+      this.validateMiddleware.handler(this.schema.resetPasswordByEmail()),
+      this.asyncMiddleware.handler(
+        this.controller.resetPasswordByEmail.bind(this.controller),
+      ),
+    );
   }
 }

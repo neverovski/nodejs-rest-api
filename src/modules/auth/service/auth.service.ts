@@ -1,7 +1,12 @@
 import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
-import { TokenType } from '@common/enums';
+import { OtpType, TemplatePath, TokenType } from '@common/enums';
 import { ServiceCore } from '@core/service';
+import {
+  INotificationService,
+  NotificationInject,
+} from '@modules/notification';
+import { IOtpService, OtpInject } from '@modules/otp';
 import { IPlatformService, PlatformInject } from '@modules/platform';
 import {
   IRefreshTokenService,
@@ -17,10 +22,12 @@ import { ILoggerService, LoggerInject } from '@providers/logger';
 
 import { AuthInject } from '../auth.enum';
 import {
+  AuthForgotPasswordByEmail,
   AuthLogin,
   AuthLogout,
   AuthPlatform,
   AuthRefreshToken,
+  AuthResetPasswordByEmail,
   AuthToken,
 } from '../auth.type';
 import { IAuthService, IAuthTokenService } from '../interface';
@@ -31,6 +38,9 @@ export class AuthService extends ServiceCore implements IAuthService {
     @Inject(AuthInject.TOKEN_SERVICE)
     private authTokenService: IAuthTokenService,
     @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
+    @Inject(NotificationInject.SERVICE)
+    private readonly notificationService: INotificationService,
+    @Inject(OtpInject.SERVICE) private otpService: IOtpService,
     @Inject(PlatformInject.SERVICE) private platformService: IPlatformService,
     @Inject(RefreshTokenInject.SERVICE)
     private refreshTokenService: IRefreshTokenService,
@@ -39,6 +49,17 @@ export class AuthService extends ServiceCore implements IAuthService {
     private userValidatorService: IUserValidatorService,
   ) {
     super();
+  }
+
+  async forgotPasswordByEmail({ email }: AuthForgotPasswordByEmail) {
+    const user = await this.userService.getOne({ email });
+
+    if (user) {
+      await this.otpService.createAndSendCode({
+        type: OtpType.RESET_PASSWORD_BY_EMAIL,
+        user,
+      });
+    }
   }
 
   async login({ email, password }: AuthLogin) {
@@ -68,6 +89,28 @@ export class AuthService extends ServiceCore implements IAuthService {
     return this.getTokens(user);
   }
 
+  async resetPasswordByEmail({
+    email,
+    token,
+    password,
+  }: AuthResetPasswordByEmail) {
+    const user = await this.userService.getOne({ email });
+
+    if (user) {
+      await this.otpService.verifyCode({
+        code: token,
+        type: OtpType.RESET_PASSWORD_BY_EMAIL,
+        user,
+      });
+      await this.userService.update({ id: user.id }, { password });
+
+      this.notificationService.send(
+        { email },
+        { templatePath: TemplatePath.PASSWORD_CHANGED },
+      );
+    }
+  }
+
   protected async getTokens(user: FullUser): Promise<AuthToken> {
     const [accessToken, refreshToken] = await Promise.all([
       this.authTokenService.getAccessToken(user.id, user.getPayload()),
@@ -80,56 +123,4 @@ export class AuthService extends ServiceCore implements IAuthService {
       refreshToken,
     };
   }
-
-  // async forgotPassword({ email }: ForgotPasswordRequest) {
-  //   const { id } = await this.userService.getOneOrFail({ email });
-
-  //   const resetPasswordCode = Crypto.generateUUID();
-
-  //   const token = Crypto.signJwt(
-  //     {
-  //       jti: resetPasswordCode,
-  //       sub: `${id}`,
-  //     },
-  //     JwtConfig.secretToken,
-  //     {
-  //       expiresIn: DateUtil.parseStringToMs(JwtConfig.expiresInToken),
-  //     },
-  //   );
-
-  //   await this.userService.update({ id }, { resetPasswordCode });
-  //   void this.notificationService.addToQueue({
-  //     data: { token },
-  //     email,
-  //     template: TemplateType.PASSWORD_RESET,
-  //   });
-  // }
-
-  // async resetPassword({ password, token }: ResetPasswordRequest) {
-  //   const { jti, email } = await Crypto.verifyJwt<JwtPayload>(
-  //     token,
-  //     JwtConfig.secretToken,
-  //   );
-
-  // await this.userService.update({ id: user.id }, { password: password });
-
-  //   void this.notificationService.send(query, {
-  //     template: TemplateType.PASSWORD_CHANGED,
-  //   });
-
-  //   try {
-  //     await this.userService.update(
-  //       { email, resetPasswordCode: jti },
-  //       { password: password },
-  //     );
-  //     void this.notificationService.addToQueue({
-  //       email,
-  //       template: TemplateType.PASSWORD_CHANGED,
-  //     });
-  //   } catch {
-  //     throw Exception.getError(HttpCode.UNPROCESSABLE_ENTITY, {
-  //       errors: { token: i18n()['validate.token.resetPassword'] },
-  //     });
-  //   }
-  // }
 }

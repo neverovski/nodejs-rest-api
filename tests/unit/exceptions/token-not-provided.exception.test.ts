@@ -8,6 +8,6 @@ describe('TokenNotProvidedException', () => {
 
     expect(exception.message).toEqual(i18n()['exception.tokenNotProvided']);
     expect(exception.messageCode).toEqual(MessageCode.TOKEN_NOT_PROVIDED);
-    expect(exception.statusCode).toEqual(HttpStatus.Unauthorized);
+    expect(exception.statusCode).toEqual(HttpStatus.UNAUTHORIZED);
   });
 });

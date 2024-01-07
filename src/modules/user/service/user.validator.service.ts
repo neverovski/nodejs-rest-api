@@ -1,11 +1,13 @@
-import { UnprocessableEntityException } from '@common/exceptions';
 import { HashUtil } from '@common/utils';
-import { i18n } from '@i18n';
+import { ValidatorServiceCore } from '@core/service';
 
 import { IUserValidatorService } from '../interface';
 import { FullUser, UserPasswordChange } from '../types';
 
-export class UserValidatorService implements IUserValidatorService {
+export class UserValidatorService
+  extends ValidatorServiceCore
+  implements IUserValidatorService
+{
   async checkCredentials(
     user?: DeepPartial<FullUser> | null,
     password?: string,
@@ -13,23 +15,16 @@ export class UserValidatorService implements IUserValidatorService {
     const isValid = await HashUtil.isComparePassword(password, user?.password);
 
     if (!isValid) {
-      throw new UnprocessableEntityException([
-        {
-          key: 'invalidCredentials',
-          value: i18n()['validate.invalidCredentials'],
-        },
-      ]);
+      this.throwException('invalidCredentials', 'validate.invalidCredentials');
     }
   }
 
   checkNewPassword(data: UserPasswordChange) {
     if (data.newPassword === data.oldPassword) {
-      throw new UnprocessableEntityException([
-        {
-          key: 'newPassword',
-          value: i18n()['validate.newPassword.equalOldPassword'],
-        },
-      ]);
+      this.throwException(
+        'newPassword',
+        'validate.newPassword.equalOldPassword',
+      );
     }
   }
 
@@ -37,12 +32,7 @@ export class UserValidatorService implements IUserValidatorService {
     const isValid = await HashUtil.isComparePassword(password, user?.password);
 
     if (!isValid) {
-      throw new UnprocessableEntityException([
-        {
-          key: 'oldPassword',
-          value: i18n()['validate.oldPassword.notCorrect'],
-        },
-      ]);
+      this.throwException('oldPassword', 'validate.oldPassword.notCorrect');
     }
   }
 }

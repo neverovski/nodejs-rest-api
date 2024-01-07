@@ -1,7 +1,7 @@
 import { Logger as OrmLogger } from 'typeorm';
 
 import { LoggerCtx } from '@common/enums';
-import { ILoggerService } from '@providers/logger';
+import type { ILoggerService } from '@providers/logger';
 
 export class DatabaseLogger implements OrmLogger {
   private readonly loggerCtx: LoggerCtx;

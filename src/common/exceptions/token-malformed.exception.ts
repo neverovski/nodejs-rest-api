@@ -8,7 +8,7 @@ export class TokenMalformedException extends HttpException {
     super({
       message: i18n()['exception.tokenMalformed'],
       messageCode: MessageCode.TOKEN_MALFORMED,
-      statusCode: HttpStatus.Unauthorized,
+      statusCode: HttpStatus.UNAUTHORIZED,
     });
   }
 }

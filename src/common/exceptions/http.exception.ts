@@ -13,6 +13,6 @@ export class HttpException extends Error {
 
     this.message = param?.message || i18n()['exception.serverError'];
     this.messageCode = param?.messageCode || MessageCode.INTERNAL_SERVER_ERROR;
-    this.statusCode = param?.statusCode || HttpStatus.InternalServerError;
+    this.statusCode = param?.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
   }
 }

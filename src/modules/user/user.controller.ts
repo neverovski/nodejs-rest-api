@@ -63,7 +63,12 @@ export class UserController extends ControllerCore implements IUserController {
 
     await this.userService.updatePassword({ id }, req.body);
 
-    res.json(this.getOk(i18n()['message.passwordReset.successfully']));
+    const message = this.getMessage(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      i18n()['message.passwordChange.successfully'],
+    );
+
+    return this.sendJson(res, message);
   }
 
   /**
@@ -86,10 +91,16 @@ export class UserController extends ControllerCore implements IUserController {
   async create(req: CreateUserRequest, res: ExpressResponse) {
     await this.userService.create(req.body);
 
-    res.status(HttpStatus.Created).json({
-      ...this.getOk(i18n()['message.passwordReset.successfully']),
-      statusCode: HttpStatus.Created,
-    });
+    const message = this.getMessage(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      i18n()['message.passwordChange.successfully'],
+    );
+
+    return this.sendJson(
+      res,
+      { ...message, statusCode: HttpStatus.CREATED },
+      { status: HttpStatus.CREATED },
+    );
   }
 
   /**
@@ -117,7 +128,7 @@ export class UserController extends ControllerCore implements IUserController {
 
     this.storeTokenInCookie(res, {}, { maxAge: 0 });
 
-    res.status(HttpStatus.NoContent);
+    return this.sendJson(res, null, { status: HttpStatus.NO_CONTENT });
   }
 
   /**
@@ -141,9 +152,10 @@ export class UserController extends ControllerCore implements IUserController {
   async getCurrentUser(req: UserRequest, res: ExpressResponse) {
     const { userId } = req.user;
 
-    const data = await this.userService.getOne({ id: userId });
+    const userRaw = await this.userService.getOne({ id: userId });
+    const user = this.mappingDataToDto(userRaw, { cls: UserDto });
 
-    res.json(this.mappingDataToDto(data, { cls: UserDto }));
+    return this.sendJson(res, user);
   }
 
   /**
@@ -171,8 +183,9 @@ export class UserController extends ControllerCore implements IUserController {
   async updateCurrentUser(req: UpdateUserRequest, res: ExpressResponse) {
     const { userId } = req.user;
 
-    const data = await this.userService.update({ id: userId }, req.body);
+    const userRaw = await this.userService.update({ id: userId }, req.body);
+    const user = this.mappingDataToDto(userRaw, { cls: UserDto });
 
-    res.json(this.mappingDataToDto(data, { cls: UserDto }));
+    return this.sendJson(res, user);
   }
 }

@@ -1,5 +1,7 @@
 import { ObjectLiteral } from 'typeorm/common/ObjectLiteral';
 
+import { HttpStatus } from '@common/enums';
+
 import { FindOption } from './sql.type';
 
 export type Context<T = ObjectLiteral> = Partial<
@@ -8,3 +10,7 @@ export type Context<T = ObjectLiteral> = Partial<
       cacheKey: string;
     }
 >;
+
+export type ResponseCtx = {
+  status?: HttpStatus;
+};

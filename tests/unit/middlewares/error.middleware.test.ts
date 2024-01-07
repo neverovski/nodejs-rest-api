@@ -33,8 +33,8 @@ describe('ErrorMiddleware', () => {
       nextFunction,
     );
 
-    expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.NotFound);
-    expect(mockResponse.json).toHaveBeenCalledWith(error);
+    expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
+    expect(mockResponse.json).toHaveBeenCalledWith({ data: { ...error } });
   });
 
   it('should respond with InternalServerErrorException if the error does not have a messageCode and statusCode', () => {
@@ -48,10 +48,10 @@ describe('ErrorMiddleware', () => {
     );
 
     expect(mockResponse.status).toHaveBeenCalledWith(
-      HttpStatus.InternalServerError,
+      HttpStatus.INTERNAL_SERVER_ERROR,
     );
-    expect(mockResponse.json).toHaveBeenCalledWith(
-      new InternalServerErrorException(),
-    );
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      data: { ...new InternalServerErrorException(), message: error.message },
+    });
   });
 });

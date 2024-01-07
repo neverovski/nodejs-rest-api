@@ -8,6 +8,6 @@ describe('TokenMalformedException', () => {
 
     expect(exception.message).toEqual(i18n()['exception.tokenMalformed']);
     expect(exception.messageCode).toEqual(MessageCode.TOKEN_MALFORMED);
-    expect(exception.statusCode).toEqual(HttpStatus.Unauthorized);
+    expect(exception.statusCode).toEqual(HttpStatus.UNAUTHORIZED);
   });
 });

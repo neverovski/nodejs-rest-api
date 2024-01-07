@@ -13,14 +13,16 @@ import '@database/database.di';
 import '@modules/module.di';
 
 import { DatabaseInject, IDatabaseService } from '@database';
+import { ILoggerService, LoggerInject } from '@providers/logger';
 
 import { Server } from './server';
 
 @Singleton()
 class Bootstrap {
   constructor(
-    @Inject(Server) private readonly server: Server,
     @Inject(DatabaseInject.SERVICE) private readonly database: IDatabaseService,
+    @Inject(LoggerInject.SERVICE) private readonly logger: ILoggerService,
+    @Inject(Server) private readonly server: Server,
   ) {}
 
   async run() {
@@ -29,11 +31,10 @@ class Bootstrap {
       await this.server.run();
 
       // EventEmitter.emit('start');
-      console.info({ message: 'Вatabase and server started...' });
+      this.logger.log('The server is running');
     } catch (err) {
       // EventEmitter.emit('close');
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      console.error({ message: 'Database or server not running', err });
+      this.logger.error('Database or server not running', err);
 
       process.exit(1);
     }

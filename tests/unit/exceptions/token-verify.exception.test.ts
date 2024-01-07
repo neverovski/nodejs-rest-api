@@ -8,6 +8,6 @@ describe('TokenVerifyException', () => {
 
     expect(exception.message).toEqual(i18n()['exception.tokenVerify']);
     expect(exception.messageCode).toEqual(MessageCode.TOKEN_VERIFY);
-    expect(exception.statusCode).toEqual(HttpStatus.Unauthorized);
+    expect(exception.statusCode).toEqual(HttpStatus.UNAUTHORIZED);
   });
 });

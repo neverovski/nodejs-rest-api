@@ -6,6 +6,8 @@ import { ENV_CLI, ENV_SEED } from '@common/constants';
 import { IAppConfig, IDatabaseConfig, IRedisConfig } from '@config';
 import { ILoggerService } from '@providers/logger';
 
+import { PathUtil } from '../utils';
+
 import { redisClusterConnect, redisConnect } from './cache-connect';
 import { DatabaseLogger } from './logger';
 
@@ -23,10 +25,8 @@ export const AppDataSource = (
     password: databaseConfig.password,
     database: databaseConfig.databaseName,
     entities: [resolve('src/modules/**/*.entity{.ts,.js}')],
-    migrations:
-      appConfig.env === ENV_SEED
-        ? [resolve('src/db/seed/*{.ts,.js}')]
-        : [resolve('src/db/migration/*{.ts,.js}')],
+    migrations: PathUtil.getMigrations(appConfig.env),
+    migrationsTableName: PathUtil.getMigrationsTableName(appConfig.env),
     subscribers: [resolve('src/modules/**/*.subscriber{.ts,.js}')],
     synchronize: false,
     logging: databaseConfig.logEnabled,

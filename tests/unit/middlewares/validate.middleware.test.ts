@@ -54,11 +54,12 @@ describe('ValidateMiddleware', () => {
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(422);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        data: expect.objectContaining({
           message: [{ key: 'id', value: 'Must be integer' }],
         }),
-      );
+      });
     });
   });
 
@@ -115,15 +116,16 @@ describe('ValidateMiddleware', () => {
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(422);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        data: expect.objectContaining({
           message: [
             // eslint-disable-next-line quotes
             { key: 'name', value: "Must have required property 'name'" },
             { key: 'age', value: 'Must NOT have additional properties' },
           ],
         }),
-      );
+      });
     });
   });
 
@@ -184,8 +186,9 @@ describe('ValidateMiddleware', () => {
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(422);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        data: expect.objectContaining({
           message: [
             {
               key: 'firstName',
@@ -193,7 +196,7 @@ describe('ValidateMiddleware', () => {
             },
           ],
         }),
-      );
+      });
     });
   });
 });

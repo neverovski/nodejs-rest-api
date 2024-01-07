@@ -9,7 +9,7 @@ export class ConflictException extends HttpException {
     super({
       message: message || i18n()['exception.conflict'],
       messageCode: MessageCode.FORBIDDEN,
-      statusCode: HttpStatus.Forbidden,
+      statusCode: HttpStatus.FORBIDDEN,
     });
   }
 }
