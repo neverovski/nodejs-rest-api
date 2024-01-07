@@ -14,6 +14,7 @@ import {
   AuthPlatformRequest,
   AuthRefreshToken,
   AuthRefreshTokenRequest,
+  AuthResetPasswordByEmailRequest,
 } from './auth.type';
 import { AuthTokenDto } from './dto';
 import { IAuthController, IAuthService } from './interface';
@@ -188,33 +189,32 @@ export class AuthController extends ControllerCore implements IAuthController {
     return this.sendJson(res, data);
   }
 
-  // /**
-  //  * @openapi
-  //  * /api/auth/password/reset:
-  //  *   post:
-  //  *      tags: [Auth]
-  //  *      summary: Reset password
-  //  *      description: ''
-  //  *      requestBody:
-  //  *        $ref: '#/components/requestBodies/ResetPasswordRequest'
-  //  *      responses:
-  //  *        200:
-  //  *          $ref: '#/components/responses/HttpOk'
-  //  *        422:
-  //  *          $ref: '#/components/responses/HttpUnprocessableEntity'
-  //  *        500:
-  //  *          $ref: '#/components/responses/HttpInternalServerError'
-  //  */
-  // async resetPassword(
-  //   req: Request<any, any, ResetPasswordRequest>,
-  //   res: Response,
-  // ) {
-  //   await this.service.resetPassword(req.body);
+  /**
+   * @openapi
+   * /api/auth/password/reset:
+   *   post:
+   *      tags: [Auth]
+   *      summary: Reset password
+   *      description: ''
+   *      requestBody:
+   *        $ref: '#/components/requestBodies/ResetPasswordRequest'
+   *      responses:
+   *        200:
+   *          $ref: '#/components/responses/HttpOk'
+   *        422:
+   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *        500:
+   *          $ref: '#/components/responses/HttpInternalServerError'
+   */
+  async resetPasswordByEmail(
+    req: AuthResetPasswordByEmailRequest,
+    res: ExpressResponse,
+  ) {
+    await this.service.resetPasswordByEmail(req.body);
+    const message = this.getMessage(
+      i18n()['message.passwordReset.successfully'],
+    );
 
-  //   this.response(res, {
-  //     data: Exception.getOk(HttpCode.OK, {
-  //       message: i18n()['message.passwordReset.successfully'],
-  //     }),
-  //   });
-  // }
+    return this.sendJson(res, message);
+  }
 }

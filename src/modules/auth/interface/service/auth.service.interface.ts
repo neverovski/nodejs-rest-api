@@ -5,6 +5,7 @@ import {
   AuthLogout,
   AuthPlatform,
   AuthRefreshToken,
+  AuthResetPasswordByEmail,
   AuthToken,
 } from '../../auth.type';
 
@@ -14,5 +15,5 @@ export interface IAuthService {
   logout(data: AuthLogout): Promise<void>;
   platform(data: AuthPlatform, ctx?: AuthCtx): Promise<AuthToken>;
   refreshToken(data: AuthRefreshToken, ctx?: AuthCtx): Promise<AuthToken>;
-  // resetPassword(data: AuthResetPassword): Promise<void>;
+  resetPasswordByEmail(data: AuthResetPasswordByEmail): Promise<void>;
 }

@@ -9,7 +9,10 @@ export type AuthPlatform = { platform: PlatformName; token: string };
 export type AuthRefreshToken = { refreshToken: Token };
 
 export type AuthForgotPasswordByEmail = { email: Email };
-export type AuthResetPassword = { newPassword: Password; token: Token };
+export type AuthResetPasswordByEmail = AuthForgotPasswordByEmail & {
+  password: Password;
+  token: Token;
+};
 
 export type AuthVerifyEmail = { token: Token };
 
@@ -37,6 +40,11 @@ export type AuthForgotPasswordByEmailRequest = ExpressRequest<
   unknown,
   unknown,
   AuthForgotPasswordByEmail
+>;
+export type AuthResetPasswordByEmailRequest = ExpressRequest<
+  unknown,
+  unknown,
+  AuthResetPasswordByEmail
 >;
 
 //email/verify - GET send link to email

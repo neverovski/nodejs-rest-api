@@ -6,6 +6,7 @@ import {
   AuthLogoutRequest,
   AuthPlatformRequest,
   AuthRefreshTokenRequest,
+  AuthResetPasswordByEmailRequest,
 } from '../auth.type';
 
 export interface IAuthController {
@@ -18,6 +19,10 @@ export interface IAuthController {
   platform(req: AuthPlatformRequest, res: ExpressResponse): Promise<void>;
   refreshToken(
     req: AuthRefreshTokenRequest,
+    res: ExpressResponse,
+  ): Promise<void>;
+  resetPasswordByEmail(
+    req: AuthResetPasswordByEmailRequest,
     res: ExpressResponse,
   ): Promise<void>;
 }
