@@ -33,6 +33,11 @@ export type AuthRefreshTokenRequest = ExpressRequest<
   unknown,
   AuthRefreshToken
 >;
+export type AuthForgotPasswordByEmailRequest = ExpressRequest<
+  unknown,
+  unknown,
+  AuthForgotPasswordByEmail
+>;
 
 //email/verify - GET send link to email
 //email/verify/{token} - GET

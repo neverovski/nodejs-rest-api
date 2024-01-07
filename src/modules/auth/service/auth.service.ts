@@ -1,7 +1,8 @@
 import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
-import { TokenType } from '@common/enums';
+import { OtpType, TokenType } from '@common/enums';
 import { ServiceCore } from '@core/service';
+import { IOtpService, OtpInject } from '@modules/otp';
 import { IPlatformService, PlatformInject } from '@modules/platform';
 import {
   IRefreshTokenService,
@@ -17,6 +18,7 @@ import { ILoggerService, LoggerInject } from '@providers/logger';
 
 import { AuthInject } from '../auth.enum';
 import {
+  AuthForgotPasswordByEmail,
   AuthLogin,
   AuthLogout,
   AuthPlatform,
@@ -31,6 +33,7 @@ export class AuthService extends ServiceCore implements IAuthService {
     @Inject(AuthInject.TOKEN_SERVICE)
     private authTokenService: IAuthTokenService,
     @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
+    @Inject(OtpInject.SERVICE) private otpService: IOtpService,
     @Inject(PlatformInject.SERVICE) private platformService: IPlatformService,
     @Inject(RefreshTokenInject.SERVICE)
     private refreshTokenService: IRefreshTokenService,
@@ -39,6 +42,17 @@ export class AuthService extends ServiceCore implements IAuthService {
     private userValidatorService: IUserValidatorService,
   ) {
     super();
+  }
+
+  async forgotPasswordByEmail({ email }: AuthForgotPasswordByEmail) {
+    const user = await this.userService.getOne({ email });
+
+    if (user) {
+      await this.otpService.createAndSendCode({
+        type: OtpType.RESET_PASSWORD_BY_EMAIL,
+        user,
+      });
+    }
   }
 
   async login({ email, password }: AuthLogin) {
@@ -81,30 +95,6 @@ export class AuthService extends ServiceCore implements IAuthService {
     };
   }
 
-  // async forgotPassword({ email }: ForgotPasswordRequest) {
-  //   const { id } = await this.userService.getOneOrFail({ email });
-
-  //   const resetPasswordCode = Crypto.generateUUID();
-
-  //   const token = Crypto.signJwt(
-  //     {
-  //       jti: resetPasswordCode,
-  //       sub: `${id}`,
-  //     },
-  //     JwtConfig.secretToken,
-  //     {
-  //       expiresIn: DateUtil.parseStringToMs(JwtConfig.expiresInToken),
-  //     },
-  //   );
-
-  //   await this.userService.update({ id }, { resetPasswordCode });
-  //   void this.notificationService.addToQueue({
-  //     data: { token },
-  //     email,
-  //     template: TemplateType.PASSWORD_RESET,
-  //   });
-  // }
-
   // async resetPassword({ password, token }: ResetPasswordRequest) {
   //   const { jti, email } = await Crypto.verifyJwt<JwtPayload>(
   //     token,
@@ -133,3 +123,16 @@ export class AuthService extends ServiceCore implements IAuthService {
   //   }
   // }
 }
+
+// Создаем таблице OTP (one time password) для хранения временных кодов
+// для восстановления пароля, подтверждения email, подтверждения телефона, подтверждения смены email и т.д.
+// В таблице должны быть поля: id, user_id, code, type, expired_at, created_at, updated_at.
+// Поле type должно быть enum со значениями: reset_password, confirm_email, confirm_phone, change_email.
+// Поле code должно содержать код, который будет отправляться на email или телефон.
+// Поле expired_at должно содержать время, когда код перестанет быть действительным.
+// Отправлять код на email будем как jwt токен, в котором будет зашифрован id пользователя, код и тип кода.
+// Далее добавить env OTP_RESET_PASSWORD_EXPIRED_AT, OTP_CONFIRM_EMAIL_EXPIRED_AT, OTP_CONFIRM_PHONE_EXPIRED_AT, OTP_CHANGE_EMAIL_EXPIRED_AT и тд
+// В сервисе Auth добавить методы: forgotPasswordByEmail, resetPasswordByEmail
+// В методе forgotPasswordByEmail создаем код, сохраняем его в таблицу OTP и отправляем на email.
+// В методе resetPasswordByEmail проверяем код, если код не найден или просрочен, то выкидываем ошибку.
+// Если код найден и не просрочен, то обновляем пароль пользователя и удаляем код из таблицы OTP.
