@@ -17,6 +17,7 @@
   "validate.object.exists": "Such an object already exists",
   "validate.object": "{prop} should be object",
   "validate.oldPassword.notCorrect": "Wrong password. Please try again.",
+  "validate.otp.delay": "The code can be sent again after {time}",
   "validate.page": "The page should be >= {minimum} and <= {maximum}, or = {const}",
   "validate.string.format": "The ${0#} must be a string of format {format}",
   "validate.string": "The ${0#} should be string",

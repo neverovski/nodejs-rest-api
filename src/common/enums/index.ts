@@ -3,6 +3,7 @@ export * from './config.enum';
 export * from './exception.enum';
 export * from './logger.enum';
 export * from './middleware.enum';
+export * from './otp.enum';
 export * from './platform.enum';
 export * from './sort.type';
 export * from './sql.enum';
