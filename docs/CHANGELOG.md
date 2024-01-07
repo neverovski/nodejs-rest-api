@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/neverovski/nodejs-auth-jwt/compare/v1.1.0...v1.2.0) (2024-01-07)
+
+
+### Features
+
+* **auth:** add forgotPasswordByEmail method ([8a2a370](https://github.com/neverovski/nodejs-auth-jwt/commit/8a2a3706cd8b083a4c5f64854ea6675db7f25f40))
+* **auth:** add resetPasswordByEmail method ([9c46c4d](https://github.com/neverovski/nodejs-auth-jwt/commit/9c46c4d5eaf486d6d2255166bc6aaf0aad549c7c))
+* **otp:** add opt module ([be4646f](https://github.com/neverovski/nodejs-auth-jwt/commit/be4646f8e375d5b07ef4153f5323959000281e1e))
+* **otp:** add verifyCode method ([31dfa0c](https://github.com/neverovski/nodejs-auth-jwt/commit/31dfa0c2129185e8eb55fd7ec65753640e79b3ae))
+* **validator:** add validator core service ([06f7ffd](https://github.com/neverovski/nodejs-auth-jwt/commit/06f7ffdadcf6fd599dd83b12921b48e7b14d7f4c))
+
+
+### Bug Fixes
+
+* **http:** upgrade auth and user http client ([04f98a7](https://github.com/neverovski/nodejs-auth-jwt/commit/04f98a79f7444b8f1e367fe4f205888524548b0e))
+* **otp:** replace LessThanOrEqual with MoreThanOrEqual ([7bc9ad2](https://github.com/neverovski/nodejs-auth-jwt/commit/7bc9ad29bb884df12a67607994bc5c32048257fe))
+
 ## [1.1.0](https://github.com/neverovski/nodejs-auth-jwt/compare/v1.0.1...v1.1.0) (2023-12-08)
 
 ### [1.0.1](https://github.com/neverovski/nodejs-auth-jwt/compare/v1.0.0...v1.0.1) (2023-12-03)
