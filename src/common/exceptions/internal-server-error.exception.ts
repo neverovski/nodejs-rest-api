@@ -9,7 +9,7 @@ export class InternalServerErrorException extends HttpException {
     super({
       message: message || i18n()['exception.serverError'],
       messageCode: MessageCode.INTERNAL_SERVER_ERROR,
-      statusCode: HttpStatus.InternalServerError,
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
     });
   }
 }

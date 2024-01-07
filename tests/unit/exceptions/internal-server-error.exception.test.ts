@@ -8,7 +8,7 @@ describe('InternalServerErrorException', () => {
     const exception = new InternalServerErrorException();
 
     expect(exception.messageCode).toEqual(MessageCode.INTERNAL_SERVER_ERROR);
-    expect(exception.statusCode).toEqual(HttpStatus.InternalServerError);
+    expect(exception.statusCode).toEqual(HttpStatus.INTERNAL_SERVER_ERROR);
     expect(exception.message).toEqual(i18n()['exception.serverError']);
   });
 
@@ -17,7 +17,7 @@ describe('InternalServerErrorException', () => {
     const exception = new InternalServerErrorException(message);
 
     expect(exception.messageCode).toEqual(MessageCode.INTERNAL_SERVER_ERROR);
-    expect(exception.statusCode).toEqual(HttpStatus.InternalServerError);
+    expect(exception.statusCode).toEqual(HttpStatus.INTERNAL_SERVER_ERROR);
     expect(exception.message).toEqual(message);
   });
 
@@ -26,7 +26,7 @@ describe('InternalServerErrorException', () => {
     const exception = new InternalServerErrorException(message);
 
     expect(exception.messageCode).toEqual(MessageCode.INTERNAL_SERVER_ERROR);
-    expect(exception.statusCode).toEqual(HttpStatus.InternalServerError);
+    expect(exception.statusCode).toEqual(HttpStatus.INTERNAL_SERVER_ERROR);
     expect(exception.message).toEqual(message);
   });
 });

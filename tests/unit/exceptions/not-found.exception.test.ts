@@ -8,7 +8,7 @@ describe('NotFoundException', () => {
     const exception = new NotFoundException();
 
     expect(exception.messageCode).toEqual(MessageCode.NOT_FOUND);
-    expect(exception.statusCode).toEqual(HttpStatus.NotFound);
+    expect(exception.statusCode).toEqual(HttpStatus.NOT_FOUND);
     expect(exception.message).toEqual(i18n()['exception.notFound']);
   });
 
@@ -17,7 +17,7 @@ describe('NotFoundException', () => {
     const exception = new NotFoundException(message);
 
     expect(exception.messageCode).toEqual(MessageCode.NOT_FOUND);
-    expect(exception.statusCode).toEqual(HttpStatus.NotFound);
+    expect(exception.statusCode).toEqual(HttpStatus.NOT_FOUND);
     expect(exception.message).toEqual(message);
   });
 
@@ -26,7 +26,7 @@ describe('NotFoundException', () => {
     const exception = new NotFoundException(message);
 
     expect(exception.messageCode).toEqual(MessageCode.NOT_FOUND);
-    expect(exception.statusCode).toEqual(HttpStatus.NotFound);
+    expect(exception.statusCode).toEqual(HttpStatus.NOT_FOUND);
     expect(exception.message).toEqual(message);
   });
 });

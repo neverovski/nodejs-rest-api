@@ -98,8 +98,8 @@ export class UserController extends ControllerCore implements IUserController {
 
     return this.sendJson(
       res,
-      { ...message, statusCode: HttpStatus.Created },
-      { status: HttpStatus.Created },
+      { ...message, statusCode: HttpStatus.CREATED },
+      { status: HttpStatus.CREATED },
     );
   }
 
@@ -128,7 +128,7 @@ export class UserController extends ControllerCore implements IUserController {
 
     this.storeTokenInCookie(res, {}, { maxAge: 0 });
 
-    return this.sendJson(res, null, { status: HttpStatus.NoContent });
+    return this.sendJson(res, null, { status: HttpStatus.NO_CONTENT });
   }
 
   /**

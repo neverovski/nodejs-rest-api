@@ -8,7 +8,7 @@ export class TokenExpiredException extends HttpException {
     super({
       message: i18n()['exception.tokenExpired'],
       messageCode: MessageCode.TOKEN_EXPIRED,
-      statusCode: HttpStatus.Unauthorized,
+      statusCode: HttpStatus.UNAUTHORIZED,
     });
   }
 }

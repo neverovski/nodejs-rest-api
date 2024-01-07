@@ -49,7 +49,9 @@ export class OtpValidatorService
     });
 
     if (otp) {
-      this.throwException('code', 'validate.otp.resend');
+      this.throwException('code', 'validate.otp.delay', {
+        time: DELAY_FOR_RESEND,
+      });
     }
   }
 

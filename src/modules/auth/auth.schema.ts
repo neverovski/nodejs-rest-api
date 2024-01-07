@@ -74,7 +74,7 @@ export class AuthSchema extends SchemaCore implements IAuthSchema {
         required: ['token', 'password', 'email'],
         properties: {
           ...this.getEmail(),
-          ...this.getPassword('token'),
+          ...this.getString('token'),
           ...this.getPassword('password'),
         },
       },

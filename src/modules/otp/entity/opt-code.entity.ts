@@ -1,11 +1,13 @@
-import { Column, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
+import { DB_TABLE_OTP_CODE } from '@common/constants';
 import { BaseEntity } from '@common/entities';
 import { OtpType } from '@common/enums';
 import { UserEntity } from '@modules/user/entity/user.entity';
 
 import { IOtpCode } from '../interface';
 
+@Entity({ name: DB_TABLE_OTP_CODE })
 export class OtpCodeEntity extends BaseEntity<IOtpCode> implements IOtpCode {
   @Column('varchar')
   code!: string;

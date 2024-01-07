@@ -8,6 +8,6 @@ describe('RefreshTokenVerifyException', () => {
 
     expect(exception.message).toEqual(i18n()['exception.refreshTokenVerify']);
     expect(exception.messageCode).toEqual(MessageCode.REFRESH_TOKEN_VERIFY);
-    expect(exception.statusCode).toEqual(HttpStatus.Unauthorized);
+    expect(exception.statusCode).toEqual(HttpStatus.UNAUTHORIZED);
   });
 });

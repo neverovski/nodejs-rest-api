@@ -1,9 +1,9 @@
 ### RETURN A CURRENT USER [USER]
-GET {{apiUrl}}/v1/users/current
+GET {{apiUrl}}/users/current
 Authorization: Bearer {{dotenv REST_USER_ACCESS_TOKEN}}
 
 ### CREATE A USER [USER]
-POST {{host}}/api/users
+POST {{apiUrl}}/users
 
 {
   "email": "{{$dotenv REST_USER_LOGIN}}",
@@ -15,7 +15,7 @@ POST {{host}}/api/users
 }
 
 ### UPDATE A CURRENT USER [USER]
-PUT {{apiUrl}}/v1/users/current
+PUT {{apiUrl}}/users/current
 Authorization: Bearer {{dotenv REST_USER_ACCESS_TOKEN}}
 
 {
@@ -26,14 +26,14 @@ Authorization: Bearer {{dotenv REST_USER_ACCESS_TOKEN}}
 }
 
 ### CHANGE PASSWORD FOR A CURRENT USER [USER]
-POST {{apiUrl}}/v1/users/current/change-password
+POST {{apiUrl}}/users/current/change-password
 Authorization: Bearer {{dotenv REST_USER_ACCESS_TOKEN}}
 
 {
   "oldPassword": "{{$dotenv REST_USER_PASSWORD}}",
-  "newPassword": "1234567"
+  "newPassword": "87654321"
 }
 
 ### DELETE A CURRENT USER [USER]
-DELETE {{apiUrl}}/v1/users/current
+DELETE {{apiUrl}}/users/current
 Authorization: Bearer {{dotenv REST_USER_ACCESS_TOKEN}}

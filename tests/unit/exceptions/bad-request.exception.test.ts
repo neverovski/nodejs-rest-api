@@ -8,7 +8,7 @@ describe('BadRequestException', () => {
     const exception = new BadRequestException();
 
     expect(exception.messageCode).toEqual(MessageCode.BAD_REQUEST);
-    expect(exception.statusCode).toEqual(HttpStatus.BadRequest);
+    expect(exception.statusCode).toEqual(HttpStatus.BAD_REQUEST);
     expect(exception.message).toEqual(i18n()['exception.badRequest']);
   });
 
@@ -17,7 +17,7 @@ describe('BadRequestException', () => {
     const exception = new BadRequestException(message);
 
     expect(exception.messageCode).toEqual(MessageCode.BAD_REQUEST);
-    expect(exception.statusCode).toEqual(HttpStatus.BadRequest);
+    expect(exception.statusCode).toEqual(HttpStatus.BAD_REQUEST);
     expect(exception.message).toEqual(message);
   });
 
@@ -26,7 +26,7 @@ describe('BadRequestException', () => {
     const exception = new BadRequestException(message);
 
     expect(exception.messageCode).toEqual(MessageCode.BAD_REQUEST);
-    expect(exception.statusCode).toEqual(HttpStatus.BadRequest);
+    expect(exception.statusCode).toEqual(HttpStatus.BAD_REQUEST);
     expect(exception.message).toEqual(message);
   });
 });

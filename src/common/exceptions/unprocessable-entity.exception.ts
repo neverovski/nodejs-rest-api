@@ -9,7 +9,7 @@ export class UnprocessableEntityException extends HttpException {
     super({
       message: message || i18n()['exception.unprocessableEntity'],
       messageCode: MessageCode.UNPROCESSABLE_ENTITY,
-      statusCode: HttpStatus.UnprocessableEntity,
+      statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
     });
   }
 }

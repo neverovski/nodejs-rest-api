@@ -120,7 +120,7 @@ export class AuthController extends ControllerCore implements IAuthController {
 
     this.storeTokenInCookie(res, {}, { maxAge: 0 });
 
-    return this.sendJson(res, null, { status: HttpStatus.NoContent });
+    return this.sendJson(res, null, { status: HttpStatus.NO_CONTENT });
   }
 
   /**
@@ -191,7 +191,7 @@ export class AuthController extends ControllerCore implements IAuthController {
 
   /**
    * @openapi
-   * /api/auth/password/reset:
+   * /api/auth/password/reset/email:
    *   post:
    *      tags: [Auth]
    *      summary: Reset password

@@ -8,7 +8,7 @@ describe('UnprocessableEntityException', () => {
     const exception = new UnprocessableEntityException();
 
     expect(exception.messageCode).toEqual(MessageCode.UNPROCESSABLE_ENTITY);
-    expect(exception.statusCode).toEqual(HttpStatus.UnprocessableEntity);
+    expect(exception.statusCode).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     expect(exception.message).toEqual(i18n()['exception.unprocessableEntity']);
   });
 
@@ -17,7 +17,7 @@ describe('UnprocessableEntityException', () => {
     const exception = new UnprocessableEntityException(message);
 
     expect(exception.messageCode).toEqual(MessageCode.UNPROCESSABLE_ENTITY);
-    expect(exception.statusCode).toEqual(HttpStatus.UnprocessableEntity);
+    expect(exception.statusCode).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     expect(exception.message).toEqual(message);
   });
 
@@ -26,7 +26,7 @@ describe('UnprocessableEntityException', () => {
     const exception = new UnprocessableEntityException(message);
 
     expect(exception.messageCode).toEqual(MessageCode.UNPROCESSABLE_ENTITY);
-    expect(exception.statusCode).toEqual(HttpStatus.UnprocessableEntity);
+    expect(exception.statusCode).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     expect(exception.message).toEqual(message);
   });
 });

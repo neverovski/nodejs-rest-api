@@ -1,6 +1,6 @@
 ### LOGIN [USER]
 # @name loginUser
-POST {{apiUrl}}/v1/auth/login
+POST {{apiUrl}}/auth/login
 
 {
   "email": "{{$dotenv REST_USER_LOGIN}}",
@@ -8,22 +8,22 @@ POST {{apiUrl}}/v1/auth/login
 }
 
 ### LOGOUT [USER]
-POST {{apiUrl}}/v1/auth/logout
-Authorization: Bearer {{loginUser.response.body.data.payload.accessToken}}
+POST {{apiUrl}}/auth/logout
+Authorization: Bearer {{loginUser.response.body.data.accessToken}}
 
 ### LOGOUT [USER]
-POST {{apiUrl}}/v1/auth/logout
-Cookie: accessToken={{loginUser.response.body.data.payload.accessToken}}
+POST {{apiUrl}}/auth/logout
+Cookie: accessToken={{loginUser.response.body.data.accessToken}}
 
 ### REFRESH-TOKEN [USER]
-POST {{apiUrl}}/v1/auth/refresh-token
+POST {{apiUrl}}/auth/refresh-token
 
 {
-  "refreshToken": "{{loginUser.response.body.data.payload.refreshToken}}"
+  "refreshToken": "{{loginUser.response.body.data.refreshToken}}"
 }
 
 ### LOGS USER INTO THE SYSTEM THROUGH A APPLE
-POST {{apiUrl}}/v1/auth/platform
+POST {{apiUrl}}/auth/platform
 
 {
   "token": "{{$dotenv REST_APPLE_TOKEN}}",
@@ -31,7 +31,7 @@ POST {{apiUrl}}/v1/auth/platform
 }
 
 ### LOGS USER INTO THE SYSTEM THROUGH A FACEBOOK
-POST {{apiUrl}}/v1/auth/platform
+POST {{apiUrl}}/auth/platform
 
 {
   "token": "{{$dotenv REST_FACEBOOK_TOKEN}}",
@@ -40,7 +40,7 @@ POST {{apiUrl}}/v1/auth/platform
 
 
 ### LOGS USER INTO THE SYSTEM THROUGH A GOOGLE
-POST {{apiUrl}}/v1/auth/platform
+POST {{apiUrl}}/auth/platform
 
 {
   "token": "{{$dotenv REST_GOOGLE_TOKEN}}",
@@ -48,7 +48,7 @@ POST {{apiUrl}}/v1/auth/platform
 }
 
 ### LOGS USER INTO THE SYSTEM THROUGH A GITHUB
-POST {{apiUrl}}/v1/auth/platform
+POST {{apiUrl}}/auth/platform
 
 {
   "token": "{{$dotenv REST_GITHUB_TOKEN}}",
@@ -56,8 +56,17 @@ POST {{apiUrl}}/v1/auth/platform
 }
 
 ### FORGOT PASSWORD BY EMAIL
-POST {{apiUrl}}/v1/auth/password/email
+POST {{apiUrl}}/auth/password/email
+
+{
+  "email": "{{$dotenv REST_USER_LOGIN}}"
+}
+
+### RESET PASSWORD BY EMAIL
+POST {{apiUrl}}/auth/password/reset/email
 
 {
   "email": "{{$dotenv REST_USER_LOGIN}}",
+  "token": "f5792b25-e9ce-44e4-a34d-a9382257b086",
+  "password": "{{$dotenv REST_USER_PASSWORD}}"
 }

@@ -8,6 +8,6 @@ describe('RefreshTokenExpiredException', () => {
 
     expect(exception.message).toEqual(i18n()['exception.refreshTokenExpired']);
     expect(exception.messageCode).toEqual(MessageCode.REFRESH_TOKEN_EXPIRED);
-    expect(exception.statusCode).toEqual(HttpStatus.Unauthorized);
+    expect(exception.statusCode).toEqual(HttpStatus.UNAUTHORIZED);
   });
 });

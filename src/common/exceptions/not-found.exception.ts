@@ -9,7 +9,7 @@ export class NotFoundException extends HttpException {
     super({
       message: message || i18n()['exception.notFound'],
       messageCode: MessageCode.NOT_FOUND,
-      statusCode: HttpStatus.NotFound,
+      statusCode: HttpStatus.NOT_FOUND,
     });
   }
 }

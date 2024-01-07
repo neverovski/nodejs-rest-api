@@ -3,7 +3,7 @@ import { inject as Inject, singleton as Singleton } from 'tsyringe';
 import { RepositoryCore } from '@core';
 import { DatabaseInject, IDatabaseService } from '@database';
 
-import { OtpCodeEntity } from '../entity/opt-code';
+import { OtpCodeEntity } from '../entity/opt-code.entity';
 import { IOtpCodeRepository } from '../interface';
 
 @Singleton()
