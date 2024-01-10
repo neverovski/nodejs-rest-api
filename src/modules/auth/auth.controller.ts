@@ -37,7 +37,7 @@ export class AuthController extends ControllerCore implements IAuthController {
 
   /**
    * @openapi
-   * /api/auth/password/email:
+   * /api/auth/forgot-password/email:
    *   post:
    *      tags: [Auth]
    *      summary: Forgot password
@@ -191,7 +191,7 @@ export class AuthController extends ControllerCore implements IAuthController {
 
   /**
    * @openapi
-   * /api/auth/password/reset/email:
+   * /api/auth/forgot-password/email/reset:
    *   post:
    *      tags: [Auth]
    *      summary: Reset password

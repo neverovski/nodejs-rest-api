@@ -6,10 +6,10 @@ export enum AuthInject {
 }
 
 export enum AuthRouterLink {
+  FORGOT_PASSWORD_EMAIL = '/forgot-password/email',
+  FORGOT_PASSWORD_EMAIL_RESET = '/forgot-password/email/reset',
   LOGIN = '/login',
   LOGOUT = '/logout',
-  PASSWORD_EMAIL = '/password/email',
-  PASSWORD_RESET_EMAIL = '/password/reset/email',
   PLATFORM = '/platform',
   REFRESH_TOKEN = '/refresh-token',
 }

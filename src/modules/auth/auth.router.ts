@@ -59,7 +59,7 @@ export class AuthRouter extends RouterCore {
     );
 
     this.router.post(
-      AuthRouterLink.PASSWORD_EMAIL,
+      AuthRouterLink.FORGOT_PASSWORD_EMAIL,
       this.validateMiddleware.handler(this.schema.forgotPasswordByEmail()),
       this.asyncMiddleware.handler(
         this.controller.forgotPasswordByEmail.bind(this.controller),
@@ -67,7 +67,7 @@ export class AuthRouter extends RouterCore {
     );
 
     this.router.post(
-      AuthRouterLink.PASSWORD_RESET_EMAIL,
+      AuthRouterLink.FORGOT_PASSWORD_EMAIL_RESET,
       this.validateMiddleware.handler(this.schema.resetPasswordByEmail()),
       this.asyncMiddleware.handler(
         this.controller.resetPasswordByEmail.bind(this.controller),
