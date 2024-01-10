@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/neverovski/nodejs-auth-jwt/compare/v1.2.0...v1.3.0) (2024-01-10)
+
+
+### Features
+
+* add email verification ([55258fb](https://github.com/neverovski/nodejs-auth-jwt/commit/55258fbcf9f6fbfda496f8e1e3e644c51ff68111))
+
+
+### Bug Fixes
+
+* **router:** change  password to forgot-password ([68ff03f](https://github.com/neverovski/nodejs-auth-jwt/commit/68ff03f98dbf57a651f77115d30f2a1b89407f2c))
+
 ## [1.2.0](https://github.com/neverovski/nodejs-auth-jwt/compare/v1.1.0...v1.2.0) (2024-01-07)
 
 
