@@ -3,6 +3,7 @@ type Email = string;
 type Password = string;
 
 type Token = string;
+type Code = string;
 
 type IdObject = { id: Id };
 

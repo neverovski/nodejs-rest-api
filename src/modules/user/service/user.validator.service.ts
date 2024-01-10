@@ -19,6 +19,18 @@ export class UserValidatorService
     }
   }
 
+  checkEmailConfirmed(user?: FullUser | null) {
+    if (user?.isEmailConfirmed) {
+      this.throwException('user', 'validate.email.confirmed');
+    }
+  }
+
+  checkEmailEmpty(user?: FullUser | null) {
+    if (!user || !user.email) {
+      this.throwException('user', 'validate.email.empty');
+    }
+  }
+
   checkNewPassword(data: UserPasswordChange) {
     if (data.newPassword === data.oldPassword) {
       this.throwException(

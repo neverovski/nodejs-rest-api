@@ -1,3 +1,4 @@
 export enum OtpType {
-  RESET_PASSWORD_BY_EMAIL = 'reset_password_by_email',
+  FORGOT_PASSWORD_BY_EMAIL = 'reset_password_by_email',
+  VERIFY_EMAIL = 'verify_email',
 }

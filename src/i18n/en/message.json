@@ -1,7 +1,9 @@
 {
-  "message.ok": "Ok",
-  "message.passwordReset.sentToEmail": "Password reset code sent to email",
-  "message.passwordReset.successfully": "Password reset successfully",
-  "message.user.created": "User created successfully!",
-  "message.user.update": "User updated successfully!"
+  "message.ok": "Operation successful",
+  "message.emailVerify.sentToEmail": "Verification code has been sent to your email",
+  "message.emailVerify.successfully": "Email has been verified successfully",
+  "message.passwordReset.sentToEmail": "Password reset code has been sent to your email",
+  "message.passwordReset.successfully": "Password has been reset successfully",
+  "message.user.created": "User has been created successfully",
+  "message.user.update": "User has been updated successfully"
 }

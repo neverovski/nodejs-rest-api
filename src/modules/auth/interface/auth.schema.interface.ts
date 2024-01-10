@@ -6,4 +6,5 @@ export interface IAuthSchema {
   platform(): JsonSchemaOptions;
   refreshToken(): JsonSchemaOptions;
   resetPasswordByEmail(): JsonSchemaOptions;
+  verifyEmailByCode(): JsonSchemaOptions;
 }

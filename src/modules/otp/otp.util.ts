@@ -12,8 +12,10 @@ import { FullOtpCode } from './otp.type';
 export class OtpUtil {
   static generateCode(type: OtpType): string {
     switch (type) {
-      case OtpType.RESET_PASSWORD_BY_EMAIL:
+      case OtpType.FORGOT_PASSWORD_BY_EMAIL:
+      case OtpType.VERIFY_EMAIL:
         return HashUtil.generateUuid();
+
       default:
         return '';
     }
@@ -21,11 +23,12 @@ export class OtpUtil {
 
   static getExpiredAt(type: OtpType): Date {
     switch (type) {
-      case OtpType.RESET_PASSWORD_BY_EMAIL:
+      case OtpType.FORGOT_PASSWORD_BY_EMAIL:
         return DateUtil.addMillisecondToDate(
           new Date(),
           DateUtil.parseStringToMs(EXPIRED_AT_RESET_PASSWORD),
         );
+
       default:
         return DateUtil.addMillisecondToDate(
           new Date(),
@@ -39,15 +42,26 @@ export class OtpUtil {
     user: FullUser,
   ): [NotificationMethod, NotificationParams] | null {
     switch (otp.type) {
-      case OtpType.RESET_PASSWORD_BY_EMAIL: {
+      case OtpType.FORGOT_PASSWORD_BY_EMAIL: {
         return [
           { email: user.email },
           {
-            templatePath: TemplatePath.PASSWORD_RESET,
+            templatePath: TemplatePath.FORGOT_PASSWORD_BY_EMAIL,
             data: { code: otp.code },
           },
         ];
       }
+
+      case OtpType.VERIFY_EMAIL: {
+        return [
+          { email: user.email },
+          {
+            templatePath: TemplatePath.EMAIL_VERIFICATION,
+            data: { code: otp.code },
+          },
+        ];
+      }
+
       default:
         return null;
     }

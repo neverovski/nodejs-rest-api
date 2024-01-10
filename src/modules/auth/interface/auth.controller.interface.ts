@@ -1,4 +1,7 @@
-import type { Response as ExpressResponse } from 'express';
+import type {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
 
 import {
   AuthForgotPasswordByEmailRequest,
@@ -7,6 +10,7 @@ import {
   AuthPlatformRequest,
   AuthRefreshTokenRequest,
   AuthResetPasswordByEmailRequest,
+  AuthVerifyEmailRequest,
 } from '../auth.type';
 
 export interface IAuthController {
@@ -23,6 +27,14 @@ export interface IAuthController {
   ): Promise<void>;
   resetPasswordByEmail(
     req: AuthResetPasswordByEmailRequest,
+    res: ExpressResponse,
+  ): Promise<void>;
+  sendVerifyCodeByEmail(
+    req: ExpressRequest,
+    res: ExpressResponse,
+  ): Promise<void>;
+  verifyEmailByCode(
+    req: AuthVerifyEmailRequest,
     res: ExpressResponse,
   ): Promise<void>;
 }

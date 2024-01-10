@@ -29,6 +29,7 @@ import {
   AuthRefreshToken,
   AuthResetPasswordByEmail,
   AuthToken,
+  AuthVerifyEmail,
 } from '../auth.type';
 import { IAuthService, IAuthTokenService } from '../interface';
 
@@ -56,7 +57,7 @@ export class AuthService extends ServiceCore implements IAuthService {
 
     if (user) {
       await this.otpService.createAndSendCode({
-        type: OtpType.RESET_PASSWORD_BY_EMAIL,
+        type: OtpType.FORGOT_PASSWORD_BY_EMAIL,
         user,
       });
     }
@@ -91,15 +92,15 @@ export class AuthService extends ServiceCore implements IAuthService {
 
   async resetPasswordByEmail({
     email,
-    token,
+    code,
     password,
   }: AuthResetPasswordByEmail) {
     const user = await this.userService.getOne({ email });
 
     if (user) {
       await this.otpService.verifyCode({
-        code: token,
-        type: OtpType.RESET_PASSWORD_BY_EMAIL,
+        code,
+        type: OtpType.FORGOT_PASSWORD_BY_EMAIL,
         user,
       });
       await this.userService.update({ id: user.id }, { password });
@@ -109,6 +110,37 @@ export class AuthService extends ServiceCore implements IAuthService {
         { templatePath: TemplatePath.PASSWORD_CHANGED },
       );
     }
+  }
+
+  async sendVerifyCodeByEmail({ email }: Pick<AuthVerifyEmail, 'email'>) {
+    const user = await this.userService.getOne({ email });
+
+    this.userValidatorService.checkEmailEmpty(user);
+    this.userValidatorService.checkEmailConfirmed(user);
+
+    await this.otpService.createAndSendCode({
+      type: OtpType.VERIFY_EMAIL,
+      user: user!,
+    });
+  }
+
+  async verifyEmailByCode({ email, code }: AuthVerifyEmail) {
+    const user = await this.userService.getOne({ email });
+
+    this.userValidatorService.checkEmailEmpty(user);
+    this.userValidatorService.checkEmailConfirmed(user);
+
+    await this.otpService.verifyCode({
+      code,
+      type: OtpType.VERIFY_EMAIL,
+      user: user!,
+    });
+    await this.userService.update({ id: user!.id }, { isEmailConfirmed: true });
+
+    this.notificationService.send(
+      { email },
+      { templatePath: TemplatePath.EMAIL_CONFIRMED },
+    );
   }
 
   protected async getTokens(user: FullUser): Promise<AuthToken> {

@@ -73,5 +73,22 @@ export class AuthRouter extends RouterCore {
         this.controller.resetPasswordByEmail.bind(this.controller),
       ),
     );
+
+    this.router.get(
+      AuthRouterLink.EMAIL_VERIFY,
+      this.authMiddleware.handler(),
+      this.asyncMiddleware.handler(
+        this.controller.sendVerifyCodeByEmail.bind(this.controller),
+      ),
+    );
+
+    this.router.get(
+      AuthRouterLink.EMAIL_VERIFY_CODE,
+      this.authMiddleware.handler(),
+      this.validateMiddleware.handler(this.schema.verifyEmailByCode()),
+      this.asyncMiddleware.handler(
+        this.controller.verifyEmailByCode.bind(this.controller),
+      ),
+    );
   }
 }

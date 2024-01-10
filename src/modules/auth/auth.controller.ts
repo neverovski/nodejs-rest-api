@@ -1,4 +1,7 @@
-import type { Response as ExpressResponse } from 'express';
+import type {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
 import { inject as Inject, injectable as Injectable } from 'tsyringe';
 
 import { ConfigKey, HttpStatus } from '@common/enums';
@@ -15,6 +18,7 @@ import {
   AuthRefreshToken,
   AuthRefreshTokenRequest,
   AuthResetPasswordByEmailRequest,
+  AuthVerifyEmailRequest,
 } from './auth.type';
 import { AuthTokenDto } from './dto';
 import { IAuthController, IAuthService } from './interface';
@@ -158,7 +162,7 @@ export class AuthController extends ControllerCore implements IAuthController {
    *   post:
    *      tags: [Auth]
    *      summary: Refresh Token
-   *      description: ''
+   *      description: Refreshes the authentication token for a user.
    *      requestBody:
    *        $ref: '#/components/requestBodies/RefreshTokenRequest'
    *      responses:
@@ -195,7 +199,7 @@ export class AuthController extends ControllerCore implements IAuthController {
    *   post:
    *      tags: [Auth]
    *      summary: Reset password
-   *      description: ''
+   *      description: Resets the user's password using the information provided in the request body.
    *      requestBody:
    *        $ref: '#/components/requestBodies/ResetPasswordRequest'
    *      responses:
@@ -214,6 +218,69 @@ export class AuthController extends ControllerCore implements IAuthController {
     const message = this.getMessage(
       i18n()['message.passwordReset.successfully'],
     );
+
+    return this.sendJson(res, message);
+  }
+
+  /**
+   * @openapi
+   * /api/auth/email/verify:
+   *   get:
+   *      tags: [Auth]
+   *      summary: Send verify code by email
+   *      description: Sends a verification code to the user's email.
+   *      responses:
+   *        200:
+   *          $ref: '#/components/responses/HttpOk'
+   *        401:
+   *          $ref: '#/components/responses/HttpUnauthorized'
+   *        422:
+   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *        500:
+   *          $ref: '#/components/responses/HttpInternalServerError'
+   */
+  async sendVerifyCodeByEmail({ user }: ExpressRequest, res: ExpressResponse) {
+    const { email } = user;
+
+    await this.service.sendVerifyCodeByEmail({ email });
+    const message = this.getMessage(i18n()['message.emailVerify.sentToEmail']);
+
+    return this.sendJson(res, message);
+  }
+
+  /**
+   * @openapi
+   * /api/auth/email/verify/{code}:
+   *   get:
+   *      tags: [Auth]
+   *      summary: Сonfirmation email
+   *      description: Verifies the email of a user using a provided code.
+   *      parameters:
+   *        - in: path
+   *          name: code
+   *          required: true
+   *          schema:
+   *            type: string
+   *          description: Verification code.
+   *      responses:
+   *        200:
+   *          $ref: '#/components/responses/HttpOk'
+   *        401:
+   *          $ref: '#/components/responses/HttpUnauthorized'
+   *        422:
+   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *        500:
+   *          $ref: '#/components/responses/HttpInternalServerError'
+   */
+  async verifyEmailByCode(
+    { user, params }: AuthVerifyEmailRequest,
+    res: ExpressResponse,
+  ) {
+    const { email } = user;
+    const { code } = params;
+
+    await this.service.verifyEmailByCode({ email, code });
+    const message = this.getMessage(i18n()['message.emailVerify.successfully']);
 
     return this.sendJson(res, message);
   }

@@ -10,11 +10,11 @@ export type AuthRefreshToken = { refreshToken: Token };
 
 export type AuthForgotPasswordByEmail = { email: Email };
 export type AuthResetPasswordByEmail = AuthForgotPasswordByEmail & {
+  code: Code;
   password: Password;
-  token: Token;
 };
 
-export type AuthVerifyEmail = { token: Token };
+export type AuthVerifyEmail = { code: Code; email?: Email };
 
 export type AuthToken = {
   accessToken: Token;
@@ -46,7 +46,8 @@ export type AuthResetPasswordByEmailRequest = ExpressRequest<
   unknown,
   AuthResetPasswordByEmail
 >;
-
-//email/verify - GET send link to email
-//email/verify/{token} - GET
-//email/resend - GET
+export type AuthVerifyEmailRequest = ExpressRequest<
+  AuthVerifyEmail,
+  unknown,
+  unknown
+>;

@@ -62,11 +62,19 @@ POST {{apiUrl}}/auth/forgot-password/email
   "email": "{{$dotenv REST_USER_LOGIN}}"
 }
 
-### RESET PASSWORD BY EMAIL
+### FORGOT PASSWORD BY EMAIL
 POST {{apiUrl}}/auth/forgot-password/email/reset
 
 {
   "email": "{{$dotenv REST_USER_LOGIN}}",
-  "token": "b70e0419-9839-4a6e-a799-8580e929e5a9",
+  "code": "b70e0419-9839-4a6e-a799-8580e929e5a9",
   "password": "{{$dotenv REST_USER_PASSWORD}}"
 }
+
+### SEND VERIFY CODE BY EMAIL
+GET {{apiUrl}}/auth/email/verify
+Authorization: Bearer {{loginUser.response.body.data.accessToken}}
+
+### СONFIRMATION EMAIL
+GET {{apiUrl}}/auth/email/verify/6cd21091-8b3a-4469-9614-6571395bf7d9
+Authorization: Bearer {{loginUser.response.body.data.accessToken}}
