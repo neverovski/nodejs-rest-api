@@ -1,25 +1,12 @@
 components:
   requestBodies:
-    ChangePasswordRequest:
+    UserChangePasswordRequest:
       description: Change password for a user
       required: true
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              newPassword:
-                $ref: '#/components/schemas/PasswordValue'
-              oldPassword:
-                $ref: '#/components/schemas/PasswordValue'
-
-    UserUpdateRequest:
-      description: Update a user
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/User'
+            $ref: '#/components/schemas/UserChangePasswordSchema'
 
     UserCreateRequest:
       description: Create a user
@@ -27,21 +14,19 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - email
-              - password
-              - profile
-            allOf:
-              - $ref: '#/components/schemas/User'
-              - type: object
-                properties:
-                  password:
-                    $ref: '#/components/schemas/PasswordValue'
+            $ref: '#/components/schemas/UserCreateSchema'
+
+    UserUpdateRequest:
+      description: Update a user
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserUpdateSchema'
 
   responses:
-    UserOneResponse:
-      description: Successful operation
+    UserResponse:
+      description: Successful operation, returns the full user data
       content:
         application/json:
           schema:
@@ -49,7 +34,40 @@ components:
             properties:
               data:
                 $ref: '#/components/schemas/FullUser'
+
   schemas:
+    UserChangePasswordSchema:
+      type: object
+      required:
+        - newPassword
+        - oldPassword
+      properties:
+        newPassword:
+          $ref: '#/components/schemas/PasswordValue'
+        oldPassword:
+          $ref: '#/components/schemas/PasswordValue'
+
+    UserCreateSchema:
+      type: object
+      required:
+        - email
+        - password
+        - profile
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            password:
+              $ref: '#/components/schemas/PasswordValue'
+
+    UserUpdateSchema:
+      type: object
+      required:
+        - profile
+      properties:
+        profile:
+          $ref: '#/components/schemas/Profile'
+
     Profile:
       type: object
       properties:
@@ -61,16 +79,6 @@ components:
           type: string
           maxLength: 100
           example: 'Neverovski'
-
-    FullProfile:
-      allOf:
-        - $ref: '#/components/schemas/Profile'
-        - type: object
-          properties:
-            fullName:
-              type: string
-              example: Dmitry Neverovski
-
 
     User:
       type: object
@@ -84,13 +92,13 @@ components:
       allOf:
         - type: object
           properties:
-            id:
-              type: number
-              example: 1
             createdAt:
-              type: string
-              example: 2022-06-06T11:00:00Z
+              $ref: '#/components/schemas/DateTimeValue'
+            id:
+              $ref: '#/components/schemas/IdValue'
             isConfirmedEmail:
               type: boolean
               example: true
+            role:
+              $ref: '#/components/schemas/RoleValue'
         - $ref: '#/components/schemas/User'

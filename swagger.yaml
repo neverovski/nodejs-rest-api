@@ -1,0 +1,467 @@
+components:
+  parameters:
+    IdParam:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+        example: 10
+      description: Unique identifier for the resource
+
+  responses:
+    TokenResponse:
+      description: Authentication token for the user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/TokenSchema'
+
+    IdResponse:
+      description: Unique identifier for the created resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/IdSchema'
+
+    HttpOkResponse:
+      description: The operation was successful
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/OkSchema'
+
+    HttpNoContentResponse:
+      description: No Content
+      content:
+        application/json:
+          schema:
+            type: object
+            properties: {}
+
+    HttpBadRequestResponse:
+      description: The server could not understand the request due to invalid syntax.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/BadRequestSchema'
+
+    HttpUnauthorizedResponse:
+      description: You are not authorized to view the resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                oneOf:
+                  - $ref: '#/components/schemas/RefreshTokenExpiredSchema'
+                  - $ref: '#/components/schemas/RefreshTokenVerifySchema'
+                  - $ref: '#/components/schemas/TokenExpiredSchema'
+                  - $ref: '#/components/schemas/TokenMalformedSchema'
+                  - $ref: '#/components/schemas/TokenNotProviderSchema'
+                  - $ref: '#/components/schemas/TokenVerifySchema'
+
+    HttpForbiddenResponse:
+      description: Accessing the resource you were trying to reach is forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/ForbiddenSchema'
+
+    HttpNotFoundResponse:
+      description: The resource you were trying to reach is not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/NotFoundSchema'
+
+    HttpUnprocessableEntityResponse:
+      description: The request was well-formed but was unable to be followed due to validation errors
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/UnprocessableEntitySchema'
+
+    HttpInternalServerErrorResponse:
+      description: The server encountered an error while processing the request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/InternalServiceSchema'
+
+  securitySchemes:
+    CookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
+      description: This API uses Cookie authentication. The API expects the `accessToken` in the cookie of the HTTP request.
+
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: This API uses Bearer authentication (JWT). The API expects the `Authorization` header to be formatted as `Bearer {token}`.
+
+  schemas:
+    OkSchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Operation successful
+          description: A human-readable message indicating the operation was successful
+        messageCode:
+          type: string
+          example: OK
+          description: A machine-readable code indicating the operation was successful
+        statusCode:
+          type: number
+          example: 200
+          description: The HTTP status code for the operation
+
+    BadRequestSchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The server could not understand the request due to invalid syntax.
+          description: A human-readable message indicating the error
+        messageCode:
+          type: string
+          example: BAD_REQUEST
+          description: A machine-readable code indicating the error
+        status:
+          type: number
+          example: 400
+          description: The HTTP status code for the error
+
+    ConflictSchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The request could not be completed due to a conflict with the current state of the resource.
+          description: A human-readable message indicating the error
+        messageCode:
+          type: string
+          example: CONFLICT
+          description: A machine-readable code indicating the error
+        status:
+          type: number
+          example: 409
+          description: The HTTP status code for the error
+
+    ForbiddenSchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: You do not have permission to access the requested resource.
+          description: A human-readable message indicating the error
+        messageCode:
+          type: string
+          example: FORBIDDEN
+          description: A machine-readable code indicating the error
+        statusCode:
+          type: number
+          example: 403
+          description: The HTTP status code for the error
+
+    InternalServiceSchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The server encountered an error while processing the request.
+          description: A human-readable message indicating the error
+        messageCode:
+          type: string
+          example: INTERNAL_SERVER_ERROR
+          description: A machine-readable code indicating the error
+        statusCode:
+          type: number
+          example: 500
+          description: The HTTP status code for the error
+
+    NotFoundSchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The requested resource could not be found. Please check your request.
+          description: A human-readable message indicating the error
+        messageCode:
+          type: string
+          example: NOT_FOUND
+          description: A machine-readable code indicating the error
+        statusCode:
+          type: number
+          example: 404
+          description: The HTTP status code for the error
+
+    RefreshTokenExpiredSchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The provided refresh token has expired. Please obtain a new refresh token.
+          description: A human-readable message indicating the error
+        messageCode:
+          type: string
+          example: REFRESH_TOKEN_EXPIRED
+          description: A machine-readable code indicating the error
+        statusCode:
+          type: number
+          example: 401
+          description: The HTTP status code for the error
+
+    RefreshTokenVerifySchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: An error occurred while verifying the refresh token. Please check your refresh token.
+          description: A human-readable message indicating the error
+        messageCode:
+          type: string
+          example: REFRESH_TOKEN_VERIFY
+          description: A machine-readable code indicating the error
+        statusCode:
+          type: number
+          example: 401
+          description: The HTTP status code for the error
+
+    TokenExpiredSchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The provided token has expired. Please refresh your token.
+          description: A human-readable message indicating the error
+        messageCode:
+          type: string
+          example: TOKEN_EXPIRED
+          description: A machine-readable code indicating the error
+        statusCode:
+          type: number
+          example: 401
+          description: The HTTP status code for the error
+
+    TokenMalformedSchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The provided token is malformed. Please check your token.
+          description: A human-readable message indicating the error
+        messageCode:
+          type: string
+          example: TOKEN_MALFORMED
+          description: A machine-readable code indicating the error
+        statusCode:
+          type: number
+          example: 401
+          description: The HTTP status code for the error
+
+    TokenNotProviderSchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: No authentication token provided. Please include a token in your request.
+          description: A human-readable message indicating the error
+        messageCode:
+          type: string
+          example: TOKEN_NOT_PROVIDED
+          description: A machine-readable code indicating the error
+        status:
+          type: number
+          example: 401
+          description: The HTTP status code for the error
+
+    TokenVerifySchema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: An error occurred while verifying the token. Please check your token.
+          description: A human-readable message indicating the error
+        messageCode:
+          type: string
+          example: TOKEN_VERIFY
+          description: A machine-readable code indicating the error
+        statusCode:
+          type: number
+          example: 401
+          description: The HTTP status code for the error
+
+    UnprocessableEntitySchema:
+      type: object
+      properties:
+        message:
+          type: array
+          description: A human-readable message indicating the error
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                example: email
+              value:
+                type: string
+                example: The "email" must be a string of format test@test.com, it is test.com
+        messageCode:
+          type: string
+          example: UNPROCESSABLE_ENTITY
+          description: A machine-readable code indicating the error
+        statusCode:
+          type: number
+          example: 422
+          description: The HTTP status code for the error
+
+    MetaSchema:
+      type: object
+      required:
+        - limit
+        - currentPage
+        - hasNextPage
+        - hasPrevPage
+        - totalPages
+        - totalItems
+      properties:
+        limit:
+          type: number
+          format: int64
+          example: 20
+          description: The maximum number of items to return per page
+        currentPage:
+          type: number
+          format: int64
+          example: 1
+          description: The current page number
+        hasNextPage:
+          type: boolean
+          example: true
+          description: Indicates if there is a next page
+        hasPrevPage:
+          type: boolean
+          example: false
+          description: Indicates if there is a previous page
+        nextPage:
+          type: number
+          format: int64
+          example: 2
+          description: The number of the next page
+        prevPage:
+          type: number
+          format: int64
+          example: 1
+          description: The number of the previous page
+        totalPages:
+          type: number
+          format: int64
+          example: 10
+          description: The total number of pages
+        totalItems:
+          type: number
+          format: int64
+          example: 200
+          description: The total number of items
+
+    IdSchema:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/IdValue'
+
+    TokenSchema:
+      type: object
+      required:
+        - tokenType
+        - accessToken
+        - refreshToken
+      properties:
+        tokenType:
+          type: string
+          example: Bearer
+          description: The type of the token, typically "Bearer"
+        accessToken:
+          $ref: '#/components/schemas/TokenValue'
+          description: The access token used for authentication
+        refreshToken:
+          $ref: '#/components/schemas/TokenValue'
+          description: The refresh token used to obtain a new access token
+
+    IdValue:
+      type: integer
+      format: int64
+      example: 1
+      description: Unique identifier for the resource
+
+    DateValue:
+      type: string
+      description: The date value in ISO 8601 format.
+      example: 2022-06-06T11:00:00Z
+
+    EmailValue:
+      type: string
+      example: dmitryneverovski@gmail.com
+      description: The email address of the user
+
+    PasswordValue:
+      type: string
+      format: password
+      minLength: 8
+      maxLength: 128
+      example: '******'
+      description: The password of the user, must be at least 6 characters
+
+    PlatformValue:
+      type: string
+      description: The platform used for authentication
+      enum:
+        - facebook
+        - apple
+        - google
+        - github
+      example: facebook
+
+    RoleValue:
+      type: string
+      description: The role used for authentication
+      enum:
+        - user
+      example: user
+
+    TokenValue:
+      type: string
+      example: '******'
+      description: The JWT (JSON Web Token) used for authentication

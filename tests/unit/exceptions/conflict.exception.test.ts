@@ -7,8 +7,8 @@ describe('ConflictException', () => {
   it('should create an instance with default message when no message is provided', () => {
     const exception = new ConflictException();
 
-    expect(exception.messageCode).toEqual(MessageCode.FORBIDDEN);
-    expect(exception.statusCode).toEqual(HttpStatus.FORBIDDEN);
+    expect(exception.messageCode).toEqual(MessageCode.CONFLICT);
+    expect(exception.statusCode).toEqual(HttpStatus.CONFLICT);
     expect(exception.message).toEqual(i18n()['exception.conflict']);
   });
 
@@ -16,8 +16,8 @@ describe('ConflictException', () => {
     const message = 'Test message';
     const exception = new ConflictException(message);
 
-    expect(exception.messageCode).toEqual(MessageCode.FORBIDDEN);
-    expect(exception.statusCode).toEqual(HttpStatus.FORBIDDEN);
+    expect(exception.messageCode).toEqual(MessageCode.CONFLICT);
+    expect(exception.statusCode).toEqual(HttpStatus.CONFLICT);
     expect(exception.message).toEqual(message);
   });
 
@@ -25,8 +25,8 @@ describe('ConflictException', () => {
     const message: ExceptionMessage = [{ key: 'test', value: 'Test message' }];
     const exception = new ConflictException(message);
 
-    expect(exception.messageCode).toEqual(MessageCode.FORBIDDEN);
-    expect(exception.statusCode).toEqual(HttpStatus.FORBIDDEN);
+    expect(exception.messageCode).toEqual(MessageCode.CONFLICT);
+    expect(exception.statusCode).toEqual(HttpStatus.CONFLICT);
     expect(exception.message).toEqual(message);
   });
 });

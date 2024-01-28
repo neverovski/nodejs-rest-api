@@ -1,75 +1,103 @@
 components:
+  parameters:
+    CodeParam:
+      in: path
+      name: code
+      required: true
+      schema:
+        type: string
+      description: The verification code received by the user.
+
   requestBodies:
-    LoginRequest:
+    AuthLoginRequest:
       description: Logs user into the system by email and password
       required: true
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - email
-              - password
-            properties:
-              email:
-                $ref: '#/components/schemas/EmailValue'
-              password:
-                $ref: '#/components/schemas/PasswordValue'
+            $ref: '#/components/schemas/AuthLoginSchema'
 
-    ForgotPasswordRequest:
-      description: Forgot password
+    AuthForgotPasswordByEmailRequest:
+      description: Forgot password by email
       required: true
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - email
-            properties:
-              email:
-                $ref: '#/components/schemas/EmailValue'
+            $ref: '#/components/schemas/AuthForgotPasswordByEmailSchema'
 
-    ResetPasswordRequest:
-      description: Reset password
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - token
-              - password
-            properties:
-              token:
-                $ref: '#/components/schemas/TokenValue'
-              password:
-                $ref: '#/components/schemas/PasswordValue'
-
-    RefreshTokenRequest:
-      description: Refresh token
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - refreshToken
-            properties:
-              refreshToken:
-                $ref: '#/components/schemas/TokenValue'
-
-    PlatformRequest:
+    AuthPlatformRequest:
       description: Logs user into the system through a platform (apple, google and etc.)
       required: true
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - platform
-              - token
-            properties:
-              platform:
-                $ref: '#/components/schemas/PlatformValue'
-              token:
-                $ref: '#/components/schemas/TokenValue'
+            $ref: '#/components/schemas/AuthPlatformSchema'
+
+    AuthRefreshTokenRequest:
+      description: This request is used to refresh the authentication token of a user.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthRefreshTokenSchema'
+
+    AuthResetPasswordByEmailRequest:
+      description: Reset password
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthResetPasswordByEmailSchema'
+
+  schemas:
+    AuthLoginSchema:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          $ref: '#/components/schemas/EmailValue'
+        password:
+          $ref: '#/components/schemas/PasswordValue'
+
+    AuthForgotPasswordByEmailSchema:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          $ref: '#/components/schemas/EmailValue'
+
+    AuthPlatformSchema:
+      type: object
+      required:
+        - platform
+        - token
+      properties:
+        platform:
+          $ref: '#/components/schemas/PlatformValue'
+        token:
+          $ref: '#/components/schemas/TokenValue'
+
+    AuthRefreshTokenSchema:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          $ref: '#/components/schemas/TokenValue'
+
+    AuthResetPasswordByEmailSchema:
+      type: object
+      required:
+        - email
+        - code
+        - password
+      properties:
+        email:
+          $ref: '#/components/schemas/EmailValue'
+        code:
+          $ref: '#/components/schemas/TokenValue'
+        password:
+          $ref: '#/components/schemas/PasswordValue'

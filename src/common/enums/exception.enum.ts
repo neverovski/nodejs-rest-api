@@ -13,6 +13,7 @@ export enum HttpStatus {
 
 export enum MessageCode {
   BAD_REQUEST = 'BAD_REQUEST',
+  CONFLICT = 'CONFLICT',
   DB_ERROR = 'DB_ERROR',
   DELETE_ERROR = 'DELETE_ERROR',
   EMAIL_ALREADY_TAKEN = 'EMAIL_ALREADY_TAKEN',

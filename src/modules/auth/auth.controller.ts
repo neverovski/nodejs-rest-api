@@ -44,19 +44,19 @@ export class AuthController extends ControllerCore implements IAuthController {
    * /api/auth/forgot-password/email:
    *   post:
    *      tags: [Auth]
-   *      summary: Forgot password
-   *      description: ''
+   *      summary: Forgot password by email
+   *      description: This endpoint is used when a user has forgotten their password and wants to reset it using their email.
    *      requestBody:
-   *        $ref: '#/components/requestBodies/ForgotPasswordRequest'
+   *        $ref: '#/components/requestBodies/AuthForgotPasswordByEmailRequest'
    *      responses:
    *        200:
-   *          $ref: '#/components/responses/HttpOk'
+   *          $ref: '#/components/responses/HttpOkResponse'
    *        404:
-   *          $ref: '#/components/responses/HttpNotFound'
+   *          $ref: '#/components/responses/HttpNotFoundResponse'
    *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *          $ref: '#/components/responses/HttpUnprocessableEntityResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
    */
   async forgotPasswordByEmail(
     req: AuthForgotPasswordByEmailRequest,
@@ -76,18 +76,18 @@ export class AuthController extends ControllerCore implements IAuthController {
    *   post:
    *      tags: [Auth]
    *      summary: Logs user into the system by email and password
-   *      description: ''
+   *      description: This endpoint is used for user authentication. The user provides email and password to log into the system.
    *      requestBody:
-   *        $ref: '#/components/requestBodies/LoginRequest'
+   *        $ref: '#/components/requestBodies/AuthLoginRequest'
    *      responses:
    *        200:
    *          $ref: '#/components/responses/TokenResponse'
    *        400:
-   *          $ref: '#/components/responses/HttpBadRequest'
+   *          $ref: '#/components/responses/HttpBadRequestResponse'
    *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *          $ref: '#/components/responses/HttpUnprocessableEntityResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
    */
   async login({ body, userSession }: AuthLoginRequest, res: ExpressResponse) {
     const dataRaw = await this.service.login(body, { userSession });
@@ -105,14 +105,14 @@ export class AuthController extends ControllerCore implements IAuthController {
    *   post:
    *      tags: [Auth]
    *      summary: Logs out current logged-in user session
-   *      description: ''
+   *      description: This endpoint is used to log out the current user session. It invalidates the user's authentication token.
    *      responses:
    *        204:
-   *          $ref: '#/components/responses/HttpNoContent'
+   *          $ref: '#/components/responses/HttpNoContentResponse'
    *        401:
-   *          $ref: '#/components/responses/HttpUnauthorized'
+   *          $ref: '#/components/responses/HttpUnauthorizedResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
    *      security:
    *        - CookieAuth: []
    *        - BearerAuth: []
@@ -133,16 +133,16 @@ export class AuthController extends ControllerCore implements IAuthController {
    *   post:
    *      tags: [Auth]
    *      summary: Logs user into the system through a platform (apple, google and etc.)
-   *      description: ''
+   *      description: This endpoint is used for user authentication through various platforms like Apple, Google, etc. The user provides platform-specific authentication details to log into the system.
    *      requestBody:
-   *        $ref: '#/components/requestBodies/PlatformRequest'
+   *        $ref: '#/components/requestBodies/AuthPlatformRequest'
    *      responses:
    *        200:
    *          $ref: '#/components/responses/TokenResponse'
    *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *          $ref: '#/components/responses/HttpUnprocessableEntityResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
    */
   async platform(
     { body, userSession }: AuthPlatformRequest,
@@ -162,18 +162,18 @@ export class AuthController extends ControllerCore implements IAuthController {
    *   post:
    *      tags: [Auth]
    *      summary: Refresh Token
-   *      description: Refreshes the authentication token for a user.
+   *      description: This endpoint is used to refresh the authentication token for a user. The user provides the refresh token to get a new access token.
    *      requestBody:
-   *        $ref: '#/components/requestBodies/RefreshTokenRequest'
+   *        $ref: '#/components/requestBodies/AuthRefreshTokenRequest'
    *      responses:
    *        200:
    *          $ref: '#/components/responses/TokenResponse'
    *        401:
-   *          $ref: '#/components/responses/HttpUnauthorized'
+   *          $ref: '#/components/responses/HttpUnauthorizedResponse'
    *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *          $ref: '#/components/responses/HttpUnprocessableEntityResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
    */
   async refreshToken(
     { body, userSession, ...req }: AuthRefreshTokenRequest,
@@ -201,14 +201,14 @@ export class AuthController extends ControllerCore implements IAuthController {
    *      summary: Reset password
    *      description: Resets the user's password using the information provided in the request body.
    *      requestBody:
-   *        $ref: '#/components/requestBodies/ResetPasswordRequest'
+   *        $ref: '#/components/requestBodies/AuthResetPasswordByEmailRequest'
    *      responses:
    *        200:
-   *          $ref: '#/components/responses/HttpOk'
+   *          $ref: '#/components/responses/HttpOkResponse'
    *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *          $ref: '#/components/responses/HttpUnprocessableEntityResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
    */
   async resetPasswordByEmail(
     req: AuthResetPasswordByEmailRequest,
@@ -228,16 +228,19 @@ export class AuthController extends ControllerCore implements IAuthController {
    *   get:
    *      tags: [Auth]
    *      summary: Send verify code by email
-   *      description: Sends a verification code to the user's email.
+   *      description: This endpoint is used to request a verification code which will be sent to the user's email. The user can use this code to verify their email address.
    *      responses:
    *        200:
-   *          $ref: '#/components/responses/HttpOk'
+   *          $ref: '#/components/responses/HttpOkResponse'
    *        401:
-   *          $ref: '#/components/responses/HttpUnauthorized'
+   *          $ref: '#/components/responses/HttpUnauthorizedResponse'
    *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *          $ref: '#/components/responses/HttpUnprocessableEntityResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
+   *      security:
+   *        - CookieAuth: []
+   *        - BearerAuth: []
    */
   async sendVerifyCodeByEmail({ user }: ExpressRequest, res: ExpressResponse) {
     const { email } = user;
@@ -254,23 +257,21 @@ export class AuthController extends ControllerCore implements IAuthController {
    *   get:
    *      tags: [Auth]
    *      summary: Сonfirmation email
-   *      description: Verifies the email of a user using a provided code.
+   *      description: This endpoint is used to verify the email of a user. The user provides a verification code that they received in their email.
    *      parameters:
-   *        - in: path
-   *          name: code
-   *          required: true
-   *          schema:
-   *            type: string
-   *          description: Verification code.
+   *        - $ref: '#/components/parameters/CodeParam'
    *      responses:
    *        200:
-   *          $ref: '#/components/responses/HttpOk'
+   *          $ref: '#/components/responses/HttpOkResponse'
    *        401:
-   *          $ref: '#/components/responses/HttpUnauthorized'
+   *          $ref: '#/components/responses/HttpUnauthorizedResponse'
    *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *          $ref: '#/components/responses/HttpUnprocessableEntityResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
+   *      security:
+   *        - CookieAuth: []
+   *        - BearerAuth: []
    */
   async verifyEmailByCode(
     { user, params }: AuthVerifyEmailRequest,

@@ -41,16 +41,16 @@ export class UserController extends ControllerCore implements IUserController {
    *      summary: Change password for a current user
    *      description: This can only be done by the logged-in user.
    *      requestBody:
-   *        $ref: '#/components/requestBodies/ChangePasswordRequest'
+   *        $ref: '#/components/requestBodies/UserChangePasswordRequest'
    *      responses:
    *        200:
-   *          $ref: '#/components/responses/HttpOk'
+   *          $ref: '#/components/responses/HttpOkResponse'
    *        401:
-   *          $ref: '#/components/responses/HttpUnauthorized'
+   *          $ref: '#/components/responses/HttpUnauthorizedResponse'
    *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *          $ref: '#/components/responses/HttpUnprocessableEntityResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
    *      security:
    *        - CookieAuth: []
    *        - BearerAuth: []
@@ -77,16 +77,16 @@ export class UserController extends ControllerCore implements IUserController {
    *   post:
    *      tags: [User]
    *      summary: Create a user
-   *      description: ''
+   *      description: This endpoint is used to create a new user. The user's details are provided in the request body.
    *      requestBody:
    *        $ref: '#/components/requestBodies/UserCreateRequest'
    *      responses:
    *        201:
-   *          $ref: '#/components/responses/HttpOk'
+   *          $ref: '#/components/responses/HttpOkResponse'
    *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *          $ref: '#/components/responses/HttpUnprocessableEntityResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
    */
   async create(req: CreateUserRequest, res: ExpressResponse) {
     await this.userService.create(req.body);
@@ -112,11 +112,11 @@ export class UserController extends ControllerCore implements IUserController {
    *      description: This can only be done by the logged-in user.
    *      responses:
    *        204:
-   *          $ref: '#/components/responses/HttpNoContent'
+   *          $ref: '#/components/responses/HttpNoContentResponse'
    *        401:
-   *          $ref: '#/components/responses/HttpUnauthorized'
+   *          $ref: '#/components/responses/HttpUnauthorizedResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
    *      security:
    *        - CookieAuth: []
    *        - BearerAuth: []
@@ -140,11 +140,11 @@ export class UserController extends ControllerCore implements IUserController {
    *      description: This can only be done by the logged-in user.
    *      responses:
    *        200:
-   *          $ref: '#/components/responses/UserOneResponse'
+   *          $ref: '#/components/responses/UserResponse'
    *        401:
-   *          $ref: '#/components/responses/HttpUnauthorized'
+   *          $ref: '#/components/responses/HttpUnauthorizedResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
    *      security:
    *        - CookieAuth: []
    *        - BearerAuth: []
@@ -169,13 +169,13 @@ export class UserController extends ControllerCore implements IUserController {
    *        $ref: '#/components/requestBodies/UserUpdateRequest'
    *      responses:
    *        200:
-   *          $ref: '#/components/responses/HttpOk'
+   *          $ref: '#/components/responses/UserResponse'
    *        401:
-   *          $ref: '#/components/responses/HttpUnauthorized'
+   *          $ref: '#/components/responses/HttpUnauthorizedResponse'
    *        422:
-   *          $ref: '#/components/responses/HttpUnprocessableEntity'
+   *          $ref: '#/components/responses/HttpUnprocessableEntityResponse'
    *        500:
-   *          $ref: '#/components/responses/HttpInternalServerError'
+   *          $ref: '#/components/responses/HttpInternalServerErrorResponse'
    *      security:
    *        - CookieAuth: []
    *        - BearerAuth: []

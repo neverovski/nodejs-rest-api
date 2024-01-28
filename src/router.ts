@@ -3,9 +3,11 @@ import type {
   Response as ExpressResponse,
   NextFunction,
 } from 'express';
+import swaggerUi from 'swagger-ui-express';
 import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
 import { NotFoundException } from '@common/exceptions';
+import { SwaggerUtil } from '@common/utils';
 import { RouterCore } from '@core';
 import { i18n } from '@i18n';
 import { AuthRouter } from '@modules/auth/auth.router';
@@ -27,6 +29,12 @@ export class Router extends RouterCore {
 
     this.router.use('/api/auth', this.authRouter.getRouter());
     this.router.use('/api/users', this.userRouter.getRouter());
+
+    this.router.use(
+      '/docs',
+      swaggerUi.serve,
+      swaggerUi.setup(SwaggerUtil.spec()),
+    );
 
     this.notFound();
   }

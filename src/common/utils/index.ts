@@ -8,6 +8,7 @@ export * from './mapping.util';
 export * from './queue.util';
 export * from './request.util';
 export * from './string.util';
+export * from './swagger.util';
 export * from './template.util';
 export * from './url.util';
 export * from './user-agent.util';
