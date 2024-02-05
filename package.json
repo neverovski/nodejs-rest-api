@@ -84,7 +84,7 @@
     "mustache": "^4.2.0",
     "nodemailer": "^6.9.8",
     "pg": "^8.11.3",
-    "pino": "^8.17.2",
+    "pino": "^8.18.0",
     "pino-elasticsearch": "^8.0.0",
     "pino-http": "^9.0.0",
     "pino-pretty": "^10.3.1",
