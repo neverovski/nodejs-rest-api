@@ -1,6 +1,6 @@
 {
   "name": "nodejs-rest-api",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Node.js for Token Based Authentication (access and refresh) with PostgreSQL database.",
   "index": "src/index.ts",
   "scripts": {
