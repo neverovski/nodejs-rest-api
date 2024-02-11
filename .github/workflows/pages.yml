@@ -1,0 +1,70 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-openapi:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Cache node modules
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Generate Swagger documentation
+      run: npx swagger-jsdoc -o ./openapi.json -d ./swagger.config.js ./swagger.yaml ./src/modules/*/*.controller.ts ./src/modules/*/*.yaml
+
+    - name: Upload openapi.json
+      uses: actions/upload-artifact@v4
+      with:
+        name: spec-file
+        path: openapi.json
+
+  deploy:
+    needs: generate-openapi
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download openapi.json
+      uses: actions/download-artifact@v4
+      with:
+        name: spec-file
+
+    - name: Generate Swagger UI
+      uses: Legion2/swagger-ui-action@v1
+      with:
+        output: swagger-ui
+        spec-file: openapi.json
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: swagger-u

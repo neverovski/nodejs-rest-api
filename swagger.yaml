@@ -426,7 +426,7 @@ components:
       example: 1
       description: Unique identifier for the resource
 
-    DateValue:
+    DateTimeValue:
       type: string
       description: The date value in ISO 8601 format.
       example: 2022-06-06T11:00:00Z

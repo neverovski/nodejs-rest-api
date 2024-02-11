@@ -8,7 +8,7 @@ export class SwaggerUtil {
   private static get options(): Options {
     return {
       definition: {
-        openapi: '3.0.1',
+        openapi: '3.0.3',
         info: {
           title: 'Auth - OpenAPI 3.0',
           version,
