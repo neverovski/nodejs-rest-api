@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/neverovski/nodejs-rest-api/compare/v1.3.0...v1.4.0) (2024-02-11)
+
+
+### Features
+
+* add funding ([b9b4380](https://github.com/neverovski/nodejs-rest-api/commit/b9b4380b3f4658b6a9c20cc032ed65d285cf754e))
+* add swagger ([fc2a7ca](https://github.com/neverovski/nodejs-rest-api/commit/fc2a7cad667f6db214975137eb1cea41a0efda29))
+* **swagger:** add github action ([f5dad8d](https://github.com/neverovski/nodejs-rest-api/commit/f5dad8df458e877dfc36c00ba5478781ddca9943))
+
 ## [1.3.0](https://github.com/neverovski/nodejs-auth-jwt/compare/v1.2.0...v1.3.0) (2024-01-10)
 
 
