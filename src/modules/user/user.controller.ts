@@ -21,7 +21,7 @@ import { UserInject } from './user.enum';
  * @openapi
  * tags:
  *   name: User
- *   description: user
+ *   description: The User API provides endpoints for managing user data, including creating, updating, retrieving, and deleting user records.
  */
 @Injectable()
 export class UserController extends ControllerCore implements IUserController {

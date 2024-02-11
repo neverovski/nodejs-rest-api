@@ -1,18 +1,55 @@
-# Basic Authentication for Nodejs
+# Node.js Rest API
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](http://prettier.io) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
-This project, titled "Basic Authentication for Nodejs", is a comprehensive authentication solution built with Node.js. It includes features such as user authentication, token refresh, user logout, password reset, and user management (creation, update, deletion).
+This is a sample Node.js application comprehensive API including features such as user authentication, token refresh, user logout, password reset, and user management (creation, update, deletion).
 
 Additionally, it supports authentication through various platforms including Facebook, Apple, Google, and Github. Twitter and LinkedIn are planned for future integration.
 
 The project also includes a Swagger documentation.
 
+## Features
+  - Auth
+    - [X] Authenticate user
+    - [X] Email verify
+    - [X] Implement "Forgot Password" via email
+    - [] Implement "Forgot Password" via phone
+    - [X] Logout a user
+    - [X] Refresh token
+    - [X] Implement "Reset Password" via email
+    - [] Implement "Reset Password" via phone
+  - User
+    - [X] Create a new user
+    - [X] Update user
+    - [X] Reset password
+    - [X] Delete user
+  - Social Platform Integration
+    - [ ] Linkedin
+    - [ ] Twitter
+    - [X] Apple
+    - [X] Facebook
+    - [X] Github
+    - [X] Google
+  - Testing
+    - [X] Unit
+    - [ ] E2E
+    - [ ] Integration
+  - [X] Implement Swagger for API documentation
+
+## API Documentation
+
+The REST API exposes its OpenAPI. You can view the API definition interactively using the Swagger UI, hosted at /docs. Simply start the server and navigate to [http://127.0.0.1:5858/docs](http://127.0.0.1:5858/docs) in your browser to access the Swagger UI.
+
+Alternatively, you can explore the [online version of the API documentation](https://neverovski.github.io/nodejs-rest-api/) without running the server.
+
+[![openapi](docs/img/openapi.png)](https://neverovski.github.io/nodejs-rest-api/)
+
 ## Installation
 
 Development environment requirements:
-- [Docker](https://www.docker.com) >= 17.06
-- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Node.js](https://nodejs.org) >= 20
+- [Docker](https://www.docker.com) >= 24
+- [Docker Compose V2](https://docs.docker.com/compose/install/)
 
 ## Project initialization
 

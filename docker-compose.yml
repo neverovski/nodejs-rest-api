@@ -1,11 +1,11 @@
 version: '3.9'
 
 services:
-  auth-server:
-    image: auth-server
-    container_name: auth-server
+  rest-api-server:
+    image: rest-api-server
+    container_name: rest-api-server
     networks:
-      - auth-network
+      - rest-api-network
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -17,25 +17,26 @@ services:
       - ${APP_PORT}:${APP_PORT}
     restart: unless-stopped
 
-  auth-redis:
+  rest-api-redis:
     image: redis:7
-    container_name: auth-redis
+    container_name: rest-api-redis
     networks:
-      - auth-network
-    command: redis-server --save 20 1 --loglevel warning
+      - rest-api-network
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     volumes:
-      - auth-redis-data:/data
+      - ./.cloud/redis.conf:/usr/local/etc/redis/redis.conf
+      - rest-api-redis-data:/data
     ports:
       - ${REDIS_PORT}:6379
     restart: unless-stopped
 
-  auth-db:
+  rest-api-db:
     image: postgres:15
-    container_name: auth-db
+    container_name: rest-api-db
     networks:
-      - auth-network
+      - rest-api-network
     volumes:
-      - auth-db-data:/var/lib/postgresql/data
+      - rest-api-db-data:/var/lib/postgresql/data
     environment:
       TZ: 'UTC'
       POSTGRES_DB: ${DB_NAME}
@@ -46,11 +47,11 @@ services:
     restart: unless-stopped
 
 volumes:
-  auth-redis-data:
+  rest-api-redis-data:
     driver: local
-  auth-db-data:
+  rest-api-db-data:
     driver: local
 
 networks:
-  auth-network:
-    name: auth-network
+  rest-api-network:
+    name: rest-api-network

@@ -27,7 +27,7 @@ import { IAuthController, IAuthService } from './interface';
  * @openapi
  * tags:
  *   name: Auth
- *   description: auth
+ *   description: The Auth API provides endpoints for managing user authentication, including login, logout, password reset, and token refresh.
  */
 @Injectable()
 export class AuthController extends ControllerCore implements IAuthController {
