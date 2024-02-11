@@ -81,14 +81,12 @@ describe('DateUtil', () => {
     });
 
     it('should use the current date if no date is specified', () => {
+      const date = new Date('2024-02-11T09:01:10.390Z');
       const months = 1;
-      const now = new Date();
 
-      const result = DateUtil.addMonths(new Date(), months);
+      const result = DateUtil.addMonths(date, months);
 
-      expect(result.getTime()).toBeGreaterThanOrEqual(
-        now.getTime() + months * 30 * 24 * 60 * 60 * 1000,
-      );
+      expect(result).toEqual(new Date('2024-03-11T09:01:10.390Z'));
     });
 
     it('should handle negative months', () => {
