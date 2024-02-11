@@ -4,10 +4,13 @@ on:
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
   generate-openapi:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     strategy:
       matrix:
