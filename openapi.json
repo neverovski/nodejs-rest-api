@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Auth - OpenAPI 3.0",
+    "title": "Node.js Rest API  - OpenAPI 3.0",
     "version": "1.3.0",
     "description": "Node.js for Token Based Authentication (access and refresh) with PostgreSQL database.",
     "contact": {
@@ -1271,11 +1271,11 @@
   "tags": [
     {
       "name": "Auth",
-      "description": "auth"
+      "description": "The Auth API provides endpoints for managing user authentication, including login, logout, password reset, and token refresh."
     },
     {
       "name": "User",
-      "description": "user"
+      "description": "The User API provides endpoints for managing user data, including creating, updating, retrieving, and deleting user records."
     }
   ]
 }
