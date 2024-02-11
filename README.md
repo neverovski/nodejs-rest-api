@@ -13,11 +13,11 @@ The project also includes a Swagger documentation.
     - [X] Authenticate user
     - [X] Email verify
     - [X] Implement "Forgot Password" via email
-    - [] Implement "Forgot Password" via phone
+    - [ ] Implement "Forgot Password" via phone
     - [X] Logout a user
     - [X] Refresh token
     - [X] Implement "Reset Password" via email
-    - [] Implement "Reset Password" via phone
+    - [ ] Implement "Reset Password" via phone
   - User
     - [X] Create a new user
     - [X] Update user
