@@ -1,0 +1,1281 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Auth - OpenAPI 3.0",
+    "version": "1.3.0",
+    "description": "Node.js for Token Based Authentication (access and refresh) with PostgreSQL database.",
+    "contact": {
+      "name": "Dmitry Neverovski",
+      "email": "dmitryneverovski@gmail.com",
+      "url": "https://code-stuff.com"
+    }
+  },
+  "paths": {
+    "/api/auth/forgot-password/email": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Forgot password by email",
+        "description": "This endpoint is used when a user has forgotten their password and wants to reset it using their email.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/AuthForgotPasswordByEmailRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/HttpOkResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/HttpNotFoundResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/HttpUnprocessableEntityResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Logs user into the system by email and password",
+        "description": "This endpoint is used for user authentication. The user provides email and password to log into the system.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/AuthLoginRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TokenResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/HttpBadRequestResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/HttpUnprocessableEntityResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Logs out current logged-in user session",
+        "description": "This endpoint is used to log out the current user session. It invalidates the user's authentication token.",
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/HttpNoContentResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/HttpUnauthorizedResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        },
+        "security": [
+          {
+            "CookieAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/auth/platform": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Logs user into the system through a platform (apple, google and etc.)",
+        "description": "This endpoint is used for user authentication through various platforms like Apple, Google, etc. The user provides platform-specific authentication details to log into the system.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/AuthPlatformRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TokenResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/HttpUnprocessableEntityResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/api/auth/refresh-token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Refresh Token",
+        "description": "This endpoint is used to refresh the authentication token for a user. The user provides the refresh token to get a new access token.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/AuthRefreshTokenRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TokenResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/HttpUnauthorizedResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/HttpUnprocessableEntityResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/api/auth/forgot-password/email/reset": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Reset password",
+        "description": "Resets the user's password using the information provided in the request body.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/AuthResetPasswordByEmailRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/HttpOkResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/HttpUnprocessableEntityResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/api/auth/email/verify": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Send verify code by email",
+        "description": "This endpoint is used to request a verification code which will be sent to the user's email. The user can use this code to verify their email address.",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/HttpOkResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/HttpUnauthorizedResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/HttpUnprocessableEntityResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        },
+        "security": [
+          {
+            "CookieAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/auth/email/verify/{code}": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Сonfirmation email",
+        "description": "This endpoint is used to verify the email of a user. The user provides a verification code that they received in their email.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CodeParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/HttpOkResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/HttpUnauthorizedResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/HttpUnprocessableEntityResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        },
+        "security": [
+          {
+            "CookieAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/current/change-password": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Change password for a current user",
+        "description": "This can only be done by the logged-in user.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UserChangePasswordRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/HttpOkResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/HttpUnauthorizedResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/HttpUnprocessableEntityResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        },
+        "security": [
+          {
+            "CookieAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create a user",
+        "description": "This endpoint is used to create a new user. The user's details are provided in the request body.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UserCreateRequest"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/HttpOkResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/HttpUnprocessableEntityResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/api/v1/users/current": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete a current user",
+        "description": "This can only be done by the logged-in user.",
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/HttpNoContentResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/HttpUnauthorizedResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        },
+        "security": [
+          {
+            "CookieAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Return a current user",
+        "description": "This can only be done by the logged-in user.",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UserResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/HttpUnauthorizedResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        },
+        "security": [
+          {
+            "CookieAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update a current user",
+        "description": "This can only be done by the logged-in user.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UserUpdateRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UserResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/HttpUnauthorizedResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/HttpUnprocessableEntityResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/HttpInternalServerErrorResponse"
+          }
+        },
+        "security": [
+          {
+            "CookieAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "IdParam": {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64",
+          "example": 10
+        },
+        "description": "Unique identifier for the resource"
+      },
+      "CodeParam": {
+        "in": "path",
+        "name": "code",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The verification code received by the user."
+      }
+    },
+    "responses": {
+      "TokenResponse": {
+        "description": "Authentication token for the user",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/TokenSchema"
+                }
+              }
+            }
+          }
+        }
+      },
+      "IdResponse": {
+        "description": "Unique identifier for the created resource",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/IdSchema"
+                }
+              }
+            }
+          }
+        }
+      },
+      "HttpOkResponse": {
+        "description": "The operation was successful",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/OkSchema"
+                }
+              }
+            }
+          }
+        }
+      },
+      "HttpNoContentResponse": {
+        "description": "No Content",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      },
+      "HttpBadRequestResponse": {
+        "description": "The server could not understand the request due to invalid syntax.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/BadRequestSchema"
+                }
+              }
+            }
+          }
+        }
+      },
+      "HttpUnauthorizedResponse": {
+        "description": "You are not authorized to view the resource",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/RefreshTokenExpiredSchema"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RefreshTokenVerifySchema"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TokenExpiredSchema"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TokenMalformedSchema"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TokenNotProviderSchema"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TokenVerifySchema"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "HttpForbiddenResponse": {
+        "description": "Accessing the resource you were trying to reach is forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/ForbiddenSchema"
+                }
+              }
+            }
+          }
+        }
+      },
+      "HttpNotFoundResponse": {
+        "description": "The resource you were trying to reach is not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/NotFoundSchema"
+                }
+              }
+            }
+          }
+        }
+      },
+      "HttpUnprocessableEntityResponse": {
+        "description": "The request was well-formed but was unable to be followed due to validation errors",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/UnprocessableEntitySchema"
+                }
+              }
+            }
+          }
+        }
+      },
+      "HttpInternalServerErrorResponse": {
+        "description": "The server encountered an error while processing the request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/InternalServiceSchema"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UserResponse": {
+        "description": "Successful operation, returns the full user data",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/FullUser"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "CookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "accessToken",
+        "description": "This API uses Cookie authentication. The API expects the `accessToken` in the cookie of the HTTP request."
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "This API uses Bearer authentication (JWT). The API expects the `Authorization` header to be formatted as `Bearer {token}`."
+      }
+    },
+    "schemas": {
+      "OkSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Operation successful",
+            "description": "A human-readable message indicating the operation was successful"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "OK",
+            "description": "A machine-readable code indicating the operation was successful"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 200,
+            "description": "The HTTP status code for the operation"
+          }
+        }
+      },
+      "BadRequestSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "The server could not understand the request due to invalid syntax.",
+            "description": "A human-readable message indicating the error"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "BAD_REQUEST",
+            "description": "A machine-readable code indicating the error"
+          },
+          "status": {
+            "type": "number",
+            "example": 400,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "ConflictSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "The request could not be completed due to a conflict with the current state of the resource.",
+            "description": "A human-readable message indicating the error"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "CONFLICT",
+            "description": "A machine-readable code indicating the error"
+          },
+          "status": {
+            "type": "number",
+            "example": 409,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "ForbiddenSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "You do not have permission to access the requested resource.",
+            "description": "A human-readable message indicating the error"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "FORBIDDEN",
+            "description": "A machine-readable code indicating the error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 403,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "InternalServiceSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "The server encountered an error while processing the request.",
+            "description": "A human-readable message indicating the error"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "INTERNAL_SERVER_ERROR",
+            "description": "A machine-readable code indicating the error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 500,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "NotFoundSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "The requested resource could not be found. Please check your request.",
+            "description": "A human-readable message indicating the error"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "NOT_FOUND",
+            "description": "A machine-readable code indicating the error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 404,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "RefreshTokenExpiredSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "The provided refresh token has expired. Please obtain a new refresh token.",
+            "description": "A human-readable message indicating the error"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "REFRESH_TOKEN_EXPIRED",
+            "description": "A machine-readable code indicating the error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 401,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "RefreshTokenVerifySchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "An error occurred while verifying the refresh token. Please check your refresh token.",
+            "description": "A human-readable message indicating the error"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "REFRESH_TOKEN_VERIFY",
+            "description": "A machine-readable code indicating the error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 401,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "TokenExpiredSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "The provided token has expired. Please refresh your token.",
+            "description": "A human-readable message indicating the error"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "TOKEN_EXPIRED",
+            "description": "A machine-readable code indicating the error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 401,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "TokenMalformedSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "The provided token is malformed. Please check your token.",
+            "description": "A human-readable message indicating the error"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "TOKEN_MALFORMED",
+            "description": "A machine-readable code indicating the error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 401,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "TokenNotProviderSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "No authentication token provided. Please include a token in your request.",
+            "description": "A human-readable message indicating the error"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "TOKEN_NOT_PROVIDED",
+            "description": "A machine-readable code indicating the error"
+          },
+          "status": {
+            "type": "number",
+            "example": 401,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "TokenVerifySchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "An error occurred while verifying the token. Please check your token.",
+            "description": "A human-readable message indicating the error"
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "TOKEN_VERIFY",
+            "description": "A machine-readable code indicating the error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 401,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "UnprocessableEntitySchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "array",
+            "description": "A human-readable message indicating the error",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "example": "email"
+                },
+                "value": {
+                  "type": "string",
+                  "example": "The \"email\" must be a string of format test@test.com, it is test.com"
+                }
+              }
+            }
+          },
+          "messageCode": {
+            "type": "string",
+            "example": "UNPROCESSABLE_ENTITY",
+            "description": "A machine-readable code indicating the error"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 422,
+            "description": "The HTTP status code for the error"
+          }
+        }
+      },
+      "MetaSchema": {
+        "type": "object",
+        "required": [
+          "limit",
+          "currentPage",
+          "hasNextPage",
+          "hasPrevPage",
+          "totalPages",
+          "totalItems"
+        ],
+        "properties": {
+          "limit": {
+            "type": "number",
+            "format": "int64",
+            "example": 20,
+            "description": "The maximum number of items to return per page"
+          },
+          "currentPage": {
+            "type": "number",
+            "format": "int64",
+            "example": 1,
+            "description": "The current page number"
+          },
+          "hasNextPage": {
+            "type": "boolean",
+            "example": true,
+            "description": "Indicates if there is a next page"
+          },
+          "hasPrevPage": {
+            "type": "boolean",
+            "example": false,
+            "description": "Indicates if there is a previous page"
+          },
+          "nextPage": {
+            "type": "number",
+            "format": "int64",
+            "example": 2,
+            "description": "The number of the next page"
+          },
+          "prevPage": {
+            "type": "number",
+            "format": "int64",
+            "example": 1,
+            "description": "The number of the previous page"
+          },
+          "totalPages": {
+            "type": "number",
+            "format": "int64",
+            "example": 10,
+            "description": "The total number of pages"
+          },
+          "totalItems": {
+            "type": "number",
+            "format": "int64",
+            "example": 200,
+            "description": "The total number of items"
+          }
+        }
+      },
+      "IdSchema": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/IdValue"
+          }
+        }
+      },
+      "TokenSchema": {
+        "type": "object",
+        "required": [
+          "tokenType",
+          "accessToken",
+          "refreshToken"
+        ],
+        "properties": {
+          "tokenType": {
+            "type": "string",
+            "example": "Bearer",
+            "description": "The type of the token, typically \"Bearer\""
+          },
+          "accessToken": {
+            "$ref": "#/components/schemas/TokenValue",
+            "description": "The access token used for authentication"
+          },
+          "refreshToken": {
+            "$ref": "#/components/schemas/TokenValue",
+            "description": "The refresh token used to obtain a new access token"
+          }
+        }
+      },
+      "IdValue": {
+        "type": "integer",
+        "format": "int64",
+        "example": 1,
+        "description": "Unique identifier for the resource"
+      },
+      "DateTimeValue": {
+        "type": "string",
+        "description": "The date value in ISO 8601 format.",
+        "example": "2022-06-06T11:00:00Z"
+      },
+      "EmailValue": {
+        "type": "string",
+        "example": "dmitryneverovski@gmail.com",
+        "description": "The email address of the user"
+      },
+      "PasswordValue": {
+        "type": "string",
+        "format": "password",
+        "minLength": 8,
+        "maxLength": 128,
+        "example": "******",
+        "description": "The password of the user, must be at least 6 characters"
+      },
+      "PlatformValue": {
+        "type": "string",
+        "description": "The platform used for authentication",
+        "enum": [
+          "facebook",
+          "apple",
+          "google",
+          "github"
+        ],
+        "example": "facebook"
+      },
+      "RoleValue": {
+        "type": "string",
+        "description": "The role used for authentication",
+        "enum": [
+          "user"
+        ],
+        "example": "user"
+      },
+      "TokenValue": {
+        "type": "string",
+        "example": "******",
+        "description": "The JWT (JSON Web Token) used for authentication"
+      },
+      "AuthLoginSchema": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "$ref": "#/components/schemas/EmailValue"
+          },
+          "password": {
+            "$ref": "#/components/schemas/PasswordValue"
+          }
+        }
+      },
+      "AuthForgotPasswordByEmailSchema": {
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "$ref": "#/components/schemas/EmailValue"
+          }
+        }
+      },
+      "AuthPlatformSchema": {
+        "type": "object",
+        "required": [
+          "platform",
+          "token"
+        ],
+        "properties": {
+          "platform": {
+            "$ref": "#/components/schemas/PlatformValue"
+          },
+          "token": {
+            "$ref": "#/components/schemas/TokenValue"
+          }
+        }
+      },
+      "AuthRefreshTokenSchema": {
+        "type": "object",
+        "required": [
+          "refreshToken"
+        ],
+        "properties": {
+          "refreshToken": {
+            "$ref": "#/components/schemas/TokenValue"
+          }
+        }
+      },
+      "AuthResetPasswordByEmailSchema": {
+        "type": "object",
+        "required": [
+          "email",
+          "code",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "$ref": "#/components/schemas/EmailValue"
+          },
+          "code": {
+            "$ref": "#/components/schemas/TokenValue"
+          },
+          "password": {
+            "$ref": "#/components/schemas/PasswordValue"
+          }
+        }
+      },
+      "UserChangePasswordSchema": {
+        "type": "object",
+        "required": [
+          "newPassword",
+          "oldPassword"
+        ],
+        "properties": {
+          "newPassword": {
+            "$ref": "#/components/schemas/PasswordValue"
+          },
+          "oldPassword": {
+            "$ref": "#/components/schemas/PasswordValue"
+          }
+        }
+      },
+      "UserCreateSchema": {
+        "type": "object",
+        "required": [
+          "email",
+          "password",
+          "profile"
+        ],
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/User"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "password": {
+                "$ref": "#/components/schemas/PasswordValue"
+              }
+            }
+          }
+        ]
+      },
+      "UserUpdateSchema": {
+        "type": "object",
+        "required": [
+          "profile"
+        ],
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/Profile"
+          }
+        }
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "maxLength": 100,
+            "example": "Dmitry"
+          },
+          "lastName": {
+            "type": "string",
+            "maxLength": 100,
+            "example": "Neverovski"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "$ref": "#/components/schemas/EmailValue"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/Profile"
+          }
+        }
+      },
+      "FullUser": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "$ref": "#/components/schemas/DateTimeValue"
+              },
+              "id": {
+                "$ref": "#/components/schemas/IdValue"
+              },
+              "isConfirmedEmail": {
+                "type": "boolean",
+                "example": true
+              },
+              "role": {
+                "$ref": "#/components/schemas/RoleValue"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/User"
+          }
+        ]
+      }
+    },
+    "requestBodies": {
+      "AuthLoginRequest": {
+        "description": "Logs user into the system by email and password",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AuthLoginSchema"
+            }
+          }
+        }
+      },
+      "AuthForgotPasswordByEmailRequest": {
+        "description": "Forgot password by email",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AuthForgotPasswordByEmailSchema"
+            }
+          }
+        }
+      },
+      "AuthPlatformRequest": {
+        "description": "Logs user into the system through a platform (apple, google and etc.)",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AuthPlatformSchema"
+            }
+          }
+        }
+      },
+      "AuthRefreshTokenRequest": {
+        "description": "This request is used to refresh the authentication token of a user.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AuthRefreshTokenSchema"
+            }
+          }
+        }
+      },
+      "AuthResetPasswordByEmailRequest": {
+        "description": "Reset password",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AuthResetPasswordByEmailSchema"
+            }
+          }
+        }
+      },
+      "UserChangePasswordRequest": {
+        "description": "Change password for a user",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserChangePasswordSchema"
+            }
+          }
+        }
+      },
+      "UserCreateRequest": {
+        "description": "Create a user",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserCreateSchema"
+            }
+          }
+        }
+      },
+      "UserUpdateRequest": {
+        "description": "Update a user",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserUpdateSchema"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "auth"
+    },
+    {
+      "name": "User",
+      "description": "user"
+    }
+  ]
+}
