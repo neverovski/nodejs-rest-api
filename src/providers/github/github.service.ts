@@ -1,6 +1,6 @@
 import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
-import { ConfigKey, LoggerCtx, PlatformName } from '@common/enums';
+import { ConfigKey, PlatformName } from '@common/enums';
 import { PlatformPayload } from '@common/types';
 import { RequestUtil } from '@common/utils';
 import { IPlatformConfig } from '@config';
@@ -21,10 +21,6 @@ export class GitHubService
     @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
   ) {
     super();
-  }
-
-  protected get loggerCtx(): LoggerCtx {
-    return LoggerCtx.GITHUB;
   }
 
   async getPayload(token: string): Promise<PlatformPayload> {

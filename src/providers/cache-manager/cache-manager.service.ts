@@ -1,4 +1,3 @@
-import { LoggerCtx } from '@common/enums';
 import { ProviderServiceCore } from '@core/service';
 
 import { ICacheManagerService } from './interface';
@@ -7,10 +6,6 @@ export class CacheManagerService
   extends ProviderServiceCore
   implements ICacheManagerService
 {
-  protected get loggerCtx(): LoggerCtx {
-    return LoggerCtx.CACHE;
-  }
-
   async clearByPattern(key: string) {
     const items = await this.getKeysByPattern(key);
 

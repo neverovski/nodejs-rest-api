@@ -66,28 +66,25 @@ export class Server {
   private async listenHttpServer(): Promise<void> {
     return new Promise((resolve) => {
       process.on('unhandledRejection', (reason) => {
-        this.loggerService.error({
-          message: 'unhandledRejection',
+        this.loggerService.error('UnhandledRejection', {
           error: reason,
         });
       });
 
       process.on('rejectionHandled', (promise) => {
-        this.loggerService.warn({
-          message: 'rejectionHandled',
+        this.loggerService.warn('RejectionHandled', {
           error: promise,
         });
       });
 
       process.on('multipleResolves', (type, promise, reason) => {
-        this.loggerService.error({
-          message: 'multipleResolves',
+        this.loggerService.error('MultipleResolves', {
           error: { type, promise, reason },
         });
       });
 
       process.on('uncaughtException', (error) => {
-        this.loggerService.error({ message: 'uncaughtException', error });
+        this.loggerService.error('UncaughtException', { error });
         process.exit(1);
       });
 

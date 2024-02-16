@@ -1,4 +1,3 @@
-import { LoggerCtx } from '@common/enums';
 import { InternalServerErrorException } from '@common/exceptions';
 import type { ILoggerService } from '@providers/logger';
 
@@ -9,16 +8,9 @@ export class ProviderServiceCore {
     this.init();
   }
 
-  protected get loggerCtx(): LoggerCtx {
-    return LoggerCtx.SERVICE;
-  }
-
   protected handleError(err: unknown) {
     if (this.logger) {
-      this.logger.error(this.constructor.name, {
-        err,
-        context: this.loggerCtx,
-      });
+      this.logger.error(this.constructor.name, { err });
     }
 
     return new InternalServerErrorException();
@@ -29,8 +21,6 @@ export class ProviderServiceCore {
       return;
     }
 
-    this.logger.debug(`${this.constructor.name} initialized...`, {
-      context: this.loggerCtx,
-    });
+    this.logger.log(`${this.constructor.name} initialized...`);
   }
 }

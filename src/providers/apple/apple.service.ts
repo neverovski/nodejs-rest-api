@@ -1,7 +1,7 @@
 import { JwksClient } from 'jwks-rsa';
 import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
-import { ConfigKey, LoggerCtx, PlatformName } from '@common/enums';
+import { ConfigKey, PlatformName } from '@common/enums';
 import { PlatformPayload } from '@common/types';
 import { IPlatformConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
@@ -26,10 +26,6 @@ export class AppleService extends ProviderServiceCore implements IAppleService {
     super();
 
     this.client = new JwksClient({ jwksUri: this.platformConfig.apple.url });
-  }
-
-  protected get loggerCtx(): LoggerCtx {
-    return LoggerCtx.APPLE;
   }
 
   async getPayload(token: string): Promise<PlatformPayload> {

@@ -9,7 +9,8 @@ export const PRETTY_PRINT = {
   levelFirst: false,
   // eslint-disable-next-line quotes
   translateTime: "yyyy-mm-dd'T'HH:MM:ss.l'Z'",
-  messageFormat: '{req.headers.x-correlation-id} [{context}] {msg}',
+  messageFormat:
+    '{if req.headers.x-correlation-id}{req.headers.x-correlation-id} {end}{if context}[{context}] {end}{msg}',
   ignore: 'pid,hostname,context,req,res.headers',
 };
 

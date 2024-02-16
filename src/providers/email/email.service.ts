@@ -2,7 +2,7 @@ import { createTransport } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
-import { ConfigKey, LoggerCtx } from '@common/enums';
+import { ConfigKey } from '@common/enums';
 import { TemplateUtil } from '@common/utils';
 import { IEmailConfig } from '@config';
 import { ProviderServiceCore } from '@core/service';
@@ -28,10 +28,6 @@ export class EmailService extends ProviderServiceCore implements IEmailService {
         pass: this.emailConfig.password,
       },
     });
-  }
-
-  protected get loggerCtx(): LoggerCtx {
-    return LoggerCtx.EMAIL;
   }
 
   async sendEmail(options: EmailMessage): Promise<void> {

@@ -3,8 +3,10 @@ import type { Job, Queue } from 'bull';
 import { JobHandler } from '@common/types';
 import { QueueUtil } from '@common/utils';
 import { IRedisConfig } from '@config';
+import { ILoggerService } from '@providers/logger';
 
 export class ConsumerCoreJob {
+  protected readonly logger?: ILoggerService;
   private concurrency: number;
   private jobHandlers: Map<string, JobHandler>;
   private queue: Queue;
@@ -32,7 +34,12 @@ export class ConsumerCoreJob {
     if (jobHandler) {
       await jobHandler.call(this, job);
     } else {
-      console.error(`No handler found for job type: ${jobName}`);
+      if (this.logger) {
+        this.logger.error(this.constructor.name, {
+          err: `No handler found for job type: ${jobName}`,
+        });
+      }
+
       await job.discard();
     }
   }

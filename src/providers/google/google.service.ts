@@ -1,7 +1,7 @@
 import { TokenPayload } from 'google-auth-library';
 import { inject as Inject, singleton as Singleton } from 'tsyringe';
 
-import { ConfigKey, LoggerCtx, PlatformName } from '@common/enums';
+import { ConfigKey, PlatformName } from '@common/enums';
 import { PlatformPayload } from '@common/types';
 import { RequestUtil, UrlUtil } from '@common/utils';
 import { IPlatformConfig } from '@config';
@@ -22,10 +22,6 @@ export class GoogleService
     @Inject(LoggerInject.SERVICE) protected readonly logger: ILoggerService,
   ) {
     super();
-  }
-
-  protected get loggerCtx(): LoggerCtx {
-    return LoggerCtx.GOOGLE;
   }
 
   async getPayload(token: string): Promise<PlatformPayload> {

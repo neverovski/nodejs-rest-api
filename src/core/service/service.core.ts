@@ -1,4 +1,3 @@
-import { LoggerCtx } from '@common/enums';
 import { ILoggerService } from '@providers/logger';
 
 export class ServiceCore {
@@ -8,19 +7,12 @@ export class ServiceCore {
     this.init();
   }
 
-  protected get loggerCtx(): LoggerCtx {
-    return LoggerCtx.SERVICE;
-  }
-
   protected handleError(err: unknown) {
     if (!this.logger) {
       return;
     }
 
-    this.logger.error(err, {
-      name: this.constructor.name,
-      context: this.loggerCtx,
-    });
+    this.logger.error(this.constructor.name, { err });
   }
 
   protected init() {
@@ -28,8 +20,6 @@ export class ServiceCore {
       return;
     }
 
-    this.logger.debug(`${this.constructor.name} initialized...`, {
-      context: this.loggerCtx,
-    });
+    this.logger.log(`${this.constructor.name} initialized...`);
   }
 }

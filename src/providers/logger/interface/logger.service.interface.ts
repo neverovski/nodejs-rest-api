@@ -2,9 +2,10 @@ import type { Logger } from 'pino';
 
 export interface ILoggerService {
   pino: Logger;
-  debug(message: any, ...optionalParams: any[]): any;
-  error(message: any, ...optionalParams: any[]): any;
-  log(message: any, ...optionalParams: any[]): any;
-  verbose?(message: any, ...optionalParams: any[]): any;
-  warn(message: any, ...optionalParams: any[]): any;
+
+  debug(message: string, ...optionalParams: unknown[]): void;
+  error(message: string, ...optionalParams: unknown[]): void;
+  log(message: string, ...optionalParams: unknown[]): void;
+  verbose?(message: string, ...optionalParams: unknown[]): void;
+  warn(message: string, ...optionalParams: unknown[]): void;
 }
