@@ -1,5 +1,7 @@
 import { container as Container } from 'tsyringe';
 
+import { DiCore } from '@core/service';
+
 import {
   IProfileRepository,
   IUserController,
@@ -15,7 +17,7 @@ import { UserController } from './user.controller';
 import { UserInject } from './user.enum';
 import { UserSchema } from './user.schema';
 
-export class UserDi {
+export class UserDi extends DiCore {
   register() {
     this.registerRepositoryProfile();
     this.registerRepository();

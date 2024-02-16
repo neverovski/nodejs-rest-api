@@ -1,5 +1,7 @@
 import { container as Container } from 'tsyringe';
 
+import { DiCore } from '@core/service';
+
 import { EmailInject } from './email.enum';
 import { EmailService } from './email.service';
 import {
@@ -9,7 +11,7 @@ import {
 } from './interface';
 import { EmailConsumerJob, EmailProducerJob } from './job';
 
-export class EmailDi {
+export class EmailDi extends DiCore {
   register() {
     this.registerService();
     this.registerProducer();

@@ -1,3 +1,5 @@
+import { DiCore } from '@core/service';
+
 import { AppleDi } from './apple/apple.di';
 import { CacheManagerDi } from './cache-manager/cache-manager.di';
 import { EmailDi } from './email/email.di';
@@ -7,7 +9,7 @@ import { GoogleDi } from './google/google.di';
 import { LoggerDi } from './logger/logger.di';
 import { TokenDi } from './token/token.di';
 
-class ProviderDi {
+class ProviderDi extends DiCore {
   register() {
     new LoggerDi().register();
     new TokenDi().register();

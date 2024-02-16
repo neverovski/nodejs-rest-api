@@ -1,5 +1,7 @@
 import { container as Container } from 'tsyringe';
 
+import { DiCore } from '@core/service';
+
 import {
   IRefreshTokenRepository,
   IRefreshTokenService,
@@ -9,7 +11,7 @@ import { RefreshTokenInject } from './refresh-token.enum';
 import { RefreshTokenRepository } from './repository';
 import { RefreshTokenService, RefreshTokenValidatorService } from './service';
 
-export class RefreshTokenDi {
+export class RefreshTokenDi extends DiCore {
   register() {
     this.registerRepository();
     this.registerValidatorService();

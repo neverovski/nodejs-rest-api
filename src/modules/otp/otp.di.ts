@@ -1,5 +1,7 @@
 import { container as Container } from 'tsyringe';
 
+import { DiCore } from '@core/service';
+
 import {
   IOtpCodeRepository,
   IOtpService,
@@ -9,7 +11,7 @@ import { OtpInject } from './otp.enum';
 import { OtpCodeRepository } from './repository';
 import { OtpService, OtpValidatorService } from './service';
 
-export class OtpDi {
+export class OtpDi extends DiCore {
   register() {
     this.registerRepository();
     this.registerService();

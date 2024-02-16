@@ -2,6 +2,7 @@ import { container as Container } from 'tsyringe';
 
 import { MiddlewareKey } from '@common/enums/middleware.enum';
 import { IMiddleware } from '@common/interfaces';
+import { DiCore } from '@core/service';
 
 import { AsyncMiddleware } from './async.middleware';
 import { AuthMiddleware } from './auth.middleware';
@@ -12,7 +13,7 @@ import { PrometheusMiddleware } from './prometheus.middleware';
 import { UserSessionMiddleware } from './user-session.middleware';
 import { ValidateMiddleware } from './validate.middleware';
 
-class MiddlewareDi {
+class MiddlewareDi extends DiCore {
   register() {
     this.registerAsync();
     this.registerAuth();
