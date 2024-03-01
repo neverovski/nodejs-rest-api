@@ -44,7 +44,7 @@ jobs:
       run: npx swagger-jsdoc -o ./openapi.json -d ./swagger.config.js ./swagger.yaml ./src/modules/*/*.controller.ts ./src/modules/*/*.yaml
 
     - name: Upload openapi.json
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: spec-file
         path: openapi.json
