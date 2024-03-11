@@ -14,16 +14,16 @@ USER node
 FROM node:20-alpine3.17 AS build
 LABEL author="Dmitry Neverovski <dmitryneverovski@gmail.com>"
 
+WORKDIR /app
+
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV:-development}
-
-WORKDIR /app
 
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node --from=deps /app/node_modules ./node_modules
 COPY --chown=node:node . .
 
-RUN NODE_ENV=${NODE_ENV} npm run build
+RUN NODE_ENV=${NODE_ENV} npm run build:api
 
 USER node
 
@@ -31,10 +31,10 @@ USER node
 FROM node:20-alpine3.17 AS modules
 LABEL author="Dmitry Neverovski <dmitryneverovski@gmail.com>"
 
+WORKDIR /app
+
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV:-development}
-
-WORKDIR /app
 
 COPY --chown=node:node package*.json ./
 
@@ -49,14 +49,10 @@ LABEL author="Dmitry Neverovski <dmitryneverovski@gmail.com>"
 ARG APP_PORT
 ENV APP_PORT=${APP_PORT:-5656}
 
-WORKDIR /app
-USER node
-
 COPY --chown=node:node package*.json ./
+COPY --chown=node:node templates ./templates
 COPY --chown=node:node --from=modules /app/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/dist ./dist
-COPY --chown=node:node swagger ./swagger
-COPY --chown=node:node templates ./templates
 
 EXPOSE ${APP_PORT}
 
